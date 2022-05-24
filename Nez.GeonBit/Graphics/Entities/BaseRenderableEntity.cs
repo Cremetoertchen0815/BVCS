@@ -86,8 +86,6 @@ namespace Nez.GeonBit
         /// </summary>
         protected BoundingSphere _lastBoundingSphere;
 
-        protected Camera3D _camera;
-
         /// <summary>
         /// Get / Set if this entity is visible.
         /// </summary>
@@ -124,7 +122,7 @@ namespace Nez.GeonBit
         public virtual void Draw(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // not visible / no active camera? skip
-            if (!Visible || _camera == null)
+            if (!Visible || GeonBitRenderer.ActiveCamera == null)
             {
                 return;
             }

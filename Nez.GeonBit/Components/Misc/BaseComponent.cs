@@ -4,13 +4,15 @@
     {
         internal GeonNode Node;
 
-        public override void OnAddedToEntity() => Node = Entity.GetComponent<GeonNode>();
+        public override void OnAddedToEntity() => Node = Entity.GetComponent<GeonNode>() ?? throw new System.Exception("Entity must have a GeonNode component!");
 
-        public virtual BaseComponent CopyBasics(BaseComponent c) => c;
+        public override void OnRemovedFromEntity() => Node?.RemoveComponent(this);
+
+		public virtual BaseComponent CopyBasics(BaseComponent c) => c;
 
         internal void Destroy()
         {
-
+            Entity.RemoveComponent(this);
         }
 
         public virtual void OnParentChange(GeonNode from, GeonNode to) { }

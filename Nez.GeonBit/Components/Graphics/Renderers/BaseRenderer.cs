@@ -24,19 +24,23 @@ namespace Nez.GeonBit
     /// <summary>
     /// Base implementation for most graphics-related components.
     /// </summary>
-    public abstract class BaseRendererComponent : Component
+    public abstract class BaseRendererComponent : BaseComponent
     {
         /// <summary>
         /// Get the main entity instance of this renderer.
         /// </summary>
         protected abstract BaseRenderableEntity RenderableEntity { get; }
 
-        internal GeonNode Node;
+		public override void OnAddedToEntity()
+		{
+			base.OnAddedToEntity();
+            Node.AddEntity(RenderableEntity);
+		}
 
-        /// <summary>
-        /// Set / get Entity blending state.
-        /// </summary>
-        public BlendState BlendingState
+		/// <summary>
+		/// Set / get Entity blending state.
+		/// </summary>
+		public BlendState BlendingState
         {
             set => RenderableEntity.BlendingState = value;
             get => RenderableEntity.BlendingState;
@@ -63,8 +67,6 @@ namespace Nez.GeonBit
             otherRenderer.BlendingState = BlendingState;
             return copyTo;
         }
-
-        public override void OnAddedToEntity() => Node = Entity.GetComponent<GeonNode>();
 
         /// <summary>
         /// Called when GameObject turned disabled.

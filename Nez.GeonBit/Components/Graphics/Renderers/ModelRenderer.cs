@@ -91,27 +91,18 @@ namespace Nez.GeonBit
         {
         }
 
-        private Model _ctorModel;
-        private string _ctorName;
-
-        public override void OnAddedToEntity()
-        {
-            base.OnAddedToEntity();
-            _entity = new ModelEntity(_ctorModel ?? Entity.Scene.Content.Load<Model>(_ctorName));
-        }
-
 
         /// <summary>
         /// Create the model renderer component.
         /// </summary>
         /// <param name="model">Model to draw.</param>
-        public ModelRenderer(Model model) => _ctorModel = model;
+        public ModelRenderer(Model model) => _entity = new ModelEntity(model);
 
         /// <summary>
         /// Create the model renderer component.
         /// </summary>
         /// <param name="model">Path of the model asset to draw.</param>
-        public ModelRenderer(string model) => _ctorName = model;
+        public ModelRenderer(string model) => _entity = new ModelEntity(GeonBitRenderer.CurrentContentManager.LoadModel(model, x => Materials.DefaultMaterialsFactory.GetDefaultMaterial(x)));
 
         /// <summary>
         /// Copy basic properties to another component (helper function to help with Cloning).

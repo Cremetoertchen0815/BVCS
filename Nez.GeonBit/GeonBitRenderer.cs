@@ -103,16 +103,14 @@ namespace Nez.GeonBit
         /// <returns></returns>
         public static void EnableDeferredLighting() => _DeferredLighting = new Lights.DeferredLighting();
 
-        /// <summary>
-        /// Handle screen resize.
-        /// </summary>
-        public static void HandleResize()
-        {
+		public override void OnSceneBackBufferSizeChanged(int newWidth, int newHeight)
+		{
+			base.OnSceneBackBufferSizeChanged(newWidth, newHeight);
             if (IsDeferredLightingEnabled)
             {
                 _DeferredLighting.OnResize();
             }
-        }
+		}
 
         /// <summary>
         /// Render a renderable entity.
@@ -233,15 +231,21 @@ namespace Nez.GeonBit
 
         public override void Render(Scene scene)
         {
-            NodesManager.StartFrame();
+            StartDrawFrame();
+
             foreach (var item in scene.EntitiesOfType<Entity>()) item.GetComponent<GeonNode>()?.Draw();
-            NodesManager.EndFrame();
+
+            EndDrawFrame();
+
+            // reset stencil state
+            Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
         }
 
         public GeonBitRenderer(int renderOrder, Scene sourceScene) : base(renderOrder)
         {
             _physics = new Physics.PhysicsWorld();
             CurrentContentManager = sourceScene.Content;
+            RenderingQueues.Initialize();
         }
 
     }
