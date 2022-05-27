@@ -16,7 +16,7 @@
 
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 
-namespace GeonBit.Content.Pipeline.Graphics
+namespace Nez.ExtendedContent.GeonBit.Graphics
 {
     public class DynamicVertexBufferContent: VertexBufferContent 
     {

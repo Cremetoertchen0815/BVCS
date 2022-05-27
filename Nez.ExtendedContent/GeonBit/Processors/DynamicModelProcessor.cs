@@ -14,16 +14,16 @@
 //   limitations under the License.
 #endregion
 
+using Microsoft.Xna.Framework.Content.Pipeline;
+using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
+using Microsoft.Xna.Framework.Content.Pipeline.Processors;
+using Nez.ExtendedContent.GeonBit.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Microsoft.Xna.Framework.Content.Pipeline;
-using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
-using Microsoft.Xna.Framework.Content.Pipeline.Processors;
-using GeonBit.Content.Pipeline.Graphics;
 
-namespace GeonBit.Content.Pipeline.Serialization
+namespace Nez.ExtendedContent.GeonBit.Serialization
 {
     [ContentProcessor(DisplayName = "DynamicModel - GeonBit")]
     public class DynamicModelProcessor : ModelProcessor, IContentProcessor

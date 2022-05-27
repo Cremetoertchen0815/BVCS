@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace GeonBit.Content.Pipeline.Graphics
+namespace Nez.ExtendedContent.GeonBit.Graphics
 {
     public class DynamicIndexBufferContent: Collection<int>
     {

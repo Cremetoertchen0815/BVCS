@@ -19,17 +19,19 @@
 //   limitations under the License.
 #endregion
 
-using Microsoft.Xna.Framework.Content.Pipeline.Processors;
-using GeonBit.Content.Pipeline.Graphics;
+using System;
 
-namespace GeonBit.Content.Pipeline.Animation
+namespace Nez.ExtendedContent.GeonBit.Animation
 {
-    public class CpuAnimatedVertexBufferContent : DynamicVertexBufferContent
+    public class ClipContent
     {
-        public CpuAnimatedVertexBufferContent(VertexBufferContent source) : base(source)
+        public TimeSpan Duration { get; internal set; }
+        public KeyframeContent[] Keyframes { get; private set; }
+
+        internal ClipContent(TimeSpan duration, KeyframeContent[] keyframes)
         {
+            Duration = duration;
+            Keyframes = keyframes;
         }
-
-
     }
 }

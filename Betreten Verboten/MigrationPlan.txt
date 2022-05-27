@@ -1,5 +1,4 @@
-﻿-Copy Nez
--Add sub entities to entities
+﻿-Add sub entities to entities
 -Add FixedUpdate and Heartbeat to Entities/Components
 -Add visibility control to entities
 -Migrate different node types to "Node3D" components as 3D to 2D nodes(they mainly handle 3D transforms and culling) in 

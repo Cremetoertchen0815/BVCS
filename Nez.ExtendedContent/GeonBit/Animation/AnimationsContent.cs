@@ -19,19 +19,27 @@
 //   limitations under the License.
 #endregion
 
-using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
-namespace GeonBit.Content.Pipeline.Animation
+namespace Nez.ExtendedContent.GeonBit.Animation
 {
-    public class ClipContent
+    public class AnimationsContent
     {
-        public TimeSpan Duration { get; internal set; }
-        public KeyframeContent[] Keyframes { get; private set; }
+        public List<Matrix> BindPose { get; private set; }
+        public List<Matrix> InvBindPose { get; private set; }
+        public List<int> SkeletonHierarchy { get; private set; }
+        public List<string> BoneNames { get; private set; }
+        public Dictionary<string, ClipContent> Clips { get; private set; }
 
-        internal ClipContent(TimeSpan duration, KeyframeContent[] keyframes)
+
+        internal AnimationsContent(List<Matrix> bindPose, List<Matrix> invBindPose, List<int> skeletonHierarchy, List<string> boneNames, Dictionary<string, ClipContent> clips)
         {
-            Duration = duration;
-            Keyframes = keyframes;
+            BindPose = bindPose;
+            InvBindPose = invBindPose;
+            SkeletonHierarchy = skeletonHierarchy;
+            BoneNames = boneNames;
+            Clips = clips;
         }
     }
 }

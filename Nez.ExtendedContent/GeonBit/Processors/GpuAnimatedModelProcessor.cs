@@ -25,7 +25,7 @@ using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GeonBit.Content.Pipeline.Processors
+namespace Nez.ExtendedContent.GeonBit.Processors
 {
     [ContentProcessor(DisplayName = "GPU AnimatedModel - GeonBit")]
     public class GpuAnimatedModelProcessor : ModelProcessor

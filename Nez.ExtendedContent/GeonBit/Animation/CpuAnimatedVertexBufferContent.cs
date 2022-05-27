@@ -19,22 +19,17 @@
 //   limitations under the License.
 #endregion
 
-using System;
-using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content.Pipeline.Processors;
+using Nez.ExtendedContent.GeonBit.Graphics;
 
-namespace GeonBit.Content.Pipeline.Animation
+namespace Nez.ExtendedContent.GeonBit.Animation
 {
-    public struct KeyframeContent
+    public class CpuAnimatedVertexBufferContent : DynamicVertexBufferContent
     {
-        public int Bone;
-        public TimeSpan Time;
-        public Matrix Transform;
-
-        public KeyframeContent(int bone, TimeSpan time, Matrix transform)
+        public CpuAnimatedVertexBufferContent(VertexBufferContent source) : base(source)
         {
-            this.Bone = bone;
-            this.Time = time;
-            this.Transform = transform;
-        }	
+        }
+
+
     }
 }

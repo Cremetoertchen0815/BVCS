@@ -1,10 +1,5 @@
 ﻿#region License
-/// -------------------------------------------------------------------------------------
-/// Notice: This file had been edited to integrate as core inside GeonBit.
-/// Original license and attributes below. The license and copyright notice below affect
-/// this file and this file only. https://github.com/tainicom/Aether.Extras
-/// -------------------------------------------------------------------------------------
-//   Copyright 2011-2016 Kastellanos Nikolaos
+//   Copyright 2016 Kastellanos Nikolaos
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -19,24 +14,25 @@
 //   limitations under the License.
 #endregion
 
-using System;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
-using GeonBit.Content.Pipeline.Animation;
-using GeonBit.Content.Pipeline.Graphics;
+using Nez.ExtendedContent.GeonBit.Graphics;
+using System;
 
-namespace GeonBit.Content.Pipeline.Serialization
+namespace Nez.ExtendedContent.GeonBit.Serialization
 {
     [ContentTypeWriter]
-    public class CpuAnimatedVertexBufferWriter : ContentTypeWriter<CpuAnimatedVertexBufferContent>
-    {
-        protected override void Write(ContentWriter output, CpuAnimatedVertexBufferContent buffer)
-        {
+    public class DynamicVertexBufferWriter : ContentTypeWriter<DynamicVertexBufferContent>
+    {    
+        protected override void Write(ContentWriter output, DynamicVertexBufferContent buffer)
+        {            
             WriteVertexBuffer(output, buffer);
-            
+
             output.Write(buffer.IsWriteOnly);
+
+            return;
         }
-                
+
         private void WriteVertexBuffer(ContentWriter output, DynamicVertexBufferContent buffer)
         {
             var vertexCount = buffer.VertexData.Length / buffer.VertexDeclaration.VertexStride;
@@ -44,11 +40,11 @@ namespace GeonBit.Content.Pipeline.Serialization
             output.Write((UInt32)vertexCount);
             output.Write(buffer.VertexData);
         }
-        
+                
         public override string GetRuntimeReader(TargetPlatform targetPlatform)
         {
-            return "GeonBit.Extend.Animation.Content.CpuAnimatedVertexBufferReader, " +
-                typeof(GeonBit.Extend.Animation.Content.CpuAnimatedVertexBufferReader).Assembly.FullName;
+            return "GeonBit.Graphics.Content.DynamicVertexBufferReader, Aether.Graphics";
         }
+        
     }
 }

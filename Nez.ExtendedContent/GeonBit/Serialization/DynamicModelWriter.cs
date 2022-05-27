@@ -14,15 +14,15 @@
 //   limitations under the License.
 #endregion
 
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
-using GeonBit.Content.Pipeline.Graphics;
+using Nez.ExtendedContent.GeonBit.Graphics;
+using System;
+using System.Collections.Generic;
 
-namespace GeonBit.Content.Pipeline.Serialization
+namespace Nez.ExtendedContent.GeonBit.Serialization
 {
     [ContentTypeWriter]
     class DynamicModelWriter : ContentTypeWriter<DynamicModelContent>

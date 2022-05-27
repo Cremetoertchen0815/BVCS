@@ -19,17 +19,17 @@
 //   limitations under the License.
 #endregion
 
-using System.Collections.Generic;
-using System.ComponentModel;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Microsoft.Xna.Framework.Graphics;
-using GeonBit.Content.Pipeline.Animation;
-using GeonBit.Content.Pipeline.Serialization;
-using GeonBit.Content.Pipeline.Graphics;
+using Nez.ExtendedContent.GeonBit.Animation;
+using Nez.ExtendedContent.GeonBit.Graphics;
+using Nez.ExtendedContent.GeonBit.Serialization;
+using System.Collections.Generic;
+using System.ComponentModel;
 
-namespace GeonBit.Content.Pipeline.Processors
+namespace Nez.ExtendedContent.GeonBit.Processors
 {
     [ContentProcessor(DisplayName = "CPU AnimatedModel - GeonBit")]
     class CpuAnimatedModelProcessor : DynamicModelProcessor, IContentProcessor

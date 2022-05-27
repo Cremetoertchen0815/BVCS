@@ -19,14 +19,15 @@
 //   limitations under the License.
 #endregion
 
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
-using GeonBit.Content.Pipeline.Animation;
+using Nez.ExtendedContent.GeonBit.Animation;
+using Nez.ExtendedContent.GeonBit.Content;
+using System;
+using System.Collections.Generic;
 
 
-namespace GeonBit.Content.Pipeline.Serialization
+namespace Nez.ExtendedContent.GeonBit.Serialization
 {
     [ContentTypeWriter]
     class ClipWriter : ContentTypeWriter<ClipContent>
@@ -72,13 +73,13 @@ namespace GeonBit.Content.Pipeline.Serialization
         public override string GetRuntimeType(TargetPlatform targetPlatform)
         {
             return "GeonBit.Extend.Animation.Clip, " +
-                typeof(GeonBit.Extend.Animation.Clip).Assembly.FullName;
+                typeof(Clip).Assembly.FullName;
         }
 
         public override string GetRuntimeReader(TargetPlatform targetPlatform)
         {
             return "GeonBit.Extend.Animation.Content.ClipReader, " +
-                typeof(GeonBit.Extend.Animation.Content.ClipReader).Assembly.FullName;
+                typeof(ClipReader).Assembly.FullName;
         }
     }
     

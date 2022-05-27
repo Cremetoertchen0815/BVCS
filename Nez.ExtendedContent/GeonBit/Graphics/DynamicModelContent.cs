@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 
-namespace GeonBit.Content.Pipeline.Graphics 
+namespace Nez.ExtendedContent.GeonBit.Graphics 
 {    
     public class DynamicModelContent
     {
