@@ -383,7 +383,7 @@ namespace Nez.GeonBit
                 // if need to sort by distance from camera, do the sorting
                 if (queue.SortByCamera)
                 {
-                    Vector3 camPos = GeonBitRenderer.ActiveCamera.Position;
+                    var camPos = GeonBitRenderer.ActiveCamera.Position;
                     queue.Entities.Sort(delegate (EntityInQueue x, EntityInQueue y)
                     {
                         return (int)(Vector3.Distance(camPos, y.World.Translation) * 100f - System.Math.Floor(y.Entity.CameraDistanceBias)) -
@@ -414,7 +414,7 @@ namespace Nez.GeonBit
         public static void AddEntity(BaseRenderableEntity entity, Matrix world)
         {
             // special case - skip debug if not in debug mode
-            if (entity.RenderingQueue == RenderingQueue.Debug && !GeonBitMain.Instance.DebugMode)
+            if (entity.RenderingQueue == RenderingQueue.Debug && !Core.DebugRenderEnabled)
             {
                 return;
             }

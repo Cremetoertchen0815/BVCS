@@ -214,7 +214,7 @@ namespace Nez.GeonBit
         internal override void UpdateNodeTransforms()
         {
             // update transforms
-            Matrix newTrans = _body.WorldTransform;
+            var newTrans = _body.WorldTransform;
             Node.SetWorldTransforms(ref newTrans);
             _alreadyUpdatedBodyInFrame = true;
 
@@ -381,7 +381,7 @@ namespace Nez.GeonBit
             // remove from physics world
             if (_isInWorld)
             {
-                GeonBitCore.Instance.Physics.RemoveBody(_body);
+                GeonBitRenderer.Physics.RemoveBody(_body);
                 _isInWorld = false;
             }
         }
@@ -395,7 +395,7 @@ namespace Nez.GeonBit
             // add to physics world
             if (!_isInWorld)
             {
-                GeonBitCore.Instance.Physics.AddBody(_body);
+                GeonBitRenderer.Physics.AddBody(_body);
                 UpdateNodeTransforms();
                 _isInWorld = true;
             }

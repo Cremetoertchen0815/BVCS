@@ -20,7 +20,7 @@
 using System;
 
 
-namespace GeonBit.Core.Utils
+namespace Nez.GeonBit
 {
     /// <summary>
     /// An array you can add elements to, but still access the internal array object.

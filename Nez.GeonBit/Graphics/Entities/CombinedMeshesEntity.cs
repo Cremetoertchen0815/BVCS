@@ -19,7 +19,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using GeonBit.Core.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -117,7 +116,7 @@ namespace Nez.GeonBit
                     // make sure didn't overflow
                     if (absIndex < IndexOffset)
                     {
-                        throw new Exceptions.OutOfRangeException("Too many vertices were pushed into combined mesh!");
+                        throw new System.ArgumentOutOfRangeException("Too many vertices were pushed into combined mesh!");
                     }
 
                     // add to indexes array
@@ -131,7 +130,7 @@ namespace Nez.GeonBit
             public void Build()
             {
                 // get device
-                var device = Graphics.Core.GraphicsDevice;
+                var device = Core.GraphicsDevice;
 
                 // build vertex buffer
                 Vertices.Trim();
@@ -197,7 +196,7 @@ namespace Nez.GeonBit
             {
                 _vtype = VertexTypes.VertexPositionNormalTangentTexture;
             }
-            else { throw new Exceptions.InvalidValueException("Unsupported vertex type in combined mesh!"); }
+            else { throw new System.ArgumentException("Unsupported vertex type in combined mesh!"); }
         }
 
         /// <summary>
@@ -279,13 +278,13 @@ namespace Nez.GeonBit
                 if (meshPart.VertexBuffer.BufferUsage == BufferUsage.WriteOnly ||
                     meshPart.IndexBuffer.BufferUsage == BufferUsage.WriteOnly)
                 {
-                    throw new Exceptions.InvalidValueException("Cannot add mesh with write-only buffers to Combined Mesh!");
+                    throw new System.InvalidOperationException("Cannot add mesh with write-only buffers to Combined Mesh!");
                 }
 
                 // make sure vertex buffer uses position-normal-texture
                 if (meshPart.VertexBuffer.VertexDeclaration.VertexStride < 8)
                 {
-                    throw new Exceptions.InvalidValueException("Combined meshes can only use vertex buffers with position, normal and texture!");
+                    throw new System.InvalidOperationException("Combined meshes can only use vertex buffers with position, normal and texture!");
                 }
 
                 // get vertex buffer parameters
@@ -577,7 +576,7 @@ namespace Nez.GeonBit
         public override void DoEntityDraw(ref Matrix worldTransformations)
         {
             // get graphic device
-            var device = Graphics.Core.GraphicsDevice;
+            var device = Core.GraphicsDevice;
 
             // iterate combined parts
             foreach (var combinedPart in _parts)

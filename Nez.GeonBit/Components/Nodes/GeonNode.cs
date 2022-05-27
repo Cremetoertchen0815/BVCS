@@ -414,10 +414,7 @@ namespace Nez.GeonBit
         #endregion
 
 
-        public override void OnAddedToEntity()
-        {
-            Renderer = Entity.Scene.GetRenderer<GeonBitRenderer>();
-        }
+        public override void OnAddedToEntity() => Renderer = Entity.Scene.GetRenderer<GeonBitRenderer>();
 
         /// <summary>
         /// Add an entity to this node.

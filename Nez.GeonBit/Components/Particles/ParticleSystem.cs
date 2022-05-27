@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace Nez.GeonBit.Particles
@@ -210,7 +209,7 @@ namespace Nez.GeonBit.Particles
                         if (AddParticlesToRoot)
                         {
                             var newNode = newPart.GetComponent<GeonNode>();
-                            Vector3 position = newNode.WorldPosition;
+                            var position = newNode.WorldPosition;
                             newPart.Parent = null;
                             newNode.Position = position;
                         }
@@ -225,12 +224,14 @@ namespace Nez.GeonBit.Particles
         /// <returns>Cloned copy of this component.</returns>
         public override Component Clone()
         {
-            var ret = new ParticleSystem();
-            ret.TimeToLive = TimeToLive;
-            ret.DestroyParentWhenExpired = DestroyParentWhenExpired;
-            ret.Interval = Interval;
-            ret.SpawningSpeedFactor = SpawningSpeedFactor;
-            ret.AddParticlesToRoot = AddParticlesToRoot;
+            var ret = new ParticleSystem
+            {
+                TimeToLive = TimeToLive,
+                DestroyParentWhenExpired = DestroyParentWhenExpired,
+                Interval = Interval,
+                SpawningSpeedFactor = SpawningSpeedFactor,
+                AddParticlesToRoot = AddParticlesToRoot
+            };
             foreach (var particleType in _particles)
             {
                 ret._particles.Add(particleType.Clone());

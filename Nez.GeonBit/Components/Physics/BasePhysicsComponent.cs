@@ -232,7 +232,7 @@ namespace Nez.GeonBit
             // remove from physics world
             if (_isInWorld)
             {
-                GeonBitCore.Instance.Physics.RemoveBody(_PhysicalBody);
+                GeonBitRenderer.Physics.RemoveBody(_PhysicalBody);
                 _isInWorld = false;
             }
         }
@@ -246,7 +246,7 @@ namespace Nez.GeonBit
             // add to physics world
             if (!_isInWorld)
             {
-                GeonBitCore.Instance.Physics.AddBody(_PhysicalBody);
+                GeonBitRenderer.Physics.AddBody(_PhysicalBody);
                 _isInWorld = true;
             }
         }

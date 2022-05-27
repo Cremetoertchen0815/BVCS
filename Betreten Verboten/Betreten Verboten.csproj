@@ -30,7 +30,7 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GeonBit\GeonBit.csproj" />
-    <ProjectReference Include="..\GeonBit\Libs\DataTypes\GeonBit.UI.DataTypes.csproj" />
+    <ProjectReference Include="..\Nez.GeonBit\Nez.GeonBit.csproj" />
+    <ProjectReference Include="..\Nez.Portable\Nez.csproj" />
   </ItemGroup>
 </Project>

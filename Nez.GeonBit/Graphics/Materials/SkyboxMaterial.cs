@@ -54,7 +54,7 @@ namespace Nez.GeonBit.Materials
             _effect = new BasicEffect(Core.GraphicsDevice)
             {
                 TextureEnabled = true,
-                Texture = ResourcesManager.Instance.GetTexture(texture),
+                Texture = GeonBitRenderer.CurrentContentManager.LoadTexture(texture),
                 LightingEnabled = false
             };
         }

@@ -145,7 +145,7 @@ namespace Nez.GeonBit
         /// Create the model entity from asset path.
         /// </summary>
         /// <param name="path">Path of the model to load.</param>
-        public CompositeModelEntity(string path) : this(ResourcesManager.Instance.GetModel(path))
+        public CompositeModelEntity(string path) : this(GeonBitRenderer.CurrentContentManager.Load<Model>(path))
         {
         }
 
@@ -167,7 +167,7 @@ namespace Nez.GeonBit
         protected override BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             var modelBoundingSphere = ModelUtils.GetBoundingSphere(Model);
-            Vector3 scale = Utils.ExtendedMath.GetScale(ref worldTransformations);
+            var scale = Math3D.GetScale(ref worldTransformations);
             modelBoundingSphere.Radius *= scale.Length();
             modelBoundingSphere.Center = worldTransformations.Translation;
             return modelBoundingSphere;

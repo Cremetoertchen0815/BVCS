@@ -120,7 +120,7 @@ namespace Nez.GeonBit
 
             // reset last radius
             _lastRadius = 0f;
-            Vector3 scale = Math3D.GetScale(ref worldTransformations);
+            var scale = Math3D.GetScale(ref worldTransformations);
             float scaleLen = scale.Length();
 
             // check if in this mesh we have shared materials, eg same effects used for several mesh parts

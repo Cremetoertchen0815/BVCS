@@ -201,7 +201,7 @@ namespace Nez.GeonBit
 
             // screen width and height
             float width; float height;
-
+            /*
             // if we have alternative screen size defined, use it
             if (ForceScreenSize != null)
             {
@@ -215,6 +215,9 @@ namespace Nez.GeonBit
                 width = deviceManager.PreferredBackBufferWidth;
                 height = deviceManager.PreferredBackBufferHeight;
             }
+            */
+            width = Screen.Width;
+            height = Screen.Height;
 
             // calc aspect ratio
             _aspectRatio = width / height;

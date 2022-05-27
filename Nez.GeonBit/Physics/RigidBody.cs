@@ -138,7 +138,7 @@ namespace Nez.GeonBit.Physics
         /// <param name="other">Other physical body to copy condition from.</param>
         public void CopyConditionFrom(RigidBody other)
         {
-            BulletSharp.Math.Matrix trans = BulletRigidBody.WorldTransform;
+            var trans = BulletRigidBody.WorldTransform;
             other.BulletRigidBody.GetWorldTransform(out trans);
             BulletRigidBody.MotionState.SetWorldTransform(ref trans);
             BulletRigidBody.WorldTransform = trans;

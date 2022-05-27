@@ -17,6 +17,7 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
+using BulletSharp;
 using Microsoft.Xna.Framework;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("World")]
 
@@ -72,7 +73,7 @@ namespace Nez.GeonBit.Physics
         {
             // create the collision object
             _shape = shape;
-            BulletCollisionObject = new CollisionObject
+            BulletCollisionObject = new CollisionObject()
             {
                 CollisionShape = shape.BulletCollisionShape,
                 UserObject = this

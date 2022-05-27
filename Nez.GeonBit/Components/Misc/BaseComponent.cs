@@ -1,24 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Nez.GeonBit
+﻿namespace Nez.GeonBit
 {
     public class BaseComponent : Component
     {
         internal GeonNode Node;
 
-        public override void OnAddedToEntity()
-        {
-            Node = Entity.GetComponent<GeonNode>();
-        }
+        public override void OnAddedToEntity() => Node = Entity.GetComponent<GeonNode>();
 
-        public virtual BaseComponent  CopyBasics(BaseComponent c)
-        {
-            return c;
-        }
+        public virtual BaseComponent CopyBasics(BaseComponent c) => c;
 
         internal void Destroy()
         {

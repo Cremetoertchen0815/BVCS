@@ -149,6 +149,7 @@
     <Compile Include="Utils\CountAndAlert.cs" />
     <Compile Include="Utils\Math3D.cs" />
     <Compile Include="Utils\ResizeableArray.cs" />
+    <Compile Include="Utils\ResourcesManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nez.Portable\Nez.csproj">

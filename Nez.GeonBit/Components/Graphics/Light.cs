@@ -105,7 +105,7 @@ namespace Nez.GeonBit
                 Direction = Direction,
                 Range = Range
             };
-            
+
             return ret;
         }
 

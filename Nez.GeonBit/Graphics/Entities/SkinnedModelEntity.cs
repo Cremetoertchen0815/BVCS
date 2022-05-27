@@ -107,7 +107,7 @@ namespace Nez.GeonBit
         /// Create the model entity from asset path.
         /// </summary>
         /// <param name="path">Path of the model to load.</param>
-        public SkinnedModelEntity(string path) : this(ResourcesManager.Instance.GetModel(path))
+        public SkinnedModelEntity(string path) : this(GeonBitRenderer.CurrentContentManager.Load<Model>(path))
         {
         }
 

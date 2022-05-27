@@ -95,10 +95,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get the physical world instance.
         /// </summary>
-        public Physics.PhysicsWorld Physics
-        {
-            get { return _physics; }
-        }
+        public static Physics.PhysicsWorld Physics => _physics;
 
         /// <summary>
         /// Enable deferred lighting.
@@ -241,7 +238,7 @@ namespace Nez.GeonBit
             NodesManager.EndFrame();
         }
 
-        public GeonBitRenderer(int renderOrder, Scene sourceScene) : base(renderOrder) 
+        public GeonBitRenderer(int renderOrder, Scene sourceScene) : base(renderOrder)
         {
             _physics = new Physics.PhysicsWorld();
             CurrentContentManager = sourceScene.Content;

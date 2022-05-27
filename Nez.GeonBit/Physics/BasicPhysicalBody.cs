@@ -176,7 +176,7 @@ namespace Nez.GeonBit.Physics
         {
             get
             {
-                CollisionFlags ret = CollisionFlags.None;
+                var ret = CollisionFlags.None;
                 if (IsStatic) ret |= CollisionFlags.StaticObject;
                 if (IsKinematic) ret |= CollisionFlags.KinematicObject;
                 if (IsEthereal) ret |= CollisionFlags.NoContactResponse;

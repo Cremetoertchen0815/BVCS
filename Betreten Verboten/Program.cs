@@ -14,7 +14,7 @@ namespace Betreten_Verboten
         static void Main()
         {
             // execute GeonBit with Game1 instance.
-            GeonBit.GeonBitMain.Instance.Run(new GameCore());
+            new GameCore().Run();
         }
     }
 }

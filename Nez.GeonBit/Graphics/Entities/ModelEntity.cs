@@ -82,7 +82,7 @@ namespace Nez.GeonBit
         /// Create the model entity from asset path.
         /// </summary>
         /// <param name="path">Path of the model to load.</param>
-        public ModelEntity(string path) : this(ResourcesManager.Instance.GetModel(path))
+        public ModelEntity(string path) : this(GeonBitRenderer.CurrentContentManager.Load<Model>(path))
         {
         }
 

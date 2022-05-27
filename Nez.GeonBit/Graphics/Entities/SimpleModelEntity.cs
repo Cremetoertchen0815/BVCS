@@ -56,7 +56,7 @@ namespace Nez.GeonBit
         /// Create the model entity from asset path.
         /// </summary>
         /// <param name="path">Path of the model to load.</param>
-        public SimpleModelEntity(string path) : this(ResourcesManager.Instance.GetModel(path))
+        public SimpleModelEntity(string path) : this(GeonBitRenderer.CurrentContentManager.Load<Model>(path))
         {
         }
 
@@ -79,7 +79,7 @@ namespace Nez.GeonBit
                 // iterate over mesh effects and apply them (set world matrix etc)
                 foreach (var effect in mesh.Effects)
                 {
-                    Materials.MaterialAPI material = effect.GetMaterial();
+                    var material = effect.GetMaterial();
                     material.Apply(ref worldTransformations, ref _lastBoundingSphere);
                 }
 

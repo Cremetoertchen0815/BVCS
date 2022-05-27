@@ -107,7 +107,7 @@ namespace Nez.GeonBit.Particles.Animators
             base.OnAddedToEntity();
 
             // get model renderers
-            ModelRenderer[] targets = Entity.GetComponents<ModelRenderer>().ToArray();
+            var targets = Entity.GetComponents<ModelRenderer>().ToArray();
 
             // random alpha
             if (_minAlpha != null)
