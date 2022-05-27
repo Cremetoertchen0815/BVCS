@@ -17,10 +17,11 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
+using BulletSharp;
 using Microsoft.Xna.Framework;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("World")]
 
-namespace GeonBit.Core.Physics
+namespace Nez.GeonBit.Physics
 {
     /// <summary>
     /// A rigid body is the basic dynamic object of the physics world.

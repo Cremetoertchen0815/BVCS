@@ -48,8 +48,8 @@ namespace Nez.GeonBit.Particles.Animators
         public override Component Clone() =>
             // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitter
             // so we'll still have the random factor applied on the cloned entity.
-            CopyBasics(new RotationAnimator(BaseProperties, RotationDirection,
-                _directionJitter, _minSpeed, _maxSpeed));
+            new RotationAnimator(BaseProperties, RotationDirection,
+                _directionJitter, _minSpeed, _maxSpeed);
 
         /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
@@ -107,8 +107,10 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Called when GameObject spawns.
         /// </summary>
-        protected override void OnSpawn()
+        public override void OnAddedToEntity()
         {
+            base.OnAddedToEntity();
+
             // add rotation jitter
             if (_directionJitter != null)
             {
@@ -132,6 +134,6 @@ namespace Nez.GeonBit.Particles.Animators
         /// </summary>
         protected override void DoAnimation(float speedFactor) =>
             // rotate scene node
-            _GameObject.SceneNode.Rotation += RotationDirection * speedFactor;
+            Node.Rotation += RotationDirection * speedFactor;
     }
 }

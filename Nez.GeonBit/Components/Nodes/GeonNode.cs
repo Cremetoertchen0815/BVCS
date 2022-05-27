@@ -38,7 +38,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Parent node.
         /// </summary>
-        public GeonNode Parent { get; protected set; } = null;
+        public GeonNode Parent { get; internal set; } = null;
 
         internal GeonBitRenderer Renderer { get; private set; }
 
@@ -678,7 +678,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="trans">Transformations to transform.</param>
         /// <returns>Matrix with combined transformations.</returns>
-        public Matrix Transform(Transformations trans)
+        public Matrix TransformMatrix(Transformations trans)
         {
             // build matrix for given transformations
             var transMatrix = trans.BuildMatrix();

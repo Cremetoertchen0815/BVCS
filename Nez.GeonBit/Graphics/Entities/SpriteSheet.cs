@@ -73,7 +73,7 @@ namespace Nez.GeonBit
         /// <returns>Spritesheet step.</returns>
         public SpriteSheetStep GetStep(int index)
         {
-            if (index >= _steps.Count) { throw new Exceptions.OutOfRangeException("Spritesheet step out of range!"); }
+            if (index >= _steps.Count) { throw new System.ArgumentOutOfRangeException("Spritesheet step out of range!"); }
             return _steps[index];
         }
 
@@ -220,7 +220,7 @@ namespace Nez.GeonBit
             // sanity check
             if (startStep > endStep)
             {
-                throw new Exceptions.InvalidValueException("Animation clip ending step index cannot be smaller than starting step index!");
+                throw new System.InvalidOperationException("Animation clip ending step index cannot be smaller than starting step index!");
             }
 
             // store properties

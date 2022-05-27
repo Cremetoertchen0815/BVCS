@@ -51,6 +51,8 @@ namespace Nez
             set => SetUpdateOrder(value);
         }
 
+        public string Name;
+
         private bool _enabled = true;
         internal int _updateOrder = 0;
         internal bool isGettingRemoved = false;
@@ -130,6 +132,8 @@ namespace Nez
 
             return this;
         }
+
+
 
         #endregion
 

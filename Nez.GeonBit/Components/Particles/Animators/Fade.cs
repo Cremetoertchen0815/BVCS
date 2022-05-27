@@ -50,7 +50,7 @@ namespace Nez.GeonBit.Particles.Animators
         public override Component Clone() =>
             // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitter
             // so we'll still have the random factor applied on the cloned entity.
-            CopyBasics(new FadeAnimator(BaseProperties, FromAlpha, ToAlpha, FadingTime, _fadeTimeJitter));
+            new FadeAnimator(BaseProperties, FromAlpha, ToAlpha, FadingTime, _fadeTimeJitter);
 
         /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
@@ -77,8 +77,10 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Called when GameObject spawns.
         /// </summary>
-        protected override void OnSpawn()
+        public override void OnAddedToEntity()
         {
+            base.OnAddedToEntity();
+
             // add fading time jittering
             if (_fadeTimeJitter != 0f)
             {

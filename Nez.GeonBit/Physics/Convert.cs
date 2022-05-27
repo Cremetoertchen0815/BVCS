@@ -19,7 +19,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 
-namespace GeonBit.Core.Physics
+namespace Nez.GeonBit.Physics
 {
     /// <summary>
     /// Convert from MonoGame to Bullet3d.

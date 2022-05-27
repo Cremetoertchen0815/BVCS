@@ -32,12 +32,13 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+using BulletSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
 
-namespace GeonBit.Core.Physics
+namespace Nez.GeonBit.Physics
 {
     /// <summary>
     /// Draw Bullet3d physical world using MonoGame graphic device, for debug purposes.
@@ -134,7 +135,7 @@ namespace GeonBit.Core.Physics
         public void DrawDebugWorld(DynamicsWorld world)
         {
             // no camera? skip
-            if (Graphics.GraphicsManager.ActiveCamera == null)
+            if (GeonBitRenderer.ActiveCamera == null)
             {
                 return;
             }
@@ -149,8 +150,8 @@ namespace GeonBit.Core.Physics
             }
 
             // set effect properties
-            _effect.View = Graphics.GraphicsManager.ActiveCamera.View;
-            _effect.Projection = Graphics.GraphicsManager.ActiveCamera.Projection;
+            _effect.View = GeonBitRenderer.ActiveCamera.View;
+            _effect.Projection = GeonBitRenderer.ActiveCamera.Projection;
 
             // set self as the debug drawer
             world.DebugDrawer = this;
@@ -163,8 +164,8 @@ namespace GeonBit.Core.Physics
             RasterizerState.FillMode = FillMode.Solid;
             DepthStencilState.DepthBufferEnable = true;
             DepthStencilState.DepthBufferWriteEnable = true;
-            Graphics.GraphicsManager.GraphicsDevice.RasterizerState = RasterizerState;
-            Graphics.GraphicsManager.GraphicsDevice.DepthStencilState = DepthStencilState;
+            Core.GraphicsDevice.RasterizerState = RasterizerState;
+            Core.GraphicsDevice.DepthStencilState = DepthStencilState;
 
             // apply effect
             foreach (var pass in _effect.CurrentTechnique.Passes)

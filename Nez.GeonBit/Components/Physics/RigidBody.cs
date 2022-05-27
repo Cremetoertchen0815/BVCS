@@ -18,33 +18,34 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
+using Nez.GeonBit.Physics;
 
-namespace Nez.GeonBit.Physics
+namespace Nez.GeonBit
 {
     /// <summary>
     /// A rigid body component.
     /// </summary>
-    public class RigidBody : BasePhysicsComponent
+    public class RigidBody : BasePhysicsComponent, IUpdatable
     {
         // the core rigid body
-        private Core.Physics.RigidBody _body;
+        private Physics.RigidBody _body;
 
         /// <summary>
         /// The physical body in the core layer.
         /// </summary>
-        internal override Core.Physics.BasicPhysicalBody _PhysicalBody => _body;
+        internal override BasicPhysicalBody _PhysicalBody => _body;
 
         /// <summary>
         /// The shape used for this physical body.
         /// </summary>
-        private Core.Physics.CollisionShapes.ICollisionShape _shape = null;
+        private Physics.CollisionShapes.ICollisionShape _shape = null;
 
         /// <summary>
         /// Optional game object to force update whenever this body updates transformations.
         /// Useful if you want to attach a camera to a gameobject that is affected by this body and want to prevent
         /// "tearing" due to physics / nodes update times.
         /// </summary>
-        public GameObject SyncUpdateWith;
+        public GeonNode SyncUpdateWith;
 
         // body mass
         private float _mass;
@@ -118,7 +119,7 @@ namespace Nez.GeonBit.Physics
         /// <param name="mass">Body mass (0 for static).</param>
         /// <param name="inertia">Body inertia (0 for static).</param>
         /// <param name="friction">Body friction.</param>
-        public RigidBody(Core.Physics.CollisionShapes.ICollisionShape shape, float mass = 0f, float inertia = 0f, float friction = 1f) => CreateBody(shape, mass, inertia, friction);
+        public RigidBody(Physics.CollisionShapes.ICollisionShape shape, float mass = 0f, float inertia = 0f, float friction = 1f) => CreateBody(shape, mass, inertia, friction);
 
         /// <summary>
         /// Create the actual collision body.
@@ -127,12 +128,12 @@ namespace Nez.GeonBit.Physics
         /// <param name="mass">Body mass.</param>
         /// <param name="inertia">Body inertia.</param>
         /// <param name="friction">Body friction.</param>
-        private void CreateBody(Core.Physics.CollisionShapes.ICollisionShape shape, float mass, float inertia, float friction)
+        private void CreateBody(Physics.CollisionShapes.ICollisionShape shape, float mass, float inertia, float friction)
         {
             // store params and create the body
             _mass = mass;
             _intertia = inertia;
-            _body = new Core.Physics.RigidBody(shape, mass, inertia)
+            _body = new Physics.RigidBody(shape, mass, inertia)
             {
                 Friction = friction
             };
@@ -167,7 +168,7 @@ namespace Nez.GeonBit.Physics
         /// Called every frame in the Update() loop.
         /// Note: this is called only if GameObject is enabled.
         /// </summary>
-        protected override void OnUpdate()
+        public void Update()
         {
             // set const velocity
             if (ConstVelocity != null)
@@ -196,20 +197,7 @@ namespace Nez.GeonBit.Physics
             // normally, we want to update node before drawing entity.
             // but if our node is currently not visible or culled out, we still want to update it.
             // for that purpose we do the test below - if node was not drawn, update from within update() call.
-            if (!_GameObject.SceneNode.WasDrawnThisFrame && NeedToUpdataNode)
-            {
-                UpdateNodeTransforms();
-            }
-        }
-
-        /// <summary>
-        /// Called every frame before the scene renders.
-        /// Note: this is called only if GameObject is enabled.
-        /// </summary>
-        protected override void OnBeforeDraw()
-        {
-            // update scene node
-            if (!_alreadyUpdatedBodyInFrame && NeedToUpdataNode)
+            if (!Node.WasDrawnThisFrame && NeedToUpdataNode)
             {
                 UpdateNodeTransforms();
             }
@@ -227,15 +215,15 @@ namespace Nez.GeonBit.Physics
         {
             // update transforms
             Matrix newTrans = _body.WorldTransform;
-            _GameObject.SceneNode.SetWorldTransforms(ref newTrans);
+            Node.SetWorldTransforms(ref newTrans);
             _alreadyUpdatedBodyInFrame = true;
 
             // if have object to sync update with, update the object as well
             if (SyncUpdateWith != null)
             {
-                _GameObject.SceneNode.ForceFullUpdate(false);
-                _GameObject.SceneNode.UpdateTransformations(true);
-                SyncUpdateWith.Update();
+                Node.ForceFullUpdate(false);
+                Node.UpdateTransformations(true);
+                SyncUpdateWith.UpdateTransformations(true);
             }
         }
 
@@ -369,8 +357,8 @@ namespace Nez.GeonBit.Physics
             if (clearForces) { _body.ClearForces(true); }
 
             // note: we can't just use SceneNode.WorldTransformations because its calculated differently because there's a physical body attached (ourselves..)
-            WorldTransform = _GameObject.SceneNode.BuildTransformationsMatrix() *
-                (_GameObject.SceneNode.Parent != null ? _GameObject.SceneNode.Parent.WorldTransformations : Matrix.Identity);
+            WorldTransform = Node.BuildTransformationsMatrix() *
+                (Node.Parent != null ? Node.Parent.WorldTransformations : Matrix.Identity);
         }
 
         /// <summary>
@@ -378,7 +366,7 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         /// <param name="prevParent">Previous parent.</param>
         /// <param name="newParent">New parent.</param>
-        protected override void OnParentChange(GameObject prevParent, GameObject newParent)
+        public override void OnParentChange(GeonNode prevParent, GeonNode newParent)
         {
             _alreadyUpdatedBodyInFrame = false;
             base.OnParentChange(prevParent, newParent);
@@ -388,12 +376,12 @@ namespace Nez.GeonBit.Physics
         /// Called when this component is effectively removed from scene, eg when removed
         /// from a GameObject or when its GameObject is removed from scene.
         /// </summary>
-        protected override void OnRemoveFromScene()
+        public override void OnRemovedFromEntity()
         {
             // remove from physics world
             if (_isInWorld)
             {
-                _GameObject.ParentScene.Physics.RemoveBody(_body);
+                GeonBitCore.Instance.Physics.RemoveBody(_body);
                 _isInWorld = false;
             }
         }
@@ -402,12 +390,12 @@ namespace Nez.GeonBit.Physics
         /// Called when this component is effectively added to scene, eg when added
         /// to a GameObject currently in scene or when its GameObject is added to scene.
         /// </summary>
-        protected override void OnAddToScene()
+        public override void OnAddedToEntity()
         {
             // add to physics world
             if (!_isInWorld)
             {
-                _GameObject.ParentScene.Physics.AddBody(_body);
+                GeonBitCore.Instance.Physics.AddBody(_body);
                 UpdateNodeTransforms();
                 _isInWorld = true;
             }

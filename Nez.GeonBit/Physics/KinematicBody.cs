@@ -20,7 +20,7 @@
 using Microsoft.Xna.Framework;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("World")]
 
-namespace GeonBit.Core.Physics
+namespace Nez.GeonBit.Physics
 {
     /// <summary>
     /// A kinematic collision object that don't respond to forces.

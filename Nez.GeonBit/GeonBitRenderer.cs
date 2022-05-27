@@ -81,6 +81,26 @@ namespace Nez.GeonBit
         public static bool IsDeferredLightingEnabled => _DeferredLighting != null;
 
         /// <summary>
+        /// Currently active camera.
+        /// </summary>
+        public static Camera3D ActiveCamera;
+
+        internal static Systems.NezContentManager CurrentContentManager = Core.Content;
+
+        /// <summary>
+        /// The physical world of this scene.
+        /// </summary>
+        public static Physics.PhysicsWorld _physics;
+
+        /// <summary>
+        /// Get the physical world instance.
+        /// </summary>
+        public Physics.PhysicsWorld Physics
+        {
+            get { return _physics; }
+        }
+
+        /// <summary>
         /// Enable deferred lighting.
         /// </summary>
         /// <returns></returns>
@@ -221,13 +241,11 @@ namespace Nez.GeonBit
             NodesManager.EndFrame();
         }
 
-        public GeonBitRenderer(int renderOrder) : base(renderOrder) { }
+        public GeonBitRenderer(int renderOrder, Scene sourceScene) : base(renderOrder) 
+        {
+            _physics = new Physics.PhysicsWorld();
+            CurrentContentManager = sourceScene.Content;
+        }
 
-        /// <summary>
-        /// Currently active camera.
-        /// </summary>
-        public static Camera3D ActiveCamera;
-
-        public static GraphicsDeviceManager GraphicsDeviceManager;
     }
 }

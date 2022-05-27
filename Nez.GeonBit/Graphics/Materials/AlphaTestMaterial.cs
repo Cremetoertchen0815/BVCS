@@ -58,7 +58,7 @@ namespace Nez.GeonBit.Materials
         private int _referenceAlpha = 128;
 
         // empty effect instance to clone when creating new material
-        private static AlphaTestEffect _emptyEffect = new AlphaTestEffect(GraphicsManager.GraphicsDevice);
+        private static AlphaTestEffect _emptyEffect = new AlphaTestEffect(Core.GraphicsDevice);
 
         /// <summary>
         /// Create the default material from empty effect.

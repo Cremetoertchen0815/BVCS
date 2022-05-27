@@ -48,8 +48,8 @@ namespace Nez.GeonBit.Particles.Animators
         public override Component Clone() =>
             // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitters
             // so we'll still have the random factor applied on the cloned entity.
-            CopyBasics(new ScaleAnimator(BaseProperties, FromScale, ToScale, ScalingTime,
-                _scaleTimeJitter, _startScaleJitter, _endScaleJitter));
+            new ScaleAnimator(BaseProperties, FromScale, ToScale, ScalingTime,
+                _scaleTimeJitter, _startScaleJitter, _endScaleJitter);
 
         /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
@@ -108,27 +108,22 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Called when GameObject spawns.
         /// </summary>
-        protected override void OnSpawn()
+        public override void OnAddedToEntity()
         {
-            // add scaling time jittering
+            base.OnAddedToEntity();
             if (_scaleTimeJitter != 0f)
             {
-
                 ScalingTime += Random.NextFloat() * _scaleTimeJitter;
             }
-            // add scaling start jittering
             if (_startScaleJitter != 0f)
             {
                 FromScale += Vector3.One * (Random.NextFloat() * _startScaleJitter);
             }
-            // add scaling end jittering
             if (_endScaleJitter != 0f)
             {
                 ToScale += Vector3.One * (Random.NextFloat() * _endScaleJitter);
             }
-
-            // update starting scale
-            _GameObject.SceneNode.Scale = FromScale;
+            Node.Scale = FromScale;
         }
 
         /// <summary>
@@ -140,7 +135,7 @@ namespace Nez.GeonBit.Particles.Animators
             float position = AnimatorUtils.CalcTransitionPercent(TimeAnimated, ScalingTime);
 
             // calc current scale value
-            _GameObject.SceneNode.Scale = (FromScale * (1f - position)) + (ToScale * position);
+            Node.Scale = (FromScale * (1f - position)) + (ToScale * position);
         }
     }
 }

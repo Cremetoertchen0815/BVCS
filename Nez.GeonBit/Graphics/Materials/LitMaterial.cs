@@ -40,7 +40,7 @@ namespace Nez.GeonBit.Materials
         public override Effect Effect => _effect;
 
         /// <summary>
-        /// If true, will use the currently set lights manager in `Graphics.GraphicsManager.LightsManager` and call ApplyLights() with the lights from manager.
+        /// If true, will use the currently set lights manager in `Graphics.GeonBitRenderer.LightsManager` and call ApplyLights() with the lights from manager.
         /// </summary>
         protected override bool UseDefaultLightsManager => true;
 
@@ -116,7 +116,7 @@ namespace Nez.GeonBit.Materials
         /// Create new lit effect instance.
         /// </summary>
         /// <returns>New lit effect instance.</returns>
-        public virtual Effect CreateEffect() => ResourcesManager.Instance.GetEffect(_effectPath).Clone();
+        public virtual Effect CreateEffect() => Core.Content.LoadEffect(_effectPath).Clone();
 
         /// <summary>
         /// Create the lit material from an empty effect.

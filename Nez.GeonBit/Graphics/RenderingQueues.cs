@@ -377,13 +377,13 @@ namespace Nez.GeonBit
                 }
 
                 // apply queue states
-                GraphicsManager.GraphicsDevice.RasterizerState = queue.RasterizerState;
-                GraphicsManager.GraphicsDevice.DepthStencilState = queue.DepthStencilState;
+                Core.GraphicsDevice.RasterizerState = queue.RasterizerState;
+                Core.GraphicsDevice.DepthStencilState = queue.DepthStencilState;
 
                 // if need to sort by distance from camera, do the sorting
                 if (queue.SortByCamera)
                 {
-                    Vector3 camPos = GraphicsManager.ActiveCamera.Position;
+                    Vector3 camPos = GeonBitRenderer.ActiveCamera.Position;
                     queue.Entities.Sort(delegate (EntityInQueue x, EntityInQueue y)
                     {
                         return (int)(Vector3.Distance(camPos, y.World.Translation) * 100f - System.Math.Floor(y.Entity.CameraDistanceBias)) -
@@ -402,8 +402,8 @@ namespace Nez.GeonBit
             }
 
             // reset device states
-            GraphicsManager.GraphicsDevice.RasterizerState = _defaultRasterizerState;
-            GraphicsManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            Core.GraphicsDevice.RasterizerState = _defaultRasterizerState;
+            Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
         }
 
         /// <summary>

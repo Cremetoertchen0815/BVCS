@@ -36,7 +36,7 @@ namespace Nez.GeonBit.Materials
         public override Effect Effect => _effect;
 
         // empty effect instance to clone when creating new material
-        private static BasicEffect _emptyEffect = new BasicEffect(GraphicsManager.GraphicsDevice);
+        private static BasicEffect _emptyEffect = new BasicEffect(Core.GraphicsDevice);
 
         /// <summary>
         /// Create the default material from empty effect.

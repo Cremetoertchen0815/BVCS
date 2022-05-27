@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BulletSharp, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BulletSharp.0.11.1\lib\net40-client\BulletSharp.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework, Version=3.8.0.1641, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\lib\net452\MonoGame.Framework.dll</HintPath>
     </Reference>
@@ -71,11 +74,9 @@
     <Compile Include="Components\Particles\Animators\Rotation.cs" />
     <Compile Include="Components\Particles\Animators\Scale.cs" />
     <Compile Include="Components\Particles\Animators\SpawnRandomizer.cs" />
-    <Compile Include="Components\Particles\Docs.cs" />
     <Compile Include="Components\Particles\ParticleSystem.cs" />
     <Compile Include="Components\Physics\BasePhysicsComponent.cs" />
     <Compile Include="Components\Physics\BodyShapesInfo.cs" />
-    <Compile Include="Components\Physics\Docs.cs" />
     <Compile Include="Components\Physics\KinematicBody.cs" />
     <Compile Include="Components\Physics\RigidBody.cs" />
     <Compile Include="Components\Physics\StaticBody.cs" />
@@ -98,7 +99,7 @@
     <Compile Include="Graphics\Entities\SkinnedModelEntity.cs" />
     <Compile Include="Graphics\Entities\SpriteEntity.cs" />
     <Compile Include="Graphics\Entities\SpriteSheet.cs" />
-    <Compile Include="Graphics\GeonBitRenderer.cs" />
+    <Compile Include="GeonBitRenderer.cs" />
     <Compile Include="Graphics\Lights\DeferredLighting.cs" />
     <Compile Include="Graphics\Lights\ILightsManager.cs" />
     <Compile Include="Graphics\Lights\LightsManager.cs" />
@@ -165,5 +166,7 @@
       <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets'))" />
+    <Error Condition="!Exists('..\packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets'))" />
   </Target>
+  <Import Project="..\packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets" Condition="Exists('..\packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets')" />
 </Project>

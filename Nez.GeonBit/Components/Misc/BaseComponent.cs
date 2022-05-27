@@ -14,5 +14,18 @@ namespace Nez.GeonBit
         {
             Node = Entity.GetComponent<GeonNode>();
         }
+
+        public virtual BaseComponent  CopyBasics(BaseComponent c)
+        {
+            return c;
+        }
+
+        internal void Destroy()
+        {
+
+        }
+
+        public virtual void OnParentChange(GeonNode from, GeonNode to) { }
+        public virtual void OnTransformationUpdate() { }
     }
 }

@@ -19,7 +19,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 
-namespace GeonBit.Core.Physics.CollisionShapes
+namespace Nez.GeonBit.Physics.CollisionShapes
 {
     /// <summary>
     /// Height map collision shape (used for terrains).

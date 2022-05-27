@@ -20,7 +20,7 @@
 using Microsoft.Xna.Framework;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("World")]
 
-namespace GeonBit.Core.Physics
+namespace Nez.GeonBit.Physics
 {
     /// <summary>
     /// A static collision object that does not respond to events and can't be moved.

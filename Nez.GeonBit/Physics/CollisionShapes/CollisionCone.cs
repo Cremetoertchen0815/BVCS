@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-namespace GeonBit.Core.Physics.CollisionShapes
+namespace Nez.GeonBit.Physics.CollisionShapes
 {
     /// <summary>
     /// Which axis the cone is aligned with.

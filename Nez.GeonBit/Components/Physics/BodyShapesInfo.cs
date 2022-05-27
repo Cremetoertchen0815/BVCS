@@ -18,10 +18,10 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using GeonBit.Core.Physics.CollisionShapes;
 using Microsoft.Xna.Framework;
+using Nez.GeonBit.Physics.CollisionShapes;
 
-namespace Nez.GeonBit.Physics
+namespace Nez.GeonBit
 {
     /// <summary>
     /// Different physical body shapes we can have.

@@ -19,7 +19,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 
-namespace GeonBit.Core.Physics
+namespace Nez.GeonBit.Physics
 {
     /// <summary>
     /// GeonBit.Core.Physics implement physics related stuff.
@@ -59,7 +59,7 @@ namespace GeonBit.Core.Physics
             /// <summary>
             /// Physical body we collided with.
             /// </summary>
-            public ECS.Components.Physics.BasePhysicsComponent CollisionBody;
+            public BasePhysicsComponent CollisionBody;
 
             /// <summary>
             /// Collision normal.
@@ -153,7 +153,7 @@ namespace GeonBit.Core.Physics
             };
 
             // create debug renderer
-            _debugDraw = new PhysicsDebugDraw(Graphics.GraphicsManager.GraphicsDevice);
+            _debugDraw = new PhysicsDebugDraw(Core.GraphicsDevice);
 
             // set default gravity
             SetGravity(Vector3.Down * 9.8f);
@@ -286,7 +286,7 @@ namespace GeonBit.Core.Physics
         /// <param name="start">Start ray vector.</param>
         /// <param name="end">End ray vector.</param>
         /// <param name="self">Physical body to ignore.</param>
-        public RaycastResults Raycast(Vector3 start, Vector3 end, ECS.Components.Physics.BasePhysicsComponent self)
+        public RaycastResults Raycast(Vector3 start, Vector3 end, BasePhysicsComponent self)
         {
             // convert start and end vectors to bullet vectors
             var bStart = ToBullet.Vector(start);

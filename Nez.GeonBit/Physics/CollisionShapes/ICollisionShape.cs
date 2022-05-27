@@ -18,10 +18,10 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-namespace GeonBit.Core.Physics.CollisionShapes
+namespace Nez.GeonBit.Physics.CollisionShapes
 {
     /// <summary>
-    /// GeonBit.Core.Physics.CollisionShapes contain all the physical shapes we can use for rigid bodies.
+    /// GeonBit.Physics.CollisionShapes contain all the physical shapes we can use for rigid bodies.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGenerated]
     internal class NamespaceDoc

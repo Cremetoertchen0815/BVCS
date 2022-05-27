@@ -36,8 +36,8 @@ namespace Nez.GeonBit.Particles.Animators
             if (originalLen == 0f) originalLen = 1f;
             var newVelocity = baseVector;
             newVelocity.X += (Random.NextFloat() * (randDir.X * 2) - randDir.X);
-            newVelocity.Y += (float)(Random.NextFloat() * (randDir.Y * 2) - randDir.Y);
-            newVelocity.Z += (float)(Random.NextFloat() * (randDir.Z * 2) - randDir.Z);
+            newVelocity.Y += (Random.NextFloat() * (randDir.Y * 2) - randDir.Y);
+            newVelocity.Z += (Random.NextFloat() * (randDir.Z * 2) - randDir.Z);
             newVelocity.Normalize();
             return newVelocity * originalLen;
         }
@@ -45,7 +45,7 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Random a vector from min and max.
         /// </summary>
-        public static Vector3 RandVector(Random random, Vector3 minVector, Vector3 maxVector) => new Vector3(
+        public static Vector3 RandVector(Vector3 minVector, Vector3 maxVector) => new Vector3(
                     minVector.X + (Random.NextFloat() * (maxVector.X - minVector.X)),
                     minVector.Y + (Random.NextFloat() * (maxVector.Y - minVector.Y)),
                     minVector.Z + (Random.NextFloat() * (maxVector.Z - minVector.Z)));
@@ -53,7 +53,7 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Random a vector from max vector only.
         /// </summary>
-        public static Vector3 RandVector(Random random, Vector3 maxVector) => new Vector3(
+        public static Vector3 RandVector(Vector3 maxVector) => new Vector3(
                     -maxVector.X + (Random.NextFloat() * (maxVector.X * 2f)),
                     -maxVector.Y + (Random.NextFloat() * (maxVector.Y * 2f)),
                     -maxVector.Z + (Random.NextFloat() * (maxVector.Z * 2f)));
@@ -61,18 +61,18 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Random color value from base and rand color.
         /// </summary>
-        public static Color RandColor(Random random, Color baseColor, Color colorJitter) => new Color(
-                    (byte)Math.Min(255, baseColor.R + random.Next(colorJitter.R)),
-                    (byte)Math.Min(255, baseColor.G + random.Next(colorJitter.G)),
-                    (byte)Math.Min(255, baseColor.B + random.Next(colorJitter.B)));
+        public static Color RandColor(Color baseColor, Color colorJitter) => new Color(
+                    (byte)Math.Min(255, baseColor.R + Random.Range(0, colorJitter.R)),
+                    (byte)Math.Min(255, baseColor.G + Random.Range(0, colorJitter.G)),
+                    (byte)Math.Min(255, baseColor.B + Random.Range(0, colorJitter.B)));
 
         /// <summary>
         /// Random color value from min and max color values.
         /// </summary>
-        public static Color RandColor2(Random random, Color minColor, Color maxColor) => new Color(
-                    random.Next(minColor.R, maxColor.R),
-                    random.Next(minColor.G, maxColor.G),
-                    random.Next(minColor.B, maxColor.B));
+        public static Color RandColor2(Color minColor, Color maxColor) => new Color(
+                    Random.Range(minColor.R, maxColor.R),
+                    Random.Range(minColor.G, maxColor.G),
+                    Random.Range(minColor.B, maxColor.B));
 
         /// <summary>
         /// Calculate transition percent from current time and max time (return values from 0f to 1f).

@@ -126,7 +126,7 @@ namespace Nez.GeonBit
         public override void Draw(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // not visible / no active camera? skip
-            if (!Visible || GraphicsManager.ActiveCamera == null)
+            if (!Visible || GeonBitRenderer.ActiveCamera == null)
             {
                 return;
             }
@@ -137,7 +137,7 @@ namespace Nez.GeonBit
             // draw all meshes
             foreach (DictionaryEntry mesh in _meshes)
             {
-                GraphicsManager.DrawEntity(mesh.Value as MeshEntity, worldTransformations);
+                GeonBitRenderer.DrawEntity(mesh.Value as MeshEntity, worldTransformations);
             }
         }
 

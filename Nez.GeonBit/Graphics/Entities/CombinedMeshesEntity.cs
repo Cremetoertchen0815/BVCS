@@ -131,7 +131,7 @@ namespace Nez.GeonBit
             public void Build()
             {
                 // get device
-                var device = Graphics.GraphicsManager.GraphicsDevice;
+                var device = Graphics.Core.GraphicsDevice;
 
                 // build vertex buffer
                 Vertices.Trim();
@@ -577,7 +577,7 @@ namespace Nez.GeonBit
         public override void DoEntityDraw(ref Matrix worldTransformations)
         {
             // get graphic device
-            var device = Graphics.GraphicsManager.GraphicsDevice;
+            var device = Graphics.Core.GraphicsDevice;
 
             // iterate combined parts
             foreach (var combinedPart in _parts)

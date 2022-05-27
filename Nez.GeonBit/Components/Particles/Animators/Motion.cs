@@ -54,8 +54,8 @@ namespace Nez.GeonBit.Particles.Animators
         public override Component Clone() =>
             // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitter
             // so we'll still have the random factor applied on the cloned entity.
-            CopyBasics(new MotionAnimator(BaseProperties, Velocity, Acceleration, MaxVelocity,
-                _velocityJitter, _accelerationJitter, _velocityDirectionJitter, _accelerationDirectionJitter));
+            new MotionAnimator(BaseProperties, Velocity, Acceleration, MaxVelocity,
+                _velocityJitter, _accelerationJitter, _velocityDirectionJitter, _accelerationDirectionJitter);
 
         /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
@@ -90,8 +90,10 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Called when GameObject spawns.
         /// </summary>
-        protected override void OnSpawn()
+        public override void OnAddedToEntity()
         {
+            base.OnAddedToEntity();
+
             // add velocity jitter
             if (_velocityJitter != 0f)
             {
@@ -117,12 +119,12 @@ namespace Nez.GeonBit.Particles.Animators
         protected override void DoAnimation(float speedFactor)
         {
             // move scene node
-            _GameObject.SceneNode.Position += Velocity * speedFactor;
+            Node.Position += Velocity * speedFactor;
 
             // add acceleration
             if (Acceleration != null && (MaxVelocity == 0f || Velocity.Length() < MaxVelocity))
             {
-                Velocity += (Vector3)Acceleration * Managers.TimeManager.TimeFactor;
+                Velocity += (Vector3)Acceleration * Time.DeltaTime;
             }
         }
     }

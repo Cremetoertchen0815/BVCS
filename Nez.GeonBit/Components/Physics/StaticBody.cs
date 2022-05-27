@@ -18,7 +18,9 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-namespace Nez.GeonBit.Physics
+using Nez.GeonBit.Physics;
+
+namespace Nez.GeonBit
 {
     /// <summary>
     /// A Static Body component.
@@ -28,17 +30,17 @@ namespace Nez.GeonBit.Physics
     public class StaticBody : BasePhysicsComponent
     {
         // the core static body
-        private Core.Physics.StaticBody _body;
+        private Physics.StaticBody _body;
 
         /// <summary>
         /// The physical body in the core layer.
         /// </summary>
-        internal override Core.Physics.BasicPhysicalBody _PhysicalBody => _body;
+        internal override BasicPhysicalBody _PhysicalBody => _body;
 
         /// <summary>
         /// The shape used for this physical body.
         /// </summary>
-        private Core.Physics.CollisionShapes.ICollisionShape _shape = null;
+        private Physics.CollisionShapes.ICollisionShape _shape = null;
 
         // are we currently in physics world?
         private bool _isInWorld = false;
@@ -53,16 +55,16 @@ namespace Nez.GeonBit.Physics
         /// Create the static collision body from shape instance.
         /// </summary>
         /// <param name="shape">Shape to use.</param>
-        public StaticBody(Core.Physics.CollisionShapes.ICollisionShape shape) => CreateBody(shape);
+        public StaticBody(Physics.CollisionShapes.ICollisionShape shape) => CreateBody(shape);
 
         /// <summary>
         /// Create the actual collision body.
         /// </summary>
         /// <param name="shape">Collision shape.</param>
-        private void CreateBody(Core.Physics.CollisionShapes.ICollisionShape shape)
+        private void CreateBody(Physics.CollisionShapes.ICollisionShape shape)
         {
             _shape = shape;
-            _body = new Core.Physics.StaticBody(shape)
+            _body = new Physics.StaticBody(shape)
             {
                 EcsComponent = this
             };
@@ -85,18 +87,18 @@ namespace Nez.GeonBit.Physics
         /// Called every time scene node transformation updates.
         /// Note: this is called only if GameObject is enabled and have Update events enabled.
         /// </summary>
-        protected override void OnTransformationUpdate() => _body.WorldTransform = _GameObject.SceneNode.WorldTransformations;
+        public override void OnTransformationUpdate() => _body.WorldTransform = Node.WorldTransformations;
 
         /// <summary>
         /// Called when this component is effectively removed from scene, eg when removed
         /// from a GameObject or when its GameObject is removed from scene.
         /// </summary>
-        protected override void OnRemoveFromScene()
+        public override void OnRemovedFromEntity()
         {
             // remove from physics world
             if (_isInWorld)
             {
-                _GameObject.ParentScene.Physics.RemoveBody(_body);
+                GeonBitCore.Instance.Physics.RemoveBody(_body);
                 _isInWorld = false;
             }
         }
@@ -105,12 +107,12 @@ namespace Nez.GeonBit.Physics
         /// Called when this component is effectively added to scene, eg when added
         /// to a GameObject currently in scene or when its GameObject is added to scene.
         /// </summary>
-        protected override void OnAddToScene()
+        public override void OnAddedToEntity()
         {
             // add to physics world
             if (!_isInWorld)
             {
-                _GameObject.ParentScene.Physics.AddBody(_body);
+                GeonBitCore.Instance.Physics.AddBody(_body);
                 _isInWorld = true;
             }
 

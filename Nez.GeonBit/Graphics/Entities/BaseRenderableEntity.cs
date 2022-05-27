@@ -86,6 +86,8 @@ namespace Nez.GeonBit
         /// </summary>
         protected BoundingSphere _lastBoundingSphere;
 
+        protected Camera3D _camera;
+
         /// <summary>
         /// Get / Set if this entity is visible.
         /// </summary>
@@ -122,7 +124,7 @@ namespace Nez.GeonBit
         public virtual void Draw(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // not visible / no active camera? skip
-            if (!Visible || GraphicsManager.ActiveCamera == null)
+            if (!Visible || _camera == null)
             {
                 return;
             }
@@ -134,7 +136,7 @@ namespace Nez.GeonBit
             GetBoundingSphere(parent, ref localTransformations, ref worldTransformations);
 
             // call to draw this entity - this will either add to the corresponding rendering queue, or draw immediately if have no drawing queue.
-            GraphicsManager.DrawEntity(this, worldTransformations);
+            GeonBitRenderer.DrawEntity(this, worldTransformations);
         }
 
         /// <summary>
@@ -143,7 +145,7 @@ namespace Nez.GeonBit
         /// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
         public virtual void DoEntityDraw(ref Matrix worldTransformations) =>
             // set blend state
-            GraphicsManager.GraphicsDevice.BlendState = BlendingState;
+            Core.GraphicsDevice.BlendState = BlendingState;
 
         /// <summary>
         /// Get the bounding box of this entity, either from cache or calculate it.

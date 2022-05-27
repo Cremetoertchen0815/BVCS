@@ -83,6 +83,11 @@ namespace Nez
         private bool _enabled = true;
         internal int _updateOrder = 0;
 
+        /// <summary>
+        /// Internal dictionary of attached data.
+        /// </summary>
+        private Dictionary<string, object> _internalData = null;
+
         #endregion
 
 
@@ -244,6 +249,39 @@ namespace Nez
             }
 
             return this;
+        }
+
+        /// <summary>
+        /// Attach internal data to game object.
+        /// </summary>
+        /// <param name="key">Internal data key.</param>
+        /// <param name="value">Internal data value.</param>
+        public void SetInternalData(ref string key, object value)
+        {
+            // create internal data dictionary if needed
+            if (_internalData == null)
+            {
+                _internalData = new Dictionary<string, object>();
+            }
+
+            // set value
+            _internalData[key] = value;
+        }
+
+        /// <summary>
+        /// Get internal data from game object.
+        /// </summary>
+        /// <param name="key">Internal data key.</param>
+        public object GetInternalData(ref string key)
+        {
+            // if internal data does not exist, return null
+            if (_internalData == null)
+            {
+                return null;
+            }
+
+            // get value
+            return _internalData[key];
         }
 
         /// <summary>
@@ -445,6 +483,9 @@ namespace Nez
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         public T GetComponent<T>() where T : Component => Components.GetComponent<T>(false);
 
+        public T GetComponent<T>(string name) where T : Component => Components.GetComponent<T>(name, false);
+
+
         /// <summary>
         /// Tries to get the component of type T. If no components are found returns false.
         /// </summary>
@@ -497,6 +538,8 @@ namespace Nez
         /// <returns>The component.</returns>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         public List<T> GetComponents<T>() where T : Component => Components.GetComponents<T>();
+
+        public List<T> GetComponents<T>(string name) where T : Component => Components.GetComponents<T>(name);
 
         /// <summary>
         /// removes the first Component of type T from the components list

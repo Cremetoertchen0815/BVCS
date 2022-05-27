@@ -30,7 +30,7 @@ namespace Nez.GeonBit.Particles
         /// <summary>
         /// The particle GameObject (we emit clone of these objects).
         /// </summary>
-        public GameObject ParticlePrototype { get; private set; }
+        public Entity ParticlePrototype { get; private set; }
 
         /// <summary>
         /// How often to spawn particles (value range should be 0f - 1f).
@@ -69,7 +69,7 @@ namespace Nez.GeonBit.Particles
         /// <param name="minCountPerSpawn">How many min particles to spawn every time.</param>
         /// <param name="maxCountPerSpawn">How many max particles to spawn every time.</param>
         /// <param name="frequencyChange">Change frequency over time.</param>
-        public ParticleType(GameObject particle, float frequency = 0.01f, uint minCountPerSpawn = 1, uint maxCountPerSpawn = 1, float frequencyChange = 0f)
+        public ParticleType(Entity particle, float frequency = 0.01f, uint minCountPerSpawn = 1, uint maxCountPerSpawn = 1, float frequencyChange = 0f)
         {
             ParticlePrototype = particle.Clone();
             Frequency = frequency;
@@ -88,7 +88,7 @@ namespace Nez.GeonBit.Particles
     /// <summary>
     /// Particle system component that emit predefined particles.
     /// </summary>
-    public class ParticleSystem : BaseComponent
+    public class ParticleSystem : BaseComponent, IUpdatable
     {
         // list of particle types
         private List<ParticleType> _particles;
@@ -153,10 +153,10 @@ namespace Nez.GeonBit.Particles
         /// <summary>
         /// Called every const X seconds.
         /// </summary>
-        protected override void OnFixedUpdate()
+        public void Update()
         {
             // get time factor
-            float timeFactor = Managers.TimeManager.FixedTimeFactor * SpawningSpeedFactor;
+            float timeFactor = Time.DeltaTime * SpawningSpeedFactor;
 
             // increase time alive
             _timeAlive += timeFactor;
@@ -165,9 +165,9 @@ namespace Nez.GeonBit.Particles
             if (TimeToLive != 0f && _timeAlive > TimeToLive)
             {
                 // destroy parent if needed (note: if destroying parent we don't need to destroy self as well)
-                if (DestroyParentWhenExpired && !_GameObject.WasDestroyed)
+                if (DestroyParentWhenExpired && !Entity.IsDestroyed)
                 {
-                    _GameObject.Destroy();
+                    Entity.Destroy();
                     return;
                 }
 
@@ -194,24 +194,25 @@ namespace Nez.GeonBit.Particles
                 if (frequency <= 0f) { continue; }
 
                 // check if should spawn particles
-                if (frequency >= (float)_random.NextDouble())
+                if (frequency >= Random.NextFloat())
                 {
                     // rand quantity to spawn
-                    uint toSpawn = (uint)_random.Next((int)particleType.MinParticlesPerSpawn, (int)particleType.MaxParticlesPerSpawn);
+                    uint toSpawn = (uint)Random.Range((int)particleType.MinParticlesPerSpawn, (int)particleType.MaxParticlesPerSpawn);
 
                     // spawn particles
                     for (int i = 0; i < toSpawn; ++i)
                     {
                         // create new particle and add to self game object
-                        GameObject newPart = particleType.ParticlePrototype.Clone();
-                        newPart.Parent = _GameObject;
+                        var newPart = particleType.ParticlePrototype.Clone().GetComponent<GeonNode>();
+                        newPart.Parent = Node;
 
                         // if need to add particles to root
                         if (AddParticlesToRoot)
                         {
-                            Vector3 position = newPart.SceneNode.WorldPosition;
-                            newPart.Parent = Managers.ActiveScene.Root;
-                            newPart.SceneNode.Position = position;
+                            var newNode = newPart.GetComponent<GeonNode>();
+                            Vector3 position = newNode.WorldPosition;
+                            newPart.Parent = null;
+                            newNode.Position = position;
                         }
                     }
                 }
@@ -224,7 +225,7 @@ namespace Nez.GeonBit.Particles
         /// <returns>Cloned copy of this component.</returns>
         public override Component Clone()
         {
-            var ret = CopyBasics(new ParticleSystem()) as ParticleSystem;
+            var ret = new ParticleSystem();
             ret.TimeToLive = TimeToLive;
             ret.DestroyParentWhenExpired = DestroyParentWhenExpired;
             ret.Interval = Interval;

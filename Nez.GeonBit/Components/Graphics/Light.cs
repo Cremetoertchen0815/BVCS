@@ -28,7 +28,6 @@ namespace Nez.GeonBit
     {
         // the core light source.
         private Lights.LightSource _light;
-        private GeonNode Node;
 
         /// <summary>
         /// Light direction, if its a directional light.
@@ -124,7 +123,7 @@ namespace Nez.GeonBit
         /// Called every time scene node transformation updates.
         /// Note: this is called only if GameObject is enabled and have Update events enabled.
         /// </summary>
-        protected override void OnTransformationUpdate()
+        public override void OnTransformationUpdate()
         {
             if (!_light.IsInfinite) { _light.Position = Node.WorldPosition; }
         }
@@ -142,7 +141,7 @@ namespace Nez.GeonBit
         public override void OnAddedToEntity()
         {
             base.OnAddedToEntity();
-            GeonBitRenderer.Lights.AddLight(_light);
+            GeonBitRenderer.ActiveLightsManager.AddLight(_light);
         }
     }
 }

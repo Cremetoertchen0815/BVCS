@@ -19,7 +19,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 
-namespace GeonBit.Core.Physics.CollisionShapes
+namespace Nez.GeonBit.Physics.CollisionShapes
 {
     /// <summary>
     /// Endless plane collision shape.

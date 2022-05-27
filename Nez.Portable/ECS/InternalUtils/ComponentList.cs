@@ -221,6 +221,29 @@ namespace Nez
             return null;
         }
 
+        public T GetComponent<T>(string name, bool onlyReturnInitializedComponents) where T : Component
+        {
+            for (int i = 0; i < _components.Length; i++)
+            {
+                var component = _components.Buffer[i];
+                if (component is T && component.Name == name)
+                    return component as T;
+            }
+
+            // we optionally check the pending components just in case addComponent and getComponent are called in the same frame
+            if (!onlyReturnInitializedComponents)
+            {
+                for (int i = 0; i < _componentsToAdd.Count; i++)
+                {
+                    var component = _componentsToAdd[i];
+                    if (component is T)
+                        return component as T;
+                }
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Gets all the components of type T without a List allocation
         /// </summary>
@@ -243,6 +266,28 @@ namespace Nez
                 if (component is T)
                     components.Add(component as T);
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public List<T> GetComponents<T>(string name) where T : Component
+        {
+            var components = new List<T>();
+            for (int i = 0; i < _components.Length; i++)
+            {
+                var component = _components.Buffer[i];
+                if (component is T && component.Name == name)
+                    components.Add(component as T);
+            }
+
+            // we also check the pending components just in case addComponent and getComponent are called in the same frame
+            for (int i = 0; i < _componentsToAdd.Count; i++)
+            {
+                var component = _componentsToAdd[i];
+                if (component is T && component.Name == name)
+                    components.Add(component as T);
+            }
+
+            return components;
         }
 
         /// <summary>

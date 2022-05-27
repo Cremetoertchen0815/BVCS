@@ -71,7 +71,7 @@ namespace Nez.GeonBit.Lights
             Dispose();
 
             // get device and screen width and height
-            var device = GraphicsManager.GraphicsDevice;
+            var device = Core.GraphicsDevice;
             int backBufferWidth = device.PresentationParameters.BackBufferWidth;
             int backBufferHeight = device.PresentationParameters.BackBufferHeight;
 
@@ -100,7 +100,7 @@ namespace Nez.GeonBit.Lights
         /// </summary>
         private void SetGBuffer()
         {
-            var device = GraphicsManager.GraphicsDevice;
+            var device = Core.GraphicsDevice;
             device.SetRenderTargets(new RenderTargetBinding[] { _rtColorSpecularIntensity, _rtNormalsSpecularPower, _rtDepth });
         }
 
@@ -109,7 +109,7 @@ namespace Nez.GeonBit.Lights
         /// </summary>
         private void ResolveGBuffer()
         {
-            var device = GraphicsManager.GraphicsDevice;
+            var device = Core.GraphicsDevice;
             device.SetRenderTarget(null);
         }
 
@@ -118,7 +118,7 @@ namespace Nez.GeonBit.Lights
         /// </summary>
         private void ClearGBuffer()
         {
-            var device = GraphicsManager.GraphicsDevice;
+            var device = Core.GraphicsDevice;
             device.Clear(Color.Gray);
         }
     }

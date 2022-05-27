@@ -17,10 +17,11 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
+using BulletSharp;
 using Microsoft.Xna.Framework;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("World")]
 
-namespace GeonBit.Core.Physics
+namespace Nez.GeonBit.Physics
 {
     /// <summary>
     /// A Physical body is the basic object of the physics world.
@@ -221,7 +222,7 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// The component associated with this physical body.
         /// </summary>
-        internal ECS.Components.Physics.BasePhysicsComponent EcsComponent;
+        internal BasePhysicsComponent EcsComponent;
 
         // current collision group
         private short _collisionGroup = short.MaxValue;

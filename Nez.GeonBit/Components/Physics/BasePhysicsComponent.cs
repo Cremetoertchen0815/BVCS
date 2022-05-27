@@ -18,8 +18,9 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
+using Nez.GeonBit.Physics;
 
-namespace Nez.GeonBit.Physics
+namespace Nez.GeonBit
 {
     /// <summary>
     /// Basic physical component.
@@ -30,7 +31,7 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// The physical body in the core layer.
         /// </summary>
-        internal virtual Core.Physics.BasicPhysicalBody _PhysicalBody { get; }
+        internal virtual BasicPhysicalBody _PhysicalBody { get; }
 
         /// <summary>
         /// Return if this is a static object.
@@ -146,11 +147,11 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         /// <param name="other">The other body we collide with.</param>
         /// <param name="data">Extra collision data.</param>
-        public void CallCollisionStart(BasePhysicsComponent other, Core.Physics.CollisionData data)
+        public void CallCollisionStart(BasePhysicsComponent other, CollisionData data)
         {
-            if (_GameObject != null && other._GameObject != null)
+            if (Entity != null && other.Entity != null)
             {
-                _GameObject.CallCollisionStart(other._GameObject, data);
+                //_GameObject.CallCollisionStart(other._GameObject, data);
             }
         }
 
@@ -167,9 +168,9 @@ namespace Nez.GeonBit.Physics
         /// <param name="other">The other body we collided with, but no longer.</param>
         public void CallCollisionEnd(BasePhysicsComponent other)
         {
-            if (_GameObject != null && other._GameObject != null)
+            if (Entity != null && other.Entity != null)
             {
-                _GameObject.CallCollisionEnd(other._GameObject);
+                //_GameObject.CallCollisionEnd(other._GameObject);
             }
         }
 
@@ -179,9 +180,9 @@ namespace Nez.GeonBit.Physics
         /// <param name="other">The other body we are colliding with.</param>
         public void CallCollisionProcess(BasePhysicsComponent other)
         {
-            if (_GameObject != null && other._GameObject != null)
+            if (Entity != null && other.Entity != null)
             {
-                _GameObject.CallCollisionProcess(other._GameObject);
+                //_GameObject.CallCollisionProcess(other._GameObject);
             }
         }
 
@@ -199,25 +200,25 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         /// <param name="prevParent">Previous parent.</param>
         /// <param name="newParent">New parent.</param>
-        protected override void OnParentChange(GameObject prevParent, GameObject newParent)
+        public override void OnParentChange(GeonNode prevParent, GeonNode newParent)
         {
             // make previous parent scene node no longer use external transformations
             if (prevParent != null)
             {
-                prevParent.SceneNode.UseExternalTransformations = TakeOverNodeTransformations;
+                prevParent.UseExternalTransformations = TakeOverNodeTransformations;
             }
 
             // if we got a new parent:
             if (newParent != null)
             {
                 // make sure it doesn't already have a physical body
-                if (newParent.PhysicalBody != null && newParent.PhysicalBody != this)
+                if (newParent.Entity.GetComponent<BasePhysicsComponent>() != null && newParent.Entity.GetComponent<BasePhysicsComponent>() != this)
                 {
                     throw new System.InvalidOperationException("Cannot add multiple physical bodies to a single Game Object!");
                 }
 
                 // set its node to relay on external transformations.
-                newParent.SceneNode.UseExternalTransformations = TakeOverNodeTransformations;
+                newParent.UseExternalTransformations = TakeOverNodeTransformations;
                 if (TakeOverNodeTransformations) { UpdateNodeTransforms(); }
             }
         }
@@ -226,12 +227,12 @@ namespace Nez.GeonBit.Physics
         /// Called when this component is effectively removed from scene, eg when removed
         /// from a GameObject or when its GameObject is removed from scene.
         /// </summary>
-        protected override void OnRemoveFromScene()
+        public override void OnRemovedFromEntity()
         {
             // remove from physics world
             if (_isInWorld)
             {
-                _GameObject.ParentScene.Physics.RemoveBody(_PhysicalBody);
+                GeonBitCore.Instance.Physics.RemoveBody(_PhysicalBody);
                 _isInWorld = false;
             }
         }
@@ -240,12 +241,12 @@ namespace Nez.GeonBit.Physics
         /// Called when this component is effectively added to scene, eg when added
         /// to a GameObject currently in scene or when its GameObject is added to scene.
         /// </summary>
-        protected override void OnAddToScene()
+        public override void OnAddedToEntity()
         {
             // add to physics world
             if (!_isInWorld)
             {
-                _GameObject.ParentScene.Physics.AddBody(_PhysicalBody);
+                GeonBitCore.Instance.Physics.AddBody(_PhysicalBody);
                 _isInWorld = true;
             }
         }
@@ -255,7 +256,7 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         /// <param name="copyTo">Other component to copy values to.</param>
         /// <returns>The object we are copying properties to.</returns>
-        protected override BaseComponent CopyBasics(BaseComponent copyTo)
+        public override BaseComponent CopyBasics(BaseComponent copyTo)
         {
             var ret = copyTo as BasePhysicsComponent;
             ret.InvokeCollisionEvents = InvokeCollisionEvents;

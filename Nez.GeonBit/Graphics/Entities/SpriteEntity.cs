@@ -139,7 +139,7 @@ namespace Nez.GeonBit
             else
             {
                 // create material
-                Materials.MaterialAPI material = new Materials.SpriteMaterial(new AlphaTestEffect(GraphicsManager.GraphicsDevice), true)
+                Materials.MaterialAPI material = new Materials.SpriteMaterial(new AlphaTestEffect(Core.GraphicsDevice), true)
                 {
 
                     // set material texture and return
@@ -238,14 +238,14 @@ namespace Nez.GeonBit
                 if (LockedAxis != null)
                 {
                     newWorld = Matrix.CreateScale(scale) *
-                               Matrix.CreateConstrainedBillboard(position, GraphicsManager.ActiveCamera.Position,
+                               Matrix.CreateConstrainedBillboard(position, GeonBitRenderer.ActiveCamera.Position,
                                LockedAxis.Value, null, null);
                 }
                 // set rotation based on camera without any locked axis
                 else
                 {
                     newWorld = Matrix.CreateScale(scale) *
-                               Matrix.CreateBillboard(position, GraphicsManager.ActiveCamera.Position,
+                               Matrix.CreateBillboard(position, GeonBitRenderer.ActiveCamera.Position,
                                Vector3.Up, null);
                 }
             }
@@ -265,7 +265,7 @@ namespace Nez.GeonBit
             // draw the cube vertices
             material.IterateEffectPasses((EffectPass pass) =>
             {
-                GraphicsManager.GraphicsDevice.DrawUserIndexedPrimitives
+                Core.GraphicsDevice.DrawUserIndexedPrimitives
                     <VertexPositionNormalTexture>(
                     PrimitiveType.TriangleList,
                     _spritesheetStep.Vertices, 0, 4,

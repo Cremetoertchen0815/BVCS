@@ -172,7 +172,7 @@ namespace Nez.GeonBit
 
             // reset last radius
             _lastRadius = 0f;
-            float scaleLen = Utils.ExtendedMath.GetScale(ref worldTransformations).Length();
+            float scaleLen = Math3D.GetScale(ref worldTransformations).Length();
 
             // iterate model meshes
             foreach (var mesh in Model.Meshes)
@@ -259,7 +259,7 @@ namespace Nez.GeonBit
         protected override BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             var modelBoundingSphere = ModelUtils.GetBoundingSphere(Model);
-            modelBoundingSphere.Radius *= Utils.ExtendedMath.GetScale(ref worldTransformations).Length();
+            modelBoundingSphere.Radius *= Math3D.GetScale(ref worldTransformations).Length();
             modelBoundingSphere.Center = worldTransformations.Translation;
             return modelBoundingSphere;
 

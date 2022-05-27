@@ -99,16 +99,6 @@ namespace Nez.GeonBit.Particles.Animators
         public float TimeAnimated => TimeAlive - BaseProperties.DelayToStart;
 
         /// <summary>
-        /// Random object to use for all animators.
-        /// </summary>
-        private static System.Random _rand = new System.Random();
-
-        /// <summary>
-        /// Get the random object.
-        /// </summary>
-        protected System.Random Random => _rand;
-
-        /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
         /// </summary>
         protected abstract bool IsDone
@@ -123,40 +113,40 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Get all renderable entities in an efficient way.
         /// </summary>
-        protected Graphics.BaseRendererComponent[] Renderables
+        protected BaseRendererComponent[] Renderables
         {
             get
             {
                 // create list of renderables to operate on (only happens first time)
-                object list = _GameObject.GetInternalData(ref AnimatorRenderablesInternalKey);
+                object list = Entity.GetInternalData(ref AnimatorRenderablesInternalKey);
                 if (list == null)
                 {
-                    list = _GameObject.GetComponents<Graphics.BaseRendererComponent>(BaseProperties.FilterTargetsByName).ToArray();
-                    _GameObject.SetInternalData(ref AnimatorRenderablesInternalKey, list);
+                    list = Entity.GetComponents<BaseRendererComponent>(BaseProperties.FilterTargetsByName).ToArray();
+                    Entity.SetInternalData(ref AnimatorRenderablesInternalKey, list);
                 }
 
                 // return list of renderables
-                return list as Graphics.BaseRendererComponent[];
+                return list as BaseRendererComponent[];
             }
         }
 
         /// <summary>
         /// Get all model renderable entities in an efficient way.
         /// </summary>
-        protected Graphics.BaseRendererWithOverrideMaterial[] ModelRenderables
+        protected BaseRendererWithOverrideMaterial[] ModelRenderables
         {
             get
             {
                 // create list of renderables to operate on (only happens first time)
-                object list = _GameObject.GetInternalData(ref AnimatorModelsInternalKey);
+                object list = Entity.GetInternalData(ref AnimatorModelsInternalKey);
                 if (list == null)
                 {
-                    list = _GameObject.GetComponents<Graphics.BaseRendererWithOverrideMaterial>(BaseProperties.FilterTargetsByName).ToArray();
-                    _GameObject.SetInternalData(ref AnimatorModelsInternalKey, list);
+                    list = Entity.GetComponents<BaseRendererWithOverrideMaterial>(BaseProperties.FilterTargetsByName).ToArray();
+                    Entity.SetInternalData(ref AnimatorModelsInternalKey, list);
                 }
 
                 // return list of renderables
-                return list as Graphics.BaseRendererWithOverrideMaterial[];
+                return list as BaseRendererWithOverrideMaterial[];
             }
         }
 
@@ -193,21 +183,21 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Random vector direction.
         /// </summary>
-        protected Vector3 RandDirection(Vector3 baseVector, Vector3 randDir) => AnimatorUtils.RandDirection(Random, baseVector, randDir);
+        protected Vector3 RandDirection(Vector3 baseVector, Vector3 randDir) => AnimatorUtils.RandDirection(baseVector, randDir);
 
         /// <summary>
         /// Random color value from base and rand color.
         /// </summary>
-        protected Color RandColor(Color baseColor, Color randColor) => AnimatorUtils.RandColor(Random, baseColor, randColor);
+        protected Color RandColor(Color baseColor, Color randColor) => AnimatorUtils.RandColor(baseColor, randColor);
 
         /// <summary>
         /// Called every frame in the Update() loop.
         /// Note: this is called only if GameObject is enabled.
         /// </summary>
-        protected override void OnUpdate()
+        public void Update()
         {
             // increase time alive
-            float timeIncreased = Managers.TimeManager.TimeFactor * (BaseProperties.SpeedFactor);
+            float timeIncreased = Time.DeltaTime * (BaseProperties.SpeedFactor);
             TimeAlive += timeIncreased;
 
             // if there's initial delay that need to expire stop here
@@ -224,9 +214,9 @@ namespace Nez.GeonBit.Particles.Animators
                 (BaseProperties.TimeToLive == 0f && BaseProperties.DestroyObjectOnFinish && finished))
             {
                 // destroy parent game object if needed
-                if (BaseProperties.DestroyObjectOnFinish && !_GameObject.WasDestroyed)
+                if (BaseProperties.DestroyObjectOnFinish && !Entity.IsDestroyed)
                 {
-                    _GameObject.Destroy();
+                    Entity.Destroy();
                 }
 
                 // destroy self
@@ -245,7 +235,7 @@ namespace Nez.GeonBit.Particles.Animators
             _timeInInterval = BaseProperties.Intervals;
 
             // finally, if we got here we need to do animation
-            DoAnimation(Managers.TimeManager.TimeFactor * BaseProperties.SpeedFactor);
+            DoAnimation(Time.DeltaTime * BaseProperties.SpeedFactor);
 
             // if done, disable self
             if (finished)
@@ -254,9 +244,9 @@ namespace Nez.GeonBit.Particles.Animators
                 Enabled = false;
 
                 // destroy parent game object if needed
-                if (BaseProperties.DestroyObjectOnFinish && !_GameObject.WasDestroyed)
+                if (BaseProperties.DestroyObjectOnFinish && !Entity.IsDestroyed)
                 {
-                    _GameObject.Destroy();
+                    Entity.Destroy();
                 }
             }
         }

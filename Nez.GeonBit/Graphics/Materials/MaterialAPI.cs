@@ -329,7 +329,7 @@ namespace Nez.GeonBit.Materials
         public SamplerState SamplerState = DefaultSamplerState;
 
         /// <summary>
-        /// If true, will use the currently set lights manager in `Graphics.GraphicsManager.LightsManager` and call ApplyLights() with the lights from manager.
+        /// If true, will use the currently set lights manager in `Graphics.GeonBitRenderer.LightsManager` and call ApplyLights() with the lights from manager.
         /// </summary>
         protected virtual bool UseDefaultLightsManager => false;
 
@@ -393,7 +393,7 @@ namespace Nez.GeonBit.Materials
         /// </summary>
         protected virtual void ApplySamplerState()
         {
-            var states = GraphicsManager.GraphicsDevice.SamplerStates;
+            var states = Core.GraphicsDevice.SamplerStates;
             for (int i = 0; i < SamplersCount; ++i)
                 if (states[i] != SamplerState) states[i] = SamplerState;
         }
@@ -430,7 +430,7 @@ namespace Nez.GeonBit.Materials
             if (LightingEnabled && UseDefaultLightsManager)
             {
                 // get lights in rendering range
-                var lightsManager = GraphicsManager.ActiveLightsManager;
+                var lightsManager = GeonBitRenderer.ActiveLightsManager;
                 var lights = lightsManager.GetLights(this, ref boundingSphere, MaxLights);
                 AmbientLight = lightsManager.AmbientLight;
                 ApplyLights(lights, ref worldMatrix, ref boundingSphere);

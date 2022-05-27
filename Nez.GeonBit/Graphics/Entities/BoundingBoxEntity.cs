@@ -81,7 +81,7 @@ namespace Nez.GeonBit
         /// </summary>
         public BoundingBoxEntity() =>
             // create effect
-            _boxEffect = new BasicEffect(GraphicsManager.GraphicsDevice)
+            _boxEffect = new BasicEffect(Core.GraphicsDevice)
             {
                 TextureEnabled = false
             };
@@ -113,21 +113,21 @@ namespace Nez.GeonBit
         public override void DoEntityDraw(ref Matrix worldTransformations)
         {
             // not visible / no active camera? skip
-            if (!Visible || GraphicsManager.ActiveCamera == null)
+            if (!Visible || GeonBitRenderer.ActiveCamera == null)
             {
                 return;
             }
 
             // set world / view / projection matrix
             _boxEffect.World = IsBoxAlreadyTransformed ? Matrix.Identity : worldTransformations;
-            _boxEffect.View = GraphicsManager.ActiveCamera.View;
-            _boxEffect.Projection = GraphicsManager.ActiveCamera.Projection;
+            _boxEffect.View = GeonBitRenderer.ActiveCamera.View;
+            _boxEffect.Projection = GeonBitRenderer.ActiveCamera.Projection;
 
             // Draw the box with a LineList
             foreach (var pass in _boxEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GraphicsManager.GraphicsDevice.DrawUserIndexedPrimitives(
+                Core.GraphicsDevice.DrawUserIndexedPrimitives(
                     PrimitiveType.LineList, _primitiveList, 0, 8,
                     _bBoxIndices, 0, 12);
             }

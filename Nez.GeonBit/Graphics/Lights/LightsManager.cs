@@ -17,6 +17,7 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
+using GeonBit.Core.Utils;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
@@ -191,7 +192,7 @@ namespace Nez.GeonBit.Lights
             var max = GetMaxRegionIndex(ref boundingSphere);
 
             // build array to return
-            var retLights = new Utils.ResizableArray<LightSource>();
+            var retLights = new ResizableArray<LightSource>();
 
             // add all infinite lights first (directional lights etc)
             foreach (var light in _infiniteLights)
@@ -231,7 +232,7 @@ namespace Nez.GeonBit.Lights
                                     continue;
 
                                 // if light is out of camera, skip it
-                                if (!GraphicsManager.ActiveCamera.ViewFrustum.Intersects(light.BoundingSphere))
+                                if (!GeonBitRenderer.ActiveCamera.ViewFrustum.Intersects(light.BoundingSphere))
                                     continue;
 
                                 // add light to return array
