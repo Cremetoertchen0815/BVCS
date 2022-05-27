@@ -19,7 +19,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
@@ -41,7 +40,7 @@ namespace Nez.GeonBit
         /// Add bias to distance from camera when sorting by distance from camera.
         /// This is useful for particles, sprites etc.
         /// </summary>
-        virtual public float CameraDistanceBias { get { return 0f; } }
+        public virtual float CameraDistanceBias => 0f;
 
         /// <summary>
         /// Callback that triggers every time an entity is rendered.
@@ -67,18 +66,12 @@ namespace Nez.GeonBit
         /// </summary>
         public bool WireFrame
         {
-            get
-            {
-                return RenderingQueue == RenderingQueue.Wireframe;
-            }
-            set
-            {
-                RenderingQueue = value ? RenderingQueue.Wireframe : RenderingQueue.Solid;
-            }
+            get => RenderingQueue == RenderingQueue.Wireframe;
+            set => RenderingQueue = value ? RenderingQueue.Wireframe : RenderingQueue.Solid;
         }
 
         // last transformation version of parent node that we calculated bounding box for.
-        uint _lastWorldTransformForBoundingBox;
+        private uint _lastWorldTransformForBoundingBox;
 
         /// <summary>
         /// Last bounding box we calculated for this entity.
@@ -86,7 +79,7 @@ namespace Nez.GeonBit
         protected BoundingBox _lastBoundingBox;
 
         // last transformation version of parent node that we calculated bounding sphere for.
-        uint _lastWorldTransformForBoundingSphere;
+        private uint _lastWorldTransformForBoundingSphere;
 
         /// <summary>
         /// Last bounding sphere we calculated for this entity.
@@ -98,32 +91,27 @@ namespace Nez.GeonBit
         /// </summary>
         public bool Visible
         {
-            get { return _visible; }
-            set { _visible = value; }
+            get => _visible;
+            set => _visible = value;
         }
 
         // an empty value for bounding box calculation. this is just an optimization.
-        static readonly BoundingBox EmptyBoundingBox = new BoundingBox();
+        private static readonly BoundingBox EmptyBoundingBox = new BoundingBox();
 
         // an empty value for bounding sphere calculations. this is just an optimization.
-        static readonly BoundingSphere EmptyBoundingSphere = new BoundingSphere();
+        private static readonly BoundingSphere EmptyBoundingSphere = new BoundingSphere();
 
         /// <summary>
         /// If true, this entity will only show in debug / editor mode.
         /// </summary>
-        public virtual bool IsDebugEntity
-        {
-            get { return false; }
-        }
+        public virtual bool IsDebugEntity => false;
 
         /// <summary>
         /// Create the renderable entity.
         /// </summary>
-        public BaseRenderableEntity()
-        {
+        public BaseRenderableEntity() =>
             // count the object creation
             CountAndAlert.Count(CountAndAlert.PredefAlertTypes.AddedOrCreated);
-        }
 
         /// <summary>
         /// Draw the entity.
@@ -153,11 +141,9 @@ namespace Nez.GeonBit
         /// The per-entity drawing function, must be implemented by child entities.
         /// </summary>
         /// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
-        public virtual void DoEntityDraw(ref Matrix worldTransformations)
-        {
+        public virtual void DoEntityDraw(ref Matrix worldTransformations) =>
             // set blend state
             GraphicsManager.GraphicsDevice.BlendState = BlendingState;
-        }
 
         /// <summary>
         /// Get the bounding box of this entity, either from cache or calculate it.
@@ -185,10 +171,7 @@ namespace Nez.GeonBit
         /// Note: this value may be out-of-date if transformations changed since last calculation.
         /// </summary>
         /// <returns>Last known bounding box.</returns>
-        public BoundingBox GetLastBoundingBox()
-        {
-            return _lastBoundingBox;
-        }
+        public BoundingBox GetLastBoundingBox() => _lastBoundingBox;
 
         /// <summary>
         /// Calculate and return the bounding box of this entity (in world space).
@@ -197,10 +180,7 @@ namespace Nez.GeonBit
         /// <param name="localTransformations">Local transformations from the direct parent node.</param>
         /// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
         /// <returns>Bounding box of the entity.</returns>
-        protected virtual BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
-        {
-            return EmptyBoundingBox;
-        }
+        protected virtual BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations) => EmptyBoundingBox;
 
         /// <summary>
         /// Get the bounding sphere of this entity, either from cache or calculate it.
@@ -228,10 +208,7 @@ namespace Nez.GeonBit
         /// Note: this value may be out-of-date if transformations changed since last calculation.
         /// </summary>
         /// <returns>Last known bounding sphere.</returns>
-        public BoundingSphere GetLastBoundingSphere()
-        {
-            return _lastBoundingSphere;
-        }
+        public BoundingSphere GetLastBoundingSphere() => _lastBoundingSphere;
 
         /// <summary>
         /// Calculate and return the bounding sphere of this entity (in world space).
@@ -240,9 +217,6 @@ namespace Nez.GeonBit
         /// <param name="localTransformations">Local transformations from the direct parent node.</param>
         /// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
         /// <returns>Bounding sphere of the entity.</returns>
-        protected virtual BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
-        {
-            return EmptyBoundingSphere;
-        }
+        protected virtual BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations) => EmptyBoundingSphere;
     }
 }

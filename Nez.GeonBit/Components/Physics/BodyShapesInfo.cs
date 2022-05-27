@@ -18,8 +18,8 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 using GeonBit.Core.Physics.CollisionShapes;
+using Microsoft.Xna.Framework;
 
 namespace Nez.GeonBit.Physics
 {
@@ -100,16 +100,13 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Get shape type enum.
         /// </summary>
-        public PhysicalBodyShapeTypes ShapeType { get { return PhysicalBodyShapeTypes.EndlessPlane; } }
+        public PhysicalBodyShapeTypes ShapeType => PhysicalBodyShapeTypes.EndlessPlane;
 
         /// <summary>
         /// Create and return a collision shape of this type.
         /// </summary>
         /// <returns>Collision shape instance.</returns>
-        public ICollisionShape CreateShape()
-        {
-            return new CollisionEndlessPlane(Normal);
-        }
+        public ICollisionShape CreateShape() => new CollisionEndlessPlane(Normal);
 
         /// <summary>
         /// Plane normal.
@@ -120,10 +117,7 @@ namespace Nez.GeonBit.Physics
         /// Create the info to create endless plane body.
         /// </summary>
         /// <param name="normal">Plane normal (default to Vector3.Up).</param>
-        public EndlessPlaneInfo(Vector3? normal = null)
-        {
-            Normal = normal ?? Vector3.Up;
-        }
+        public EndlessPlaneInfo(Vector3? normal = null) => Normal = normal ?? Vector3.Up;
     }
 
     /// <summary>
@@ -134,16 +128,13 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Get shape type enum.
         /// </summary>
-        public PhysicalBodyShapeTypes ShapeType { get { return PhysicalBodyShapeTypes.Sphere; } }
+        public PhysicalBodyShapeTypes ShapeType => PhysicalBodyShapeTypes.Sphere;
 
         /// <summary>
         /// Create and return a collision shape of this type.
         /// </summary>
         /// <returns>Collision shape instance.</returns>
-        public ICollisionShape CreateShape()
-        {
-            return new CollisionSphere(Radius);
-        }
+        public ICollisionShape CreateShape() => new CollisionSphere(Radius);
 
         /// <summary>
         /// Sphere radius
@@ -154,10 +145,7 @@ namespace Nez.GeonBit.Physics
         /// Create the info to create a sphere body.
         /// </summary>
         /// <param name="radius">Sphere radius.</param>
-        public SphereInfo(float radius = 1f)
-        {
-            Radius = radius;
-        }
+        public SphereInfo(float radius = 1f) => Radius = radius;
     }
 
     /// <summary>
@@ -168,16 +156,13 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Get shape type enum.
         /// </summary>
-        public PhysicalBodyShapeTypes ShapeType { get { return PhysicalBodyShapeTypes.Box; } }
+        public PhysicalBodyShapeTypes ShapeType => PhysicalBodyShapeTypes.Box;
 
         /// <summary>
         /// Create and return a collision shape of this type.
         /// </summary>
         /// <returns>Collision shape instance.</returns>
-        public ICollisionShape CreateShape()
-        {
-            return new CollisionBox(BaseSize.X, BaseSize.Y, BaseSize.Z);
-        }
+        public ICollisionShape CreateShape() => new CollisionBox(BaseSize.X, BaseSize.Y, BaseSize.Z);
 
         /// <summary>
         /// Box basic size.
@@ -188,10 +173,7 @@ namespace Nez.GeonBit.Physics
         /// Create the info to create a box body.
         /// </summary>
         /// <param name="baseSize">Box base size (default to Vector3.One).</param>
-        public BoxInfo(Vector3? baseSize = null)
-        {
-            BaseSize = baseSize ?? Vector3.One;
-        }
+        public BoxInfo(Vector3? baseSize = null) => BaseSize = baseSize ?? Vector3.One;
     }
 
     /// <summary>
@@ -202,16 +184,13 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Get shape type enum.
         /// </summary>
-        public PhysicalBodyShapeTypes ShapeType { get { return PhysicalBodyShapeTypes.Box2D; } }
-        
+        public PhysicalBodyShapeTypes ShapeType => PhysicalBodyShapeTypes.Box2D;
+
         /// <summary>
         /// Create and return a collision shape of this type.
         /// </summary>
         /// <returns>Collision shape instance.</returns>
-        public ICollisionShape CreateShape()
-        {
-            return new CollisionBox2D(BaseSize.X, BaseSize.Y, BaseSize.Z);
-        }
+        public ICollisionShape CreateShape() => new CollisionBox2D(BaseSize.X, BaseSize.Y, BaseSize.Z);
 
         /// <summary>
         /// Box basic size.
@@ -222,10 +201,7 @@ namespace Nez.GeonBit.Physics
         /// Create the info to create a box2d body.
         /// </summary>
         /// <param name="baseSize">Box base size (default to Vector3.One).</param>
-        public Box2dInfo(Vector3? baseSize = null)
-        {
-            BaseSize = baseSize ?? Vector3.One;
-        }
+        public Box2dInfo(Vector3? baseSize = null) => BaseSize = baseSize ?? Vector3.One;
     }
 
     /// <summary>
@@ -236,16 +212,13 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Get shape type enum.
         /// </summary>
-        public PhysicalBodyShapeTypes ShapeType { get { return PhysicalBodyShapeTypes.Capsule; } }
+        public PhysicalBodyShapeTypes ShapeType => PhysicalBodyShapeTypes.Capsule;
 
         /// <summary>
         /// Create and return a collision shape of this type.
         /// </summary>
         /// <returns>Collision shape instance.</returns>
-        public ICollisionShape CreateShape()
-        {
-            return new CollisionCapsule(Radius, Height, Axis);
-        }
+        public ICollisionShape CreateShape() => new CollisionCapsule(Radius, Height, Axis);
 
         /// <summary>
         /// Capsule radius.
@@ -284,16 +257,13 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Get shape type enum.
         /// </summary>
-        public PhysicalBodyShapeTypes ShapeType { get { return PhysicalBodyShapeTypes.Cone; } }
+        public PhysicalBodyShapeTypes ShapeType => PhysicalBodyShapeTypes.Cone;
 
         /// <summary>
         /// Create and return a collision shape of this type.
         /// </summary>
         /// <returns>Collision shape instance.</returns>
-        public ICollisionShape CreateShape()
-        {
-            return new CollisionCone(Radius, Height, Axis);
-        }
+        public ICollisionShape CreateShape() => new CollisionCone(Radius, Height, Axis);
 
         /// <summary>
         /// Capsule radius.
@@ -332,16 +302,13 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Get shape type enum.
         /// </summary>
-        public PhysicalBodyShapeTypes ShapeType { get { return PhysicalBodyShapeTypes.ConvexHull; } }
+        public PhysicalBodyShapeTypes ShapeType => PhysicalBodyShapeTypes.ConvexHull;
 
         /// <summary>
         /// Create and return a collision shape of this type.
         /// </summary>
         /// <returns>Collision shape instance.</returns>
-        public ICollisionShape CreateShape()
-        {
-            return new CollisionConvexHull(Points);
-        }
+        public ICollisionShape CreateShape() => new CollisionConvexHull(Points);
 
         /// <summary>
         /// Hull shape points.
@@ -352,10 +319,7 @@ namespace Nez.GeonBit.Physics
         /// Create the info to create a convex-hull body.
         /// </summary>
         /// <param name="points">Points to build the convex hull from.</param>
-        public ConvexHullInfo(Vector3[] points)
-        {
-            Points = points;
-        }
+        public ConvexHullInfo(Vector3[] points) => Points = points;
     }
 
     /// <summary>
@@ -366,22 +330,19 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Get shape type enum.
         /// </summary>
-        public PhysicalBodyShapeTypes ShapeType { get { return PhysicalBodyShapeTypes.Cylinder; } }
+        public PhysicalBodyShapeTypes ShapeType => PhysicalBodyShapeTypes.Cylinder;
 
         /// <summary>
         /// Create and return a collision shape of this type.
         /// </summary>
         /// <returns>Collision shape instance.</returns>
-        public ICollisionShape CreateShape()
-        {
-            return new CollisionCylinder(HalfExtent, Axis);
-        }
+        public ICollisionShape CreateShape() => new CollisionCylinder(HalfExtent, Axis);
 
         /// <summary>
         /// Half extent of the cylinder on X, Y and Z axis.
         /// </summary>
         public Vector3 HalfExtent;
-        
+
         /// <summary>
         /// Cylinder align axis.
         /// </summary>
@@ -404,7 +365,7 @@ namespace Nez.GeonBit.Physics
         /// <param name="radius">Cylinder radius.</param>
         /// <param name="height">Cylinder height.</param>
         /// <param name="axis">Cylinder direction axis (Y = standing up).</param>
-        public CylinderInfo(float radius, float height, CylinderDirectionAxis axis = CylinderDirectionAxis.Y) : 
+        public CylinderInfo(float radius, float height, CylinderDirectionAxis axis = CylinderDirectionAxis.Y) :
             this(new Vector3(radius, height, radius), axis)
         {
         }
@@ -418,16 +379,13 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Get shape type enum.
         /// </summary>
-        public PhysicalBodyShapeTypes ShapeType { get { return PhysicalBodyShapeTypes.Triangle; } }
+        public PhysicalBodyShapeTypes ShapeType => PhysicalBodyShapeTypes.Triangle;
 
         /// <summary>
         /// Create and return a collision shape of this type.
         /// </summary>
         /// <returns>Collision shape instance.</returns>
-        public ICollisionShape CreateShape()
-        {
-            return new CollisionTriangle(P1, P2, P3);
-        }
+        public ICollisionShape CreateShape() => new CollisionTriangle(P1, P2, P3);
 
         /// <summary>
         /// Triangle point 1.

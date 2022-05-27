@@ -37,10 +37,10 @@ namespace Nez.GeonBit.Particles.Animators
         public Vector3? Acceleration { get; private set; }
 
         // store jitters, for cloning
-        float _velocityJitter = 0f;
-        float _accelerationJitter = 0f;
-        Vector3? _velocityDirectionJitter = null;
-        Vector3? _accelerationDirectionJitter = null;
+        private float _velocityJitter = 0f;
+        private float _accelerationJitter = 0f;
+        private Vector3? _velocityDirectionJitter = null;
+        private Vector3? _accelerationDirectionJitter = null;
 
         /// <summary>
         /// Optional max velocity (only applies if there's acceleration).
@@ -51,24 +51,16 @@ namespace Nez.GeonBit.Particles.Animators
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
-        {
+        public override Component Clone() =>
             // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitter
             // so we'll still have the random factor applied on the cloned entity.
-            return CopyBasics(new MotionAnimator(BaseProperties, Velocity, Acceleration, MaxVelocity, 
+            CopyBasics(new MotionAnimator(BaseProperties, Velocity, Acceleration, MaxVelocity,
                 _velocityJitter, _accelerationJitter, _velocityDirectionJitter, _accelerationDirectionJitter));
-        }
 
         /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
         /// </summary>
-        override protected bool IsDone
-        {
-            get
-            {
-                return false;
-            }
-        }
+        protected override bool IsDone => false;
 
         /// <summary>
         /// Create the motion animator.
@@ -103,13 +95,13 @@ namespace Nez.GeonBit.Particles.Animators
             // add velocity jitter
             if (_velocityJitter != 0f)
             {
-                Velocity *= (float)Random.NextDouble() * _velocityJitter;
+                Velocity *= Random.NextFloat() * _velocityJitter;
             }
 
             // add acceleration jitter
             if (_accelerationJitter != 0f)
             {
-                Acceleration *= (float)Random.NextDouble() * _accelerationJitter;
+                Acceleration *= Random.NextFloat() * _accelerationJitter;
             }
 
             // add velocity direction jitter
@@ -122,7 +114,7 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// The animator implementation.
         /// </summary>
-        override protected void DoAnimation(float speedFactor)
+        protected override void DoAnimation(float speedFactor)
         {
             // move scene node
             _GameObject.SceneNode.Position += Velocity * speedFactor;

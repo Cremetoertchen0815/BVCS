@@ -51,7 +51,7 @@ namespace Nez.GeonBit.Animation
             if (animatedVertexBuffer == null) { throw new System.Exception("Cannot find CPU-animated data. Make sure the model processor is set to CPU-animated model in the content manager."); }
             animatedVertexBuffer.UpdateVertices(boneTransforms, meshPart.VertexOffset, meshPart.NumVertices);
         }
-        
+
         /// <summary>
         /// Get if a given model is CPU-animated.
         /// </summary>

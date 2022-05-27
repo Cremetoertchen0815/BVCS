@@ -46,10 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Graphics\Backgrounds\SceneBackground.cs" />
     <Compile Include="Components\Graphics\Backgrounds\SkyBox.cs" />
     <Compile Include="Components\Graphics\Camera3D.cs" />
-    <Compile Include="Components\Graphics\Docs.cs" />
     <Compile Include="Components\Graphics\Light.cs" />
     <Compile Include="Components\Graphics\Renderers\BaseRenderer.cs" />
     <Compile Include="Components\Graphics\Renderers\BaseRendererWithOverrideMaterial.cs" />
@@ -63,9 +61,7 @@
     <Compile Include="Components\Graphics\Renderers\SimpleModelRenderer.cs" />
     <Compile Include="Components\Graphics\Renderers\SkinnedModelRenderer.cs" />
     <Compile Include="Components\Graphics\Renderers\SpriteRenderer.cs" />
-    <Compile Include="Components\Misc\CameraEditorController.cs" />
-    <Compile Include="Components\Misc\Docs.cs" />
-    <Compile Include="Components\Misc\TileMap.cs" />
+    <Compile Include="Components\Misc\BaseComponent.cs" />
     <Compile Include="Components\Misc\TimeToLive.cs" />
     <Compile Include="Components\Particles\Animators\AnimatorUtils.cs" />
     <Compile Include="Components\Particles\Animators\BaseAnimator.cs" />

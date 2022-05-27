@@ -41,29 +41,21 @@ namespace Nez.GeonBit.Particles.Animators
         public float FadingTime { get; private set; }
 
         // store fade time jitter for cloning.
-        float _fadeTimeJitter = 0f;
+        private float _fadeTimeJitter = 0f;
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
-        {
+        public override Component Clone() =>
             // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitter
             // so we'll still have the random factor applied on the cloned entity.
-            return CopyBasics(new FadeAnimator(BaseProperties, FromAlpha, ToAlpha, FadingTime, _fadeTimeJitter));
-        }
+            CopyBasics(new FadeAnimator(BaseProperties, FromAlpha, ToAlpha, FadingTime, _fadeTimeJitter));
 
         /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
         /// </summary>
-        override protected bool IsDone
-        {
-            get
-            {
-                return TimeAnimated >= FadingTime;
-            }
-        }
+        protected override bool IsDone => TimeAnimated >= FadingTime;
 
         /// <summary>
         /// Create the fade animator.
@@ -90,7 +82,7 @@ namespace Nez.GeonBit.Particles.Animators
             // add fading time jittering
             if (_fadeTimeJitter != 0f)
             {
-                FadingTime += (float)Random.NextDouble() * _fadeTimeJitter;
+                FadingTime += Random.NextFloat() * _fadeTimeJitter;
             }
 
             // update renderables starting alpha
@@ -103,7 +95,7 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// The animator implementation.
         /// </summary>
-        override protected void DoAnimation(float speedFactor)
+        protected override void DoAnimation(float speedFactor)
         {
             // get current fade step, and if done, skip
             float position = AnimatorUtils.CalcTransitionPercent(TimeAnimated, FadingTime);

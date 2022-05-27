@@ -25,7 +25,7 @@ namespace GeonBit.Core.Physics
     /// GeonBit.Core.Physics implement physics related stuff.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGenerated]
-    class NamespaceDoc
+    internal class NamespaceDoc
     {
     }
 
@@ -43,10 +43,7 @@ namespace GeonBit.Core.Physics
         /// Create the collision data.
         /// </summary>
         /// <param name="position">Collision point.</param>
-        public CollisionData(Vector3 position)
-        {
-            Position = position;
-        }
+        public CollisionData(Vector3 position) => Position = position;
     }
 
     /// <summary>
@@ -94,13 +91,7 @@ namespace GeonBit.Core.Physics
         /// Get first / main result.
         /// Careful not to call this without checking HasHit first.
         /// </summary>
-        public SingleResult Collision
-        {
-            get
-            {
-                return Collisions[0];
-            }
-        }
+        public SingleResult Collision => Collisions[0];
     }
 
     /// <summary>
@@ -109,19 +100,19 @@ namespace GeonBit.Core.Physics
     public class PhysicsWorld
     {
         // physical world components
-        BulletSharp.CollisionConfiguration _config;
-        BulletSharp.BroadphaseInterface _broadphase;
-        BulletSharp.ConstraintSolver _solver;
-        BulletSharp.Dispatcher _dispatcher;
+        private BulletSharp.CollisionConfiguration _config;
+        private BulletSharp.BroadphaseInterface _broadphase;
+        private BulletSharp.ConstraintSolver _solver;
+        private BulletSharp.Dispatcher _dispatcher;
 
         // physical world
         internal BulletSharp.DynamicsWorld _world;
 
         // current gravity vector
-        BulletSharp.Math.Vector3 _gravity;
+        private BulletSharp.Math.Vector3 _gravity;
 
         // debug renderer
-        PhysicsDebugDraw _debugDraw;
+        private PhysicsDebugDraw _debugDraw;
 
         /// <summary>
         /// Physics max sub steps per frame.
@@ -151,13 +142,15 @@ namespace GeonBit.Core.Physics
 
             // create world instance
             _world = new BulletSharp.DiscreteDynamicsWorld(
-                dispatcher: _dispatcher, 
-                pairCache: _broadphase, 
-                constraintSolver: _solver, 
-                collisionConfiguration: _config);
+                dispatcher: _dispatcher,
+                pairCache: _broadphase,
+                constraintSolver: _solver,
+                collisionConfiguration: _config)
+            {
 
-            // for better performance
-            _world.ForceUpdateAllAabbs = false;
+                // for better performance
+                ForceUpdateAllAabbs = false
+            };
 
             // create debug renderer
             _debugDraw = new PhysicsDebugDraw(Graphics.GraphicsManager.GraphicsDevice);
@@ -177,15 +170,12 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Destroy the physical world.
         /// </summary>
-        public void Destroy()
-        {
-            _world = null;
-        }
+        public void Destroy() => _world = null;
 
         /// <summary>
         /// Class to store persistent collision data, so that bullet detach events will work.
         /// </summary>
-        struct CollisionPersistData
+        private struct CollisionPersistData
         {
             public BasicPhysicalBody Body0;
             public BasicPhysicalBody Body1;
@@ -212,8 +202,8 @@ namespace GeonBit.Core.Physics
                 int index1) =>
             {
                 // get physical bodies
-                BasicPhysicalBody body0 = obj0.CollisionObject.UserObject as BasicPhysicalBody;
-                BasicPhysicalBody body1 = obj1.CollisionObject.UserObject as BasicPhysicalBody;
+                var body0 = obj0.CollisionObject.UserObject as BasicPhysicalBody;
+                var body1 = obj1.CollisionObject.UserObject as BasicPhysicalBody;
 
                 // if one of the bodies don't support collision skip
                 if (body0 == null || body1 == null) { return; }
@@ -222,7 +212,7 @@ namespace GeonBit.Core.Physics
                 cp.UserPersistentData = new CollisionPersistData(body0, body1);
 
                 // send collision events
-                CollisionData data = new CollisionData(ToMonoGame.Vector(cp.PositionWorldOnA));
+                var data = new CollisionData(ToMonoGame.Vector(cp.PositionWorldOnA));
                 body0.CallCollisionStart(body1, ref data);
                 body1.CallCollisionStart(body0, ref data);
             };
@@ -234,7 +224,7 @@ namespace GeonBit.Core.Physics
                 BulletSharp.CollisionObject body1) =>
             {
                 if (cp.UserPersistentData == null) { return; }
-                CollisionPersistData data = (CollisionPersistData)cp.UserPersistentData;
+                var data = (CollisionPersistData)cp.UserPersistentData;
                 data.Body0.CallCollisionProcess(data.Body1);
                 data.Body1.CallCollisionProcess(data.Body0);
             };
@@ -243,7 +233,7 @@ namespace GeonBit.Core.Physics
             BulletSharp.PersistentManifold.ContactDestroyed += (object userPersistantData) =>
             {
                 if (userPersistantData == null) { return; }
-                CollisionPersistData data = (CollisionPersistData)userPersistantData;
+                var data = (CollisionPersistData)userPersistantData;
                 data.Body0.CallCollisionEnd(data.Body1);
                 data.Body1.CallCollisionEnd(data.Body0);
             };
@@ -278,11 +268,11 @@ namespace GeonBit.Core.Physics
         public RaycastResults Raycast(Vector3 start, Vector3 end, bool returnNearest = true)
         {
             // convert start and end vectors to bullet vectors
-            BulletSharp.Math.Vector3 bStart = ToBullet.Vector(start);
-            BulletSharp.Math.Vector3 bEnd = ToBullet.Vector(end);
+            var bStart = ToBullet.Vector(start);
+            var bEnd = ToBullet.Vector(end);
 
             // create class to hold results
-            BulletSharp.RayResultCallback resultsCallback = returnNearest ?
+            var resultsCallback = returnNearest ?
                 new BulletSharp.ClosestRayResultCallback(ref bStart, ref bEnd) as BulletSharp.RayResultCallback :
                 new BulletSharp.AllHitsRayResultCallback(bStart, bEnd);
 
@@ -299,11 +289,11 @@ namespace GeonBit.Core.Physics
         public RaycastResults Raycast(Vector3 start, Vector3 end, ECS.Components.Physics.BasePhysicsComponent self)
         {
             // convert start and end vectors to bullet vectors
-            BulletSharp.Math.Vector3 bStart = ToBullet.Vector(start);
-            BulletSharp.Math.Vector3 bEnd = ToBullet.Vector(end);
+            var bStart = ToBullet.Vector(start);
+            var bEnd = ToBullet.Vector(end);
 
             // create class to hold results
-            BulletSharp.RayResultCallback resultsCallback = 
+            BulletSharp.RayResultCallback resultsCallback =
                 new BulletSharp.KinematicClosestNotMeRayResultCallback(self._PhysicalBody._BulletEntity);
 
             // perform ray cast
@@ -319,8 +309,8 @@ namespace GeonBit.Core.Physics
         internal RaycastResults Raycast(Vector3 start, Vector3 end, BulletSharp.RayResultCallback resultsCallback)
         {
             // convert start and end vectors to bullet vectors
-            BulletSharp.Math.Vector3 bStart = ToBullet.Vector(start);
-            BulletSharp.Math.Vector3 bEnd = ToBullet.Vector(end);
+            var bStart = ToBullet.Vector(start);
+            var bEnd = ToBullet.Vector(end);
 
             // perform the ray test
             return Raycast(bStart, bEnd, resultsCallback);
@@ -338,14 +328,14 @@ namespace GeonBit.Core.Physics
             _world.RayTestRef(ref bStart, ref bEnd, resultsCallback);
 
             // create results object to return
-            RaycastResults results = new RaycastResults();
+            var results = new RaycastResults();
 
             // parse data based on type
             // closest result / closest but not me types:
             if (resultsCallback is BulletSharp.ClosestRayResultCallback)
             {
                 // convert to closest results type
-                BulletSharp.ClosestRayResultCallback closestReults = resultsCallback as BulletSharp.ClosestRayResultCallback;
+                var closestReults = resultsCallback as BulletSharp.ClosestRayResultCallback;
 
                 // set results data
                 results.HasHit = closestReults.HasHit;
@@ -362,7 +352,7 @@ namespace GeonBit.Core.Physics
             else if (resultsCallback is BulletSharp.AllHitsRayResultCallback)
             {
                 // convert to all results type
-                BulletSharp.AllHitsRayResultCallback allResults = resultsCallback as BulletSharp.AllHitsRayResultCallback;
+                var allResults = resultsCallback as BulletSharp.AllHitsRayResultCallback;
 
                 // set results data
                 results.HasHit = allResults.HasHit;
@@ -398,10 +388,7 @@ namespace GeonBit.Core.Physics
         /// Update single object's aabb.
         /// </summary>
         /// <param name="body">Body to update.</param>
-        public void UpdateSingleAabb(BasicPhysicalBody body)
-        {
-            _world.UpdateSingleAabb(body._BulletEntity);
-        }
+        public void UpdateSingleAabb(BasicPhysicalBody body) => _world.UpdateSingleAabb(body._BulletEntity);
 
         /// <summary>
         /// Remove a physical body from the world.
@@ -417,9 +404,6 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Debug-draw the physical world.
         /// </summary>
-        public void DebugDraw()
-        {
-            _debugDraw.DrawDebugWorld(_world);
-        }
+        public void DebugDraw() => _debugDraw.DrawDebugWorld(_world);
     }
 }

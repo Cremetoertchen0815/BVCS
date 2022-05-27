@@ -19,7 +19,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
@@ -42,19 +41,16 @@ namespace Nez.GeonBit
         /// <summary>
         /// Add bias to distance from camera when sorting by distance from camera.
         /// </summary>
-        override public float CameraDistanceBias { get { return _lastRadius * 100f; } }
+        public override float CameraDistanceBias => _lastRadius * 100f;
 
         // store last rendering radius (based on bounding sphere)
-        float _lastRadius = 0f;
+        private float _lastRadius = 0f;
 
         /// <summary>
         /// Create the model entity from model instance.
         /// </summary>
         /// <param name="model">Model to draw.</param>
-        public SimpleModelEntity(Model model)
-        {
-            Model = model;
-        }
+        public SimpleModelEntity(Model model) => Model = model;
 
         /// <summary>
         /// Create the model entity from asset path.
@@ -100,11 +96,9 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="material">Material to prepare.</param>
         /// <param name="world">World transformations.</param>
-        protected void PrepareMaterial(Materials.MaterialAPI material, Matrix world)
-        {
+        protected void PrepareMaterial(Materials.MaterialAPI material, Matrix world) =>
             // set world / view / projection matrix of the effect
             material.World = world;
-        }
 
         /// <summary>
         /// Get the bounding sphere of this entity.
@@ -115,7 +109,7 @@ namespace Nez.GeonBit
         /// <returns>Bounding box of the entity.</returns>
         protected override BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
-            BoundingSphere modelBoundingSphere = ModelUtils.GetBoundingSphere(Model);
+            var modelBoundingSphere = ModelUtils.GetBoundingSphere(Model);
             modelBoundingSphere.Radius *= Utils.ExtendedMath.GetScale(ref worldTransformations).Length();
             modelBoundingSphere.Center = worldTransformations.Translation;
             return modelBoundingSphere;
@@ -132,17 +126,17 @@ namespace Nez.GeonBit
         protected override BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // get bounding box in local space
-            BoundingBox modelBoundingBox = ModelUtils.GetBoundingBox(Model);
+            var modelBoundingBox = ModelUtils.GetBoundingBox(Model);
 
             // initialize minimum and maximum corners of the bounding box to max and min values
-            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
             // iterate bounding box corners and transform them
-            foreach (Vector3 corner in modelBoundingBox.GetCorners())
+            foreach (var corner in modelBoundingBox.GetCorners())
             {
                 // get curr position and update min / max
-                Vector3 currPosition = Vector3.Transform(corner, worldTransformations);
+                var currPosition = Vector3.Transform(corner, worldTransformations);
                 min = Vector3.Min(min, currPosition);
                 max = Vector3.Max(max, currPosition);
             }

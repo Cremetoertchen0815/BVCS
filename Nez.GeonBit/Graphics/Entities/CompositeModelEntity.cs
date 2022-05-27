@@ -20,8 +20,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections;
-using System.Collections.Specialized;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace Nez.GeonBit
 {
@@ -46,7 +46,7 @@ namespace Nez.GeonBit
         /// Dictionary with all the mesh entities.
         /// </summary>
         protected OrderedDictionary _meshes = new OrderedDictionary();
-        
+
         /// <summary>
         /// Create the model entity from model instance.
         /// </summary>
@@ -63,30 +63,21 @@ namespace Nez.GeonBit
         /// <summary>
         /// Return meshes count.
         /// </summary>
-        public int MeshesCount
-        {
-            get { return _meshes.Count; }
-        }
+        public int MeshesCount => _meshes.Count;
 
         /// <summary>
         /// Get mesh entity by index.
         /// </summary>
         /// <param name="index">Mesh index to get.</param>
         /// <returns>MeshEntity instance for this mesh.</returns>
-        public MeshEntity GetMesh(int index)
-        {
-            return _meshes[index] as MeshEntity;
-        }
+        public MeshEntity GetMesh(int index) => _meshes[index] as MeshEntity;
 
         /// <summary>
         /// Get mesh entity by name.
         /// </summary>
         /// <param name="name">Mesh name to get.</param>
         /// <returns>MeshEntity instance for this mesh.</returns>
-        public MeshEntity GetMesh(string name)
-        {
-            return _meshes[name] as MeshEntity;
-        }
+        public MeshEntity GetMesh(string name) => _meshes[name] as MeshEntity;
 
         /// <summary>
         /// Get all meshes in this composite model.
@@ -94,8 +85,8 @@ namespace Nez.GeonBit
         /// <returns></returns>
         public List<MeshEntity> GetMeshes()
         {
-            List<MeshEntity> ret = new List<MeshEntity>(_meshes.Values.Count);
-            foreach (var mesh in _meshes.Values)
+            var ret = new List<MeshEntity>(_meshes.Values.Count);
+            foreach (object mesh in _meshes.Values)
             {
                 ret.Add(mesh as MeshEntity);
             }
@@ -110,13 +101,13 @@ namespace Nez.GeonBit
         /// <returns>List of materials.</returns>
         public List<Materials.MaterialAPI> GetMaterials()
         {
-            List<Materials.MaterialAPI> ret = new List<Materials.MaterialAPI>();
+            var ret = new List<Materials.MaterialAPI>();
             foreach (DictionaryEntry entry in _meshes)
             {
-                MeshEntity mesh = entry.Value as MeshEntity;
+                var mesh = entry.Value as MeshEntity;
                 for (int i = 0; i < mesh.Mesh.MeshParts.Count; ++i)
                 {
-                    Materials.MaterialAPI material = mesh.GetMaterial(i);
+                    var material = mesh.GetMaterial(i);
                     if (!ret.Contains(material))
                     {
                         ret.Add(material);
@@ -175,7 +166,7 @@ namespace Nez.GeonBit
         /// <returns>Bounding box of the entity.</returns>
         protected override BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
-            BoundingSphere modelBoundingSphere = ModelUtils.GetBoundingSphere(Model);
+            var modelBoundingSphere = ModelUtils.GetBoundingSphere(Model);
             Vector3 scale = Utils.ExtendedMath.GetScale(ref worldTransformations);
             modelBoundingSphere.Radius *= scale.Length();
             modelBoundingSphere.Center = worldTransformations.Translation;
@@ -192,17 +183,17 @@ namespace Nez.GeonBit
         protected override BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // get bounding box in local space
-            BoundingBox modelBoundingBox = ModelUtils.GetBoundingBox(Model);
+            var modelBoundingBox = ModelUtils.GetBoundingBox(Model);
 
             // initialize minimum and maximum corners of the bounding box to max and min values
-            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
             // iterate bounding box corners and transform them
-            foreach (Vector3 corner in modelBoundingBox.GetCorners())
+            foreach (var corner in modelBoundingBox.GetCorners())
             {
                 // get curr position and update min / max
-                Vector3 currPosition = Vector3.Transform(corner, worldTransformations);
+                var currPosition = Vector3.Transform(corner, worldTransformations);
                 min = Vector3.Min(min, currPosition);
                 max = Vector3.Max(max, currPosition);
             }

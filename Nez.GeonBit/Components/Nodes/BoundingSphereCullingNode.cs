@@ -18,7 +18,6 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
@@ -32,19 +31,21 @@ namespace Nez.GeonBit
         /// Clone this scene node.
         /// </summary>
         /// <returns>GeonNode copy.</returns>
-        public override GeonNode Clone()
+        public override Component Clone()
         {
-            BoundingSphereCullingNode ret = new BoundingSphereCullingNode();
-            ret.Transformations = Transformations.Clone();
-            ret.LastBoundingSphere = LastBoundingSphere;
-            ret.Visible = Visible;
+            var ret = new BoundingSphereCullingNode
+            {
+                Transformations = Transformations.Clone(),
+                LastBoundingSphere = LastBoundingSphere,
+                Visible = Visible
+            };
             return ret;
         }
 
         /// <summary>
         /// Get if this node is currently visible in camera.
         /// </summary>
-        override public bool IsInScreen
+        public override bool IsInScreen
         {
             get
             {
@@ -56,7 +57,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get if this node is partly inside screen (eg intersects with camera frustum).
         /// </summary>
-        override public bool IsPartlyInScreen
+        public override bool IsPartlyInScreen
         {
             get
             {
@@ -69,7 +70,7 @@ namespace Nez.GeonBit
         /// Update culling test / cached data.
         /// This is called whenever trying to draw this node after transformations update
         /// </summary>
-        override protected void UpdateCullingData()
+        protected override void UpdateCullingData()
         {
         }
     }

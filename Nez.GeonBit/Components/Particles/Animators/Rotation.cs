@@ -32,9 +32,9 @@ namespace Nez.GeonBit.Particles.Animators
         public Vector3 RotationDirection { get; private set; }
 
         // store jitters, for cloning
-        Vector3? _directionJitter = null;
-        float _minSpeed = 0f;
-        float _maxSpeed = 0f;
+        private Vector3? _directionJitter = null;
+        private float _minSpeed = 0f;
+        private float _maxSpeed = 0f;
 
         /// <summary>
         /// Rotation speed.
@@ -45,24 +45,16 @@ namespace Nez.GeonBit.Particles.Animators
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
-        {
+        public override Component Clone() =>
             // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitter
             // so we'll still have the random factor applied on the cloned entity.
-            return CopyBasics(new RotationAnimator(BaseProperties, RotationDirection,
+            CopyBasics(new RotationAnimator(BaseProperties, RotationDirection,
                 _directionJitter, _minSpeed, _maxSpeed));
-        }
 
         /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
         /// </summary>
-        override protected bool IsDone
-        {
-            get
-            {
-                return false;
-            }
-        }
+        protected override bool IsDone => false;
 
         /// <summary>
         /// Create the rotation animator.
@@ -72,7 +64,7 @@ namespace Nez.GeonBit.Particles.Animators
         /// <param name="directionJitter">Rotation vector jitter.</param>
         /// <param name="minSpeed">Minimum rotation speed.</param>
         /// <param name="maxSpeed">Maximum rotation speed.</param>
-        public RotationAnimator(BaseAnimatorProperties properties, Vector3 rotationDirection, 
+        public RotationAnimator(BaseAnimatorProperties properties, Vector3 rotationDirection,
             Vector3? directionJitter = null, float minSpeed = 1f, float maxSpeed = 1f) : base(properties)
         {
             // set basic properties
@@ -127,9 +119,9 @@ namespace Nez.GeonBit.Particles.Animators
             RotationDirection.Normalize();
 
             // random rotation speed
-            RotationSpeed = _minSpeed == _maxSpeed ? 
-                _minSpeed : 
-                _minSpeed + ((float)Random.NextDouble() * (_maxSpeed - _minSpeed));
+            RotationSpeed = _minSpeed == _maxSpeed ?
+                _minSpeed :
+                _minSpeed + (Random.NextFloat() * (_maxSpeed - _minSpeed));
 
             // apply speed
             RotationDirection *= RotationSpeed;
@@ -138,10 +130,8 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// The animator implementation.
         /// </summary>
-        override protected void DoAnimation(float speedFactor)
-        {
+        protected override void DoAnimation(float speedFactor) =>
             // rotate scene node
             _GameObject.SceneNode.Rotation += RotationDirection * speedFactor;
-        }
     }
 }

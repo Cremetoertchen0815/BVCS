@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace Nez.GeonBit.Lights
@@ -45,7 +44,7 @@ namespace Nez.GeonBit.Lights
         /// </summary>
         /// <param name="light">Light to remove.</param>
         void RemoveLight(LightSource light);
-        
+
         /// <summary>
         /// Enable / disable all lights.
         /// </summary>

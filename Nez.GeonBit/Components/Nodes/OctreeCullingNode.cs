@@ -20,7 +20,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using GeonBit.Core.Utils;
 
 namespace Nez.GeonBit
 {
@@ -30,7 +29,7 @@ namespace Nez.GeonBit
     /// When testing for culling we first test top-level bounding boxes, then those contained by them, and so forth.
     /// This is the optimal culling node that covers most basic 3d use-cases.
     /// </summary>
-    class OctreeCullingNode : GeonNode
+    internal class OctreeCullingNode : GeonNode
     {
         /// <summary>
         /// Data that only the top octree holds.
@@ -49,11 +48,11 @@ namespace Nez.GeonBit
         }
 
         // octree settings (shared between all octree nodes inside the tree).
-        OctreeData _octreeData;
+        private OctreeData _octreeData;
 
         // parent pointer and index in parent children
-        OctreeCullingNode _parentOctree;
-        Vector3 _indexInParent;
+        private OctreeCullingNode _parentOctree;
+        private Vector3 _indexInParent;
 
         // debug render octree nodes
         public static bool DebugRenderOctreeParts = false;
@@ -61,44 +60,44 @@ namespace Nez.GeonBit
         /// <summary>
         /// The child octrees under this octree node.
         /// </summary>
-        OctreeCullingNode[,,] _childOctrees = null;
+        private OctreeCullingNode[,,] _childOctrees = null;
 
         /// <summary>
         /// The child octrees bounding boxes.
         /// We use these to test where we need to push nodes into, before we create the actual child octrees.
         /// </summary>
-        BoundingBox[,,] _childBoundingBoxes = null;
+        private BoundingBox[,,] _childBoundingBoxes = null;
 
         // nodes that are actually inside this octree node, and not under one of its children
         // this is for child nodes that are too big for the subdivision nodes.
-        List<GeonNode> _nodesUnderThisOctreeBox = new List<GeonNode>();
+        private List<GeonNode> _nodesUnderThisOctreeBox = new List<GeonNode>();
 
         /// <summary>
         /// Cache of nodes directly under this octree node.
         /// </summary>
-        GeonNode[] _nodesUnderThisOctreeBoxArray;
-        
+        private GeonNode[] _nodesUnderThisOctreeBoxArray;
+
         /// <summary>
         /// Do we need to update array with nodes directly under this octree?
         /// </summary>
-        bool _isNodesListDirty = true;
+        private bool _isNodesListDirty = true;
 
         /// <summary>
         /// Bounding box entity for debug rendering.
         /// </summary>
-        BoundingBoxEntity _debugBoundingBoxEntity = null;
+        private BoundingBoxEntity _debugBoundingBoxEntity = null;
 
         /// <summary>
         /// How many times we can divide this node and its children.
         /// </summary>
-        uint _divisionsLeft = 0;
+        private uint _divisionsLeft = 0;
 
         // half length of this node bounding box diagonal
-        float _boxHalfLength;
+        private float _boxHalfLength;
 
         // when this counter > 0, this node is counting until destroying self, after it was found to be empty.
         // the reason we use counter and not remove immediately is to prevent garbage generation due to rapid remove/add on moving objects.
-        int _countToRemoveSelf = 0;
+        private int _countToRemoveSelf = 0;
 
         /// <summary>
         /// Frames to count until removing an empty node.
@@ -109,10 +108,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Return if this octree node is the octree root.
         /// </summary>
-        public bool IsOctreeRoot
-        {
-            get {return  _octreeData.Root == this; }
-        }
+        public bool IsOctreeRoot => _octreeData.Root == this;
 
         /// <summary>
         /// Create the octree at top level, eg covering the whole screen.
@@ -122,9 +118,11 @@ namespace Nez.GeonBit
         public OctreeCullingNode(BoundingBox boundingBox, uint maxDivisions = 6)
         {
             // create octree data
-            _octreeData = new OctreeData();
-            _octreeData.Root = this;
-            _octreeData.MaxDivisions = maxDivisions;
+            _octreeData = new OctreeData
+            {
+                Root = this,
+                MaxDivisions = maxDivisions
+            };
             _divisionsLeft = maxDivisions;
 
             // init octree
@@ -148,15 +146,12 @@ namespace Nez.GeonBit
         /// Clone this scene node.
         /// </summary>
         /// <returns>GeonNode copy.</returns>
-        public override GeonNode Clone()
-        {
-            return new OctreeCullingNode(LastBoundingBox, _octreeData.MaxDivisions);
-        }
+        public override Component Clone() => new OctreeCullingNode(LastBoundingBox, _octreeData.MaxDivisions);
 
         /// <summary>
         /// Initialize this octree node.
         /// </summary>
-        void InitOctreeBox(BoundingBox boundingBox)
+        private void InitOctreeBox(BoundingBox boundingBox)
         {
             // set bounding box and sphere
             LastBoundingBox = boundingBox;
@@ -179,20 +174,20 @@ namespace Nez.GeonBit
                 _childBoundingBoxes = new BoundingBox[2, 2, 2];
 
                 // get min, max, and step
-                Vector3 min = boundingBox.Min;
-                Vector3 max = boundingBox.Max;
-                Vector3 step = (max - min) * 0.5f;
+                var min = boundingBox.Min;
+                var max = boundingBox.Max;
+                var step = (max - min) * 0.5f;
 
                 // init bounding boxes
-                Vector3 center = (LastBoundingBox.Max - LastBoundingBox.Min);
+                var center = (LastBoundingBox.Max - LastBoundingBox.Min);
                 for (int x = 0; x < 2; ++x)
                 {
                     for (int y = 0; y < 2; ++y)
                     {
                         for (int z = 0; z < 2; ++z)
                         {
-                            Vector3 currMin = min + step * new Vector3(x, y, z);
-                            Vector3 currMax = currMin + step;
+                            var currMin = min + step * new Vector3(x, y, z);
+                            var currMax = currMin + step;
                             _childBoundingBoxes[x, y, z] = new BoundingBox(currMin, currMax);
                         }
                     }
@@ -219,7 +214,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="node">GeonNode that was added / removed.</param>
         /// <param name="wasAdded">If true its a node that was added, if false, a node that was removed.</param>
-        override protected void OnChildNodesListChange(GeonNode node, bool wasAdded)
+        protected override void OnChildNodesListChange(GeonNode node, bool wasAdded)
         {
             // call base child node list change
             base.OnChildNodesListChange(node, wasAdded);
@@ -246,7 +241,7 @@ namespace Nez.GeonBit
             _countToRemoveSelf = 0;
 
             // get the new node bounding box
-            BoundingBox bb = node.GetBoundingBox();
+            var bb = node.GetBoundingBox();
 
             // nothing in it? don't add
             if (bb.Min == bb.Max)
@@ -321,9 +316,9 @@ namespace Nez.GeonBit
         protected void RemoveFromTree(GeonNode node)
         {
             // remove from all octree nodes
-            foreach (GeonNode linked in node.LinkedNodes)
+            foreach (var linked in node.LinkedNodes)
             {
-                OctreeCullingNode octreeNode = linked as OctreeCullingNode;
+                var octreeNode = linked as OctreeCullingNode;
                 if (octreeNode != null)
                 {
                     octreeNode.RemoveFromSelf(node);
@@ -359,7 +354,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Remove a node from this octree list.
         /// </summary>
-        void RemoveFromSelf(GeonNode node)
+        private void RemoveFromSelf(GeonNode node)
         {
             // remove from list
             _nodesUnderThisOctreeBox.Remove(node);
@@ -376,13 +371,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get if this node is currently visible in camera.
         /// </summary>
-        public bool IsInScreen
-        {
-            get
-            {
-                return (CullingNode.CurrentCameraFrustum.Contains(LastBoundingBox) != ContainmentType.Disjoint);
-            }
-        }
+        public bool IsInScreen => (CullingNode.CurrentCameraFrustum.Contains(LastBoundingBox) != ContainmentType.Disjoint);
 
         /// <summary>
         /// Draw the node and its children.
@@ -425,13 +414,7 @@ namespace Nez.GeonBit
         /// Get if this node can hold renderable entities (if not, it means this node is just for child nodes, and not for entities.
         /// Note: an octree cannot hold entities. Only nodes.
         /// </summary>
-        public override bool CanHoldEntities
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool CanHoldEntities => false;
 
         /// <summary>
         /// Calc final transformations for current frame.
@@ -460,8 +443,10 @@ namespace Nez.GeonBit
             {
                 if (_debugBoundingBoxEntity == null)
                 {
-                    _debugBoundingBoxEntity = new BoundingBoxEntity();
-                    _debugBoundingBoxEntity.Box = LastBoundingBox;
+                    _debugBoundingBoxEntity = new BoundingBoxEntity
+                    {
+                        Box = LastBoundingBox
+                    };
                 }
                 _debugBoundingBoxEntity.BoxEffect.DiffuseColor = _nodesUnderThisOctreeBox.Count > 0 ? Color.Yellow.ToVector3() : Color.Gray.ToVector3();
                 _debugBoundingBoxEntity.Draw(this, ref _localTransform, ref _worldTransform);
@@ -477,7 +462,7 @@ namespace Nez.GeonBit
             // draw nodes that are directly under this octree box.
             // remember - nodes that are small enough got into one of the subdivisions of this node, but larget nodes are 
             // directly under this tree leaf and needs to be drawn.
-            foreach (GeonNode child in _nodesUnderThisOctreeBoxArray)
+            foreach (var child in _nodesUnderThisOctreeBoxArray)
             {
                 child.Draw(forceEvenIfAlreadyDrawn);
             }
@@ -508,41 +493,33 @@ namespace Nez.GeonBit
         /// Get up-to-date bounding box of this node and all its child nodes, and recalculate it if needed.
         /// </summary>
         /// <returns>Bounding box of the node and its children.</returns>
-        public override BoundingBox GetBoundingBox()
-        {
+        public override BoundingBox GetBoundingBox() =>
             // note: the bounding box in octree is const
-            return LastBoundingBox;
-        }
+            LastBoundingBox;
 
         /// <summary>
         /// Recalculate bounding box of this node and all its child nodes.
         /// </summary>
         /// <returns>Bounding box of the node and its children.</returns>
-        public override BoundingBox UpdateBoundingBox()
-        {
+        public override BoundingBox UpdateBoundingBox() =>
             // note: the bounding box in octree is const
-            return LastBoundingBox;
-        }
+            LastBoundingBox;
 
         /// <summary>
         /// Get up-to-date bounding sphere of this node and all its child nodes, and recalculate it if needed.
         /// </summary>
         /// <returns>Bounding sphere of the node and its children.</returns>
-        public override BoundingSphere GetBoundingSphere()
-        {
+        public override BoundingSphere GetBoundingSphere() =>
             // note: the bounding sphere in octree is const
-            return LastBoundingSphere;
-        }
+            LastBoundingSphere;
 
         /// <summary>
         /// Calculate bounding sphere and return results.
         /// This also set internal caching.
         /// </summary>
         /// <returns>Bounding sphere of the node and its children.</returns>
-        public override BoundingSphere UpdateBoundingSphere()
-        {
+        public override BoundingSphere UpdateBoundingSphere() =>
             // note: the bounding sphere in octree is const
-            return LastBoundingSphere;
-        }
+            LastBoundingSphere;
     }
 }

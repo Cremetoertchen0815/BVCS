@@ -19,7 +19,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
@@ -63,12 +62,12 @@ namespace Nez.GeonBit
     public class GeonBitRenderer : Renderer
     {
         // sprite batch used by this manager
-        static Batcher _batcher = new Batcher(Core.GraphicsDevice);
+        private static Batcher _batcher = new Batcher(Core.GraphicsDevice);
 
         /// <summary>
         /// Deferred lighting manager.
         /// </summary>
-        static private Lights.DeferredLighting _DeferredLighting;
+        private static Lights.DeferredLighting _DeferredLighting;
 
         /// <summary>
         /// Manage lights and serve them to materials.
@@ -79,19 +78,13 @@ namespace Nez.GeonBit
         /// <summary>
         /// Return if deferred lighting is currently enabled.
         /// </summary>
-        public static bool IsDeferredLightingEnabled
-        {
-            get { return _DeferredLighting != null; }
-        }
+        public static bool IsDeferredLightingEnabled => _DeferredLighting != null;
 
         /// <summary>
         /// Enable deferred lighting.
         /// </summary>
         /// <returns></returns>
-        public static void EnableDeferredLighting()
-        {
-            _DeferredLighting = new Lights.DeferredLighting();
-        }
+        public static void EnableDeferredLighting() => _DeferredLighting = new Lights.DeferredLighting();
 
         /// <summary>
         /// Handle screen resize.
@@ -206,12 +199,12 @@ namespace Nez.GeonBit
         public static void DrawTexture(Texture2D texture, Rectangle sourceRect, Vector2 position, float scale, Vector2 origin, Color? color = null)
         {
             _batcher.Begin();
-            _batcher.Draw(texture, position, sourceRect, 
-                color: color ?? Color.White, 
-                rotation: 0, 
-                origin: origin, 
-                scale: Vector2.One * scale, 
-                effects: SpriteEffects.None, 
+            _batcher.Draw(texture, position, sourceRect,
+                color: color ?? Color.White,
+                rotation: 0,
+                origin: origin,
+                scale: Vector2.One * scale,
+                effects: SpriteEffects.None,
                 layerDepth: 0f);
             _batcher.End();
         }
@@ -219,21 +212,13 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get viewport current size (in pixels).
         /// </summary>
-        public static Point ViewportSize
-        {
-            get
-            {
-                return new Point(Core.GraphicsDevice.Viewport.Width, Core.GraphicsDevice.Viewport.Height);
-            }
-        }
+        public static Point ViewportSize => new Point(Core.GraphicsDevice.Viewport.Width, Core.GraphicsDevice.Viewport.Height);
 
         public override void Render(Scene scene)
         {
-            foreach (var item in scene.EntitiesOfType<Entity>())
-            {
-                item.GetComponent<GeonNode>().Draw();
-            }
-            
+            NodesManager.StartFrame();
+            foreach (var item in scene.EntitiesOfType<Entity>()) item.GetComponent<GeonNode>().Draw();
+            NodesManager.EndFrame();
         }
 
         public GeonBitRenderer(int renderOrder) : base(renderOrder) { }

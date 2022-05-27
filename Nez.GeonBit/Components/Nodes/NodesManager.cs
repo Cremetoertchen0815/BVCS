@@ -34,16 +34,14 @@ namespace Nez.GeonBit
         /// <summary>
         /// Queue of nodes that require update at the end of the loop.
         /// </summary>
-        static List<GeonNode> _nodesUpdateQueue = new List<GeonNode>();
+        private static List<GeonNode> _nodesUpdateQueue = new List<GeonNode>();
 
         /// <summary>
         /// Start drawing frame (call this at the begining of your drawing loop, before drawing any nodes).
         /// </summary>
-        public static void StartFrame()
-        {
+        public static void StartFrame() =>
             // increase frame id
             CurrFrame++;
-        }
 
         /// <summary>
         /// End drawing frame (call this at the end of your drawing loop, after drawing all nodes).
@@ -64,9 +62,6 @@ namespace Nez.GeonBit
         /// Add this node to a queue of nodes that will do transformations update at the end of the frame.
         /// </summary>
         /// <param name="node">GeonNode to update when frame ends.</param>
-        public static void AddNodeToUpdateQueue(GeonNode node)
-        {
-            _nodesUpdateQueue.Add(node);
-        }
+        public static void AddNodeToUpdateQueue(GeonNode node) => _nodesUpdateQueue.Add(node);
     }
 }

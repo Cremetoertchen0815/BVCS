@@ -180,10 +180,7 @@ namespace Nez.GeonBit
         /// Clone transformations.
         /// </summary>
         /// <returns>Copy of this transformations.</returns>
-        public Transformations Clone()
-        {
-            return new Transformations(this);
-        }
+        public Transformations Clone() => new Transformations(this);
 
         /// <summary>
         /// Build and return just the rotation matrix for this treansformations.
@@ -272,9 +269,9 @@ namespace Nez.GeonBit
         public Matrix BuildMatrix()
         {
             // create the matrix parts
-            Matrix pos = Matrix.CreateTranslation(Position);
-            Matrix rot = BuildRotationMatrix();
-            Matrix scale = Matrix.CreateScale(Scale);
+            var pos = Matrix.CreateTranslation(Position);
+            var rot = BuildRotationMatrix();
+            var scale = Matrix.CreateScale(Scale);
 
             // build and return matrix based on order
             switch (TransformOrder)

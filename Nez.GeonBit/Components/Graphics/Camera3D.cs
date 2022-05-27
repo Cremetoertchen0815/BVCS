@@ -18,7 +18,6 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Nez.GeonBit
@@ -53,16 +52,16 @@ namespace Nez.GeonBit
         public static readonly float DefaultFieldOfView = MathHelper.PiOver4;
 
         // projection params
-        float _fieldOfView = MathHelper.PiOver4;
-        float _nearClipPlane = 1.0f;
-        float _farClipPlane = 950.0f;
-        float _aspectRatio = 1.0f;
+        private float _fieldOfView = MathHelper.PiOver4;
+        private float _nearClipPlane = 1.0f;
+        private float _farClipPlane = 950.0f;
+        private float _aspectRatio = 1.0f;
 
         // current camera type
-        CameraType _cameraType = CameraType.Perspective;
+        private CameraType _cameraType = CameraType.Perspective;
 
         // camera screen size
-        Point? _altScreenSize = null;
+        private Point? _altScreenSize = null;
 
         /// <summary>
         /// If defined, this will be used as screen size (affect aspect ratio in perspective camera,
@@ -70,8 +69,8 @@ namespace Nez.GeonBit
         /// </summary>
         public Point? ForceScreenSize
         {
-            get { return _altScreenSize; }
-            set { _altScreenSize = value; }
+            get => _altScreenSize;
+            set => _altScreenSize = value;
         }
 
         /// <summary>
@@ -80,7 +79,7 @@ namespace Nez.GeonBit
         public CameraType CameraType
         {
             set { _cameraType = value; _needUpdateProjection = true; }
-            get { return _cameraType; }
+            get => _cameraType;
         }
 
         /// <summary>
@@ -88,7 +87,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float FieldOfView
         {
-            get { return _fieldOfView; }
+            get => _fieldOfView;
             set { _fieldOfView = value; _needUpdateProjection = true; }
         }
 
@@ -97,7 +96,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float NearClipPlane
         {
-            get { return _nearClipPlane; }
+            get => _nearClipPlane;
             set { _nearClipPlane = value; _needUpdateProjection = true; }
         }
 
@@ -106,7 +105,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float FarClipPlane
         {
-            get { return _farClipPlane; }
+            get => _farClipPlane;
             set { _farClipPlane = value; _needUpdateProjection = true; }
         }
 
@@ -114,21 +113,18 @@ namespace Nez.GeonBit
         private bool _needUpdateProjection = true;
 
         // current view matrix
-        Matrix _view;
+        private Matrix _view;
 
         // current projection matrix
-        Matrix _projection;
+        private Matrix _projection;
 
         // current world position
-        Vector3 _position;
+        private Vector3 _position;
 
         /// <summary>
         /// Get camera position.
         /// </summary>
-        public Vector3 Position
-        {
-            get { return _position; }
-        }
+        public Vector3 Position => _position;
 
         /// <summary>
         /// Return the current camera projection matrix.
@@ -141,10 +137,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get / Set the current camera view matrix.
         /// </summary>
-        public Matrix View
-        {
-            get { return _view; }
-        }
+        public Matrix View => _view;
 
         /// <summary>
         /// Get camera forward vector.
@@ -153,7 +146,7 @@ namespace Nez.GeonBit
         {
             get
             {
-                Vector3 ret = Vector3.Transform(Vector3.Forward, Matrix.Invert(View));
+                var ret = Vector3.Transform(Vector3.Forward, Matrix.Invert(View));
                 ret.Normalize();
                 return -ret;
             }
@@ -166,7 +159,7 @@ namespace Nez.GeonBit
         {
             get
             {
-                Vector3 ret = Vector3.Transform(Vector3.Forward, Matrix.Invert(View));
+                var ret = Vector3.Transform(Vector3.Forward, Matrix.Invert(View));
                 ret.Normalize();
                 return ret;
             }
@@ -218,7 +211,7 @@ namespace Nez.GeonBit
             // if we don't have alternative screen size defined, get current backbuffer size
             else
             {
-                GraphicsDeviceManager deviceManager = GeonBitRenderer.GraphicsDeviceManager;
+                var deviceManager = GeonBitRenderer.GraphicsDeviceManager;
                 width = deviceManager.PreferredBackBufferWidth;
                 height = deviceManager.PreferredBackBufferHeight;
             }
@@ -257,7 +250,7 @@ namespace Nez.GeonBit
         /// <returns>Ray from camera to mouse.</returns>
         public Ray RayFromMouse()
         {
-            MouseState mouseState = Mouse.GetState();
+            var mouseState = Mouse.GetState();
             return RayFrom2dPoint(new Vector2(mouseState.X, mouseState.Y));
         }
 
@@ -266,10 +259,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="point">Point to send ray to.</param>
         /// <returns>Ray from camera to given position.</returns>
-        public Ray RayFrom3dPoint(Vector3 point)
-        {
-            return new Ray(Position, point - Position);
-        }
+        public Ray RayFrom3dPoint(Vector3 point) => new Ray(Position, point - Position);
 
         /// <summary>
         /// Return a ray starting from the camera and pointing directly at a 2d position translated to 3d space.
@@ -280,25 +270,25 @@ namespace Nez.GeonBit
         public Ray RayFrom2dPoint(Vector2 point)
         {
             // get graphic device
-            GraphicsDevice device = Core.GraphicsDevice;
+            var device = Core.GraphicsDevice;
 
             // convert point to near and far points as 3d vectors
-            Vector3 nearsource = new Vector3(point.X, point.Y, 0f);
-            Vector3 farsource = new Vector3(point.X, point.Y, 1f);
+            var nearsource = new Vector3(point.X, point.Y, 0f);
+            var farsource = new Vector3(point.X, point.Y, 1f);
 
             // create empty world matrix
-            Matrix world = Matrix.CreateTranslation(0, 0, 0);
+            var world = Matrix.CreateTranslation(0, 0, 0);
 
             // convert near point to world space
-            Vector3 nearPoint = device.Viewport.Unproject(nearsource,
+            var nearPoint = device.Viewport.Unproject(nearsource,
                 _projection, _view, world);
 
             // convert far point to world space
-            Vector3 farPoint = device.Viewport.Unproject(farsource,
+            var farPoint = device.Viewport.Unproject(farsource,
                 _projection, _view, world);
 
             // get direction
-            Vector3 dir = farPoint - nearPoint;
+            var dir = farPoint - nearPoint;
             dir.Normalize();
 
             // return ray
@@ -332,28 +322,22 @@ namespace Nez.GeonBit
         /// Get if this camera is the active camera in its scene.
         /// Note: it doesn't mean that the scene this camera belongs to is currently active.
         /// </summary>
-        public bool IsActiveCamera
-        {
-            get
-            {
-                return GeonBitRenderer.ActiveCamera == this;
-            }
-        }
+        public bool IsActiveCamera => GeonBitRenderer.ActiveCamera == this;
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public Component Clone()
+        public override Component Clone()
         {
-            Camera3D ret = (Camera3D)Clone();
+            var ret = (Camera3D)base.Clone();
             ret.LookAt = LookAt;
             ret.LookAtTarget = LookAtTarget;
             ret.LookAtTargetOffset = LookAtTargetOffset;
             ret.CameraType = CameraType;
             ret.ForceScreenSize = ForceScreenSize;
-            ret.FarPlane = FarPlane;
-            ret.NearPlane = NearPlane;
+            ret.FarClipPlane = FarClipPlane;
+            ret.NearClipPlane = NearClipPlane;
             ret.FieldOfView = FieldOfView;
             ret.AutoUpdate = AutoUpdate;
             return ret;
@@ -363,37 +347,27 @@ namespace Nez.GeonBit
         /// Get the 3d ray that starts from camera position and directed at current mouse position.
         /// </summary>
         /// <returns>Ray from camera to mouse position.</returns>
-        public Ray GetMouseRay()
-        {
-            return RayFromMouse();
-        }
+        public Ray GetMouseRay() => RayFromMouse();
 
         /// <summary>
         /// Get the 3d ray that starts from camera position and directed at a given 2d position.
         /// </summary>
         /// <param name="position">Position to get ray to.</param>
         /// <returns>Ray from camera to given position.</returns>
-        public Ray GetRay(Vector2 position)
-        {
-            return RayFrom2dPoint(position);
-        }
+        public Ray GetRay(Vector2 position) => RayFrom2dPoint(position);
 
         /// <summary>
         /// Get the 3d ray that starts from camera position and directed at a given 3d position.
         /// </summary>
         /// <param name="position">Position to get ray to.</param>
         /// <returns>Ray from camera to given position.</returns>
-        public Ray GetRay(Vector3 position)
-        {
-            return RayFrom3dPoint(position);
-        }
+        public Ray GetRay(Vector3 position) => RayFrom3dPoint(position);
 
 
         /// <summary>
         /// Set this camera as the currently active camera.
         /// </summary>
-        public void SetAsActive()
-        {
+        public void SetAsActive() =>
             // if not in scene, throw exception
             //if (_GameObject == null || _GameObject.ParentScene == null)
             //{
@@ -402,7 +376,6 @@ namespace Nez.GeonBit
 
             // update core graphics about new active camera
             GeonBitRenderer.ActiveCamera = this;
-        }
 
         /// <summary>
         /// Called every frame in the Update() loop.
@@ -433,7 +406,7 @@ namespace Nez.GeonBit
             Matrix view;
 
             // get current world position (of the camera)
-            Vector3 worldPos = _camNode.WorldPosition;
+            var worldPos = _camNode.WorldPosition;
 
             // if we have lookat-target, create view from look-at matrix.
             if (LookAt != null)
@@ -443,7 +416,7 @@ namespace Nez.GeonBit
             // if we don't have a look-at target, create view matrix from scene node transformations
             else
             {
-                Vector3 target = worldPos + Vector3.Transform(Vector3.Forward, _camNode.WorldRotation);
+                var target = worldPos + Vector3.Transform(Vector3.Forward, _camNode.WorldRotation);
                 view = Matrix.CreateLookAt(worldPos, target, Vector3.Up);
             }
 

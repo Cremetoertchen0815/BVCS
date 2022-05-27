@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 
 namespace GeonBit.Core.Physics.CollisionShapes
 {
@@ -32,10 +31,7 @@ namespace GeonBit.Core.Physics.CollisionShapes
         /// <param name="width">Box base width (X axis).</param>
         /// <param name="height">Box base height (Y axis).</param>
         /// <param name="depth">Bow base depth (Z axis).</param>
-        public CollisionBox2D(float width = 1f, float height = 1f, float depth = 1f)
-        {
-            _shape = new BulletSharp.Box2DShape(width / 2f, height / 2f, depth / 2f);
-        }
+        public CollisionBox2D(float width = 1f, float height = 1f, float depth = 1f) => _shape = new BulletSharp.Box2DShape(width / 2f, height / 2f, depth / 2f);
 
         /// <summary>
         /// Clone the physical shape.
@@ -44,7 +40,7 @@ namespace GeonBit.Core.Physics.CollisionShapes
         protected override ICollisionShape CloneImp()
         {
             var shape = _shape as BulletSharp.Box2DShape;
-            Vector3 halfExtent = ToMonoGame.Vector(shape.HalfExtentsWithoutMargin);
+            var halfExtent = ToMonoGame.Vector(shape.HalfExtentsWithoutMargin);
             return new CollisionBox2D(halfExtent.X * 2f, halfExtent.Y * 2f, halfExtent.Z * 2f);
         }
     }

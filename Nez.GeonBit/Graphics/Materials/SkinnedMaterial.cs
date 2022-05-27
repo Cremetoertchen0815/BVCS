@@ -19,8 +19,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System;
 
 namespace Nez.GeonBit.Materials
 {
@@ -30,24 +28,24 @@ namespace Nez.GeonBit.Materials
     public class SkinnedMaterial : MaterialAPI
     {
         // the effect instance of this material.
-        SkinnedEffect _effect;
+        private SkinnedEffect _effect;
 
         /// <summary>
         /// Get the effect instance.
         /// </summary>
-        public override Effect Effect { get { return _effect; } }
+        public override Effect Effect => _effect;
 
         /// <summary>
         /// Current bone transformations
         /// </summary>
-        Matrix[] _currBones;
+        private Matrix[] _currBones;
 
         /// <summary>
         /// Set bone transforms for an animated material.
         /// Useable only for materials that implement skinned animation in shader.
         /// </summary>
         /// <param name="bones"></param>
-        override public void SetBoneTransforms(Matrix[] bones)
+        public override void SetBoneTransforms(Matrix[] bones)
         {
             _currBones = bones;
             SetAsDirty(MaterialDirtyFlags.Bones);
@@ -95,7 +93,7 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Apply this material.
         /// </summary>
-        override protected void MaterialSpecificApply(bool wasLastMaterial)
+        protected override void MaterialSpecificApply(bool wasLastMaterial)
         {
             // set world matrix
             if (IsDirty(MaterialDirtyFlags.World))
@@ -139,27 +137,18 @@ namespace Nez.GeonBit.Materials
         /// Update material view matrix.
         /// </summary>
         /// <param name="view">New view to set.</param>
-        override protected void UpdateView(ref Matrix view)
-        {
-            _effect.View = View;
-        }
+        protected override void UpdateView(ref Matrix view) => _effect.View = View;
 
         /// <summary>
         /// Update material projection matrix.
         /// </summary>
         /// <param name="projection">New projection to set.</param>
-        override protected void UpdateProjection(ref Matrix projection)
-        {
-            _effect.Projection = Projection;
-        }
+        protected override void UpdateProjection(ref Matrix projection) => _effect.Projection = Projection;
 
         /// <summary>
         /// Clone this material.
         /// </summary>
         /// <returns>Copy of this material.</returns>
-        public override MaterialAPI Clone()
-        {
-            return new SkinnedMaterial(this);
-        }
+        public override MaterialAPI Clone() => new SkinnedMaterial(this);
     }
 }

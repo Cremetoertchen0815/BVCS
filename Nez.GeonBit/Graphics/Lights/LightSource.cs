@@ -50,25 +50,19 @@ namespace Nez.GeonBit.Lights
         /// <summary>
         /// Return if this light source is infinite, eg has no range and reach anywhere (like a directional light).
         /// </summary>
-        virtual public bool IsInfinite
-        {
-            get { return Direction != null || _range == 0f; }
-        }
+        public virtual bool IsInfinite => Direction != null || _range == 0f;
 
         /// <summary>
         /// Return if this light is a directional light.
         /// </summary>
-        virtual public bool IsDirectionalLight
-        {
-            get { return Direction != null; }
-        }
+        public virtual bool IsDirectionalLight => Direction != null;
 
         /// <summary>
         /// Light direction, if its a directional light.
         /// </summary>
         public Vector3? Direction
         {
-            get { return _direction; }
+            get => _direction;
             set { if (_direction == value) return; _direction = value; ParamsVersion++; RecalcBoundingSphere(); }
         }
         private Vector3? _direction = null;
@@ -78,7 +72,7 @@ namespace Nez.GeonBit.Lights
         /// </summary>
         public float Range
         {
-            get { return _range; }
+            get => _range;
             set { if (_range == value) return; _range = value; ParamsVersion++; RecalcBoundingSphere(); }
         }
         private float _range = 100f;
@@ -88,40 +82,44 @@ namespace Nez.GeonBit.Lights
         /// </summary>
         public Vector3 Position
         {
-            get { return _position; }
+            get => _position;
             set { if (_position == value) return; _position = value; ParamsVersion++; RecalcBoundingSphere(); }
         }
-        Vector3 _position = Vector3.Zero;
+
+        private Vector3 _position = Vector3.Zero;
 
         /// <summary>
         /// Light color and strength (A field = light strength).
         /// </summary>
         public Color Color
         {
-            get { return _color; }
+            get => _color;
             set { if (_color == value) return; _color = value; ParamsVersion++; }
         }
-        Color _color = Color.White;
+
+        private Color _color = Color.White;
 
         /// <summary>
         /// Light Intensity (equivilent to Color.A).
         /// </summary>
         public float Intensity
         {
-            get { return _intensity; }
+            get => _intensity;
             set { if (_intensity == value) return; _intensity = value; ParamsVersion++; }
         }
-        float _intensity = 1f;
+
+        private float _intensity = 1f;
 
         /// <summary>
         /// Specular factor.
         /// </summary>
         public float Specular
         {
-            get { return _specular; }
+            get => _specular;
             set { if (_specular == value) return; _specular = value; ParamsVersion++; }
         }
-        float _specular = 1f;
+
+        private float _specular = 1f;
 
         /// <summary>
         /// Last light known transform.
@@ -142,11 +140,9 @@ namespace Nez.GeonBit.Lights
         /// <summary>
         /// Create the light source.
         /// </summary>
-        public LightSource()
-        {
+        public LightSource() =>
             // count the object creation
             CountAndAlert.Count(CountAndAlert.PredefAlertTypes.AddedOrCreated);
-        }
 
         /// <summary>
         /// Update light transformations.
@@ -158,8 +154,7 @@ namespace Nez.GeonBit.Lights
             if (_transform == worldTransformations) { return; }
 
             // break transformation into components
-            Vector3 scale; Vector3 position; Quaternion rotation;
-            _transform.Decompose(out scale, out rotation, out position);
+            _transform.Decompose(out var scale, out var rotation, out var position);
 
             // set world position. this will also recalc bounding sphere and update lights manager, if needed.
             Position = position;

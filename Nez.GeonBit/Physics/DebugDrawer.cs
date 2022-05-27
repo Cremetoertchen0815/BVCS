@@ -32,10 +32,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using BulletSharp;
+using System;
 
 
 namespace GeonBit.Core.Physics
@@ -46,30 +45,25 @@ namespace GeonBit.Core.Physics
     public class PhysicsDebugDraw : DebugDraw
     {
         // graphic device instance
-        GraphicsDevice _device;
+        private GraphicsDevice _device;
 
         // effect to use for debug drawings
-        BasicEffect _effect = null;
+        private BasicEffect _effect = null;
 
         /// <summary>
         /// Get if in debug mode or not.
         /// </summary>
-        public override DebugDrawModes DebugMode {
-            get
-            {
-                return DebugDrawModes.DrawWireframe | DebugDrawModes.DrawContactPoints | DebugDrawModes.NoHelpText;
-            }
-            set {}
+        public override DebugDrawModes DebugMode
+        {
+            get => DebugDrawModes.DrawWireframe | DebugDrawModes.DrawContactPoints | DebugDrawModes.NoHelpText;
+            set { }
         }
 
         /// <summary>
         /// Create the debug drawer.
         /// </summary>
         /// <param name="device">MonoGame graphic device.</param>
-        public PhysicsDebugDraw(GraphicsDevice device)
-        {
-            _device = device;
-        }
+        public PhysicsDebugDraw(GraphicsDevice device) => _device = device;
 
         /// <summary>
         /// Draw 3d text.
@@ -77,10 +71,7 @@ namespace GeonBit.Core.Physics
         /// <param name="location">Psition to draw.</param>
         /// <param name="textString">String to render.</param>
 
-        public override void Draw3DText(ref BulletSharp.Math.Vector3 location, string textString)
-        {
-            throw new NotImplementedException();
-        }
+        public override void Draw3DText(ref BulletSharp.Math.Vector3 location, string textString) => throw new NotImplementedException();
 
         /// <summary>
         /// Draw contact point.
@@ -108,7 +99,7 @@ namespace GeonBit.Core.Physics
         /// <param name="color">Color.</param>
         public override void DrawLine(ref BulletSharp.Math.Vector3 from, ref BulletSharp.Math.Vector3 to, ref BulletSharp.Math.Vector3 color)
         {
-            Color col = new Color(color.X, color.Y, color.Z);
+            var col = new Color(color.X, color.Y, color.Z);
             var vertices = new[]
             {
                 new VertexPositionColor(ToMonoGame.Vector(from), col),
@@ -126,8 +117,8 @@ namespace GeonBit.Core.Physics
         /// <param name="color2">Ending color.</param>
         public void DrawLine(ref Vector3 from, ref Vector3 to, ref Vector3 color, ref Vector3 color2)
         {
-            Color col = new Color(color.X, color.Y, color.Z);
-            Color col2 = new Color(color2.X, color2.Y, color2.Z);
+            var col = new Color(color.X, color.Y, color.Z);
+            var col2 = new Color(color2.X, color2.Y, color2.Z);
             var vertices = new[]
             {
                 new VertexPositionColor(from, col),
@@ -151,8 +142,10 @@ namespace GeonBit.Core.Physics
             // create effect if needed
             if (_effect == null)
             {
-                _effect = new BasicEffect(_device);
-                _effect.VertexColorEnabled = true;
+                _effect = new BasicEffect(_device)
+                {
+                    VertexColorEnabled = true
+                };
             }
 
             // set effect properties
@@ -163,8 +156,8 @@ namespace GeonBit.Core.Physics
             world.DebugDrawer = this;
 
             // reset depth stencil and rasterizer states
-            RasterizerState RasterizerState = new RasterizerState();
-            DepthStencilState DepthStencilState = new DepthStencilState();
+            var RasterizerState = new RasterizerState();
+            var DepthStencilState = new DepthStencilState();
             RasterizerState.CullMode = CullMode.None;
             RasterizerState.DepthClipEnable = true;
             RasterizerState.FillMode = FillMode.Solid;
@@ -174,11 +167,11 @@ namespace GeonBit.Core.Physics
             Graphics.GraphicsManager.GraphicsDevice.DepthStencilState = DepthStencilState;
 
             // apply effect
-            foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
+            foreach (var pass in _effect.CurrentTechnique.Passes)
             {
                 // draw current pass
                 pass.Apply();
-                
+
                 // draw world
                 world.DebugDrawWorld();
             }
@@ -188,9 +181,6 @@ namespace GeonBit.Core.Physics
         /// Report error warning from Bullet3d.
         /// </summary>
         /// <param name="warningString">Warning to report.</param>
-        public override void ReportErrorWarning(string warningString)
-        {
-            throw new NotImplementedException();
-        }
-	}
+        public override void ReportErrorWarning(string warningString) => throw new NotImplementedException();
+    }
 }

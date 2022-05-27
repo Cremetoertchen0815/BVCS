@@ -26,36 +26,33 @@ namespace GeonBit.Core.Utils
     /// An array you can add elements to, but still access the internal array object.
     /// </summary>
     /// <typeparam name="T">Type to store in array.</typeparam>
-    class ResizableArray<T>
+    internal class ResizableArray<T>
     {
         /// <summary>
         /// Items array.
         /// </summary>
-        T[] m_array;
+        private T[] m_array;
 
         /// <summary>
         /// Items count.
         /// </summary>
-        int m_count;
+        private int m_count;
 
         /// <summary>
         /// Create the resizable array with default starting size.
         /// </summary>
         /// <param name="initialCapacity">Optional initial starting size.</param>
-        public ResizableArray(int? initialCapacity = null)
-        {
-            m_array = new T[initialCapacity ?? 4];
-        }
+        public ResizableArray(int? initialCapacity = null) => m_array = new T[initialCapacity ?? 4];
 
         /// <summary>
         /// Get the internal array.
         /// </summary>
-        public T[] InternalArray { get { return m_array; } }
+        public T[] InternalArray => m_array;
 
         /// <summary>
         /// Get array real size.
         /// </summary>
-        public int Count { get { return m_count; } }
+        public int Count => m_count;
 
         /// <summary>
         /// Clear the array.
@@ -69,10 +66,7 @@ namespace GeonBit.Core.Utils
         /// <summary>
         /// Remove the extra buffer from array and resize it to actual size.
         /// </summary>
-        public void Trim()
-        {
-            Array.Resize(ref m_array, m_count);
-        }
+        public void Trim() => Array.Resize(ref m_array, m_count);
 
         /// <summary>
         /// Add element to array.

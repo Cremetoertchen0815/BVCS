@@ -17,10 +17,7 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System;
 
 namespace Nez.GeonBit.Materials
 {

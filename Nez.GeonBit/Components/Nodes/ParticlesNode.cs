@@ -17,8 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
@@ -31,20 +29,22 @@ namespace Nez.GeonBit
         /// Clone this scene node.
         /// </summary>
         /// <returns>GeonNode copy.</returns>
-        public override GeonNode Clone()
+        public override Component Clone()
         {
-            ParticleNode ret = new ParticleNode();
-            ret.Transformations = Transformations.Clone();
-            ret.LastBoundingBox = LastBoundingBox;
-            ret.Visible = Visible;
+            var ret = new ParticleNode
+            {
+                Transformations = Transformations.Clone(),
+                LastBoundingBox = LastBoundingBox,
+                Visible = Visible
+            };
             return ret;
         }
-        
+
         /// <summary>
         /// Update culling test / cached data.
         /// This is called whenever trying to draw this node after transformations update
         /// </summary>
-        override protected void UpdateCullingData()
+        protected override void UpdateCullingData()
         {
         }
     }

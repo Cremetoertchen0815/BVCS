@@ -27,7 +27,7 @@ namespace GeonBit.Core.Physics.CollisionShapes
     public class CollisionHeightMap : ICollisionShape
     {
         // handle to the heightmap raw data
-        System.Runtime.InteropServices.GCHandle _rawDataHandle;
+        private System.Runtime.InteropServices.GCHandle _rawDataHandle;
 
         /// <summary>
         /// Destroy the collision shape.
@@ -48,11 +48,9 @@ namespace GeonBit.Core.Physics.CollisionShapes
         /// <param name="maxHeight">Max height value.</param>
         /// <param name="heightScale">Optional height scale.</param>
         /// <param name="useDiamondSubdivision">Divide the tiles into diamond shapes for more accurare results.</param>
-        public CollisionHeightMap(byte[] heightData, Point size, Vector2 scale, float minHeight = 0f, float maxHeight = 100f, float heightScale = 1f, bool useDiamondSubdivision = false)
-        {
+        public CollisionHeightMap(byte[] heightData, Point size, Vector2 scale, float minHeight = 0f, float maxHeight = 100f, float heightScale = 1f, bool useDiamondSubdivision = false) =>
             // build shape
             Build(heightData, size, scale, minHeight, maxHeight, heightScale, 1, useDiamondSubdivision);
-        }
 
         /// <summary>
         /// Create the collision height map.
@@ -66,7 +64,7 @@ namespace GeonBit.Core.Physics.CollisionShapes
         public CollisionHeightMap(Vector3[,] heightData, Vector2 scale, float minHeight = 0f, float maxHeight = 100f, float heightScale = 1f, bool useDiamondSubdivision = false)
         {
             // get size and convert to bytes array
-            Point size = new Point(heightData.GetLength(0), heightData.GetLength(1));
+            var size = new Point(heightData.GetLength(0), heightData.GetLength(1));
             float[] array = new float[size.X * size.Y * 4];
             for (int i = 0; i < size.X; ++i)
             {
@@ -92,13 +90,13 @@ namespace GeonBit.Core.Physics.CollisionShapes
         public CollisionHeightMap(byte[,] heightData, Vector2 scale, float minHeight = 0f, float maxHeight = 100f, float heightScale = 1f, bool useDiamondSubdivision = false)
         {
             // get size and convert to bytes array
-            Point size = new Point(heightData.GetLength(0), heightData.GetLength(1));
-            var array = new byte[size.X * size.Y * 4];
+            var size = new Point(heightData.GetLength(0), heightData.GetLength(1));
+            byte[] array = new byte[size.X * size.Y * 4];
             for (int i = 0; i < size.X; ++i)
             {
                 for (int j = 0; j < size.Y; ++j)
                 {
-                    array[i + j * size.X] = (byte)heightData[i, j];
+                    array[i + j * size.X] = heightData[i, j];
                 }
             }
 
@@ -146,11 +144,9 @@ namespace GeonBit.Core.Physics.CollisionShapes
         /// <param name="maxHeight">Max height value.</param>
         /// <param name="heightScale">Optional height scale.</param>
         /// <param name="useDiamondSubdivision">Divide the tiles into diamond shapes for more accurare results.</param>
-        public CollisionHeightMap(float[] heightData, Point size, Vector2 scale, float minHeight = 0f, float maxHeight = 100f, float heightScale = 1f, bool useDiamondSubdivision = false)
-        {
+        public CollisionHeightMap(float[] heightData, Point size, Vector2 scale, float minHeight = 0f, float maxHeight = 100f, float heightScale = 1f, bool useDiamondSubdivision = false) =>
             // build shape
             Build(heightData, size, scale, minHeight, maxHeight, heightScale, 1, useDiamondSubdivision);
-        }
 
         /// <summary>
         /// Create the collision height map.
@@ -164,8 +160,8 @@ namespace GeonBit.Core.Physics.CollisionShapes
         public CollisionHeightMap(float[,] heightData, Vector2 scale, float minHeight = 0f, float maxHeight = 100f, float heightScale = 1f, bool useDiamondSubdivision = false)
         {
             // get size and convert to bytes array
-            Point size = new Point(heightData.GetLength(0), heightData.GetLength(1));
-            var array = new byte[size.X * size.Y * 4];
+            var size = new Point(heightData.GetLength(0), heightData.GetLength(1));
+            byte[] array = new byte[size.X * size.Y * 4];
             for (int i = 0; i < size.X; ++i)
             {
                 for (int j = 0; j < size.Y; ++j)
@@ -212,9 +208,6 @@ namespace GeonBit.Core.Physics.CollisionShapes
         /// Clone the physical shape.
         /// </summary>
         /// <returns>Cloned shape.</returns>
-        protected override ICollisionShape CloneImp()
-        {
-            throw new System.InvalidOperationException("Cannot clone height-map physical shape!");
-        }
+        protected override ICollisionShape CloneImp() => throw new System.InvalidOperationException("Cannot clone height-map physical shape!");
     }
 }

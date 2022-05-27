@@ -19,7 +19,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using System;
 
 namespace Nez.GeonBit.Materials
@@ -33,95 +32,91 @@ namespace Nez.GeonBit.Materials
         private static readonly string _effectPath = EffectsPath + "LitEffect";
 
         // the effect instance of this material.
-        Effect _effect;
+        private Effect _effect;
 
         /// <summary>
         /// Get the effect instance.
         /// </summary>
-        public override Effect Effect { get { return _effect; } }
+        public override Effect Effect => _effect;
 
         /// <summary>
         /// If true, will use the currently set lights manager in `Graphics.GraphicsManager.LightsManager` and call ApplyLights() with the lights from manager.
         /// </summary>
-        protected override bool UseDefaultLightsManager { get { return true; } }
+        protected override bool UseDefaultLightsManager => true;
 
         // caching of lights-related params from shader
-        EffectParameter _lightsCol;
-        EffectParameter _lightsPos;
-        EffectParameter _lightsIntens;
-        EffectParameter _lightsRange;
-        EffectParameter _lightsSpec;
+        private EffectParameter _lightsCol;
+        private EffectParameter _lightsPos;
+        private EffectParameter _lightsIntens;
+        private EffectParameter _lightsRange;
+        private EffectParameter _lightsSpec;
 
         // effect parameters
-        EffectParameterCollection _effectParams;
+        private EffectParameterCollection _effectParams;
 
         // current active lights counter
-        int _activeLightsCount = 0;
+        private int _activeLightsCount = 0;
 
         // how many of the active lights are directional
-        int _directionalLightsCount = 0;
+        private int _directionalLightsCount = 0;
 
         /// <summary>
         /// Max light intensity from regular light sources (before specular).
         /// </summary>
-        virtual public float MaxLightIntensity
+        public virtual float MaxLightIntensity
         {
-            get { return _maxLightIntens; }
+            get => _maxLightIntens;
             set { _maxLightIntens = value; SetAsDirty(MaterialDirtyFlags.MaterialColors); }
         }
-        float _maxLightIntens = 1.0f;
+
+        private float _maxLightIntens = 1.0f;
 
         /// <summary>
         /// Normal map texture.
         /// </summary>
-        virtual public Texture2D NormalTexture
+        public virtual Texture2D NormalTexture
         {
-            get { return _normalTexture; }
+            get => _normalTexture;
             set { _normalTexture = value; SetAsDirty(MaterialDirtyFlags.TextureParams); }
         }
-        Texture2D _normalTexture;
+
+        private Texture2D _normalTexture;
 
         /// <summary>
         /// Get how many samplers this material uses.
         /// </summary>
-        protected override int SamplersCount { get { return _normalTexture == null ? 1 : 2; } }
+        protected override int SamplersCount => _normalTexture == null ? 1 : 2;
 
         // caching lights data in arrays ready to be sent to shader.
-        Vector3[] _lightsColArr = new Vector3[MaxLightsCount];
-        Vector3[] _lightsPosArr = new Vector3[MaxLightsCount];
-        float[] _lightsIntensArr = new float[MaxLightsCount];
-        float[] _lightsRangeArr = new float[MaxLightsCount];
-        float[] _lightsSpecArr = new float[MaxLightsCount];
+        private Vector3[] _lightsColArr = new Vector3[MaxLightsCount];
+        private Vector3[] _lightsPosArr = new Vector3[MaxLightsCount];
+        private float[] _lightsIntensArr = new float[MaxLightsCount];
+        private float[] _lightsRangeArr = new float[MaxLightsCount];
+        private float[] _lightsSpecArr = new float[MaxLightsCount];
 
         // caching world and transpose params
-        EffectParameter _worldParam;
-        EffectParameter _transposeParam;
+        private EffectParameter _worldParam;
+        private EffectParameter _transposeParam;
 
         // How many lights we can support at the same time. based on effect definition.
-        static readonly int MaxLightsCount = 7;
+        private static readonly int MaxLightsCount = 7;
 
         // cache of lights we applied
-        Lights.LightSource[] _lastLights = new Lights.LightSource[MaxLightsCount];
+        private Lights.LightSource[] _lastLights = new Lights.LightSource[MaxLightsCount];
 
         // cache of lights last known params version
-        uint[] _lastLightVersions = new uint[MaxLightsCount];
+        private uint[] _lastLightVersions = new uint[MaxLightsCount];
 
         /// <summary>
         /// Return if this material support dynamic lighting.
         /// </summary>
-        override public bool LightingEnabled
-        {
-            get { return true; }
-        }
+        public override bool LightingEnabled => true;
 
         /// <summary>
         /// Create new lit effect instance.
         /// </summary>
         /// <returns>New lit effect instance.</returns>
-        public virtual Effect CreateEffect()
-        {
-            return ResourcesManager.Instance.GetEffect(_effectPath).Clone();
-        }
+        public virtual Effect CreateEffect() => ResourcesManager.Instance.GetEffect(_effectPath).Clone();
 
         /// <summary>
         /// Create the lit material from an empty effect.
@@ -193,7 +188,7 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Init light-related params from shader.
         /// </summary>
-        void InitLightParams()
+        private void InitLightParams()
         {
             _effectParams = _effect.Parameters;
             _lightsCol = _effectParams["LightColor"];
@@ -208,7 +203,7 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Apply this material.
         /// </summary>
-        override protected void MaterialSpecificApply(bool wasLastMaterial)
+        protected override void MaterialSpecificApply(bool wasLastMaterial)
         {
             // set world matrix
             _effectParams["WorldViewProjection"].SetValue(World * ViewProjection);
@@ -258,7 +253,7 @@ namespace Nez.GeonBit.Materials
         /// Update material view matrix.
         /// </summary>
         /// <param name="view">New view to set.</param>
-        override protected void UpdateView(ref Matrix view)
+        protected override void UpdateView(ref Matrix view)
         {
         }
 
@@ -266,7 +261,7 @@ namespace Nez.GeonBit.Materials
         /// Update material projection matrix.
         /// </summary>
         /// <param name="projection">New projection to set.</param>
-        override protected void UpdateProjection(ref Matrix projection)
+        protected override void UpdateProjection(ref Matrix projection)
         {
         }
 
@@ -276,7 +271,7 @@ namespace Nez.GeonBit.Materials
         /// <param name="lights">Array of light sources to apply.</param>
         /// <param name="worldMatrix">World transforms of the rendering object.</param>
         /// <param name="boundingSphere">Bounding sphere (after world transformation applied) of the rendering object.</param>
-        override protected void ApplyLights(Lights.LightSource[] lights, ref Matrix worldMatrix, ref BoundingSphere boundingSphere)
+        protected override void ApplyLights(Lights.LightSource[] lights, ref Matrix worldMatrix, ref BoundingSphere boundingSphere)
         {
             // set global light params
             if (IsDirty(MaterialDirtyFlags.EmissiveLight))
@@ -364,9 +359,6 @@ namespace Nez.GeonBit.Materials
         /// Clone this material.
         /// </summary>
         /// <returns>Copy of this material.</returns>
-        public override MaterialAPI Clone()
-        {
-            return new LitMaterial(this);
-        }
+        public override MaterialAPI Clone() => new LitMaterial(this);
     }
 }

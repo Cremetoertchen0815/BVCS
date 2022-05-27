@@ -4,7 +4,7 @@
     /// GeonBit.ECS.Components.Physics contain physics and collision-related components.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGenerated]
-    class NamespaceDoc
+    internal class NamespaceDoc
     {
     }
 }

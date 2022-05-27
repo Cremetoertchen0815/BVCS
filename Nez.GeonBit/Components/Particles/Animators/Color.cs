@@ -42,7 +42,7 @@ namespace Nez.GeonBit.Particles.Animators
         public float ColoringTime { get; private set; }
 
         // store fade time jitter for cloning.
-        float _coloringTimeJitter = 0f;
+        private float _coloringTimeJitter = 0f;
 
         /// <summary>
         /// Optional color jitter to change the starting color.
@@ -58,24 +58,16 @@ namespace Nez.GeonBit.Particles.Animators
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
-        {
+        public override Component Clone() =>
             // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitter
             // so we'll still have the random factor applied on the cloned entity.
-            return CopyBasics(new ColorAnimator(BaseProperties, FromColor, ToColor, ColoringTime, 
+            CopyBasics(new ColorAnimator(BaseProperties, FromColor, ToColor, ColoringTime,
                 _coloringTimeJitter, _startColorJitter, _endColorJitter));
-        }
 
         /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
         /// </summary>
-        override protected bool IsDone
-        {
-            get
-            {
-                return TimeAnimated >= ColoringTime;
-            }
-        }
+        protected override bool IsDone => TimeAnimated >= ColoringTime;
 
         /// <summary>
         /// Create the color animator.
@@ -104,7 +96,7 @@ namespace Nez.GeonBit.Particles.Animators
         /// </summary>
         /// <param name="properties">Basic animator properties.</param>
         /// <param name="coloringTime">How long to transition from starting to ending color.</param>
-        public ColorAnimator(BaseAnimatorProperties properties, float coloringTime) : 
+        public ColorAnimator(BaseAnimatorProperties properties, float coloringTime) :
             this(properties, Color.Black, Color.Black, coloringTime, 0f, Color.White, Color.White)
         {
         }
@@ -117,7 +109,7 @@ namespace Nez.GeonBit.Particles.Animators
             // add fading time jittering
             if (_coloringTimeJitter != 0f)
             {
-                ColoringTime += (float)Random.NextDouble() * _coloringTimeJitter;
+                ColoringTime += Random.NextFloat() * _coloringTimeJitter;
             }
 
             // add start color jittering
@@ -142,15 +134,15 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// The animator implementation.
         /// </summary>
-        override protected void DoAnimation(float speedFactor)
+        protected override void DoAnimation(float speedFactor)
         {
             // get current fade step, and if done, skip
             float position = AnimatorUtils.CalcTransitionPercent(TimeAnimated, ColoringTime);
 
             // calc current alpha value
-            Color colora = (FromColor * (1f - position));
-            Color colorb = (ToColor * position);
-            Color finalColor = new Color((colora.R + colorb.R), (colora.G + colorb.G), (colora.B + colorb.B));
+            var colora = (FromColor * (1f - position));
+            var colorb = (ToColor * position);
+            var finalColor = new Color((colora.R + colorb.R), (colora.G + colorb.G), (colora.B + colorb.B));
 
             // update renderables
             foreach (var renderable in ModelRenderables)

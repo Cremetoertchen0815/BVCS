@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -27,13 +26,13 @@ namespace Nez.GeonBit
     /// <summary>
     /// Help utilities to handle 3d models.
     /// </summary>
-    static class ModelUtils
+    internal static class ModelUtils
     {
         // cache of bounding boxes we calculated for loaded models.
-        static Dictionary<Model, BoundingBox> _calculatedBoundingBoxes = new Dictionary<Model, BoundingBox>();
+        private static Dictionary<Model, BoundingBox> _calculatedBoundingBoxes = new Dictionary<Model, BoundingBox>();
 
         // cache of bounding spheres we calculated for loaded models.
-        static Dictionary<Model, BoundingSphere> _calculatedBoundingSpheres = new Dictionary<Model, BoundingSphere>();
+        private static Dictionary<Model, BoundingSphere> _calculatedBoundingSpheres = new Dictionary<Model, BoundingSphere>();
 
         /// <summary>
         /// Return bounding box for a model instance (calculate if needed, else return from cache).
@@ -43,8 +42,7 @@ namespace Nez.GeonBit
         public static BoundingBox GetBoundingBox(Model model)
         {
             // try to get value from cache, and if got bounding box in cache return it.
-            BoundingBox ret;
-            if (_calculatedBoundingBoxes.TryGetValue(model, out ret))
+            if (_calculatedBoundingBoxes.TryGetValue(model, out var ret))
             {
                 return ret;
             }
@@ -54,13 +52,13 @@ namespace Nez.GeonBit
 
             // got here? it means we need to calculate bounding box.
             // initialize minimum and maximum corners of the bounding box to max and min values
-            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
             // iterate over mesh parts
-            foreach (ModelMesh mesh in model.Meshes)
+            foreach (var mesh in model.Meshes)
             {
-                foreach (ModelMeshPart meshPart in mesh.MeshParts)
+                foreach (var meshPart in mesh.MeshParts)
                 {
                     // skip write-only buffers
                     if (meshPart.VertexBuffer.BufferUsage == BufferUsage.WriteOnly)
@@ -80,7 +78,7 @@ namespace Nez.GeonBit
                     for (int i = 0; i < vertexBufferSize / sizeof(float); i += vertexStride / sizeof(float))
                     {
                         // get curr position and update min / max
-                        Vector3 currPosition = new Vector3(vertexData[i], vertexData[i + 1], vertexData[i + 2]);
+                        var currPosition = new Vector3(vertexData[i], vertexData[i + 1], vertexData[i + 2]);
                         min = Vector3.Min(min, currPosition);
                         max = Vector3.Max(max, currPosition);
                     }
@@ -101,8 +99,7 @@ namespace Nez.GeonBit
         public static BoundingSphere GetBoundingSphere(Model model)
         {
             // try to get value from cache, and if got bounding box in cache return it.
-            BoundingSphere ret;
-            if (_calculatedBoundingSpheres.TryGetValue(model, out ret))
+            if (_calculatedBoundingSpheres.TryGetValue(model, out var ret))
             {
                 return ret;
             }

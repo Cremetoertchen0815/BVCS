@@ -24,30 +24,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit.Animation
 {
-    public class CpuAnimatedVertexBuffer: DynamicVertexBuffer
+    public class CpuAnimatedVertexBuffer : DynamicVertexBuffer
     {
         private VertexIndicesWeightsPositionNormal[] cpuVertices;
         private VertexPositionNormalTexture[] gpuVertices;
-        
+
         public CpuAnimatedVertexBuffer(GraphicsDevice graphicsDevice, VertexDeclaration vertexDeclaration, int vertexCount, BufferUsage bufferUsage) :
             base(graphicsDevice, vertexDeclaration, vertexCount, bufferUsage)
         {
             return;
         }
 
-        internal void SetGpuVertices(VertexPositionNormalTexture[] vertices)
-        {
-            this.gpuVertices = vertices;
-        }
+        internal void SetGpuVertices(VertexPositionNormalTexture[] vertices) => gpuVertices = vertices;
 
-        internal void SetCpuVertices(VertexIndicesWeightsPositionNormal[] vertices)
-        {
-            this.cpuVertices = vertices;
-        }
+        internal void SetCpuVertices(VertexIndicesWeightsPositionNormal[] vertices) => cpuVertices = vertices;
 
         internal void UpdateVertices(Matrix[] boneTransforms, int startIndex, int elementCount)
         {
-            Matrix transformSum = Matrix.Identity;
+            var transformSum = Matrix.Identity;
 
             // skin all of the vertices
             for (int i = startIndex; i < (startIndex + elementCount); i++)
@@ -62,7 +56,7 @@ namespace Nez.GeonBit.Animation
                 float w3 = cpuVertices[i].BlendWeights.Z;
                 float w4 = cpuVertices[i].BlendWeights.W;
 
-            #if (WP7_1)
+#if (WP7_1)
                 // Moblunatic claims ~40% faster.
                 // http://forums.create.msdn.com/forums/p/55123/335148.aspx
                 // This is true on WP7 with SIMD enabled. 
@@ -81,11 +75,11 @@ namespace Nez.GeonBit.Animation
                 transformSum.M24 = 0.0f;
                 transformSum.M34 = 0.0f;
                 transformSum.M44 = 1.0f;
-            #else
-                Matrix m1 = boneTransforms[b0];
-                Matrix m2 = boneTransforms[b1];
-                Matrix m3 = boneTransforms[b2];
-                Matrix m4 = boneTransforms[b3];
+#else
+                var m1 = boneTransforms[b0];
+                var m2 = boneTransforms[b1];
+                var m3 = boneTransforms[b2];
+                var m4 = boneTransforms[b3];
                 transformSum.M11 = (m1.M11 * w1) + (m2.M11 * w2) + (m3.M11 * w3) + (m4.M11 * w4);
                 transformSum.M12 = (m1.M12 * w1) + (m2.M12 * w2) + (m3.M12 * w3) + (m4.M12 * w4);
                 transformSum.M13 = (m1.M13 * w1) + (m2.M13 * w2) + (m3.M13 * w3) + (m4.M13 * w4);
@@ -98,7 +92,7 @@ namespace Nez.GeonBit.Animation
                 transformSum.M41 = (m1.M41 * w1) + (m2.M41 * w2) + (m3.M41 * w3) + (m4.M41 * w4);
                 transformSum.M42 = (m1.M42 * w1) + (m2.M42 * w2) + (m3.M42 * w3) + (m4.M42 * w4);
                 transformSum.M43 = (m1.M43 * w1) + (m2.M43 * w2) + (m3.M43 * w3) + (m4.M43 * w4);
-            #endif
+#endif
 
                 // Support the 4 Bone Influences - Position then Normal
                 Vector3.Transform(ref cpuVertices[i].Position, ref transformSum, out gpuVertices[i].Position);

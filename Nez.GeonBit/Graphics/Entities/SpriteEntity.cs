@@ -34,10 +34,10 @@ namespace Nez.GeonBit
         public SpriteSheet Spritesheet { get; private set; }
 
         // current spritesheet step
-        SpriteSheetStep _spritesheetStep;
+        private SpriteSheetStep _spritesheetStep;
 
         // currently playing animation (or null, if not playing any clips at the momeny)
-        SpriteAnimationClipPlay _currAnimation = null;
+        private SpriteAnimationClipPlay _currAnimation = null;
 
         /// <summary>
         /// Callback to call whenever sprite animation cycle ends (when using animation clips).
@@ -57,7 +57,7 @@ namespace Nez.GeonBit
         public MaterialOverrides MaterialOverride = new MaterialOverrides();
 
         // dictionary of shared materials. key is texture path, value is material to use for all sprites with this material.
-        static Dictionary<string, Materials.MaterialAPI> _sharedMaterials = new Dictionary<string, Materials.MaterialAPI>();
+        private static Dictionary<string, Materials.MaterialAPI> _sharedMaterials = new Dictionary<string, Materials.MaterialAPI>();
 
         /// <summary>
         /// Optional position offset to render sprite.
@@ -106,7 +106,7 @@ namespace Nez.GeonBit
         /// <param name="spritesheet">Spritesheet data for this sprite.</param>
         /// <param name="texture">Texture to use for this sprite.</param>
         /// <param name="useSharedMaterial">If true, will use a shared material for all sprites with this texture. If false, will create a new material for this specific sprite instance.</param>
-        public SpriteEntity(SpriteSheet spritesheet, Texture2D texture, bool useSharedMaterial = true) : 
+        public SpriteEntity(SpriteSheet spritesheet, Texture2D texture, bool useSharedMaterial = true) :
             this(spritesheet, GetCtorMaterial(texture, useSharedMaterial))
         {
         }
@@ -117,16 +117,15 @@ namespace Nez.GeonBit
         /// <param name="texture">Texture to get sprite material for.</param>
         /// <param name="useSharedMaterial">If true will use shared material, else will return a new material.</param>
         /// <returns></returns>
-        static Materials.MaterialAPI GetCtorMaterial(Texture2D texture, bool useSharedMaterial)
+        private static Materials.MaterialAPI GetCtorMaterial(Texture2D texture, bool useSharedMaterial)
         {
             // if using shared material:
             if (useSharedMaterial)
             {
                 // material to return
-                Materials.MaterialAPI material;
 
                 // try to get material from cache
-                if (_sharedMaterials.TryGetValue(texture.Name, out material))
+                if (_sharedMaterials.TryGetValue(texture.Name, out var material))
                 {
                     return material;
                 }
@@ -140,10 +139,12 @@ namespace Nez.GeonBit
             else
             {
                 // create material
-                Materials.MaterialAPI material = new Materials.SpriteMaterial(new AlphaTestEffect(GraphicsManager.GraphicsDevice), true);
+                Materials.MaterialAPI material = new Materials.SpriteMaterial(new AlphaTestEffect(GraphicsManager.GraphicsDevice), true)
+                {
 
-                // set material texture and return
-                material.Texture = texture;
+                    // set material texture and return
+                    Texture = texture
+                };
                 return material;
             }
         }
@@ -159,14 +160,13 @@ namespace Nez.GeonBit
         /// <param name="clip">Animation clip to play.</param>
         /// <param name="speed">Animation playing speed.</param>
         /// <param name="startingStep">Animation starting step.</param>
-        public void PlayAnimation(SpriteAnimationClip clip, float speed = 1f, int? startingStep = null)
+        public void PlayAnimation(SpriteAnimationClip clip, float speed = 1f, int? startingStep = null) => _currAnimation = new SpriteAnimationClipPlay(clip, speed, startingStep)
         {
-            _currAnimation = new SpriteAnimationClipPlay(clip, speed, startingStep);
-            _currAnimation.OnAnimationEnd = () =>
+            OnAnimationEnd = () =>
             {
-                this.OnAnimationEnd?.Invoke();
-            };
-        }
+                OnAnimationEnd?.Invoke();
+            }
+        };
 
         /// <summary>
         /// Change the spritesheet and current step of this sprite.
@@ -223,8 +223,7 @@ namespace Nez.GeonBit
             base.DoEntityDraw(ref worldTransformations);
 
             // decompose transformations
-            Vector3 position; Quaternion rotation; Vector3 scale;
-            worldTransformations.Decompose(out scale, out rotation, out position);
+            worldTransformations.Decompose(out var scale, out var rotation, out var position);
 
             // add position offset
             position += PositionOffset;
@@ -257,7 +256,7 @@ namespace Nez.GeonBit
             }
 
             // update per-entity override properties
-            Materials.MaterialAPI material = MaterialOverride.Apply(Material);
+            var material = MaterialOverride.Apply(Material);
 
             // setup material
             material.Apply(ref newWorld, ref _lastBoundingSphere);
@@ -284,8 +283,7 @@ namespace Nez.GeonBit
         protected override BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // decompose transformations
-            Vector3 position; Quaternion rotation; Vector3 scale;
-            worldTransformations.Decompose(out scale, out rotation, out position);
+            worldTransformations.Decompose(out var scale, out var rotation, out var position);
 
             // add position offset
             position += PositionOffset;
@@ -304,8 +302,7 @@ namespace Nez.GeonBit
         protected override BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // decompose transformations
-            Vector3 position; Quaternion rotation; Vector3 scale;
-            worldTransformations.Decompose(out scale, out rotation, out position);
+            worldTransformations.Decompose(out var scale, out var rotation, out var position);
 
             // add position offset
             position += PositionOffset;

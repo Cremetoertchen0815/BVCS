@@ -27,32 +27,38 @@ namespace Nez.GeonBit.Particles.Animators
     public class SpawnRandomizer : BaseComponent
     {
         // all jitters
-        float? _minAlpha = null; float? _maxAlpha = null;
-        float? _minScale = null; float? _maxScale = null;
-        Vector3? _minScaleVector = null; Vector3? _maxScaleVector = null;
-        Color? _minColor = null; Color? _maxColor = null;
-        Vector3? _positionJitter = null; Vector3? _rotationJitter = null;
-        Vector3? _impulseDirection = null; Vector3? _impulseDirectionJitter = null; float? _minImpulseStrength = null; float? _maxImpulseStrength = null;
+        private float? _minAlpha = null;
+        private float? _maxAlpha = null;
+        private float? _minScale = null;
+        private float? _maxScale = null;
+        private Vector3? _minScaleVector = null;
+        private Vector3? _maxScaleVector = null;
+        private Color? _minColor = null;
+        private Color? _maxColor = null;
+        private Vector3? _positionJitter = null;
+        private Vector3? _rotationJitter = null;
+        private Vector3? _impulseDirection = null;
+        private Vector3? _impulseDirectionJitter = null;
+        private float? _minImpulseStrength = null;
+        private float? _maxImpulseStrength = null;
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
-        {
+        public override Component Clone() =>
             // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitter
             // so we'll still have the random factor applied on the cloned entity.
-            return CopyBasics(new SpawnRandomizer(
-                _minAlpha, _maxAlpha, 
-                _minScale, _maxScale, 
+            CopyBasics(new SpawnRandomizer(
+                _minAlpha, _maxAlpha,
+                _minScale, _maxScale,
                 _minScaleVector, _maxScaleVector,
-                _minColor, _maxColor, 
+                _minColor, _maxColor,
                 _positionJitter, _rotationJitter,
                 _impulseDirection, _impulseDirectionJitter, _minImpulseStrength, _maxImpulseStrength));
-        }
 
         // create random instance
-        static System.Random Random = new System.Random();
+        private static System.Random Random = new System.Random();
 
         /// <summary>
         /// Create the spawn randomizer.
@@ -102,12 +108,12 @@ namespace Nez.GeonBit.Particles.Animators
         protected override void OnSpawn()
         {
             // get model renderers
-            Graphics.ModelRenderer[] targets = _GameObject.GetComponents<Graphics.ModelRenderer>().ToArray();
+            Graphics.ModelRenderer[] targets = Entity.GetComponents<Graphics.ModelRenderer>().ToArray();
 
             // random alpha
             if (_minAlpha != null)
             {
-                float alpha = _minAlpha.Value + ((float)Random.NextDouble() * (_maxAlpha.Value - _minAlpha.Value));
+                float alpha = _minAlpha.Value + (Random.NextFloat() * (_maxAlpha.Value - _minAlpha.Value));
                 foreach (var target in targets)
                 {
                     target.MaterialOverride.Alpha = alpha;
@@ -117,21 +123,21 @@ namespace Nez.GeonBit.Particles.Animators
             // random scale
             if (_minScale != null)
             {
-                float scale = _minScale.Value + ((float)Random.NextDouble() * (_maxScale.Value - _minScale.Value));
+                float scale = _minScale.Value + (Random.NextFloat() * (_maxScale.Value - _minScale.Value));
                 _GameObject.SceneNode.Scale *= scale;
             }
 
             // random scale by vector
             if (_minScaleVector != null)
             {
-                Vector3 scale = AnimatorUtils.RandVector(Random, _minScaleVector.Value, _maxScaleVector.Value);
+                var scale = AnimatorUtils.RandVector(Random, _minScaleVector.Value, _maxScaleVector.Value);
                 _GameObject.SceneNode.Scale *= scale;
             }
 
             // random color
             if (_minColor != null)
             {
-                Color color = AnimatorUtils.RandColor2(Random, _minColor.Value, _maxColor.Value);
+                var color = AnimatorUtils.RandColor2(Random, _minColor.Value, _maxColor.Value);
                 foreach (var target in targets)
                 {
                     target.MaterialOverride.DiffuseColor = color;
@@ -141,14 +147,14 @@ namespace Nez.GeonBit.Particles.Animators
             // random position
             if (_positionJitter != null)
             {
-                Vector3 position = AnimatorUtils.RandVector(Random, _positionJitter.Value);
+                var position = AnimatorUtils.RandVector(Random, _positionJitter.Value);
                 _GameObject.SceneNode.Position += position;
             }
 
             // random rotation
             if (_rotationJitter != null)
             {
-                Vector3 rotation = AnimatorUtils.RandVector(Random, _rotationJitter.Value);
+                var rotation = AnimatorUtils.RandVector(Random, _rotationJitter.Value);
                 _GameObject.SceneNode.Rotation += rotation;
             }
 

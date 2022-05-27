@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit
@@ -30,39 +29,33 @@ namespace Nez.GeonBit
         /// <summary>
         /// The entity from the core layer used to draw the model mesh.
         /// </summary>
-        protected Core.Graphics.MeshEntity _entity;
+        protected MeshEntity _entity;
 
         /// <summary>
         /// Override material default settings for this specific model instance.
         /// </summary>
-        public override Core.Graphics.MaterialOverrides MaterialOverride
+        public override MaterialOverrides MaterialOverride
         {
-            get { return _entity.MaterialOverride; }
-            set { _entity.MaterialOverride = value; }
+            get => _entity.MaterialOverride;
+            set => _entity.MaterialOverride = value;
         }
 
         /// <summary>
         /// Set alternative material for a specific mesh id.
         /// </summary>
         /// <param name="material">Material to set.</param>
-        public void SetMaterial(Core.Graphics.Materials.MaterialAPI material)
-        {
-            _entity.SetMaterial(material);
-        }
+        public void SetMaterial(Materials.MaterialAPI material) => _entity.SetMaterial(material);
 
         /// <summary>
         /// Set alternative materials for a specific mesh id.
         /// </summary>
         /// <param name="material">Materials to set.</param>
-        public void SetMaterials(Core.Graphics.Materials.MaterialAPI[] material)
-        {
-            _entity.SetMaterials(material);
-        }
+        public void SetMaterials(Materials.MaterialAPI[] material) => _entity.SetMaterials(material);
 
         /// <summary>
         /// Get the main entity instance of this renderer.
         /// </summary>
-        protected override Core.Graphics.BaseRenderableEntity Entity { get { return _entity; } }
+        protected override BaseRenderableEntity RenderableEntity => _entity;
 
         /// <summary>
         /// Protected constructor without params to use without creating entity, for inheriting classes.
@@ -76,21 +69,17 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="model">Model to draw.</param>
         /// <param name="mesh">Mesh to draw.</param>
-        public ModelMeshRenderer(Model model, ModelMesh mesh)
-        {
-            _entity = new Core.Graphics.MeshEntity(model, mesh);
-        }
+        public ModelMeshRenderer(Model model, ModelMesh mesh) => _entity = new MeshEntity(model, mesh);
 
         /// <summary>
         /// Create the mesh renderer component.
         /// </summary>
         /// <param name="model">Path of the model asset to draw.</param>
         /// <param name="meshName">Which mesh to draw from model.</param>
-        public ModelMeshRenderer(string model, string meshName)
+        public ModelMeshRenderer(Model model, string meshName)
         {
-            Model modelInstance = Resources.GetModel(model);
-            ModelMesh mesh = modelInstance.Meshes[meshName];
-            _entity = new Core.Graphics.MeshEntity(modelInstance, mesh);
+            var mesh = model.Meshes[meshName];
+            _entity = new MeshEntity(model, mesh);
         }
 
         /// <summary>
@@ -98,11 +87,10 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="model">Path of the model asset to draw.</param>
         /// <param name="meshIndex">Which mesh to draw from model.</param>
-        public ModelMeshRenderer(string model, int meshIndex)
+        public ModelMeshRenderer(Model model, int meshIndex)
         {
-            Model modelInstance = Resources.GetModel(model);
-            ModelMesh mesh = modelInstance.Meshes[meshIndex];
-            _entity = new Core.Graphics.MeshEntity(modelInstance, mesh);
+            var mesh = model.Meshes[meshIndex];
+            _entity = new MeshEntity(model, mesh);
         }
 
         /// <summary>
@@ -110,9 +98,9 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="copyTo">Other component to copy values to.</param>
         /// <returns>The object we are copying properties to.</returns>
-        protected override BaseComponent CopyBasics(BaseComponent copyTo)
+        public override Component CopyBasics(Component copyTo)
         {
-            ModelMeshRenderer other = copyTo as ModelMeshRenderer;
+            var other = copyTo as ModelMeshRenderer;
             other.MaterialOverride = MaterialOverride.Clone();
             other._entity.SetMaterials(_entity.OverrideMaterials);
             return base.CopyBasics(other);
@@ -122,9 +110,9 @@ namespace Nez.GeonBit
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component Clone()
         {
-            ModelMeshRenderer ret = new ModelMeshRenderer(_entity.Model, _entity.Mesh);
+            var ret = new ModelMeshRenderer(_entity.Model, _entity.Mesh);
             CopyBasics(ret);
             return ret;
         }

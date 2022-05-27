@@ -123,7 +123,7 @@ namespace Nez.GeonBit
     /// <summary>
     /// A single entity in a rendering queue.
     /// </summary>
-    class EntityInQueue
+    internal class EntityInQueue
     {
         /// <summary>
         /// The renderable entity.
@@ -150,7 +150,7 @@ namespace Nez.GeonBit
     /// <summary>
     /// Rendering queue settings and entities.
     /// </summary>
-    class RenderingQueueInstance
+    internal class RenderingQueueInstance
     {
         /// <summary>
         /// Current entities in queue.
@@ -179,7 +179,7 @@ namespace Nez.GeonBit
     internal static class RenderingQueues
     {
         // List of built-in rendering queues.
-        static List<RenderingQueueInstance> _renderingQueues = new List<RenderingQueueInstance>();
+        private static List<RenderingQueueInstance> _renderingQueues = new List<RenderingQueueInstance>();
 
         /// <summary>
         /// Init all built-in rendering queues.
@@ -188,7 +188,7 @@ namespace Nez.GeonBit
         {
             // SolidBackNoCull
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.None;
                 queue.RasterizerState.DepthClipEnable = false;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -199,7 +199,7 @@ namespace Nez.GeonBit
 
             // Solid
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -210,7 +210,7 @@ namespace Nez.GeonBit
 
             // Terrain
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -221,7 +221,7 @@ namespace Nez.GeonBit
 
             // Billboards
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.None;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -232,7 +232,7 @@ namespace Nez.GeonBit
 
             // Background
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -243,7 +243,7 @@ namespace Nez.GeonBit
 
             // BackgroundNoCull
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.None;
                 queue.RasterizerState.DepthClipEnable = false;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -254,7 +254,7 @@ namespace Nez.GeonBit
 
             // OpacityUnordered
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.None;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -265,7 +265,7 @@ namespace Nez.GeonBit
 
             // Opacity
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.None;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -277,7 +277,7 @@ namespace Nez.GeonBit
 
             // Mixed
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -289,7 +289,7 @@ namespace Nez.GeonBit
 
             // Wireframe
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.None;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.WireFrame;
@@ -300,7 +300,7 @@ namespace Nez.GeonBit
 
             // EffectsUnordered
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.None;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -312,7 +312,7 @@ namespace Nez.GeonBit
 
             // Effects
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.None;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -324,7 +324,7 @@ namespace Nez.GeonBit
 
             // EffectsOverlay
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.None;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -336,7 +336,7 @@ namespace Nez.GeonBit
 
             // Overlay
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -348,7 +348,7 @@ namespace Nez.GeonBit
 
             // debug stuff
             {
-                RenderingQueueInstance queue = new RenderingQueueInstance();
+                var queue = new RenderingQueueInstance();
                 queue.RasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
                 queue.RasterizerState.DepthClipEnable = true;
                 queue.RasterizerState.FillMode = FillMode.Solid;
@@ -360,7 +360,7 @@ namespace Nez.GeonBit
         }
 
         // default rasterizer state to reset to after every frame.
-        static RasterizerState _defaultRasterizerState = new RasterizerState();
+        private static RasterizerState _defaultRasterizerState = new RasterizerState();
 
         /// <summary>
         /// Draw rendering queues.
@@ -386,7 +386,7 @@ namespace Nez.GeonBit
                     Vector3 camPos = GraphicsManager.ActiveCamera.Position;
                     queue.Entities.Sort(delegate (EntityInQueue x, EntityInQueue y)
                     {
-                        return  (int)(Vector3.Distance(camPos, y.World.Translation) * 100f - System.Math.Floor(y.Entity.CameraDistanceBias)) - 
+                        return (int)(Vector3.Distance(camPos, y.World.Translation) * 100f - System.Math.Floor(y.Entity.CameraDistanceBias)) -
                                 (int)(Vector3.Distance(camPos, x.World.Translation) * 100f - System.Math.Floor(x.Entity.CameraDistanceBias));
                     });
                 }

@@ -19,8 +19,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GeonBit.Core.Graphics;
-using GeonBit.Core.Graphics.Materials;
+using Nez.GeonBit.Materials;
 
 namespace Nez.GeonBit
 {
@@ -39,22 +38,22 @@ namespace Nez.GeonBit
         /// </summary>
         public Vector3 PositionOffset
         {
-            get { return _entity.PositionOffset; }
-            set { _entity.PositionOffset = value; }
+            get => _entity.PositionOffset;
+            set => _entity.PositionOffset = value;
         }
 
         /// <summary>
         /// Get the main entity instance of this renderer.
         /// </summary>
-        protected override BaseRenderableEntity Entity { get { return _entity; } }
+        protected override BaseRenderableEntity RenderableEntity => _entity;
 
         /// <summary>
         /// Override material default settings for this specific model instance.
         /// </summary>
         public override MaterialOverrides MaterialOverride
         {
-            get { return _entity.MaterialOverride; }
-            set { _entity.MaterialOverride = value; }
+            get => _entity.MaterialOverride;
+            set => _entity.MaterialOverride = value;
         }
 
         /// <summary>
@@ -62,8 +61,8 @@ namespace Nez.GeonBit
         /// </summary>
         public Vector3? LockedAxis
         {
-            get { return _entity.LockedAxis; }
-            set { _entity.LockedAxis = value; }
+            get => _entity.LockedAxis;
+            set => _entity.LockedAxis = value;
         }
 
         /// <summary>
@@ -71,8 +70,8 @@ namespace Nez.GeonBit
         /// </summary>
         public bool FaceCamera
         {
-            get { return _entity.FaceCamera; }
-            set { _entity.FaceCamera = value; }
+            get => _entity.FaceCamera;
+            set => _entity.FaceCamera = value;
         }
 
         /// <summary>
@@ -80,12 +79,12 @@ namespace Nez.GeonBit
         /// </summary>
         public MaterialAPI Material
         {
-            get { return _entity.Material; }
-            set { _entity.Material = value; }
+            get => _entity.Material;
+            set => _entity.Material = value;
         }
 
         // spritesheet used for billboards (1 step only that coveres the entire texture).
-        static SpriteSheet _billboardSpritesheet = new SpriteSheet(new Point(1, 1));
+        private static SpriteSheet _billboardSpritesheet = new SpriteSheet(new Point(1, 1));
 
         /// <summary>
         /// Create the billboard renderer component.
@@ -109,23 +108,15 @@ namespace Nez.GeonBit
             FaceCamera = faceCamera;
         }
 
-        /// <summary>
-        /// Create the billboard renderer component.
-        /// </summary>
-        /// <param name="texturePath">Texture to use for this sprite with a new default material.</param>
-        /// <param name="faceCamera">If true, will always face camera. If false will use node's rotation.</param>
-        public BillboardRenderer(string texturePath = null, bool faceCamera = true) : this(Resources.GetTexture(texturePath), faceCamera)
-        {
-        }
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component CopyBasics(Component copyTo)
         {
-            BillboardRenderer ret = new BillboardRenderer(_entity.Material);
-            CopyBasics(ret);
+            var ret = new BillboardRenderer(_entity.Material);
+            base.CopyBasics(ret);
             ret._entity.CopyStep(_entity);
             ret.MaterialOverride = _entity.MaterialOverride.Clone();
             ret.LockedAxis = LockedAxis;

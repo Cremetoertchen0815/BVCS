@@ -43,26 +43,26 @@ namespace Nez.GeonBit
         /// Should we process mesh parts?
         /// This option is useful for inheriting types, it will iterate meshes before draw calls and call a virtual processing function.
         /// </summary>
-        virtual protected bool ProcessMeshParts { get { return false; } }
+        protected virtual bool ProcessMeshParts => false;
 
         /// <summary>
         /// Add bias to distance from camera when sorting by distance from camera.
         /// </summary>
-        override public float CameraDistanceBias { get { return _lastRadius * 100f; } }
+        public override float CameraDistanceBias => _lastRadius * 100f;
 
         // store last rendering radius (based on bounding sphere)
-        float _lastRadius = 0f;
+        private float _lastRadius = 0f;
 
         /// <summary>
         /// Dictionary with materials to use per meshes.
         /// Key is mesh name, value is material to use for this mesh.
         /// </summary>
-        Dictionary<string, Materials.MaterialAPI[]> _materials = new Dictionary<string, Materials.MaterialAPI[]>();
+        private Dictionary<string, Materials.MaterialAPI[]> _materials = new Dictionary<string, Materials.MaterialAPI[]>();
 
         /// <summary>
         /// Get materials dictionary.
         /// </summary>
-        internal Dictionary<string, Materials.MaterialAPI[]>  OverrideMaterialsDictionary { get { return _materials; } }
+        internal Dictionary<string, Materials.MaterialAPI[]> OverrideMaterialsDictionary => _materials;
 
         /// <summary>
         /// Optional custom render settings for this specific instance.
@@ -74,11 +74,9 @@ namespace Nez.GeonBit
         /// Create the model entity from model instance.
         /// </summary>
         /// <param name="model">Model to draw.</param>
-        public ModelEntity(Model model)
-        {
+        public ModelEntity(Model model) =>
             // store model
             Model = model;
-        }
 
         /// <summary>
         /// Create the model entity from asset path.
@@ -105,20 +103,14 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="material">Material to set.</param>
         /// <param name="meshId">Mesh name. If empty string is provided, this material will be used for all meshes.</param>
-        public void SetMaterial(Materials.MaterialAPI material, string meshId = "")
-        {
-            _materials[meshId] = new Materials.MaterialAPI[] { material };
-        }
+        public void SetMaterial(Materials.MaterialAPI material, string meshId = "") => _materials[meshId] = new Materials.MaterialAPI[] { material };
 
         /// <summary>
         /// Set alternative materials for a specific mesh id.
         /// </summary>
         /// <param name="material">Materials to set (list where index is mesh-part index as value is material to use for this part).</param>
         /// <param name="meshId">Mesh name. If empty string is provided, this material will be used for all meshes.</param>
-        public void SetMaterials(Materials.MaterialAPI[] material, string meshId = "")
-        {
-            _materials[meshId] = material;
-        }
+        public void SetMaterials(Materials.MaterialAPI[] material, string meshId = "") => _materials[meshId] = material;
 
         /// <summary>
         /// Get material for a given mesh id.
@@ -128,10 +120,9 @@ namespace Nez.GeonBit
         public Materials.MaterialAPI GetMaterial(string meshId, int meshPartIndex = 0)
         {
             // material to return
-            Materials.MaterialAPI[] ret = null;
 
             // try to get global material or material for this specific mesh
-            if (_materials.TryGetValue(string.Empty, out ret) || _materials.TryGetValue(meshId, out ret))
+            if (_materials.TryGetValue(string.Empty, out var ret) || _materials.TryGetValue(meshId, out ret))
             {
                 // get material for effect index or null if overflow
                 return meshPartIndex < ret.Length ? ret[meshPartIndex] : null;
@@ -149,12 +140,12 @@ namespace Nez.GeonBit
         /// <returns>List of materials.</returns>
         public List<Materials.MaterialAPI> GetMaterials()
         {
-            List<Materials.MaterialAPI> ret = new List<Materials.MaterialAPI>();
+            var ret = new List<Materials.MaterialAPI>();
             foreach (var mesh in Model.Meshes)
             {
                 for (int i = 0; i < mesh.MeshParts.Count; ++i)
                 {
-                    Materials.MaterialAPI material = GetMaterial(mesh.Name, i);
+                    var material = GetMaterial(mesh.Name, i);
                     if (!ret.Contains(material))
                     {
                         ret.Add(material);
@@ -168,10 +159,7 @@ namespace Nez.GeonBit
         /// Get the first material used in this renderer.
         /// </summary>
         /// <returns>List of materials.</returns>
-        public Materials.MaterialAPI GetFirstMaterial()
-        {
-            return GetMaterial(Model.Meshes[0].Name, 0);
-        }
+        public Materials.MaterialAPI GetFirstMaterial() => GetMaterial(Model.Meshes[0].Name, 0);
 
         /// <summary>
         /// Draw this model.
@@ -197,7 +185,7 @@ namespace Nez.GeonBit
                 foreach (var meshPart in mesh.MeshParts)
                 {
                     // get material for this mesh and effect index
-                    Materials.MaterialAPI material = GetMaterial(mesh.Name, index);
+                    var material = GetMaterial(mesh.Name, index);
 
                     // no material found? skip.
                     // note: this can happen if user set alternative materials array with less materials than original mesh file
@@ -233,7 +221,7 @@ namespace Nez.GeonBit
                 // iterate mesh parts
                 if (ProcessMeshParts)
                 {
-                    foreach (ModelMeshPart part in mesh.MeshParts)
+                    foreach (var part in mesh.MeshParts)
                     {
                         // call the before-drawing-mesh-part callback
                         BeforeDrawingMeshPart(part);
@@ -270,7 +258,7 @@ namespace Nez.GeonBit
         /// <returns>Bounding box of the entity.</returns>
         protected override BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
-            BoundingSphere modelBoundingSphere = ModelUtils.GetBoundingSphere(Model);
+            var modelBoundingSphere = ModelUtils.GetBoundingSphere(Model);
             modelBoundingSphere.Radius *= Utils.ExtendedMath.GetScale(ref worldTransformations).Length();
             modelBoundingSphere.Center = worldTransformations.Translation;
             return modelBoundingSphere;
@@ -287,17 +275,17 @@ namespace Nez.GeonBit
         protected override BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // get bounding box in local space
-            BoundingBox modelBoundingBox = ModelUtils.GetBoundingBox(Model);
+            var modelBoundingBox = ModelUtils.GetBoundingBox(Model);
 
             // initialize minimum and maximum corners of the bounding box to max and min values
-            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
             // iterate bounding box corners and transform them
-            foreach (Vector3 corner in modelBoundingBox.GetCorners())
+            foreach (var corner in modelBoundingBox.GetCorners())
             {
                 // get curr position and update min / max
-                Vector3 currPosition = Vector3.Transform(corner, worldTransformations);
+                var currPosition = Vector3.Transform(corner, worldTransformations);
                 min = Vector3.Min(min, currPosition);
                 max = Vector3.Max(max, currPosition);
             }

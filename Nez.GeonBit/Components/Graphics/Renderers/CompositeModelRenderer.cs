@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
@@ -32,17 +31,17 @@ namespace Nez.GeonBit
         /// <summary>
         /// The entity from the core layer used to draw the model.
         /// </summary>
-        protected Core.Graphics.CompositeModelEntity _entity;
+        protected CompositeModelEntity _entity;
 
         /// <summary>
         /// Get the main entity instance of this renderer.
         /// </summary>
-        protected override Core.Graphics.BaseRenderableEntity Entity { get { return _entity; } }
+        protected override BaseRenderableEntity RenderableEntity => _entity;
 
         /// <summary>
         /// Set the rendering queue of for all meshes in the composite model.
         /// </summary>
-        override public Core.Graphics.RenderingQueue RenderingQueue
+        public override RenderingQueue RenderingQueue
         {
             set
             {
@@ -56,39 +55,27 @@ namespace Nez.GeonBit
         /// <summary>
         /// Return meshes count.
         /// </summary>
-        public int MeshesCount
-        {
-            get { return _entity.MeshesCount; }
-        }
+        public int MeshesCount => _entity.MeshesCount;
 
         /// <summary>
         /// Get mesh entity by index.
         /// </summary>
         /// <param name="index">Mesh index to get.</param>
         /// <returns>MeshEntity instance for this mesh.</returns>
-        public Core.Graphics.MeshEntity GetMesh(int index)
-        {
-            return _entity.GetMesh(index);
-        }
+        public MeshEntity GetMesh(int index) => _entity.GetMesh(index);
 
         /// <summary>
         /// Get mesh entity by name.
         /// </summary>
         /// <param name="name">Mesh name to get.</param>
         /// <returns>MeshEntity instance for this mesh.</returns>
-        public Core.Graphics.MeshEntity GetMesh(string name)
-        {
-            return _entity.GetMesh(name);
-        }
+        public MeshEntity GetMesh(string name) => _entity.GetMesh(name);
 
         /// <summary>
         /// Get all meshes as a list.
         /// </summary>
         /// <returns>List of MeshEntity instances in this composite model.</returns>
-        public List<Core.Graphics.MeshEntity> GetMeshes()
-        {
-            return _entity.GetMeshes();
-        }
+        public List<MeshEntity> GetMeshes() => _entity.GetMeshes();
 
         /// <summary>
         /// Return a list with all materials in model.
@@ -96,10 +83,7 @@ namespace Nez.GeonBit
         /// Note2: prevent duplications, eg if even if more than one part uses the same material it will only return it once.
         /// </summary>
         /// <returns>List of materials.</returns>
-        public System.Collections.Generic.List<Core.Graphics.Materials.MaterialAPI> GetMaterials()
-        {
-            return _entity.GetMaterials();
-        }
+        public System.Collections.Generic.List<Materials.MaterialAPI> GetMaterials() => _entity.GetMaterials();
 
         /// <summary>
         /// Protected constructor without params to use without creating entity, for inheriting classes.
@@ -112,27 +96,16 @@ namespace Nez.GeonBit
         /// Create the model renderer component.
         /// </summary>
         /// <param name="model">Model to draw.</param>
-        public CompositeModelRenderer(Model model)
-        {
-            _entity = new Core.Graphics.CompositeModelEntity(model);
-        }
-
-        /// <summary>
-        /// Create the model renderer component.
-        /// </summary>
-        /// <param name="model">Path of the model asset to draw.</param>
-        public CompositeModelRenderer(string model) : this(Resources.GetModel(model))
-        {
-        }
+        public CompositeModelRenderer(Model model) => _entity = new CompositeModelEntity(model);
 
         /// <summary>
         /// Copy basic properties to another component (helper function to help with Cloning).
         /// </summary>
         /// <param name="copyTo">Other component to copy values to.</param>
         /// <returns>The object we are copying properties to.</returns>
-        protected override BaseComponent CopyBasics(BaseComponent copyTo)
+        public override Component CopyBasics(Component copyTo)
         {
-            CompositeModelRenderer other = copyTo as CompositeModelRenderer;
+            var other = copyTo as CompositeModelRenderer;
             return base.CopyBasics(other);
         }
 
@@ -140,14 +113,14 @@ namespace Nez.GeonBit
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component Clone()
         {
-            CompositeModelRenderer ret = new CompositeModelRenderer(_entity.Model);
+            var ret = new CompositeModelRenderer(_entity.Model);
             CopyBasics(ret);
             for (int i = 0; i < _entity.MeshesCount; ++i)
             {
-                Core.Graphics.MeshEntity other = ret.GetMesh(i);
-                Core.Graphics.MeshEntity self = GetMesh(i);
+                var other = ret.GetMesh(i);
+                var self = GetMesh(i);
                 other.MaterialOverride = self.MaterialOverride.Clone();
                 other.BlendingState = self.BlendingState;
                 other.SetMaterials(self.OverrideMaterials);

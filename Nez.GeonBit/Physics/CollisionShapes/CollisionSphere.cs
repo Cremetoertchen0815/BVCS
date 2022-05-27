@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 
 namespace GeonBit.Core.Physics.CollisionShapes
 {
@@ -30,10 +29,7 @@ namespace GeonBit.Core.Physics.CollisionShapes
         /// Create the collision sphere.
         /// </summary>
         /// <param name="radius">Sphere radius.</param>
-        public CollisionSphere(float radius = 1f)
-        {
-            _shape = new BulletSharp.SphereShape(radius);
-        }
+        public CollisionSphere(float radius = 1f) => _shape = new BulletSharp.SphereShape(radius);
 
         /// <summary>
         /// Clone the physical shape.

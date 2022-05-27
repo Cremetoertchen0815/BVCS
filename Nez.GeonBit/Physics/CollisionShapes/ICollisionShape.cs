@@ -24,7 +24,7 @@ namespace GeonBit.Core.Physics.CollisionShapes
     /// GeonBit.Core.Physics.CollisionShapes contain all the physical shapes we can use for rigid bodies.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGenerated]
-    class NamespaceDoc
+    internal class NamespaceDoc
     {
     }
 
@@ -36,7 +36,7 @@ namespace GeonBit.Core.Physics.CollisionShapes
         /// <summary>
         /// Get the bullet collision shape.
         /// </summary>
-        internal BulletSharp.CollisionShape BulletCollisionShape { get { return _shape; } }
+        internal BulletSharp.CollisionShape BulletCollisionShape => _shape;
 
         /// <summary>
         /// Bullet shape instance (must be set by the inheriting class).

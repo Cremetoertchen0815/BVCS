@@ -55,7 +55,7 @@ namespace Nez.GeonBit.Materials
     public static class DefaultMaterialsFactory
     {
         // all material generators
-        static MaterialGenerator[] generators = new MaterialGenerator[] {
+        private static MaterialGenerator[] generators = new MaterialGenerator[] {
             
             // Basic
             (Effect mgEffect) => {return new BasicMaterial((BasicEffect)mgEffect, true);},
@@ -71,7 +71,7 @@ namespace Nez.GeonBit.Materials
         /// Create and return a default material for a basic MonoGame effect.
         /// </summary>
         /// <param name="effect">Effect to create default material for.</param>
-        static public MaterialAPI GetDefaultMaterial(Effect effect)
+        public static MaterialAPI GetDefaultMaterial(Effect effect)
         {
             // create basic effects
             if (effect.GetType() == typeof(BasicEffect))
@@ -100,36 +100,33 @@ namespace Nez.GeonBit.Materials
         /// </summary>
         /// <param name="type">Material type to set.</param>
         /// <param name="generator">Generator function to use on this material.</param>
-        static public void SetDefaultMaterialGenerator(MaterialTypes type, MaterialGenerator generator)
-        {
-            generators[(int)type] = generator;
-        }
+        public static void SetDefaultMaterialGenerator(MaterialTypes type, MaterialGenerator generator) => generators[(int)type] = generator;
 
         /// <summary>
         /// Function to generate default materials to newly-loaded models.
         /// </summary>
-        static public MaterialGenerator Base
+        public static MaterialGenerator Base
         {
-            get { return generators[(int)MaterialTypes.Basic]; }
-            set { generators[(int)MaterialTypes.Basic] = value; }
+            get => generators[(int)MaterialTypes.Basic];
+            set => generators[(int)MaterialTypes.Basic] = value;
         }
 
         /// <summary>
         /// Function to generate default materials to newly-loaded skinned models.
         /// </summary>
-        static public MaterialGenerator Skinned
+        public static MaterialGenerator Skinned
         {
-            get { return generators[(int)MaterialTypes.Skinned]; }
-            set { generators[(int)MaterialTypes.Skinned] = value; }
+            get => generators[(int)MaterialTypes.Skinned];
+            set => generators[(int)MaterialTypes.Skinned] = value;
         }
 
         /// <summary>
         /// Function to generate default materials to newly-loaded models with alpha-test effect.
         /// </summary>
-        static public MaterialGenerator AlphaTest
+        public static MaterialGenerator AlphaTest
         {
-            get { return generators[(int)MaterialTypes.AlphaTest]; }
-            set { generators[(int)MaterialTypes.AlphaTest] = value; }
+            get => generators[(int)MaterialTypes.AlphaTest];
+            set => generators[(int)MaterialTypes.AlphaTest] = value;
         }
     }
 }

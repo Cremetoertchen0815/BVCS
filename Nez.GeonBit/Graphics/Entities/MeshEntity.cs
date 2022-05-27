@@ -19,7 +19,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
@@ -48,10 +47,10 @@ namespace Nez.GeonBit
         /// <summary>
         /// Add bias to distance from camera when sorting by distance from camera.
         /// </summary>
-        override public float CameraDistanceBias { get { return _lastRadius * 100f; } }
+        public override float CameraDistanceBias => _lastRadius * 100f;
 
         // store last rendering radius (based on bounding sphere)
-        float _lastRadius = 0f;
+        private float _lastRadius = 0f;
 
         /// <summary>
         /// Optional custom render settings for this specific instance.
@@ -73,31 +72,25 @@ namespace Nez.GeonBit
         /// <summary>
         /// Optional array of materials to use instead of the mesh default materials.
         /// </summary>
-        Materials.MaterialAPI[] _materials = null;
+        private Materials.MaterialAPI[] _materials = null;
 
         /// <summary>
         /// Get materials dictionary.
         /// </summary>
-        internal Materials.MaterialAPI[] OverrideMaterials { get { return _materials; } }
+        internal Materials.MaterialAPI[] OverrideMaterials => _materials;
 
         /// <summary>
         /// Set first alternative material for this mesh (useful for meshes with one effect).
         /// </summary>
         /// <param name="material">Material to set.</param>
-        public void SetMaterial(Materials.MaterialAPI material)
-        {
-            _materials = new Materials.MaterialAPI[] { material };
-        }
+        public void SetMaterial(Materials.MaterialAPI material) => _materials = new Materials.MaterialAPI[] { material };
 
         /// <summary>
         /// Set alternative array of materials for this mesh.
         /// Will replace mesh original materials.
         /// </summary>
         /// <param name="materials">Materials array to set.</param>
-        public void SetMaterials(Materials.MaterialAPI[] materials)
-        {
-            _materials = materials;
-        }
+        public void SetMaterials(Materials.MaterialAPI[] materials) => _materials = materials;
 
         /// <summary>
         /// Get material for a given mesh id.
@@ -138,7 +131,7 @@ namespace Nez.GeonBit
             foreach (var meshPart in Mesh.MeshParts)
             {
                 // get material for this mesh and effect index
-                Materials.MaterialAPI material = GetMaterial(index);
+                var material = GetMaterial(index);
 
                 // no material found? skip.
                 // note: this can happen if user set alternative materials array with less materials than original mesh file
@@ -191,7 +184,7 @@ namespace Nez.GeonBit
         /// <returns>Bounding box of the entity.</returns>
         protected override BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
-            BoundingSphere modelBoundingSphere = Mesh.BoundingSphere;
+            var modelBoundingSphere = Mesh.BoundingSphere;
             modelBoundingSphere.Radius *= Utils.ExtendedMath.GetScale(ref worldTransformations).Length();
             modelBoundingSphere.Center = worldTransformations.Translation;
             return modelBoundingSphere;
@@ -205,9 +198,6 @@ namespace Nez.GeonBit
         /// <param name="localTransformations">Local transformations from the direct parent node.</param>
         /// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
         /// <returns>Bounding box of the entity.</returns>
-        protected override BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
-        {
-            return BoundingBox.CreateFromSphere(GetBoundingSphere(parent, ref localTransformations, ref worldTransformations));
-        }
+        protected override BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations) => BoundingBox.CreateFromSphere(GetBoundingSphere(parent, ref localTransformations, ref worldTransformations));
     }
 }

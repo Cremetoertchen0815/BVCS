@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 
 namespace Nez.GeonBit.Physics
 {
@@ -28,38 +27,32 @@ namespace Nez.GeonBit.Physics
     public class KinematicBody : BasePhysicsComponent
     {
         // the core kinematic body
-        Core.Physics.KinematicBody _body;
+        private Core.Physics.KinematicBody _body;
 
         /// <summary>
         /// The physical body in the core layer.
         /// </summary>
-        internal override Core.Physics.BasicPhysicalBody _PhysicalBody { get { return _body; } }
+        internal override Core.Physics.BasicPhysicalBody _PhysicalBody => _body;
 
         /// <summary>
         /// The shape used for this physical body.
         /// </summary>
         private Core.Physics.CollisionShapes.ICollisionShape _shape = null;
-        
+
         // are we currently in physics world?
-        bool _isInWorld = false;
+        private bool _isInWorld = false;
 
         /// <summary>
         /// Create the kinematic body from shape info.
         /// </summary>
         /// <param name="shapeInfo">Body shape info.</param>
-        public KinematicBody(IBodyShapeInfo shapeInfo)
-        {
-            CreateBody(shapeInfo.CreateShape());
-        }
+        public KinematicBody(IBodyShapeInfo shapeInfo) => CreateBody(shapeInfo.CreateShape());
 
         /// <summary>
         /// Create the kinematic body from shape instance.
         /// </summary>
         /// <param name="shape">Shape to use.</param>
-        public KinematicBody(Core.Physics.CollisionShapes.ICollisionShape shape)
-        {
-            CreateBody(shape);
-        }
+        public KinematicBody(Core.Physics.CollisionShapes.ICollisionShape shape) => CreateBody(shape);
 
         /// <summary>
         /// Create the actual collision body.
@@ -68,18 +61,20 @@ namespace Nez.GeonBit.Physics
         private void CreateBody(Core.Physics.CollisionShapes.ICollisionShape shape)
         {
             _shape = shape;
-            _body = new Core.Physics.KinematicBody(shape);
-            _body.EcsComponent = this;
+            _body = new Core.Physics.KinematicBody(shape)
+            {
+                EcsComponent = this
+            };
         }
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component Clone()
         {
             // create cloned component to return
-            KinematicBody ret = (KinematicBody)CopyBasics(new KinematicBody(_shape.Clone()));
+            var ret = (KinematicBody)CopyBasics(new KinematicBody(_shape.Clone()));
 
             // return the cloned object
             return ret;
@@ -89,10 +84,7 @@ namespace Nez.GeonBit.Physics
         /// Called every time scene node transformation updates.
         /// Note: this is called only if GameObject is enabled and have Update events enabled.
         /// </summary>
-        protected override void OnTransformationUpdate()
-        {
-            _body.WorldTransform = _GameObject.SceneNode.WorldTransformations;
-        }
+        protected override void OnTransformationUpdate() => _body.WorldTransform = _GameObject.SceneNode.WorldTransformations;
 
         /// <summary>
         /// Called when this component is effectively removed from scene, eg when removed
@@ -120,7 +112,7 @@ namespace Nez.GeonBit.Physics
                 _GameObject.ParentScene.Physics.AddBody(_body);
                 _isInWorld = true;
             }
-            
+
             // transform to match game object transformations
             OnTransformationUpdate();
         }

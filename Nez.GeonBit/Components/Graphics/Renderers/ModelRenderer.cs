@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit
@@ -30,20 +29,20 @@ namespace Nez.GeonBit
         /// <summary>
         /// The entity from the core layer used to draw the model.
         /// </summary>
-        protected Core.Graphics.ModelEntity _entity;
+        protected ModelEntity _entity;
 
         /// <summary>
         /// Get renderer model.
         /// </summary>
-        public Model Model { get { return _entity.Model; } }
+        public Model Model => _entity.Model;
 
         /// <summary>
         /// Override material default settings for this specific model instance.
         /// </summary>
-        public override Core.Graphics.MaterialOverrides MaterialOverride
+        public override MaterialOverrides MaterialOverride
         {
-            get { return _entity.MaterialOverride; }
-            set { _entity.MaterialOverride = value; }
+            get => _entity.MaterialOverride;
+            set => _entity.MaterialOverride = value;
         }
 
         /// <summary>
@@ -51,38 +50,26 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="material">Material to set.</param>
         /// <param name="meshId">Mesh name. If empty string is provided, this material will be used for all meshes.</param>
-        public void SetMaterial(Core.Graphics.Materials.MaterialAPI material, string meshId = "")
-        {
-            _entity.SetMaterial(material, meshId);
-        }
+        public void SetMaterial(Materials.MaterialAPI material, string meshId = "") => _entity.SetMaterial(material, meshId);
 
         /// <summary>
         /// Set alternative materials for a specific mesh id.
         /// </summary>
         /// <param name="material">Materials to set.</param>
         /// <param name="meshId">Mesh name. If empty string is provided, this material will be used for all meshes.</param>
-        public void SetMaterials(Core.Graphics.Materials.MaterialAPI[] material, string meshId = "")
-        {
-            _entity.SetMaterials(material, meshId);
-        }
+        public void SetMaterials(Materials.MaterialAPI[] material, string meshId = "") => _entity.SetMaterials(material, meshId);
 
         /// <summary>
         /// Get material for a given mesh id and part index.
         /// </summary>
         /// <param name="meshId">Mesh id to get material for.</param>
         /// <param name="meshPartIndex">MeshPart index to get material for.</param>
-        public Core.Graphics.Materials.MaterialAPI GetMaterial(string meshId, int meshPartIndex = 0)
-        {
-            return _entity.GetMaterial(meshId, meshPartIndex);
-        }
+        public Materials.MaterialAPI GetMaterial(string meshId, int meshPartIndex = 0) => _entity.GetMaterial(meshId, meshPartIndex);
 
         /// <summary>
         /// Get the first material used in this renderer.
         /// </summary>
-        public Core.Graphics.Materials.MaterialAPI GetFirstMaterial()
-        {
-            return _entity.GetFirstMaterial();
-        }
+        public Materials.MaterialAPI GetFirstMaterial() => _entity.GetFirstMaterial();
 
         /// <summary>
         /// Return a list with all materials in model.
@@ -90,15 +77,12 @@ namespace Nez.GeonBit
         /// Note2: prevent duplications, eg if even if more than one part uses the same material it will only return it once.
         /// </summary>
         /// <returns>List of materials.</returns>
-        public System.Collections.Generic.List<Core.Graphics.Materials.MaterialAPI> GetMaterials()
-        {
-            return _entity.GetMaterials();
-        }
+        public System.Collections.Generic.List<Materials.MaterialAPI> GetMaterials() => _entity.GetMaterials();
 
         /// <summary>
         /// Get the main entity instance of this renderer.
         /// </summary>
-        protected override Core.Graphics.BaseRenderableEntity Entity { get { return _entity; } }
+        protected override BaseRenderableEntity RenderableEntity => _entity;
 
         /// <summary>
         /// Protected constructor without params to use without creating entity, for inheriting classes.
@@ -107,43 +91,50 @@ namespace Nez.GeonBit
         {
         }
 
+        private Model _ctorModel;
+        private string _ctorName;
+
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+            _entity = new ModelEntity(_ctorModel ?? Entity.Scene.Content.Load<Model>(_ctorName));
+        }
+
+
         /// <summary>
         /// Create the model renderer component.
         /// </summary>
         /// <param name="model">Model to draw.</param>
-        public ModelRenderer(Model model)
-        {
-            _entity = new Core.Graphics.ModelEntity(model);
-        }
+        public ModelRenderer(Model model) => _ctorModel = model;
 
         /// <summary>
         /// Create the model renderer component.
         /// </summary>
         /// <param name="model">Path of the model asset to draw.</param>
-        public ModelRenderer(string model) : this(Resources.GetModel(model))
-        {
-        }
+        public ModelRenderer(string model) => _ctorName = model;
 
         /// <summary>
         /// Copy basic properties to another component (helper function to help with Cloning).
         /// </summary>
         /// <param name="copyTo">Other component to copy values to.</param>
         /// <returns>The object we are copying properties to.</returns>
-        protected override BaseComponent CopyBasics(BaseComponent copyTo)
+        public override Component CopyBasics(Component copyTo)
         {
-            ModelRenderer other = copyTo as ModelRenderer;
+            var other = copyTo as ModelRenderer;
             other.MaterialOverride = MaterialOverride.Clone();
             other._entity.CopyMaterials(_entity.OverrideMaterialsDictionary);
             return base.CopyBasics(other);
         }
 
+
+
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component Clone()
         {
-            ModelRenderer ret = new ModelRenderer(_entity.Model);
+            var ret = new ModelRenderer(_entity.Model);
             CopyBasics(ret);
             return ret;
         }

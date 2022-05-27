@@ -52,15 +52,15 @@ namespace Nez.GeonBit
         /// <summary>
         /// Identiti matrix.
         /// </summary>
-        static Matrix Identity = Matrix.Identity;
+        private static Matrix Identity = Matrix.Identity;
 
         /// <summary>
         /// Lock animation while transitioning.
         /// </summary>
         public bool LockWhileTransitioning
         {
-            get { return _skinnedEntity.LockWhileTransitioning; }
-            set { _skinnedEntity.LockWhileTransitioning = true; }
+            get => _skinnedEntity.LockWhileTransitioning;
+            set => _skinnedEntity.LockWhileTransitioning = true;
         }
 
         /// <summary>
@@ -68,8 +68,8 @@ namespace Nez.GeonBit
         /// </summary>
         public float TransitionTime
         {
-            get { return _skinnedEntity.TransitionTime; }
-            set { _skinnedEntity.TransitionTime = value; }
+            get => _skinnedEntity.TransitionTime;
+            set => _skinnedEntity.TransitionTime = value;
         }
 
         /// <summary>
@@ -85,13 +85,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Return if currently playing the 'idle' animation.
         /// </summary>
-        public bool IsIdle
-        {
-            get
-            {
-                return AnimationClip == IdleAnimationClip;
-            }
-        }
+        public bool IsIdle => AnimationClip == IdleAnimationClip;
 
         /// <summary>
         /// Currently playing animation clip.
@@ -99,10 +93,7 @@ namespace Nez.GeonBit
         public string AnimationClip
         {
             // get currently playing animation clip
-            get
-            {
-                return _skinnedEntity.CurrentClipName;
-            }
+            get => _skinnedEntity.CurrentClipName;
 
             // set current animation clip
             set
@@ -115,7 +106,7 @@ namespace Nez.GeonBit
         /// Create the model renderer component.
         /// </summary>
         /// <param name="model">Path of the model asset to draw.</param>
-        public SkinnedModelRenderer(string model) : this(Resources.GetModel(model))
+        public SkinnedModelRenderer(Model model) : base(model)
         {
             // register the animation-end callback
             _skinnedEntity.OnAnimationEnds = () =>
@@ -162,30 +153,18 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get the core entity as a skinned model entity.
         /// </summary>
-        protected Core.Graphics.SkinnedModelEntity _skinnedEntity
-        {
-            get { return _entity as Core.Graphics.SkinnedModelEntity; }
-        }
-
-        /// <summary>
-        /// Create the model renderer component.
-        /// </summary>
-        /// <param name="model">Model to draw.</param>
-        public SkinnedModelRenderer(Model model)
-        {
-            _entity = new Core.Graphics.SkinnedModelEntity(model);
-        }
+        protected SkinnedModelEntity _skinnedEntity => _entity as SkinnedModelEntity;
 
         /// <summary>
         /// Called every frame in the Update() loop.
         /// Note: this is called only if GameObject is enabled.
         /// </summary>
-        protected override void OnUpdate()
+        public void Update()
         {
             // check distance optimization
             if (MaxAnimationDistance != 0f)
             {
-                float distance = Vector3.Distance(_GameObject.ActiveScene.ActiveCamera.Position, _GameObject.SceneNode.WorldPosition);
+                float distance = Vector3.Distance(GeonBitRenderer.ActiveCamera.Position, Node.WorldPosition);
                 if (distance > MaxAnimationDistance)
                 {
                     return;
@@ -193,22 +172,22 @@ namespace Nez.GeonBit
             }
 
             // check if wasn't drawn last frame and should not animate when not drawn
-            if (!AnimateWhenCulled && !_GameObject.SceneNode.WasDrawnThisFrame)
+            if (!AnimateWhenCulled && !Node.WasDrawnThisFrame)
             {
                 return;
             }
 
             // create the skinned entity
-            _skinnedEntity.Update(Managers.TimeManager.TimeFactor * AnimationSpeed, ref Identity);
+            _skinnedEntity.Update(Time.DeltaTime, ref Identity);
         }
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component Clone()
         {
-            SkinnedModelRenderer ret = new SkinnedModelRenderer(_entity.Model);
+            var ret = new SkinnedModelRenderer(_entity.Model);
             CopyBasics(ret);
             ret.AnimationClip = AnimationClip;
             ret.AnimationSpeed = AnimationSpeed;

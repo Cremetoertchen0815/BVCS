@@ -17,7 +17,6 @@
 // Since: 2018.
 //-----------------------------------------------------------------------------
 #endregion
-using GeonBit.Core.Graphics;
 
 
 namespace Nez.GeonBit

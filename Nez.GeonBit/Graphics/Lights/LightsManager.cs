@@ -17,8 +17,8 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 
 namespace Nez.GeonBit.Lights
@@ -50,33 +50,34 @@ namespace Nez.GeonBit.Lights
         }
 
         // ambient light value
-        Color _ambient = Color.Gray;
+        private Color _ambient = Color.Gray;
 
         /// <summary>
         /// Ambient light.
         /// </summary>
-        public Color AmbientLight {
-            get { return Enabled ? _ambient : Color.White; }
-            set { _ambient = value; }
+        public Color AmbientLight
+        {
+            get => Enabled ? _ambient : Color.White;
+            set => _ambient = value;
         }
 
         // the size of a batch / region containing lights.
-        Vector3 _regionSize = new Vector3(250, 250, 250);
+        private Vector3 _regionSize = new Vector3(250, 250, 250);
 
         // dictionary of regions and the lights they contain.
-        Dictionary<Vector3, List<LightSource>> _regions = new Dictionary<Vector3, List<LightSource>>();
+        private Dictionary<Vector3, List<LightSource>> _regions = new Dictionary<Vector3, List<LightSource>>();
 
         // list of lights that are infinite, eg have no range limit.
-        List<LightSource> _infiniteLights = new List<LightSource>();
+        private List<LightSource> _infiniteLights = new List<LightSource>();
 
         // data about lights in this lights manager
-        Dictionary<LightSource, LightSourceMD> _lightsData = new Dictionary<LightSource, LightSourceMD>();
+        private Dictionary<LightSource, LightSourceMD> _lightsData = new Dictionary<LightSource, LightSourceMD>();
 
         // list with all lights currently in manager.
-        List<LightSource> _lights = new List<LightSource>();
+        private List<LightSource> _lights = new List<LightSource>();
 
         // to return empty lights array.
-        static LightSource[] EmptyLightsArray = new LightSource[0];
+        private static LightSource[] EmptyLightsArray = new LightSource[0];
 
         /// <summary>
         /// Enable / disable all lights.
@@ -89,7 +90,7 @@ namespace Nez.GeonBit.Lights
         /// </summary>
         public Vector3 LightsRegionSize
         {
-            get { return _regionSize; }
+            get => _regionSize;
             set { _regionSize = value; UpdateLightsRegionSize(); }
         }
 
@@ -144,7 +145,7 @@ namespace Nez.GeonBit.Lights
         /// <returns>Min lights region index.</returns>
         private Vector3 GetMinRegionIndex(ref BoundingSphere boundingSphere)
         {
-            Vector3 ret = boundingSphere.Center - Vector3.One * boundingSphere.Radius;
+            var ret = boundingSphere.Center - Vector3.One * boundingSphere.Radius;
             ret /= LightsRegionSize;
             ret.X = (float)System.Math.Floor(ret.X);
             ret.Y = (float)System.Math.Floor(ret.Y);
@@ -159,7 +160,7 @@ namespace Nez.GeonBit.Lights
         /// <returns>Min lights region index.</returns>
         private Vector3 GetMaxRegionIndex(ref BoundingSphere boundingSphere)
         {
-            Vector3 ret = boundingSphere.Center + Vector3.One * boundingSphere.Radius;
+            var ret = boundingSphere.Center + Vector3.One * boundingSphere.Radius;
             ret /= LightsRegionSize;
             ret.X = (float)System.Math.Floor(ret.X);
             ret.Y = (float)System.Math.Floor(ret.Y);
@@ -186,11 +187,11 @@ namespace Nez.GeonBit.Lights
             if (_regions.Count == 0 && _infiniteLights.Count == 0) { return EmptyLightsArray; }
 
             // get min and max points of this bounding sphere
-            Vector3 min = GetMinRegionIndex(ref boundingSphere);
-            Vector3 max = GetMaxRegionIndex(ref boundingSphere);
+            var min = GetMinRegionIndex(ref boundingSphere);
+            var max = GetMaxRegionIndex(ref boundingSphere);
 
             // build array to return
-            Utils.ResizableArray<LightSource> retLights = new Utils.ResizableArray<LightSource>();
+            var retLights = new Utils.ResizableArray<LightSource>();
 
             // add all infinite lights first (directional lights etc)
             foreach (var light in _infiniteLights)
@@ -200,7 +201,7 @@ namespace Nez.GeonBit.Lights
 
             // iterate regions and add lights
             bool isFirstRegionWeCheck = true;
-            Vector3 index = new Vector3();
+            var index = new Vector3();
             for (int x = (int)min.X; x <= max.X; ++x)
             {
                 index.X = x;
@@ -212,8 +213,7 @@ namespace Nez.GeonBit.Lights
                         index.Z = z;
 
                         // try to fetch region lights
-                        List<LightSource> regionLights;
-                        if (_regions.TryGetValue(index, out regionLights))
+                        if (_regions.TryGetValue(index, out var regionLights))
                         {
                             // iterate lights in region
                             foreach (var light in _regions[index])
@@ -294,7 +294,7 @@ namespace Nez.GeonBit.Lights
             }
 
             // remove light from previous regions
-            Vector3 index = new Vector3();
+            var index = new Vector3();
             for (int x = (int)min.X; x <= max.X; ++x)
             {
                 index.X = x;
@@ -306,8 +306,7 @@ namespace Nez.GeonBit.Lights
                         index.Z = z;
 
                         // remove light from region
-                        List<LightSource> region;
-                        if (_regions.TryGetValue(index, out region))
+                        if (_regions.TryGetValue(index, out var region))
                         {
                             region.Remove(light);
 
@@ -338,8 +337,10 @@ namespace Nez.GeonBit.Lights
                 _infiniteLights.Add(light);
 
                 // update light's metadata
-                LightSourceMD newMd = new LightSourceMD();
-                newMd.Infinite = true;
+                var newMd = new LightSourceMD
+                {
+                    Infinite = true
+                };
                 _lightsData[light] = newMd;
 
                 // stop here
@@ -352,7 +353,7 @@ namespace Nez.GeonBit.Lights
             var max = GetMaxRegionIndex(ref boundingSphere);
 
             // add light to new regions
-            Vector3 index = new Vector3();
+            var index = new Vector3();
             for (int x = (int)min.X; x <= max.X; ++x)
             {
                 index.X = x;
@@ -377,9 +378,11 @@ namespace Nez.GeonBit.Lights
 
             // update light's metadata
             {
-                LightSourceMD newMd = new LightSourceMD();
-                newMd.MinRegionIndex = min;
-                newMd.MaxRegionIndex = max;
+                var newMd = new LightSourceMD
+                {
+                    MinRegionIndex = min,
+                    MaxRegionIndex = max
+                };
                 _lightsData[light] = newMd;
             }
         }

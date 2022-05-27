@@ -34,7 +34,7 @@ namespace GeonBit.Core.Physics.CollisionShapes
         public CollisionConvexHull(Vector3[] points)
         {
             // convert to bullet vectors and create the shape
-            BulletSharp.Math.Vector3[] bvectors = ToBullet.Vectors(points);
+            var bvectors = ToBullet.Vectors(points);
             _shape = new BulletSharp.ConvexHullShape(bvectors);
         }
 
@@ -46,7 +46,7 @@ namespace GeonBit.Core.Physics.CollisionShapes
         {
             // extract points from shape
             var shape = _shape as BulletSharp.ConvexHullShape;
-            Vector3[] points = new Vector3[shape.NumPoints];
+            var points = new Vector3[shape.NumPoints];
             int i = 0;
             foreach (var point in shape.Points)
             {

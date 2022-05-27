@@ -19,10 +19,10 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
+using GeonBit.Core.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using GeonBit.Core.Utils;
 
 
 namespace Nez.GeonBit
@@ -65,13 +65,13 @@ namespace Nez.GeonBit
     /// 
     /// Note: While its a good way to reduce draw calls, don't create combined meshes too big or else you'll lose some culling optimizations.
     /// </summary>
-    public class CombinedMeshesEntity <VertexType> : BaseRenderableEntity where VertexType : struct, IVertexType
+    public class CombinedMeshesEntity<VertexType> : BaseRenderableEntity where VertexType : struct, IVertexType
     {
         /// <summary>
         /// Represent the vertices and indexes of a combined mesh part.
         /// This represent a chunk of couple of meshes combined together, all vertices are in world space after transformations applied.
         /// </summary>
-        class CombinedMeshesPart
+        private class CombinedMeshesPart
         {
             /// <summary>
             /// Vertices buffer.
@@ -149,39 +149,54 @@ namespace Nez.GeonBit
 
         // dictionary to hold the combined parts and their materials.
         // key is material so we can draw them in chunks sharing the same material and texture.
-        Dictionary<Materials.MaterialAPI, CombinedMeshesPart> _parts = new Dictionary<Materials.MaterialAPI, CombinedMeshesPart>();
+        private Dictionary<Materials.MaterialAPI, CombinedMeshesPart> _parts = new Dictionary<Materials.MaterialAPI, CombinedMeshesPart>();
 
         // store all vertices positions - needed to calculate bounding box / sphere. This list is cleared once built.
-        List<Vector3> _allPoints = new List<Vector3>();
+        private List<Vector3> _allPoints = new List<Vector3>();
 
         /// <summary>
         /// Combined mesh bounding box, in local space.
         /// </summary>
-        BoundingBox _localBoundingBox;
+        private BoundingBox _localBoundingBox;
 
         /// <summary>
         /// Combined mesh bounding sphere, in local space.
         /// </summary>
-        BoundingSphere _localBoundingSphere;
+        private BoundingSphere _localBoundingSphere;
 
         /// <summary>
         /// Did we already build this combined mesh entity? happens on first draw, or when "build" is called.
         /// </summary>
-        bool _wasBuilt = false;
+        private bool _wasBuilt = false;
 
         // vertex type we use in this combined mesh.
-        VertexTypes _vtype;
-            
+        private VertexTypes _vtype;
+
         /// <summary>
         /// Create the combined mesh entity.
         /// </summary>
         public CombinedMeshesEntity()
         {
-            if (typeof(VertexType) == typeof(VertexPosition)) _vtype = VertexTypes.VertexPosition;
-            else if (typeof(VertexType) == typeof(VertexPositionColor)) _vtype = VertexTypes.VertexPositionColor;
-            else if (typeof(VertexType) == typeof(VertexPositionTexture)) _vtype = VertexTypes.VertexPositionTexture;
-            else if (typeof(VertexType) == typeof(VertexPositionNormalTexture)) _vtype = VertexTypes.VertexPositionNormalTexture;
-            else if (typeof(VertexType) == typeof(VertexPositionNormalTangentTexture)) _vtype = VertexTypes.VertexPositionNormalTangentTexture;
+            if (typeof(VertexType) == typeof(VertexPosition))
+            {
+                _vtype = VertexTypes.VertexPosition;
+            }
+            else if (typeof(VertexType) == typeof(VertexPositionColor))
+            {
+                _vtype = VertexTypes.VertexPositionColor;
+            }
+            else if (typeof(VertexType) == typeof(VertexPositionTexture))
+            {
+                _vtype = VertexTypes.VertexPositionTexture;
+            }
+            else if (typeof(VertexType) == typeof(VertexPositionNormalTexture))
+            {
+                _vtype = VertexTypes.VertexPositionNormalTexture;
+            }
+            else if (typeof(VertexType) == typeof(VertexPositionNormalTangentTexture))
+            {
+                _vtype = VertexTypes.VertexPositionNormalTangentTexture;
+            }
             else { throw new Exceptions.InvalidValueException("Unsupported vertex type in combined mesh!"); }
         }
 
@@ -191,12 +206,14 @@ namespace Nez.GeonBit
         /// <returns>Cloned copy.</returns>
         public CombinedMeshesEntity<VertexType> Clone()
         {
-            CombinedMeshesEntity<VertexType> ret = new CombinedMeshesEntity<VertexType>();
-            ret._localBoundingBox = _localBoundingBox;
-            ret._localBoundingSphere = _localBoundingSphere;
-            ret._allPoints = new List<Vector3>(_allPoints);
-            ret._parts = new Dictionary<Materials.MaterialAPI, CombinedMeshesPart>(_parts);
-            ret._wasBuilt = _wasBuilt;
+            var ret = new CombinedMeshesEntity<VertexType>
+            {
+                _localBoundingBox = _localBoundingBox,
+                _localBoundingSphere = _localBoundingSphere,
+                _allPoints = new List<Vector3>(_allPoints),
+                _parts = new Dictionary<Materials.MaterialAPI, CombinedMeshesPart>(_parts),
+                _wasBuilt = _wasBuilt
+            };
             return ret;
         }
 
@@ -223,20 +240,14 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="ver">Any vertex type to convert.</param>
         /// <returns>Vertex as template VertexType.</returns>
-        private VertexType ToVertexType(IVertexType ver)
-        {
-            return (VertexType)(ver);
-        }
+        private VertexType ToVertexType(IVertexType ver) => (VertexType)(ver);
 
         /// <summary>
         /// Convert to specific vertex type.
         /// </summary>
         /// <param name="ver">Any vertex type to convert.</param>
         /// <returns>Vertex as chosen vertex type.</returns>
-        private ToVType ToSpecificVertexType<ToVType>(IVertexType ver)
-        {
-            return (ToVType)(ver);
-        }
+        private ToVType ToSpecificVertexType<ToVType>(IVertexType ver) => (ToVType)(ver);
 
         /// <summary>
         /// Add a model mesh to the combined mesh.
@@ -262,7 +273,7 @@ namespace Nez.GeonBit
                 }
 
                 // get the combined chunk to add this meshpart to
-                CombinedMeshesPart combinedPart = GetCombinedPart(material);
+                var combinedPart = GetCombinedPart(material);
 
                 // make sure its not readonly
                 if (meshPart.VertexBuffer.BufferUsage == BufferUsage.WriteOnly ||
@@ -290,7 +301,7 @@ namespace Nez.GeonBit
                 for (int i = 0; i < vertexBufferSize / sizeof(float); i += vertexStride / sizeof(float))
                 {
                     // get curr position with transformations
-                    Vector3 currPosition = Vector3.Transform(new Vector3(vertexData[i], vertexData[i + 1], vertexData[i + 2]), transform);
+                    var currPosition = Vector3.Transform(new Vector3(vertexData[i], vertexData[i + 1], vertexData[i + 2]), transform);
 
                     // get other vertex properties based on type and add to vertices buffer
                     switch (_vtype)
@@ -305,7 +316,7 @@ namespace Nez.GeonBit
                         case VertexTypes.VertexPositionColor:
                             {
                                 // get color
-                                Color currColor = new Color(vertexData[i + 3], vertexData[i + 4], vertexData[i + 5], vertexData[i + 6]);
+                                var currColor = new Color(vertexData[i + 3], vertexData[i + 4], vertexData[i + 5], vertexData[i + 6]);
 
                                 // add to buffer
                                 var vertexToAdd = new VertexPositionColor(currPosition, currColor);
@@ -315,11 +326,11 @@ namespace Nez.GeonBit
                         case VertexTypes.VertexPositionNormalTexture:
                             {
                                 // get normal
-                                Vector3 normal = new Vector3(vertexData[i + 3], vertexData[i + 4], vertexData[i + 5]);
+                                var normal = new Vector3(vertexData[i + 3], vertexData[i + 4], vertexData[i + 5]);
                                 normal = Vector3.Normalize(Vector3.TransformNormal(normal, transform));
 
                                 // get texture coords
-                                Vector2 textcoords = new Vector2(vertexData[i + 6], vertexData[i + 7]);
+                                var textcoords = new Vector2(vertexData[i + 6], vertexData[i + 7]);
 
                                 // add to buffer
                                 var vertexToAdd = new VertexPositionNormalTexture(currPosition, normal, textcoords);
@@ -329,17 +340,17 @@ namespace Nez.GeonBit
                         case VertexTypes.VertexPositionNormalTangentTexture:
                             {
                                 // get normal
-                                Vector3 normal = new Vector3(vertexData[i + 3], vertexData[i + 4], vertexData[i + 5]);
+                                var normal = new Vector3(vertexData[i + 3], vertexData[i + 4], vertexData[i + 5]);
                                 normal = Vector3.Normalize(Vector3.TransformNormal(normal, transform));
 
                                 // get tangent
-                                Vector3 tangent = new Vector3(vertexData[i + 6], vertexData[i + 7], vertexData[i + 8]);
+                                var tangent = new Vector3(vertexData[i + 6], vertexData[i + 7], vertexData[i + 8]);
 
                                 // get binormal
-                                Vector3 binormal = new Vector3(vertexData[i + 9], vertexData[i + 10], vertexData[i + 11]);
+                                var binormal = new Vector3(vertexData[i + 9], vertexData[i + 10], vertexData[i + 11]);
 
                                 // get texture coords
-                                Vector2 textcoords = new Vector2(vertexData[i + 12], vertexData[i + 13]);
+                                var textcoords = new Vector2(vertexData[i + 12], vertexData[i + 13]);
 
                                 // add to buffer
                                 var vertexToAdd = new VertexPositionNormalTangentTexture(currPosition, normal, textcoords, tangent, binormal);
@@ -349,7 +360,7 @@ namespace Nez.GeonBit
                         case VertexTypes.VertexPositionTexture:
                             {
                                 // get texture coords
-                                Vector2 textcoords = new Vector2(vertexData[i + 3], vertexData[i + 4]);
+                                var textcoords = new Vector2(vertexData[i + 3], vertexData[i + 4]);
 
                                 // add to buffer
                                 var vertexToAdd = new VertexPositionTexture(currPosition, textcoords);
@@ -399,11 +410,11 @@ namespace Nez.GeonBit
 
             // transform all vertices from array
             int i = 0;
-            VertexType[] processed = new VertexType[vertices.Length];
+            var processed = new VertexType[vertices.Length];
             foreach (var vertex in vertices)
             {
                 // get current vertex
-                VertexType curr = vertex;
+                var curr = vertex;
 
                 // apply transformations
                 switch (_vtype)
@@ -490,7 +501,7 @@ namespace Nez.GeonBit
             if (_wasBuilt) { throw new System.InvalidOperationException("Cannot add vertices to Combined Mesh Entity after it was built!"); }
 
             // get the combined chunk to add these vertices to
-            CombinedMeshesPart combinedPart = GetCombinedPart(material);
+            var combinedPart = GetCombinedPart(material);
 
             // add vertices to combined part
             combinedPart.Vertices.AddRange(vertices);
@@ -517,8 +528,7 @@ namespace Nez.GeonBit
         private CombinedMeshesPart GetCombinedPart(Materials.MaterialAPI material)
         {
             // try to get from existing parts and if not found create it
-            CombinedMeshesPart combinedPart;
-            if (!_parts.TryGetValue(material, out combinedPart))
+            if (!_parts.TryGetValue(material, out var combinedPart))
             {
                 combinedPart = new CombinedMeshesPart();
                 _parts[material] = combinedPart;
@@ -618,10 +628,10 @@ namespace Nez.GeonBit
         protected override BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // get bounding sphere in local space
-            BoundingSphere modelBoundingSphere = _localBoundingSphere;
+            var modelBoundingSphere = _localBoundingSphere;
 
             // apply transformations on bounding sphere
-            Vector3 scale = Math3D.GetScale(ref worldTransformations);
+            var scale = Math3D.GetScale(ref worldTransformations);
             modelBoundingSphere.Radius *= System.Math.Max(scale.X, System.Math.Max(scale.Y, scale.Z));
             modelBoundingSphere.Center = Vector3.Transform(modelBoundingSphere.Center, worldTransformations);
             return modelBoundingSphere;
@@ -638,17 +648,17 @@ namespace Nez.GeonBit
         protected override BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // get bounding box in local space
-            BoundingBox modelBoundingBox = _localBoundingBox;
+            var modelBoundingBox = _localBoundingBox;
 
             // initialize minimum and maximum corners of the bounding box to max and min values
-            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
             // iterate bounding box corners and transform them
-            foreach (Vector3 corner in modelBoundingBox.GetCorners())
+            foreach (var corner in modelBoundingBox.GetCorners())
             {
                 // get curr position and update min / max
-                Vector3 currPosition = Vector3.Transform(corner, worldTransformations);
+                var currPosition = Vector3.Transform(corner, worldTransformations);
                 min = Vector3.Min(min, currPosition);
                 max = Vector3.Max(max, currPosition);
             }

@@ -117,7 +117,7 @@ namespace GeonBit.Core.Physics
         public static short OR(params short[] args)
         {
             short ret = 0;
-            foreach (var i in args)
+            foreach (short i in args)
             {
                 ret |= i;
             }
@@ -130,7 +130,7 @@ namespace GeonBit.Core.Physics
         public static short AND(params short[] args)
         {
             short ret = 0;
-            foreach (var i in args)
+            foreach (short i in args)
             {
                 ret &= i;
             }
@@ -147,7 +147,7 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Default collision mask for all type of characters - characters, player, and enemies.
         /// </summary>
-        public static readonly short Characters = 
+        public static readonly short Characters =
             CollisionGroups.AllCharacters;
 
         /// <summary>

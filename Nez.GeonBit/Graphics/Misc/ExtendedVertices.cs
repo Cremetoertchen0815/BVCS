@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.InteropServices;
 
 
@@ -62,26 +61,20 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Vertex declaration.
         /// </summary>
-        VertexDeclaration IVertexType.VertexDeclaration
-        {
-            get
-            {
-                return VertexDeclaration;
-            }
-        }
+        VertexDeclaration IVertexType.VertexDeclaration => VertexDeclaration;
 
         /// <summary>
         /// Static constructor to init vertex declaration.
         /// </summary>
         static VertexPositionNormalTangentTexture()
         {
-            VertexElement[] elements = new VertexElement[] {
+            var elements = new VertexElement[] {
                 new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
                 new VertexElement(12, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0),
                 new VertexElement(24, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0),
                 new VertexElement(32, VertexElementFormat.Vector3, VertexElementUsage.Tangent, 0),
                 new VertexElement(44, VertexElementFormat.Vector3, VertexElementUsage.Binormal, 0)};
-            VertexDeclaration declaration = new VertexDeclaration(elements);
+            var declaration = new VertexDeclaration(elements);
             VertexDeclaration = declaration;
         }
 
@@ -96,11 +89,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="binormal">Vertex binormal.</param>
         public VertexPositionNormalTangentTexture(Vector3 position, Vector3 normal, Vector2 textureCoordinate, Vector3 tangent, Vector3 binormal)
         {
-            this.Position = position;
-            this.Normal = normal;
-            this.TextureCoordinate = textureCoordinate;
-            this.Tangent = tangent;
-            this.Binormal = binormal;
+            Position = position;
+            Normal = normal;
+            TextureCoordinate = textureCoordinate;
+            Tangent = tangent;
+            Binormal = binormal;
         }
 
         /// <summary>
@@ -109,8 +102,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public void CalcTangentBinormal()
         {
             // calc c1 and c2
-            Vector3 c1 = Vector3.Cross(Normal, new Vector3(0.0f, 0.0f, 1.0f));
-            Vector3 c2 = Vector3.Cross(Normal, new Vector3(0.0f, 1.0f, 0.0f));
+            var c1 = Vector3.Cross(Normal, new Vector3(0.0f, 0.0f, 1.0f));
+            var c2 = Vector3.Cross(Normal, new Vector3(0.0f, 1.0f, 0.0f));
 
             // check which is more fitting to be tangent
             Tangent = (c1.Length() > c2.Length()) ? c1 : c2;
@@ -146,7 +139,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             unchecked
             {
-                var hashCode = Position.GetHashCode();
+                int hashCode = Position.GetHashCode();
                 hashCode = (hashCode * 397) ^ Normal.GetHashCode();
                 hashCode = (hashCode * 397) ^ TextureCoordinate.GetHashCode();
                 hashCode = (hashCode * 397) ^ Tangent.GetHashCode();
@@ -159,10 +152,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Return string representation of this vertex.
         /// </summary>
         /// <returns>String representation of the vertex.</returns>
-        public override string ToString()
-        {
-            return "{{Position:" + this.Position + " Normal:" + this.Normal + " TextureCoordinate:" + this.TextureCoordinate + " Tangent " + this.Tangent + "}}";
-        }
+        public override string ToString() => "{{Position:" + Position + " Normal:" + Normal + " TextureCoordinate:" + TextureCoordinate + " Tangent " + Tangent + "}}";
 
         /// <summary>
         /// Return if two vertices are equal.
@@ -170,10 +160,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="left">Left side to compare.</param>
         /// <param name="right">Right side to compare.</param>
         /// <returns>If equal.</returns>
-        public static bool operator ==(VertexPositionNormalTangentTexture left, VertexPositionNormalTangentTexture right)
-        {
-            return (((left.Position == right.Position) && (left.Normal == right.Normal)) && (left.TextureCoordinate == right.TextureCoordinate) && left.Binormal == right.Binormal && left.Tangent == right.Tangent);
-        }
+        public static bool operator ==(VertexPositionNormalTangentTexture left, VertexPositionNormalTangentTexture right) => (((left.Position == right.Position) && (left.Normal == right.Normal)) && (left.TextureCoordinate == right.TextureCoordinate) && left.Binormal == right.Binormal && left.Tangent == right.Tangent);
 
         /// <summary>
         /// Return if two vertices are not equal.
@@ -181,9 +168,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="left">Left side to compare.</param>
         /// <param name="right">Right side to compare.</param>
         /// <returns>If not equal.</returns>
-        public static bool operator !=(VertexPositionNormalTangentTexture left, VertexPositionNormalTangentTexture right)
-        {
-            return !(left == right);
-        }
+        public static bool operator !=(VertexPositionNormalTangentTexture left, VertexPositionNormalTangentTexture right) => !(left == right);
     }
 }

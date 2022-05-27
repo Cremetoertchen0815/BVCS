@@ -35,13 +35,11 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get / Set the bounding box to draw.
         /// </summary>
-        public BoundingBox Box {
+        public BoundingBox Box
+        {
 
             // get bounding box
-            get
-            {
-                return _boundingBox;
-            }
+            get => _boundingBox;
 
             // set bounding box
             set
@@ -56,12 +54,12 @@ namespace Nez.GeonBit
         }
 
         // drawing effect
-        BasicEffect _boxEffect;
+        private BasicEffect _boxEffect;
 
         /// <summary>
         /// Get effect we draw box with.
         /// </summary>
-        public BasicEffect BoxEffect { get { return _boxEffect; } }
+        public BasicEffect BoxEffect => _boxEffect;
 
         /// <summary>
         /// If true, it means bounding box is already transformed and we don't need to apply world matrix on it.
@@ -69,32 +67,29 @@ namespace Nez.GeonBit
         public bool IsBoxAlreadyTransformed = true;
 
         // Initialize an array of indices for the box. 12 lines require 24 indices
-        static private short[] _bBoxIndices = {
+        private static short[] _bBoxIndices = {
                 0, 1, 1, 2, 2, 3, 3, 0, // Front edges
                 4, 5, 5, 6, 6, 7, 7, 4, // Back edges
                 0, 4, 1, 5, 2, 6, 3, 7 // Side edges connecting front and back
             };
 
         // vertex list (1 per box corner, total of 8 corners)
-        VertexPositionColor[] _primitiveList = new VertexPositionColor[8];
+        private VertexPositionColor[] _primitiveList = new VertexPositionColor[8];
 
         /// <summary>
         /// Create the bounding box entity.
         /// </summary>
-        public BoundingBoxEntity()
-        {
+        public BoundingBoxEntity() =>
             // create effect
-            _boxEffect = new BasicEffect(GraphicsManager.GraphicsDevice);
-            _boxEffect.TextureEnabled = false;
-        }
+            _boxEffect = new BasicEffect(GraphicsManager.GraphicsDevice)
+            {
+                TextureEnabled = false
+            };
 
         /// <summary>
         /// If true, this entity will only show in debug / editor mode.
         /// </summary>
-        public override bool IsDebugEntity
-        {
-            get { return true; }
-        }
+        public override bool IsDebugEntity => true;
 
         /// <summary>
         /// Called when bounding box changes.
@@ -102,7 +97,7 @@ namespace Nez.GeonBit
         public void OnBoundingBoxUpdate()
         {
             // get bounding box corners
-            Vector3[] corners = Box.GetCorners();
+            var corners = Box.GetCorners();
 
             // Assign the 8 box vertices
             for (int i = 0; i < corners.Length; i++)
@@ -129,7 +124,7 @@ namespace Nez.GeonBit
             _boxEffect.Projection = GraphicsManager.ActiveCamera.Projection;
 
             // Draw the box with a LineList
-            foreach (EffectPass pass in _boxEffect.CurrentTechnique.Passes)
+            foreach (var pass in _boxEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 GraphicsManager.GraphicsDevice.DrawUserIndexedPrimitives(

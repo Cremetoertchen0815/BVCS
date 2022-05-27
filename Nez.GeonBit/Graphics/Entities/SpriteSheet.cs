@@ -47,18 +47,15 @@ namespace Nez.GeonBit
     public class SpriteSheet
     {
         // list with steps in spritesheet
-        List<SpriteSheetStep> _steps = new List<SpriteSheetStep>();
+        private List<SpriteSheetStep> _steps = new List<SpriteSheetStep>();
 
         // dictionary of step names (to get sprite from spritesheet via string identifier)
-        Dictionary<string, int> _stepsIdentifierToIndex = new Dictionary<string, int>();
+        private Dictionary<string, int> _stepsIdentifierToIndex = new Dictionary<string, int>();
 
         /// <summary>
         /// Create spritesheet without any steps (you need to add via AddStep).
         /// </summary>
-        public SpriteSheet()
-        {
-            BuildForConstStepSize(new Point(1, 1));
-        }
+        public SpriteSheet() => BuildForConstStepSize(new Point(1, 1));
 
         /// <summary>
         /// Create spritesheet from constant steps count.
@@ -85,10 +82,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="identifier">Step index to get.</param>
         /// <returns>Spritesheet step.</returns>
-        public SpriteSheetStep GetStep(string identifier)
-        {
-            return GetStep(_stepsIdentifierToIndex[identifier]);
-        }
+        public SpriteSheetStep GetStep(string identifier) => GetStep(_stepsIdentifierToIndex[identifier]);
 
         /// <summary>
         /// Define a step in the spritesheet.
@@ -99,7 +93,7 @@ namespace Nez.GeonBit
         public void AddStep(Vector2 position, Vector2 size, string identifier = null)
         {
             // create the step
-            SpriteSheetStep step = BuildStep(position, size);
+            var step = BuildStep(position, size);
             _steps.Add(step);
 
             // if there's a string identifier, set it
@@ -117,14 +111,14 @@ namespace Nez.GeonBit
         public void BuildForConstStepSize(Point stepsCount)
         {
             // calc size of a single step
-            Vector2 size = Vector2.One / new Vector2(stepsCount.X, stepsCount.Y);
+            var size = Vector2.One / new Vector2(stepsCount.X, stepsCount.Y);
 
             // create all steps
             for (int j = 0; j < stepsCount.Y; ++j)
             {
                 for (int i = 0; i < stepsCount.X; ++i)
                 {
-                    Vector2 position = size * new Vector2(i, j);
+                    var position = size * new Vector2(i, j);
                     AddStep(position, size);
                 }
             }
@@ -135,20 +129,17 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="index">Step index.</param>
         /// <param name="identifier">Identifier to set.</param>
-        public void AssignNameToStep(int index, string identifier)
-        {
-            _stepsIdentifierToIndex[identifier] = index;
-        }
+        public void AssignNameToStep(int index, string identifier) => _stepsIdentifierToIndex[identifier] = index;
 
         /// <summary>
         /// Create a single spritesheet step.
         /// </summary>
         /// <param name="positionInSpritesheet">Position in spritesheet (0-1 coords).</param>
         /// <param name="sizeInSpriteSheet">Size in spritesheet (0-1 coords).</param>
-        SpriteSheetStep BuildStep(Vector2 positionInSpritesheet, Vector2 sizeInSpriteSheet)
+        private SpriteSheetStep BuildStep(Vector2 positionInSpritesheet, Vector2 sizeInSpriteSheet)
         {
             // create vertices
-            VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[4];
+            var vertices = new VertexPositionNormalTexture[4];
 
             // set normal
             for (int i = 0; i < 4; ++i)
@@ -179,9 +170,11 @@ namespace Nez.GeonBit
             indexes[5] = 3;
 
             // create a new step and add to steps dictionary
-            SpriteSheetStep step = new SpriteSheetStep();
-            step.Vertices = vertices;
-            step.Indexes = indexes;
+            var step = new SpriteSheetStep
+            {
+                Vertices = vertices,
+                Indexes = indexes
+            };
             return step;
         }
     }
@@ -213,7 +206,7 @@ namespace Nez.GeonBit
         public bool IsLooping { get; private set; }
 
         // optional delay to add per-step
-        Dictionary<int, float> _perStepDelays = new Dictionary<int, float>();
+        private Dictionary<int, float> _perStepDelays = new Dictionary<int, float>();
 
         /// <summary>
         /// Create animation clip.
@@ -245,8 +238,7 @@ namespace Nez.GeonBit
         public float DelayForStep(int stepRelativeIndex)
         {
             float ret = 1f / Speed;
-            float extra;
-            if (_perStepDelays.TryGetValue(stepRelativeIndex, out extra))
+            if (_perStepDelays.TryGetValue(stepRelativeIndex, out float extra))
             {
                 return ret + extra;
             }
@@ -258,10 +250,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="stepRelativeIndex">On which step to add this delay (step index is relative to starting index).</param>
         /// <param name="delay">How long, in seconds, to add extra delay. Can be negative to create faster steps.</param>
-        public void AddStepDelay(int stepRelativeIndex, float delay)
-        {
-            _perStepDelays[stepRelativeIndex] = delay;
-        }
+        public void AddStepDelay(int stepRelativeIndex, float delay) => _perStepDelays[stepRelativeIndex] = delay;
     }
 
     /// <summary>
@@ -296,10 +285,10 @@ namespace Nez.GeonBit
         public OnAnimationClipEnds OnAnimationEnd;
 
         // Time until next animation step.
-        float _timeForNextStep = 0f;
+        private float _timeForNextStep = 0f;
 
         // turns true if animation is not looping and we reached the end.
-        bool _isDone = false;
+        private bool _isDone = false;
 
         /// <summary>
         /// Create a new animation clip play instance.
@@ -320,14 +309,8 @@ namespace Nez.GeonBit
         /// </summary>
         public int RelativeStep
         {
-            set
-            {
-                CurrentStep = Clip.StartIndex + value;
-            }
-            get
-            {
-                return CurrentStep - Clip.StartIndex;
-            }
+            set => CurrentStep = Clip.StartIndex + value;
+            get => CurrentStep - Clip.StartIndex;
         }
 
         /// <summary>

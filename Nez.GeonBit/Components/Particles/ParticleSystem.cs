@@ -59,10 +59,7 @@ namespace Nez.GeonBit.Particles
         /// </summary>
         /// <param name="timeAlive">For how long the particle system was alive.</param>
         /// <returns>Actual frequency for current time.</returns>
-        public float GetFrequency(float timeAlive)
-        {
-            return Frequency + FrequencyChange * timeAlive;
-        }
+        public float GetFrequency(float timeAlive) => Frequency + FrequencyChange * timeAlive;
 
         /// <summary>
         /// Create the particle type.
@@ -85,10 +82,7 @@ namespace Nez.GeonBit.Particles
         /// Clone particle type.
         /// </summary>
         /// <returns>Cloned particle type.</returns>
-        public ParticleType Clone()
-        {
-            return new ParticleType(ParticlePrototype, Frequency, MinParticlesPerSpawn, MaxParticlesPerSpawn, FrequencyChange);
-        }
+        public ParticleType Clone() => new ParticleType(ParticlePrototype, Frequency, MinParticlesPerSpawn, MaxParticlesPerSpawn, FrequencyChange);
     }
 
     /// <summary>
@@ -97,10 +91,10 @@ namespace Nez.GeonBit.Particles
     public class ParticleSystem : BaseComponent
     {
         // list of particle types
-        List<ParticleType> _particles;
+        private List<ParticleType> _particles;
 
         // for how long this particle system exists
-        float _timeAlive = 0f;
+        private float _timeAlive = 0f;
 
         /// <summary>
         /// If true, will add all particles to root scene node.
@@ -115,7 +109,7 @@ namespace Nez.GeonBit.Particles
         public float Interval = 0f;
 
         // time until next interval
-        float _timeForNextInterval = 0f;
+        private float _timeForNextInterval = 0f;
 
         /// <summary>
         /// If set, will destroy self once time to live expires.
@@ -133,7 +127,7 @@ namespace Nez.GeonBit.Particles
         public bool DestroyParentWhenExpired = false;
 
         // for random values
-        System.Random _random;
+        private System.Random _random;
 
         /// <summary>
         /// Create the new particles system.
@@ -148,19 +142,13 @@ namespace Nez.GeonBit.Particles
         /// Create the new particles system with a base particle type.
         /// </summary>
         /// <param name="type">First particles type in this system.</param>
-        public ParticleSystem(ParticleType type) : this()
-        {
-            AddParticleType(type);
-        }
+        public ParticleSystem(ParticleType type) : this() => AddParticleType(type);
 
         /// <summary>
         /// Add particle type to this particles system.
         /// </summary>
         /// <param name="type">Particle type to add.</param>
-        public void AddParticleType(ParticleType type)
-        {
-            _particles.Add(type);
-        }
+        public void AddParticleType(ParticleType type) => _particles.Add(type);
 
         /// <summary>
         /// Called every const X seconds.
@@ -234,9 +222,9 @@ namespace Nez.GeonBit.Particles
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component Clone()
         {
-            ParticleSystem ret = CopyBasics(new ParticleSystem()) as ParticleSystem;
+            var ret = CopyBasics(new ParticleSystem()) as ParticleSystem;
             ret.TimeToLive = TimeToLive;
             ret.DestroyParentWhenExpired = DestroyParentWhenExpired;
             ret.Interval = Interval;

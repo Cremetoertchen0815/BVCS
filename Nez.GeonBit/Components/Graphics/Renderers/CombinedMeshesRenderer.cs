@@ -19,8 +19,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GeonBit.Core.Graphics;
-using GeonBit.Core.Graphics.Materials;
+using Nez.GeonBit.Materials;
 
 namespace Nez.GeonBit
 {
@@ -39,7 +38,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get the main entity instance of this renderer.
         /// </summary>
-        protected override BaseRenderableEntity Entity { get { return _entity; } }
+        protected override BaseRenderableEntity RenderableEntity => _entity;
 
         /// <summary>
         /// Build the combined meshes.
@@ -47,7 +46,7 @@ namespace Nez.GeonBit
         public void Build()
         {
             _entity.Build();
-            if (_GameObject != null) _GameObject.SceneNode.ForceFullUpdate(false);
+            Node?.ForceFullUpdate(false);
         }
 
         /// <summary>
@@ -59,13 +58,13 @@ namespace Nez.GeonBit
         public void AddModelRenderer(ModelRenderer renderer, bool removeAfterAdd)
         {
             // add model to combined mesh
-            renderer._GameObject.SceneNode.ForceFullUpdate(true);
-            AddModel(renderer.Model, renderer._GameObject.SceneNode.WorldTransformations, renderer.GetFirstMaterial());
+            renderer.Node.ForceFullUpdate(true);
+            AddModel(renderer.Model, renderer.Node.WorldTransformations, renderer.GetFirstMaterial());
 
             // if needed, remove form parent.
             if (removeAfterAdd)
             {
-                renderer.RemoveFromParent();
+                renderer.Entity.RemoveComponent(renderer);
             }
         }
 
@@ -76,10 +75,7 @@ namespace Nez.GeonBit
         /// <param name="model">Model to add.</param>
         /// <param name="transform">World transformations.</param>
         /// <param name="material">Optional material to use instead of the model default materials.</param>
-        public void AddModel(Model model, Matrix transform, MaterialAPI material = null)
-        {
-            _entity.AddModel(model, transform, material);
-        }
+        public void AddModel(Model model, Matrix transform, MaterialAPI material = null) => _entity.AddModel(model, transform, material);
 
         /// <summary>
         /// Add a model mesh to the combined mesh.
@@ -88,10 +84,7 @@ namespace Nez.GeonBit
         /// <param name="mesh">Mesh to add.</param>
         /// <param name="transform">World transformations.</param>
         /// <param name="material">Optional material to use instead of the mesh default materials.</param>
-        public void AddModelMesh(ModelMesh mesh, Matrix transform, MaterialAPI material = null)
-        {
-            _entity.AddModelMesh(mesh, transform, material);
-        }
+        public void AddModelMesh(ModelMesh mesh, Matrix transform, MaterialAPI material = null) => _entity.AddModelMesh(mesh, transform, material);
 
         /// <summary>
         /// Add array of vertices to the combined mesh.
@@ -100,10 +93,7 @@ namespace Nez.GeonBit
         /// <param name="vertices">Vertices array to add.</param>
         /// <param name="indexes">Draw order / indexes array.</param>
         /// <param name="material">Material to use with the vertices.</param>
-        public void AddVertices(VertexType[] vertices, ushort[] indexes, MaterialAPI material)
-        {
-            _entity.AddVertices(vertices, indexes, material);
-        }
+        public void AddVertices(VertexType[] vertices, ushort[] indexes, MaterialAPI material) => _entity.AddVertices(vertices, indexes, material);
 
         /// <summary>
         /// Add array of vertices to the combined mesh.
@@ -113,10 +103,7 @@ namespace Nez.GeonBit
         /// <param name="indexes">Draw order / indexes array.</param>
         /// <param name="transform">World transformations.</param>
         /// <param name="material">Material to use with the vertices.</param>
-        public void AddVertices(VertexType[] vertices, ushort[] indexes, Matrix transform, MaterialAPI material)
-        {
-            _entity.AddVertices(vertices, indexes, transform, material);
-        }
+        public void AddVertices(VertexType[] vertices, ushort[] indexes, Matrix transform, MaterialAPI material) => _entity.AddVertices(vertices, indexes, transform, material);
 
         /// <summary>
         /// Clear everything from the combined meshes renderer.
@@ -124,25 +111,24 @@ namespace Nez.GeonBit
         public void Clear()
         {
             _entity.Clear();
-            if (_GameObject != null) _GameObject.SceneNode.ForceFullUpdate(false);
+            Node?.ForceFullUpdate(false);
         }
 
         /// <summary>
         /// Create the Combined Meshes Renderer component.
         /// </summary>
-        public CombinedMeshesRenderer()
-        {
-            _entity = new CombinedMeshesEntity<VertexType>();
-        }
+        public CombinedMeshesRenderer() => _entity = new CombinedMeshesEntity<VertexType>();
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component Clone()
         {
-            CombinedMeshesRenderer<VertexType> ret = new CombinedMeshesRenderer<VertexType>();
-            ret._entity = _entity.Clone();
+            var ret = new CombinedMeshesRenderer<VertexType>
+            {
+                _entity = _entity.Clone()
+            };
             return ret;
         }
     }

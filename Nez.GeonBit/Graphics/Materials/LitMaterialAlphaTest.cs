@@ -17,10 +17,7 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System;
 
 namespace Nez.GeonBit.Materials
 {
@@ -37,10 +34,7 @@ namespace Nez.GeonBit.Materials
         /// Create new lit effect instance.
         /// </summary>
         /// <returns>New lit effect instance.</returns>
-        public override Effect CreateEffect()
-        {
-            return ResourcesManager.Instance.GetEffect(_effectPath).Clone();
-        }
+        public override Effect CreateEffect() => ResourcesManager.Instance.GetEffect(_effectPath).Clone();
 
         /// <summary>
         /// Create the lit material from an empty effect.
@@ -73,14 +67,11 @@ namespace Nez.GeonBit.Materials
         public LitMaterialAlphaTest(BasicEffect fromEffect, bool copyEffectProperties = true) : base(fromEffect, copyEffectProperties)
         {
         }
-        
+
         /// <summary>
         /// Clone this material.
         /// </summary>
         /// <returns>Copy of this material.</returns>
-        public override MaterialAPI Clone()
-        {
-            return new LitMaterialAlphaTest(this);
-        }
+        public override MaterialAPI Clone() => new LitMaterialAlphaTest(this);
     }
 }

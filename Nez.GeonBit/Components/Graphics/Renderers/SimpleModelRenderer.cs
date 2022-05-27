@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit
@@ -31,12 +30,12 @@ namespace Nez.GeonBit
         /// <summary>
         /// The entity from the core layer used to draw the model.
         /// </summary>
-        protected Core.Graphics.SimpleModelEntity _entity;
+        protected SimpleModelEntity _entity;
 
         /// <summary>
         /// Get the main entity instance of this renderer.
         /// </summary>
-        protected override Core.Graphics.BaseRenderableEntity Entity { get { return _entity; } }
+        protected override BaseRenderableEntity RenderableEntity => _entity;
 
         /// <summary>
         /// Protected constructor without params to use without creating entity, for inheriting classes.
@@ -49,27 +48,16 @@ namespace Nez.GeonBit
         /// Create the model renderer component.
         /// </summary>
         /// <param name="model">Model to draw.</param>
-        public SimpleModelRenderer(Model model)
-        {
-            _entity = new Core.Graphics.SimpleModelEntity(model);
-        }
-
-        /// <summary>
-        /// Create the model renderer component.
-        /// </summary>
-        /// <param name="model">Path of the model asset to draw.</param>
-        public SimpleModelRenderer(string model) : this(Resources.GetModel(model))
-        {
-        }
+        public SimpleModelRenderer(Model model) => _entity = new SimpleModelEntity(model);
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component CopyBasics(Component copyTo)
         {
-            SimpleModelRenderer ret = new SimpleModelRenderer(_entity.Model);
-            CopyBasics(ret);
+            var ret = new SimpleModelRenderer(_entity.Model);
+            base.CopyBasics(ret);
             return ret;
         }
     }

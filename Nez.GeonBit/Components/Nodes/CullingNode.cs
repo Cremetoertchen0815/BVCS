@@ -18,7 +18,6 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
@@ -36,7 +35,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get current camera frustum.
         /// </summary>
-        protected BoundingFrustum CameraFrustum { get { return CurrentCameraFrustum; } }
+        protected BoundingFrustum CameraFrustum => CurrentCameraFrustum;
 
         /// <summary>
         /// Do we need to update whatever culling method we use?
@@ -69,7 +68,7 @@ namespace Nez.GeonBit
             }
 
             // draw all child nodes
-            foreach (GeonNode node in _childNodes)
+            foreach (var node in _childNodes)
             {
                 node.Draw();
             }
@@ -78,7 +77,7 @@ namespace Nez.GeonBit
             GeonNode.__OnNodeDraw?.Invoke(this);
 
             // draw all child entities
-            foreach (IEntity entity in _childEntities)
+            foreach (var entity in _childEntities)
             {
                 entity.Draw(this, ref _localTransform, ref _worldTransform);
             }
@@ -88,23 +87,17 @@ namespace Nez.GeonBit
         /// Update culling test / cached data.
         /// This is called whenever trying to draw this node after transformations update
         /// </summary>
-        abstract protected void UpdateCullingData();
+        protected abstract void UpdateCullingData();
 
         /// <summary>
         /// Return if we should cull this node in current frame.
         /// </summary>
-        virtual public bool ShouldCull
-        {
-            get
-            {
-                return !IsInScreen;
-            }
-        }
+        public virtual bool ShouldCull => !IsInScreen;
 
         /// <summary>
         /// Get if this node is currently visible in camera.
         /// </summary>
-        abstract public bool IsInScreen
+        public abstract bool IsInScreen
         {
             get;
         }
@@ -112,7 +105,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get if this node is partly inside screen (eg intersects with camera frustum).
         /// </summary>
-        abstract public bool IsPartlyInScreen
+        public abstract bool IsPartlyInScreen
         {
             get;
         }
@@ -144,19 +137,13 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="entity">Entity that was added / removed.</param>
         /// <param name="wasAdded">If true its an entity that was added, if false, an entity that was removed.</param>
-        override protected void OnEntitiesListChange(IEntity entity, bool wasAdded)
-        {
-            _isCullingDirty = true;
-        }
+        protected override void OnEntitiesListChange(IEntity entity, bool wasAdded) => _isCullingDirty = true;
 
         /// <summary>
         /// Called whenever an entity was added / removed from this node.
         /// </summary>
         /// <param name="node">GeonNode that was added / removed.</param>
         /// <param name="wasAdded">If true its a node that was added, if false, a node that was removed.</param>
-        override protected void OnChildNodesListChange(GeonNode node, bool wasAdded)
-        {
-            _isCullingDirty = true;
-        }
+        protected override void OnChildNodesListChange(GeonNode node, bool wasAdded) => _isCullingDirty = true;
     }
 }

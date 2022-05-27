@@ -18,9 +18,6 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-using System;
-using System.Diagnostics;
-using System.Text;
 using System.Collections.Generic;
 
 
@@ -33,7 +30,7 @@ namespace Nez
     /// when specific events happen too often.
     /// Note: this tool was designed for debug purposes. 
     /// </summary>
-    static public class CountAndAlert
+    public static class CountAndAlert
     {
         /// <summary>
         /// Enable / disable this mechanism.
@@ -217,21 +214,21 @@ namespace Nez
             /// <summary>
             /// Get if this alert have any handlers.
             /// </summary>
-            public bool GotHandlers { get { return FrameAlertHandler != null || SecondAlertHandler != null || TimePeriodAlertHandler != null; } }
+            public bool GotHandlers => FrameAlertHandler != null || SecondAlertHandler != null || TimePeriodAlertHandler != null;
 
             // current counter values.
             internal EventCounters _counters = new EventCounters();
         }
 
         // default alert settings
-        static AlertSettings _defaultAlertSettings;
+        private static AlertSettings _defaultAlertSettings;
 
         /// <summary>
         /// If defined, will be used for all unknown / undefined counter keys.
         /// </summary>
         public static AlertSettings DefaultAlertSettings
         {
-            get { return _defaultAlertSettings; }
+            get => _defaultAlertSettings;
             set { value.CounterKey = null; SetAlert(value); _defaultAlertSettings = value; }
         }
 
@@ -529,10 +526,7 @@ namespace Nez
         /// <summary>
         /// Stab.
         /// </summary>
-        public static ulong Count(object key, ulong amount = 1)
-        {
-            return 0;
-        }
+        public static ulong Count(object key, ulong amount = 1) => 0;
 
         /// <summary>
         /// Stab.

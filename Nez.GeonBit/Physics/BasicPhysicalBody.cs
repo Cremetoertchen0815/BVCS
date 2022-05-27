@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using BulletSharp;
 using Microsoft.Xna.Framework;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("World")]
 
@@ -46,27 +45,23 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Get the collision shape.
         /// </summary>
-        public CollisionShapes.ICollisionShape Shape { get { return _shape; } }
+        public CollisionShapes.ICollisionShape Shape => _shape;
 
         /// <summary>
         /// Return if the physical body is currently active.
         /// </summary>
-        public bool IsActive
-        {
-            get { return _BulletEntity.IsActive; }
-        }
+        public bool IsActive => _BulletEntity.IsActive;
 
         /// <summary>
         /// Get world transform from physical body.
         /// </summary>
-        virtual public Matrix WorldTransform
+        public virtual Matrix WorldTransform
         {
             // get world transformations
             get
             {
                 // get the bullet transform matrix
-                BulletSharp.Math.Matrix btMatrix;
-                _BulletEntity.GetWorldTransform(out btMatrix);
+                _BulletEntity.GetWorldTransform(out var btMatrix);
 
                 // convert to MonoGame and return (also apply scale, which is stored seperately)
                 return Matrix.CreateScale(Scale) * ToMonoGame.Matrix(btMatrix);
@@ -76,32 +71,25 @@ namespace GeonBit.Core.Physics
             set
             {
                 // convert to bullet matrix
-                BulletSharp.Math.Matrix btMatrix = ToBullet.Matrix(value);
+                var btMatrix = ToBullet.Matrix(value);
 
                 // set motion state
                 _BulletEntity.WorldTransform = btMatrix;
 
                 // set scale
-                Vector3 scale; Vector3 position; Quaternion rotation;
-                value.Decompose(out scale, out rotation, out position);
+                value.Decompose(out var scale, out var rotation, out var position);
                 _BulletEntity.CollisionShape.LocalScaling = ToBullet.Vector(scale);
                 UpdateAABB();
             }
         }
-        
+
         /// <summary>
         /// If false, will not simulate forces on this body and will make it behave like a kinematic body.
         /// </summary>
-        virtual public bool EnableSimulation
+        public virtual bool EnableSimulation
         {
-            set
-            {
-                _BulletEntity.ActivationState = value ? ActivationState.ActiveTag : ActivationState.DisableSimulation;
-            }
-            get
-            {
-                return _BulletEntity.ActivationState != ActivationState.DisableSimulation;
-            }
+            set => _BulletEntity.ActivationState = value ? ActivationState.ActiveTag : ActivationState.DisableSimulation;
+            get => _BulletEntity.ActivationState != ActivationState.DisableSimulation;
         }
 
         /// <summary>
@@ -109,14 +97,8 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public float Restitution
         {
-            get
-            {
-                return _BulletEntity.Restitution;
-            }
-            set
-            {
-                _BulletEntity.Restitution = value;
-            }
+            get => _BulletEntity.Restitution;
+            set => _BulletEntity.Restitution = value;
         }
 
         /// <summary>
@@ -124,10 +106,7 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public Vector3 Scale
         {
-            get
-            {
-                return ToMonoGame.Vector(_BulletEntity.CollisionShape.LocalScaling);
-            }
+            get => ToMonoGame.Vector(_BulletEntity.CollisionShape.LocalScaling);
             set
             {
                 _BulletEntity.CollisionShape.LocalScaling = ToBullet.Vector(value);
@@ -140,8 +119,8 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public float Friction
         {
-            get { return _BulletEntity.Friction; }
-            set { _BulletEntity.Friction = Friction; }
+            get => _BulletEntity.Friction;
+            set => _BulletEntity.Friction = Friction;
         }
 
         /// <summary>
@@ -152,8 +131,7 @@ namespace GeonBit.Core.Physics
             get
             {
                 // get transform
-                BulletSharp.Math.Matrix world;
-                _BulletEntity.GetWorldTransform(out world);
+                _BulletEntity.GetWorldTransform(out var world);
 
                 // return position
                 return ToMonoGame.Vector(world.Origin);
@@ -161,8 +139,7 @@ namespace GeonBit.Core.Physics
             set
             {
                 // get transform
-                BulletSharp.Math.Matrix world;
-                _BulletEntity.GetWorldTransform(out world);
+                _BulletEntity.GetWorldTransform(out var world);
 
                 // update origin
                 world.Origin = ToBullet.Vector(value);
@@ -176,7 +153,7 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Update axis-aligned-bounding-box, after transformations of this object were changed.
         /// </summary>
-        virtual protected void UpdateAABB()
+        protected virtual void UpdateAABB()
         {
             if (_world != null) { _world.UpdateSingleAabb(this); }
         }
@@ -184,12 +161,12 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Return if this is a static object.
         /// </summary>
-        virtual public bool IsStatic { get { return false; } }
+        public virtual bool IsStatic => false;
 
         /// <summary>
         /// Return if this is a kinematic object.
         /// </summary>
-        virtual public bool IsKinematic { get { return false; } }
+        public virtual bool IsKinematic => false;
 
         /// <summary>
         /// Get collision flags based on current state.
@@ -213,10 +190,7 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public bool InvokeCollisionEvents
         {
-            get
-            {
-                return _invokeCollisionEvents;
-            }
+            get => _invokeCollisionEvents;
             set
             {
                 _invokeCollisionEvents = value;
@@ -230,10 +204,7 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public bool IsEthereal
         {
-            get
-            {
-                return _isEthereal;
-            }
+            get => _isEthereal;
             set
             {
                 _isEthereal = value;
@@ -245,10 +216,7 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Update collision flags.
         /// </summary>
-        protected void UpdateCollisionFlags()
-        {
-            _BulletEntity.CollisionFlags = CollisionFlags;
-        }
+        protected void UpdateCollisionFlags() => _BulletEntity.CollisionFlags = CollisionFlags;
 
         /// <summary>
         /// The component associated with this physical body.
@@ -256,7 +224,7 @@ namespace GeonBit.Core.Physics
         internal ECS.Components.Physics.BasePhysicsComponent EcsComponent;
 
         // current collision group
-        short _collisionGroup = short.MaxValue;
+        private short _collisionGroup = short.MaxValue;
 
         /// <summary>
         /// The collision group this body belongs to.
@@ -264,20 +232,20 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public short CollisionGroup
         {
-            get { return _collisionGroup; }
+            get => _collisionGroup;
             set { _collisionGroup = value; AddBodyAgain(); }
         }
 
         // current collision mask
-        short _collisionMask = short.MaxValue;
-        
+        private short _collisionMask = short.MaxValue;
+
         /// <summary>
         /// With which collision groups this body will collide?
         /// Note: compare bits mask.
         /// </summary>
         public short CollisionMask
         {
-            get { return _collisionMask; }
+            get => _collisionMask;
             set { _collisionMask = value; AddBodyAgain(); }
         }
 
@@ -285,11 +253,11 @@ namespace GeonBit.Core.Physics
         /// Called internally to remove and re-add this body again to the physical world.
         /// This action is required when some of the properties require an updated.
         /// </summary>
-        virtual protected void AddBodyAgain()
+        protected virtual void AddBodyAgain()
         {
             if (_world != null)
             {
-                PhysicsWorld world = _world;
+                var world = _world;
                 world.RemoveBody(this);
                 world.AddBody(this);
             }
@@ -300,28 +268,19 @@ namespace GeonBit.Core.Physics
         /// </summary>
         /// <param name="other">The other body we collide with.</param>
         /// <param name="data">Extra collision data.</param>
-        public void CallCollisionStart(BasicPhysicalBody other, ref CollisionData data)
-        {
-            EcsComponent.CallCollisionStart(other.EcsComponent, data);
-        }
+        public void CallCollisionStart(BasicPhysicalBody other, ref CollisionData data) => EcsComponent.CallCollisionStart(other.EcsComponent, data);
 
         /// <summary>
         /// Called when this physical body stop colliding with another body.
         /// </summary>
         /// <param name="other">The other body we collided with, but no longer.</param>
-        public void CallCollisionEnd(BasicPhysicalBody other)
-        {
-            EcsComponent.CallCollisionEnd(other.EcsComponent);
-        }
+        public void CallCollisionEnd(BasicPhysicalBody other) => EcsComponent.CallCollisionEnd(other.EcsComponent);
 
         /// <summary>
         /// Called while this physical body is colliding with another body.
         /// </summary>
         /// <param name="other">The other body we are colliding with.</param>
-        public void CallCollisionProcess(BasicPhysicalBody other)
-        {
-            EcsComponent.CallCollisionProcess(other.EcsComponent);
-        }
+        public void CallCollisionProcess(BasicPhysicalBody other) => EcsComponent.CallCollisionProcess(other.EcsComponent);
 
         /// <summary>
         /// Attach self to a bullet3d physics world.

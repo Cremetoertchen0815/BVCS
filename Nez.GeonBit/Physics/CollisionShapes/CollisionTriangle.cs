@@ -32,10 +32,7 @@ namespace GeonBit.Core.Physics.CollisionShapes
         /// <param name="p1">Triangle point 1.</param>
         /// <param name="p2">Triangle point 2.</param>
         /// <param name="p3">Triangle point 2.</param>
-        public CollisionTriangle(Vector3 p1, Vector3 p2, Vector3 p3)
-        {
-            _shape = new BulletSharp.TriangleShape(ToBullet.Vector(p1), ToBullet.Vector(p2), ToBullet.Vector(p3));
-        }
+        public CollisionTriangle(Vector3 p1, Vector3 p2, Vector3 p3) => _shape = new BulletSharp.TriangleShape(ToBullet.Vector(p1), ToBullet.Vector(p2), ToBullet.Vector(p3));
 
         /// <summary>
         /// Clone the physical shape.

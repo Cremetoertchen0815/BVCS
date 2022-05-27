@@ -17,8 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit
 {
@@ -45,26 +43,27 @@ namespace Nez.GeonBit
         public SkyBox(string texture = null) : base(ShapeRenderer.ShapeModelsRoot + "Skybox")
         {
             TexturePath = texture ?? DefaultTexture;
-            _entity.RenderingQueue = Core.Graphics.RenderingQueue.SolidBackNoCull;
-            _entity.SetMaterial(new Core.Graphics.Materials.SkyboxMaterial(TexturePath, true));
+            _entity.RenderingQueue = RenderingQueue.SolidBackNoCull;
+            _entity.SetMaterial(new Materials.SkyboxMaterial(TexturePath, true));
         }
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component Clone()
         {
-            SkyBox ret = CopyBasics(new SkyBox(TexturePath)) as SkyBox;
+            var ret = CopyBasics(new SkyBox(TexturePath)) as SkyBox;
             return ret;
         }
 
         /// <summary>
         /// Called when this component spawns.
         /// </summary>
-        protected override void OnSpawn()
+        public override void OnAddedToEntity()
         {
-            _GameObject.SceneNode.DisableCulling = true;
+            base.OnAddedToEntity();
+            Node.DisableCulling = true;
         }
     }
 }

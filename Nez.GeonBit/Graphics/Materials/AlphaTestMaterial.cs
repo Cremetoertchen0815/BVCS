@@ -19,8 +19,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System;
 
 namespace Nez.GeonBit.Materials
 {
@@ -30,35 +28,37 @@ namespace Nez.GeonBit.Materials
     public class AlphaTestMaterial : MaterialAPI
     {
         // the effect instance of this material.
-        AlphaTestEffect _effect;
+        private AlphaTestEffect _effect;
 
         /// <summary>
         /// Get the effect instance.
         /// </summary>
-        public override Effect Effect { get { return _effect; } }
+        public override Effect Effect => _effect;
 
         /// <summary>
         /// The function used to decide which pixels are visible and which are not.
         /// </summary>
         public CompareFunction AlphaFunction
         {
-            get { return _alphaFunction; }
+            get => _alphaFunction;
             set { _alphaFunction = value; SetAsDirty(MaterialDirtyFlags.AlphaTest); }
         }
-        CompareFunction _alphaFunction = CompareFunction.GreaterEqual;
+
+        private CompareFunction _alphaFunction = CompareFunction.GreaterEqual;
 
         /// <summary>
         /// Alpha value to compare with the AlphaFunction, to decide which pixels are visible and which are not.
         /// </summary>
         public int ReferenceAlpha
         {
-            get { return _referenceAlpha; }
+            get => _referenceAlpha;
             set { _referenceAlpha = value; SetAsDirty(MaterialDirtyFlags.AlphaTest); }
         }
-        int _referenceAlpha = 128;
+
+        private int _referenceAlpha = 128;
 
         // empty effect instance to clone when creating new material
-        static AlphaTestEffect _emptyEffect = new AlphaTestEffect(GraphicsManager.GraphicsDevice);
+        private static AlphaTestEffect _emptyEffect = new AlphaTestEffect(GraphicsManager.GraphicsDevice);
 
         /// <summary>
         /// Create the default material from empty effect.
@@ -104,7 +104,7 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Apply this material.
         /// </summary>
-        override protected void MaterialSpecificApply(bool wasLastMaterial)
+        protected override void MaterialSpecificApply(bool wasLastMaterial)
         {
             // set world matrix
             if (IsDirty(MaterialDirtyFlags.World))
@@ -139,27 +139,18 @@ namespace Nez.GeonBit.Materials
         /// Update material view matrix.
         /// </summary>
         /// <param name="view">New view to set.</param>
-        override protected void UpdateView(ref Matrix view)
-        {
-            _effect.View = View;
-        }
+        protected override void UpdateView(ref Matrix view) => _effect.View = View;
 
         /// <summary>
         /// Update material projection matrix.
         /// </summary>
         /// <param name="projection">New projection to set.</param>
-        override protected void UpdateProjection(ref Matrix projection)
-        {
-            _effect.Projection = Projection;
-        }
+        protected override void UpdateProjection(ref Matrix projection) => _effect.Projection = Projection;
 
         /// <summary>
         /// Clone this material.
         /// </summary>
         /// <returns>Copy of this material.</returns>
-        public override MaterialAPI Clone()
-        {
-            return new AlphaTestMaterial(this);
-        }
+        public override MaterialAPI Clone() => new AlphaTestMaterial(this);
     }
 }

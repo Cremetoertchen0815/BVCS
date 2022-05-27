@@ -40,6 +40,8 @@ namespace Nez.GeonBit
         /// </summary>
         public GeonNode Parent { get; protected set; } = null;
 
+        internal GeonBitRenderer Renderer { get; private set; }
+
         /// <summary>
         /// Callback that triggers every time a node updates its matrix.
         /// </summary>
@@ -59,10 +61,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get if this node was drawn in current frame.
         /// </summary>
-        public bool WasDrawnThisFrame
-        {
-            get { return LastDrawFrame == NodesManager.CurrFrame; }
-        }
+        public bool WasDrawnThisFrame => LastDrawFrame == NodesManager.CurrFrame;
 
         /// <summary>
         /// Special internal list used when we need to link this node to other nodes, like the case with octree.
@@ -158,7 +157,7 @@ namespace Nez.GeonBit
         internal BoundingSphere LastBoundingSphere;
 
         // do we need to update bounding sphere?
-        bool _boundingSphereDirty = true;
+        private bool _boundingSphereDirty = true;
 
         /// <summary>
         /// Bounding box caching.
@@ -166,7 +165,7 @@ namespace Nez.GeonBit
         internal BoundingBox LastBoundingBox;
 
         // do we need to update bounding box?
-        bool _boundingBoxDirty = true;
+        private bool _boundingBoxDirty = true;
 
         /// <summary>
         /// For how many rendering frames bounding box / bounding sphere hold in cache.
@@ -178,25 +177,20 @@ namespace Nez.GeonBit
         /// of this node changes. Its not necessarily a sequence, but if you check this number for changes every
         /// frame its a good indication of transformation change.
         /// </summary>
-        public uint TransformVersion { get { return _transformVersion; } }
+        public uint TransformVersion => _transformVersion;
 
         /// <summary>
         /// Add a link to another node.
         /// </summary>
         /// <param name="node"></param>
-        internal void LinkToNode(GeonNode node)
-        {
-            LinkedNodes.Add(node);
-        }
+        internal void LinkToNode(GeonNode node) => LinkedNodes.Add(node);
 
         /// <summary>
         /// Create the node.
         /// </summary>
-        public GeonNode()
-        {
+        public GeonNode() =>
             // count the object creation
             CountAndAlert.Count(CountAndAlert.PredefAlertTypes.AddedOrCreated);
-        }
 
         #region Properties
         /// <summary>
@@ -208,15 +202,8 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get if parent transformations were update and we need to update too.
         /// </summary>
-        protected bool WasParentUpdate
-        {
-            get
-            {
-                return
-                    (Parent != null && _parentLastTransformVersion != Parent._transformVersion) ||
+        protected bool WasParentUpdate => (Parent != null && _parentLastTransformVersion != Parent._transformVersion) ||
                     (Parent == null && _parentLastTransformVersion != 0);
-            }
-        }
 
         /// <summary>
         /// Return local transformations matrix (note: will recalculate if needed).
@@ -248,7 +235,7 @@ namespace Nez.GeonBit
         {
             get
             {
-                Matrix world = WorldTransformations;
+                var world = WorldTransformations;
                 return Math3D.GetRotation(ref world);
             }
         }
@@ -261,7 +248,7 @@ namespace Nez.GeonBit
         {
             get
             {
-                Matrix world = WorldTransformations;
+                var world = WorldTransformations;
                 return Math3D.GetScale(ref world);
             }
         }
@@ -272,7 +259,7 @@ namespace Nez.GeonBit
         /// </summary>
         public TransformOrder TransformationsOrder
         {
-            get { return Transformations.TransformOrder; }
+            get => Transformations.TransformOrder;
             set { Transformations.TransformOrder = value; OnTransformationsSet(); }
         }
 
@@ -281,7 +268,7 @@ namespace Nez.GeonBit
         /// </summary>
         public RotationType RotationType
         {
-            get { return Transformations.RotationType; }
+            get => Transformations.RotationType;
             set { Transformations.RotationType = value; OnTransformationsSet(); }
         }
 
@@ -290,7 +277,7 @@ namespace Nez.GeonBit
         /// </summary>
         public RotationOrder RotationOrder
         {
-            get { return Transformations.RotationOrder; }
+            get => Transformations.RotationOrder;
             set { Transformations.RotationOrder = value; OnTransformationsSet(); }
         }
 
@@ -299,7 +286,7 @@ namespace Nez.GeonBit
         /// </summary>
         public Vector3 Position
         {
-            get { return Transformations.Position; }
+            get => Transformations.Position;
             set { if (Transformations.Position != value) OnTransformationsSet(); Transformations.Position = value; }
         }
 
@@ -308,7 +295,7 @@ namespace Nez.GeonBit
         /// </summary>
         public Vector3 Scale
         {
-            get { return Transformations.Scale; }
+            get => Transformations.Scale;
             set { if (Transformations.Scale != value) OnTransformationsSet(); Transformations.Scale = value; }
         }
 
@@ -317,7 +304,7 @@ namespace Nez.GeonBit
         /// </summary>
         public Vector3 Rotation
         {
-            get { return Transformations.Rotation; }
+            get => Transformations.Rotation;
             set { if (Transformations.Rotation != value) OnTransformationsSet(); Transformations.Rotation = value; }
         }
 
@@ -326,7 +313,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float RotationX
         {
-            get { return Transformations.Rotation.X; }
+            get => Transformations.Rotation.X;
             set { if (Transformations.Rotation.X != value) OnTransformationsSet(); Transformations.Rotation.X = value; }
         }
 
@@ -335,7 +322,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float RotationY
         {
-            get { return Transformations.Rotation.Y; }
+            get => Transformations.Rotation.Y;
             set { if (Transformations.Rotation.Y != value) OnTransformationsSet(); Transformations.Rotation.Y = value; }
         }
 
@@ -344,7 +331,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float RotationZ
         {
-            get { return Transformations.Rotation.Z; }
+            get => Transformations.Rotation.Z;
             set { if (Transformations.Rotation.Z != value) OnTransformationsSet(); Transformations.Rotation.Z = value; }
         }
 
@@ -353,7 +340,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float ScaleX
         {
-            get { return Transformations.Scale.X; }
+            get => Transformations.Scale.X;
             set { if (Transformations.Scale.X != value) OnTransformationsSet(); Transformations.Scale.X = value; }
         }
 
@@ -362,7 +349,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float ScaleY
         {
-            get { return Transformations.Scale.Y; }
+            get => Transformations.Scale.Y;
             set { if (Transformations.Scale.Y != value) OnTransformationsSet(); Transformations.Scale.Y = value; }
         }
 
@@ -371,7 +358,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float ScaleZ
         {
-            get { return Transformations.Scale.Z; }
+            get => Transformations.Scale.Z;
             set { if (Transformations.Scale.Z != value) OnTransformationsSet(); Transformations.Scale.Z = value; }
         }
 
@@ -381,7 +368,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float PositionX
         {
-            get { return Transformations.Position.X; }
+            get => Transformations.Position.X;
             set { if (Transformations.Position.X != value) OnTransformationsSet(); Transformations.Position.X = value; }
         }
 
@@ -390,7 +377,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float PositionY
         {
-            get { return Transformations.Position.Y; }
+            get => Transformations.Position.Y;
             set { if (Transformations.Position.Y != value) OnTransformationsSet(); Transformations.Position.Y = value; }
         }
 
@@ -399,25 +386,19 @@ namespace Nez.GeonBit
         /// </summary>
         public float PositionZ
         {
-            get { return Transformations.Position.Z; }
+            get => Transformations.Position.Z;
             set { if (Transformations.Position.Z != value) OnTransformationsSet(); Transformations.Position.Z = value; }
         }
 
         /// <summary>
         /// Return true if this node is empty.
         /// </summary>
-        public bool Empty
-        {
-            get { return _childEntities.Count == 0 && _childNodes.Count == 0; }
-        }
+        public bool Empty => _childEntities.Count == 0 && _childNodes.Count == 0;
 
         /// <summary>
         /// Get if this node have any entities in it.
         /// </summary>
-        public bool HaveEntities
-        {
-            get { return _childEntities.Count != 0; }
-        }
+        public bool HaveEntities => _childEntities.Count != 0;
         /// <summary>
         /// Other nodes this node is linked to.
         /// This mechanism is used to connect nodes internally.
@@ -432,6 +413,11 @@ namespace Nez.GeonBit
         }
         #endregion
 
+
+        public override void OnAddedToEntity()
+        {
+            Renderer = Entity.Scene.GetRenderer<GeonBitRenderer>();
+        }
 
         /// <summary>
         /// Add an entity to this node.
@@ -465,7 +451,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="entity">Entity that was added / removed.</param>
         /// <param name="wasAdded">If true its an entity that was added, if false, an entity that was removed.</param>
-        virtual protected void OnEntitiesListChange(IEntity entity, bool wasAdded)
+        protected virtual void OnEntitiesListChange(IEntity entity, bool wasAdded)
         {
         }
 
@@ -474,7 +460,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="node">GeonNode that was added / removed.</param>
         /// <param name="wasAdded">If true its a node that was added, if false, a node that was removed.</param>
-        virtual protected void OnChildNodesListChange(GeonNode node, bool wasAdded)
+        protected virtual void OnChildNodesListChange(GeonNode node, bool wasAdded)
         {
         }
 
@@ -529,7 +515,7 @@ namespace Nez.GeonBit
         /// <returns>GeonNode with given identifier or null if not found.</returns>
         public GeonNode FindChildNode(string identifier, bool searchInChildren = true)
         {
-            foreach (GeonNode node in _childNodes)
+            foreach (var node in _childNodes)
             {
                 // search in direct children
                 if (node.Identifier == identifier)
@@ -540,7 +526,7 @@ namespace Nez.GeonBit
                 // recursive search
                 if (searchInChildren)
                 {
-                    GeonNode foundInChild = node.FindChildNode(identifier, searchInChildren);
+                    var foundInChild = node.FindChildNode(identifier, searchInChildren);
                     if (foundInChild != null)
                     {
                         return foundInChild;
@@ -656,7 +642,7 @@ namespace Nez.GeonBit
                 _isDirty = false;
                 return;
             }
-            
+
             // if local transformations are dirty, or parent transformations are out-of-date, update world transformations
             if (_isDirty || WasParentUpdate)
             {
@@ -695,10 +681,10 @@ namespace Nez.GeonBit
         public Matrix Transform(Transformations trans)
         {
             // build matrix for given transformations
-            Matrix transMatrix = trans.BuildMatrix();
+            var transMatrix = trans.BuildMatrix();
 
             // get our world transformations
-            Matrix worldMatrix = WorldTransformations;
+            var worldMatrix = WorldTransformations;
 
             // count the event
             CountAndAlert.Count(CountAndAlert.PredefAlertTypes.ForceUpdate);
@@ -706,7 +692,7 @@ namespace Nez.GeonBit
             // combine and return
             return transMatrix * worldMatrix;
         }
-        
+
 
         /// <summary>
         /// Set world transformations from external source.
@@ -726,7 +712,7 @@ namespace Nez.GeonBit
         /// <returns>String representing the scene tree starting from this node.</returns>
         public string GetDebugString()
         {
-            System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
+            var stringBuilder = new System.Text.StringBuilder();
             GetDebugString(ref stringBuilder);
             return stringBuilder.ToString();
         }
@@ -773,32 +759,28 @@ namespace Nez.GeonBit
         /// Clone this scene node.
         /// </summary>
         /// <returns>GeonNode copy.</returns>
-        public virtual GeonNode Clone()
+        public override Component Clone()
         {
-            GeonNode ret = new GeonNode();
-            ret.Transformations = Transformations.Clone();
-            ret.Visible = Visible;
-            ret.UseExternalTransformations = UseExternalTransformations;
+            var ret = new GeonNode
+            {
+                Transformations = Transformations.Clone(),
+                Visible = Visible,
+                UseExternalTransformations = UseExternalTransformations
+            };
             return ret;
         }
 
         /// <summary>
         /// Build matrix from node transformations.
         /// </summary>
-        public Matrix BuildTransformationsMatrix()
-        {
-            return Transformations.BuildMatrix();
-        }
+        public Matrix BuildTransformationsMatrix() => Transformations.BuildMatrix();
 
         /// <summary>
         /// Return if should draw this node at this frame (test basic stuff like was already drawn, is visible, etc.
         /// </summary>
         /// <param name="forceEvenIfAlreadyDrawn">If true, will draw this node even if it was already drawn in current frame.</param>
         /// <returns>If should draw at this frame.</returns>
-        protected bool ShouldDraw(bool forceEvenIfAlreadyDrawn = false)
-        {
-            return Visible && (forceEvenIfAlreadyDrawn || !WasDrawnThisFrame);
-        }
+        protected bool ShouldDraw(bool forceEvenIfAlreadyDrawn = false) => Visible && (forceEvenIfAlreadyDrawn || !WasDrawnThisFrame);
 
         /// <summary>
         /// Draw the node and its children.
@@ -829,7 +811,7 @@ namespace Nez.GeonBit
             DoTransformationsUpdateIfNeeded();
 
             // draw all child nodes
-            foreach (GeonNode node in _childNodes)
+            foreach (var node in _childNodes)
             {
                 node.Draw(forceEvenIfAlreadyDrawn);
             }
@@ -838,7 +820,7 @@ namespace Nez.GeonBit
             __OnNodeDraw?.Invoke(this);
 
             // draw all child entities
-            foreach (IEntity entity in _childEntities)
+            foreach (var entity in _childEntities)
             {
                 entity.Draw(this, ref _localTransform, ref _worldTransform);
             }
@@ -862,7 +844,7 @@ namespace Nez.GeonBit
             // force-update all child nodes
             if (recursive)
             {
-                foreach (GeonNode node in _childNodes)
+                foreach (var node in _childNodes)
                 {
                     node.UpdateTransformations(recursive);
                 }
@@ -942,10 +924,10 @@ namespace Nez.GeonBit
             DoTransformationsUpdateIfNeeded();
 
             // list of points to build bounding box from
-            List<Vector3> corners = new List<Vector3>();
+            var corners = new List<Vector3>();
 
             // apply all child nodes bounding boxes
-            foreach (GeonNode child in _childNodes)
+            foreach (var child in _childNodes)
             {
                 // skip invisible nodes
                 if (!child.Visible)
@@ -954,7 +936,7 @@ namespace Nez.GeonBit
                 }
 
                 // get bounding box
-                BoundingBox currBox = child.GetBoundingBox();
+                var currBox = child.GetBoundingBox();
                 if (currBox.Min != currBox.Max)
                 {
                     corners.Add(currBox.Min);
@@ -963,7 +945,7 @@ namespace Nez.GeonBit
             }
 
             // apply all entities directly under this node
-            foreach (IEntity entity in _childEntities)
+            foreach (var entity in _childEntities)
             {
                 // skip invisible entities
                 if (!entity.Visible)
@@ -972,7 +954,7 @@ namespace Nez.GeonBit
                 }
 
                 // get entity bounding box
-                BoundingBox currBox = entity.GetBoundingBox(this, ref _localTransform, ref _worldTransform);
+                var currBox = entity.GetBoundingBox(this, ref _localTransform, ref _worldTransform);
                 if (currBox.Min != currBox.Max)
                 {
                     corners.Add(currBox.Min);
@@ -1031,10 +1013,10 @@ namespace Nez.GeonBit
             DoTransformationsUpdateIfNeeded();
 
             // bounding sphere to return
-            BoundingSphere ret = new BoundingSphere();
+            var ret = new BoundingSphere();
 
             // calculate all child nodes bounding spheres
-            foreach (GeonNode child in _childNodes)
+            foreach (var child in _childNodes)
             {
                 // skip invisible nodes
                 if (!child.Visible)
@@ -1043,12 +1025,12 @@ namespace Nez.GeonBit
                 }
 
                 // get bounding sphere
-                BoundingSphere currSphere = child.GetBoundingSphere();
+                var currSphere = child.GetBoundingSphere();
                 ret = BoundingSphere.CreateMerged(ret, currSphere);
             }
 
             // apply all entities directly under this node
-            foreach (IEntity entity in _childEntities)
+            foreach (var entity in _childEntities)
             {
                 // skip invisible entities
                 if (!entity.Visible)
@@ -1057,7 +1039,7 @@ namespace Nez.GeonBit
                 }
 
                 // get entity bounding sphere
-                BoundingSphere currSphere = entity.GetBoundingSphere(this, ref _localTransform, ref _worldTransform);
+                var currSphere = entity.GetBoundingSphere(this, ref _localTransform, ref _worldTransform);
                 ret = BoundingSphere.CreateMerged(ret, currSphere);
             }
 

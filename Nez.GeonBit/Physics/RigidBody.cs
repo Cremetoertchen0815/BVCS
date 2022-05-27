@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using BulletSharp;
 using Microsoft.Xna.Framework;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("World")]
 
@@ -32,10 +31,10 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Return the bullet 3d entity.
         /// </summary>
-        internal override BulletSharp.CollisionObject _BulletEntity { get { return BulletRigidBody; } }
+        internal override BulletSharp.CollisionObject _BulletEntity => BulletRigidBody;
 
         // current state (position, rotation, scale).
-        MotionState _state;
+        private MotionState _state;
 
         /// <summary>
         /// Get the rigid body in bullet format.
@@ -45,13 +44,7 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Get if the physical body currently have any forces on it.
         /// </summary>
-        public bool IsDirty
-        {
-            get
-            {
-                return BulletRigidBody.AngularVelocity.Length != 0 || BulletRigidBody.LinearVelocity.Length != 0;
-            }
-        }
+        public bool IsDirty => BulletRigidBody.AngularVelocity.Length != 0 || BulletRigidBody.LinearVelocity.Length != 0;
 
         /// <summary>
         /// Apply force on the body, from its center.
@@ -120,12 +113,10 @@ namespace GeonBit.Core.Physics
         {
             get
             {
-                BulletSharp.Math.Vector3 min;
-                BulletSharp.Math.Vector3 max;
-                BulletRigidBody.GetAabb(out min, out max);
+                BulletRigidBody.GetAabb(out var min, out var max);
                 return new BoundingBox(ToMonoGame.Vector(min), ToMonoGame.Vector(max));
             }
-        } 
+        }
 
         /// <summary>
         /// Clear all forces from the body.
@@ -151,22 +142,19 @@ namespace GeonBit.Core.Physics
             BulletRigidBody.MotionState.SetWorldTransform(ref trans);
             BulletRigidBody.WorldTransform = trans;
         }
-        
+
         /// <summary>
         /// Clear current velocity.
         /// </summary>
-        public void ClearVelocity()
-        {
-            BulletRigidBody.AngularVelocity = BulletRigidBody.LinearVelocity = BulletSharp.Math.Vector3.Zero;
-        }
+        public void ClearVelocity() => BulletRigidBody.AngularVelocity = BulletRigidBody.LinearVelocity = BulletSharp.Math.Vector3.Zero;
 
         /// <summary>
         /// Get / set linear velocity.
         /// </summary>
         public Vector3 LinearVelocity
         {
-            get { return ToMonoGame.Vector(BulletRigidBody.LinearVelocity); }
-            set { BulletRigidBody.LinearVelocity = ToBullet.Vector(value); }
+            get => ToMonoGame.Vector(BulletRigidBody.LinearVelocity);
+            set => BulletRigidBody.LinearVelocity = ToBullet.Vector(value);
         }
 
         /// <summary>
@@ -174,8 +162,8 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public Vector3 LinearFactor
         {
-            get { return ToMonoGame.Vector(BulletRigidBody.LinearFactor); }
-            set { BulletRigidBody.LinearFactor = ToBullet.Vector(value); }
+            get => ToMonoGame.Vector(BulletRigidBody.LinearFactor);
+            set => BulletRigidBody.LinearFactor = ToBullet.Vector(value);
         }
 
         /// <summary>
@@ -183,8 +171,8 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public Vector3 AngularVelocity
         {
-            get { return ToMonoGame.Vector(BulletRigidBody.AngularVelocity); }
-            set { BulletRigidBody.AngularVelocity = ToBullet.Vector(value); }
+            get => ToMonoGame.Vector(BulletRigidBody.AngularVelocity);
+            set => BulletRigidBody.AngularVelocity = ToBullet.Vector(value);
         }
 
         /// <summary>
@@ -192,8 +180,8 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public Vector3 AngularFactor
         {
-            get { return ToMonoGame.Vector(BulletRigidBody.AngularFactor); }
-            set { BulletRigidBody.AngularFactor = ToBullet.Vector(value); }
+            get => ToMonoGame.Vector(BulletRigidBody.AngularFactor);
+            set => BulletRigidBody.AngularFactor = ToBullet.Vector(value);
         }
 
         /// <summary>
@@ -201,23 +189,17 @@ namespace GeonBit.Core.Physics
         /// </summary>
         /// <param name="linear">Linear damping.</param>
         /// <param name="angular">Angular damping.</param>
-        public void SetDamping(float linear, float angular)
-        {
-            BulletRigidBody.SetDamping(linear, angular);
-        }
+        public void SetDamping(float linear, float angular) => BulletRigidBody.SetDamping(linear, angular);
 
         // alternative gravity specific for this object.
         // note: we need to store it internally because this must be set to the body AFTER its added to the 
         // world, otherwise this property is ignored. 
-        Vector3? _bodyGravity = null;
+        private Vector3? _bodyGravity = null;
 
         /// <summary>
         /// Return true if this body has alternative gravity (instead of default world gravity).
         /// </summary>
-        public bool HasCustomGravity
-        {
-            get { return _bodyGravity != null; }
-        }
+        public bool HasCustomGravity => _bodyGravity != null;
 
         /// <summary>
         /// Set / get body gravity factor.
@@ -225,7 +207,7 @@ namespace GeonBit.Core.Physics
         public Vector3? Gravity
         {
             // get body gravity
-            get { return _bodyGravity; }
+            get => _bodyGravity;
 
             // set body gravity
             set
@@ -240,7 +222,7 @@ namespace GeonBit.Core.Physics
                 {
                     if (_world != null)
                     {
-                        BulletSharp.Math.Vector3 grav = new BulletSharp.Math.Vector3();
+                        var grav = new BulletSharp.Math.Vector3();
                         _world._world.GetGravity(out grav);
                         BulletRigidBody.Gravity = grav;
                     }
@@ -256,8 +238,8 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public float LinearDamping
         {
-            get { return BulletRigidBody.LinearDamping; }
-            set { SetDamping(value, BulletRigidBody.AngularDamping); }
+            get => BulletRigidBody.LinearDamping;
+            set => SetDamping(value, BulletRigidBody.AngularDamping);
         }
 
         /// <summary>
@@ -265,8 +247,8 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public float AngularDamping
         {
-            get { return BulletRigidBody.AngularDamping; }
-            set { SetDamping(BulletRigidBody.LinearDamping, value); }
+            get => BulletRigidBody.AngularDamping;
+            set => SetDamping(BulletRigidBody.LinearDamping, value);
         }
 
         /// <summary>
@@ -274,10 +256,7 @@ namespace GeonBit.Core.Physics
         /// </summary>
         /// <param name="mass">New body mass.</param>
         /// <param name="inertia">New body inertia.</param>
-        public void SetMassAndInertia(float mass, float inertia)
-        {
-            BulletRigidBody.SetMassProps(mass, _shape.BulletCollisionShape.CalculateLocalInertia(mass) * inertia);
-        }
+        public void SetMassAndInertia(float mass, float inertia) => BulletRigidBody.SetMassProps(mass, _shape.BulletCollisionShape.CalculateLocalInertia(mass) * inertia);
 
         /// <summary>
         /// Create the physical entity.
@@ -298,15 +277,17 @@ namespace GeonBit.Core.Physics
             _state = new DefaultMotionState(ToBullet.Matrix((Matrix)(transformations)));
 
             // create the rigid body construction info
-            RigidBodyConstructionInfo info = new RigidBodyConstructionInfo(
-                mass, 
-                _state, 
-                shape.BulletCollisionShape, 
+            var info = new RigidBodyConstructionInfo(
+                mass,
+                _state,
+                shape.BulletCollisionShape,
                 shape.BulletCollisionShape.CalculateLocalInertia(mass) * inertia);
 
             // create the rigid body itself and attach self to UserObject
-            BulletRigidBody = new BulletSharp.RigidBody(info);
-            BulletRigidBody.UserObject = this;
+            BulletRigidBody = new BulletSharp.RigidBody(info)
+            {
+                UserObject = this
+            };
 
             // set default group and mask
             CollisionGroup = CollisionGroups.DynamicObjects;
@@ -341,9 +322,6 @@ namespace GeonBit.Core.Physics
         /// Remove self from a bullet3d physics world.
         /// </summary>
         /// <param name="world">World to remove from.</param>
-        internal override void RemoveSelfFromBulletWorld(BulletSharp.DynamicsWorld world)
-        {
-            world.RemoveRigidBody(BulletRigidBody);
-        }
+        internal override void RemoveSelfFromBulletWorld(BulletSharp.DynamicsWorld world) => world.RemoveRigidBody(BulletRigidBody);
     }
 }

@@ -45,29 +45,21 @@ namespace Nez.GeonBit.Particles.Animators
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
-        {
+        public override Component Clone() =>
             // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitters
             // so we'll still have the random factor applied on the cloned entity.
-            return CopyBasics(new ScaleAnimator(BaseProperties, FromScale, ToScale, ScalingTime, 
+            CopyBasics(new ScaleAnimator(BaseProperties, FromScale, ToScale, ScalingTime,
                 _scaleTimeJitter, _startScaleJitter, _endScaleJitter));
-        }
 
         /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
         /// </summary>
-        override protected bool IsDone
-        {
-            get
-            {
-                return TimeAnimated >= ScalingTime;
-            }
-        }
+        protected override bool IsDone => TimeAnimated >= ScalingTime;
 
         // store jitters, for the purpose of cloning
-        float _scaleTimeJitter = 0f;
-        float _startScaleJitter = 0f;
-        float _endScaleJitter = 0f;
+        private float _scaleTimeJitter = 0f;
+        private float _startScaleJitter = 0f;
+        private float _endScaleJitter = 0f;
 
         /// <summary>
         /// Create the scale animator.
@@ -79,7 +71,7 @@ namespace Nez.GeonBit.Particles.Animators
         /// <param name="scaleTimeJitter">If provided, will add random jitter to scaling time.</param>
         /// <param name="startScaleJitter">If provided, will add random jitter to scaling starting value.</param>
         /// /// <param name="endScaleJitter">If provided, will add random jitter to scaling ending value.</param>
-        public ScaleAnimator(BaseAnimatorProperties properties, Vector3 fromScale, Vector3 toScale, float scaleTime, 
+        public ScaleAnimator(BaseAnimatorProperties properties, Vector3 fromScale, Vector3 toScale, float scaleTime,
             float scaleTimeJitter = 0f, float startScaleJitter = 0f, float endScaleJitter = 0f) : base(properties)
         {
             // set basic properties
@@ -121,18 +113,18 @@ namespace Nez.GeonBit.Particles.Animators
             // add scaling time jittering
             if (_scaleTimeJitter != 0f)
             {
-                
-                ScalingTime += (float)Random.NextDouble() * _scaleTimeJitter;
+
+                ScalingTime += Random.NextFloat() * _scaleTimeJitter;
             }
             // add scaling start jittering
             if (_startScaleJitter != 0f)
             {
-                FromScale += Vector3.One * ((float)Random.NextDouble() * _startScaleJitter);
+                FromScale += Vector3.One * (Random.NextFloat() * _startScaleJitter);
             }
             // add scaling end jittering
             if (_endScaleJitter != 0f)
             {
-                ToScale += Vector3.One * ((float)Random.NextDouble() * _endScaleJitter);
+                ToScale += Vector3.One * (Random.NextFloat() * _endScaleJitter);
             }
 
             // update starting scale
@@ -142,7 +134,7 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// The animator implementation.
         /// </summary>
-        override protected void DoAnimation(float speedFactor)
+        protected override void DoAnimation(float speedFactor)
         {
             // get current scaling step, and if done, skip
             float position = AnimatorUtils.CalcTransitionPercent(TimeAnimated, ScalingTime);

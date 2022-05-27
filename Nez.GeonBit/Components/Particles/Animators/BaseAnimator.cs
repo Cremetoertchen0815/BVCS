@@ -70,7 +70,7 @@ namespace Nez.GeonBit.Particles.Animators
         /// <param name="intervals">If true, will only animate in these intervals.</param>
         /// <param name="speedFactor">Animator speed factor.</param>
         /// <param name="filterTargetsByName">Filter target components by name.</param>
-        public BaseAnimatorProperties(float delayToStart = 0f, float timeToLive = 0f, bool destroyObjectOnFinish = false, 
+        public BaseAnimatorProperties(float delayToStart = 0f, float timeToLive = 0f, bool destroyObjectOnFinish = false,
             float intervals = 0f, float speedFactor = 1f, string filterTargetsByName = null)
         {
             TimeToLive = timeToLive;
@@ -85,7 +85,7 @@ namespace Nez.GeonBit.Particles.Animators
     /// <summary>
     /// Base class for all particle animators.
     /// </summary>
-    abstract public class BaseAnimator : BaseComponent
+    public abstract class BaseAnimator : BaseComponent
     {
         /// <summary>
         /// For how long, in seconds, this animator was alive (including initial delay time).
@@ -96,7 +96,7 @@ namespace Nez.GeonBit.Particles.Animators
         /// Return how long, in seconds, the animation actually works.
         /// This is just TimeAlive - DelayToStart.
         /// </summary>
-        public float TimeAnimated { get { return TimeAlive - BaseProperties.DelayToStart; } }
+        public float TimeAnimated => TimeAlive - BaseProperties.DelayToStart;
 
         /// <summary>
         /// Random object to use for all animators.
@@ -106,15 +106,12 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Get the random object.
         /// </summary>
-        protected System.Random Random
-        {
-            get { return _rand; }
-        }
+        protected System.Random Random => _rand;
 
         /// <summary>
         /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
         /// </summary>
-        abstract protected bool IsDone
+        protected abstract bool IsDone
         {
             get;
         }
@@ -196,18 +193,12 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// Random vector direction.
         /// </summary>
-        protected Vector3 RandDirection(Vector3 baseVector, Vector3 randDir)
-        {
-            return AnimatorUtils.RandDirection(Random, baseVector, randDir);
-        }
+        protected Vector3 RandDirection(Vector3 baseVector, Vector3 randDir) => AnimatorUtils.RandDirection(Random, baseVector, randDir);
 
         /// <summary>
         /// Random color value from base and rand color.
         /// </summary>
-        protected Color RandColor(Color baseColor, Color randColor)
-        {
-            return AnimatorUtils.RandColor(Random, baseColor, randColor);
-        }
+        protected Color RandColor(Color baseColor, Color randColor) => AnimatorUtils.RandColor(Random, baseColor, randColor);
 
         /// <summary>
         /// Called every frame in the Update() loop.
@@ -273,6 +264,6 @@ namespace Nez.GeonBit.Particles.Animators
         /// <summary>
         /// The animator implementation.
         /// </summary>
-        abstract protected void DoAnimation(float timeFactor);
+        protected abstract void DoAnimation(float timeFactor);
     }
 }

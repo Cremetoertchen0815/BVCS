@@ -31,10 +31,7 @@ namespace GeonBit.Core.Physics
         /// </summary>
         /// <param name="vec">Vector to convert.</param>
         /// <returns>Bullet vector.</returns>
-        public static BulletSharp.Math.Vector3 Vector(Vector3 vec)
-        {
-            return new BulletSharp.Math.Vector3(vec.X, vec.Y, vec.Z);
-        }
+        public static BulletSharp.Math.Vector3 Vector(Vector3 vec) => new BulletSharp.Math.Vector3(vec.X, vec.Y, vec.Z);
 
         /// <summary>
         /// Convert an array of vectors from MonoGame to Bullet3d.
@@ -43,7 +40,7 @@ namespace GeonBit.Core.Physics
         /// <returns>Array of Bullet vectors.</returns>
         public static BulletSharp.Math.Vector3[] Vectors(Vector3[] vecs)
         {
-            BulletSharp.Math.Vector3[] bvectors = new BulletSharp.Math.Vector3[vecs.Length];
+            var bvectors = new BulletSharp.Math.Vector3[vecs.Length];
             int i = 0;
             foreach (var vector in vecs)
             {
@@ -57,14 +54,11 @@ namespace GeonBit.Core.Physics
         /// </summary>
         /// <param name="matrix">Matrix to convert.</param>
         /// <returns>Bullet matrix.</returns>
-        public static BulletSharp.Math.Matrix Matrix(Matrix matrix)
-        {
-            return new BulletSharp.Math.Matrix(
+        public static BulletSharp.Math.Matrix Matrix(Matrix matrix) => new BulletSharp.Math.Matrix(
                 matrix.M11, matrix.M12, matrix.M13, matrix.M14,
                 matrix.M21, matrix.M22, matrix.M23, matrix.M24,
                 matrix.M31, matrix.M32, matrix.M33, matrix.M34,
                 matrix.M41, matrix.M42, matrix.M43, matrix.M44);
-        }
     }
 
     /// <summary>
@@ -77,10 +71,7 @@ namespace GeonBit.Core.Physics
         /// </summary>
         /// <param name="vec">Vector to convert.</param>
         /// <returns>MonoGame vector</returns>
-        public static Vector3 Vector(BulletSharp.Math.Vector3 vec)
-        {
-            return new Vector3(vec.X, vec.Y, vec.Z);
-        }
+        public static Vector3 Vector(BulletSharp.Math.Vector3 vec) => new Vector3(vec.X, vec.Y, vec.Z);
 
         /// <summary>
         /// Convert an array of vectors from Bullet3d to MonoGame.
@@ -89,7 +80,7 @@ namespace GeonBit.Core.Physics
         /// <returns>Array of MonoGame vectors.</returns>
         public static Vector3[] Vectors(BulletSharp.Math.Vector3[] bvecs)
         {
-            Vector3[] vectors = new Vector3[bvecs.Length];
+            var vectors = new Vector3[bvecs.Length];
             int i = 0;
             foreach (var bvector in bvecs)
             {
@@ -103,13 +94,10 @@ namespace GeonBit.Core.Physics
         /// </summary>
         /// <param name="matrix">Matrix to convert.</param>
         /// <returns>MonoGame matrix.</returns>
-        public static Matrix Matrix(BulletSharp.Math.Matrix matrix)
-        {
-            return new Matrix(
+        public static Matrix Matrix(BulletSharp.Math.Matrix matrix) => new Matrix(
                 matrix.M11, matrix.M12, matrix.M13, matrix.M14,
                 matrix.M21, matrix.M22, matrix.M23, matrix.M24,
                 matrix.M31, matrix.M32, matrix.M33, matrix.M34,
                 matrix.M41, matrix.M42, matrix.M43, matrix.M44);
-        }
     }
 }

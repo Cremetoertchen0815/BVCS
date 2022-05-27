@@ -17,47 +17,39 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
     /// <summary>
     /// This component destroy game objects after given timer.
     /// </summary>
-    public class TimeToLive : BaseComponent
+    public class TimeToLive : BaseComponent, IUpdatable
     {
         // how long left to live
-        float _timeToLive = 0f;
+        private float _timeToLive = 0f;
 
         /// <summary>
         /// Create the time to live component.
         /// </summary>
         /// <param name="timeToLive">How long to wait before destroying this object.</param>
-        public TimeToLive(float timeToLive)
-        {
-            _timeToLive = timeToLive;
-        }
+        public TimeToLive(float timeToLive) => _timeToLive = timeToLive;
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
-        {
-            return CopyBasics(new TimeToLive(_timeToLive));
-        }
+        public override Component Clone() => new TimeToLive(_timeToLive);
 
         /// <summary>
         /// Called every frame in the Update() loop.
         /// Note: this is called only if GameObject is enabled.
         /// </summary>
-        protected override void OnUpdate()
+        public void Update()
         {
-            _timeToLive -= Managers.TimeManager.TimeFactor;
+            _timeToLive -= Time.DeltaTime;
             if (_timeToLive <= 0f)
             {
-                _GameObject.Destroy();
+                Entity.Destroy();
             }
         }
     }

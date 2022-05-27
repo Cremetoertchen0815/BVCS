@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using BulletSharp;
 using Microsoft.Xna.Framework;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("World")]
 
@@ -32,7 +31,7 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Return the bullet 3d entity.
         /// </summary>
-        internal override BulletSharp.CollisionObject _BulletEntity { get { return BulletCollisionObject; } }
+        internal override BulletSharp.CollisionObject _BulletEntity => BulletCollisionObject;
 
         /// <summary>
         /// Get the rigid body in bullet format.
@@ -42,19 +41,19 @@ namespace GeonBit.Core.Physics
         /// <summary>
         /// Return if this is a static object.
         /// </summary>
-        override public bool IsStatic { get { return true; } }
+        public override bool IsStatic => true;
 
         /// <summary>
         /// Return if this is a kinematic object.
         /// </summary>
-        override public bool IsKinematic { get { return true; } }
+        public override bool IsKinematic => true;
 
         /// <summary>
         /// If false, will not simulate forces on this body and will make it behave like a kinematic body.
         /// </summary>
-        override public bool EnableSimulation
+        public override bool EnableSimulation
         {
-            get { return false; }
+            get => false;
             set { if (value == true) { throw new System.InvalidOperationException("Cannot change the simulation state of a static body!"); } }
         }
 
@@ -64,10 +63,7 @@ namespace GeonBit.Core.Physics
         /// </summary>
         public override Matrix WorldTransform
         {
-            get
-            {
-                return ToMonoGame.Matrix(_BulletEntity.WorldTransform);
-            }
+            get => ToMonoGame.Matrix(_BulletEntity.WorldTransform);
             set
             {
                 _BulletEntity.WorldTransform = ToBullet.Matrix(value);
@@ -84,9 +80,11 @@ namespace GeonBit.Core.Physics
         {
             // create the collision object
             _shape = shape;
-            BulletCollisionObject = new CollisionObject();
-            BulletCollisionObject.CollisionShape = shape.BulletCollisionShape;
-            BulletCollisionObject.UserObject = this;
+            BulletCollisionObject = new CollisionObject
+            {
+                CollisionShape = shape.BulletCollisionShape,
+                UserObject = this
+            };
 
             // turn off simulation and collision events
             base.EnableSimulation = false;
@@ -114,9 +112,6 @@ namespace GeonBit.Core.Physics
         /// Remove self from a bullet3d physics world.
         /// </summary>
         /// <param name="world">World to remove from.</param>
-        internal override void RemoveSelfFromBulletWorld(BulletSharp.DynamicsWorld world)
-        {
-            world.RemoveCollisionObject(BulletCollisionObject);
-        }
+        internal override void RemoveSelfFromBulletWorld(BulletSharp.DynamicsWorld world) => world.RemoveCollisionObject(BulletCollisionObject);
     }
 }

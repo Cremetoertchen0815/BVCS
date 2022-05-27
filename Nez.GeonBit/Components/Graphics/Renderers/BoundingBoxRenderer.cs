@@ -17,51 +17,40 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit
 {
     /// <summary>
     /// This component renders a bounding-box around this GameObject.
     /// </summary>
-    public class BoundingBoxRenderer : BaseRendererComponent
+    public class BoundingBoxRenderer : BaseRendererComponent, IUpdatable
     {
         // the entity used to draw the model
-        Core.Graphics.BoundingBoxEntity _entity;
+        private BoundingBoxEntity _entity;
 
         /// <summary>
         /// Get the main entity instance of this renderer.
         /// </summary>
-        protected override Core.Graphics.BaseRenderableEntity Entity { get { return _entity; } }
+        protected override BaseRenderableEntity RenderableEntity => _entity;
 
         /// <summary>
         /// Create the bounding-box renderer component.
         /// </summary>
-        public BoundingBoxRenderer()
-        {
-            _entity = new Core.Graphics.BoundingBoxEntity();
-        }
+        public BoundingBoxRenderer() => _entity = new BoundingBoxEntity();
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
-        {
-            return CopyBasics(new BoundingBoxRenderer());
-        }
+        public override Component CopyBasics(Component copyTo) => CopyBasics(new BoundingBoxRenderer());
 
         /// <summary>
         /// Called every frame to do the component events.
         /// </summary>
-        protected override void OnUpdate()
+        public void Update()
         {
             // update bounding box
-            if (_GameObject != null)
-            {
-                _entity.Box = _GameObject.SceneNode.GetBoundingBox();
-            }
-        }  
+            if (Node != null) _entity.Box = Node.GetBoundingBox();
+        }
     }
 }

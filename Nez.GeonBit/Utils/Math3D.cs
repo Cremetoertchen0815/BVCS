@@ -18,8 +18,8 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-using System;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace Nez.GeonBit
 {
@@ -34,20 +34,14 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="degrees">Degrees to convert to radians.</param>
         /// <returns>Converted degrees as radians.</returns>
-        static public float DegreeToRadian(float degrees)
-        {
-            return (float)((Math.PI / 180) * degrees);
-        }
+        public static float DegreeToRadian(float degrees) => (float)((Math.PI / 180) * degrees);
 
         /// <summary>
         /// Convert radians to degrees.
         /// </summary>
         /// <param name="radians">Radians to convert to degrees.</param>
         /// <returns>Converted radians as degrees.</returns>
-        static public float RadianToDegree(float radians)
-        {
-            return (float)(radians * (180.0 / Math.PI));
-        }
+        public static float RadianToDegree(float radians) => (float)(radians * (180.0 / Math.PI));
 
         /// <summary>
         /// Return a vector pointing to the 'left' side of a given vector.
@@ -55,9 +49,9 @@ namespace Nez.GeonBit
         /// <param name="vector">Vector to get left vector from.</param>
         /// <param name="zeroY">If true, will zero Y component.</param>
         /// <returns>Vector pointing to the left of the given vector.</returns>
-        static public Vector3 GetLeftVector(Vector3 vector, bool zeroY = false)
+        public static Vector3 GetLeftVector(Vector3 vector, bool zeroY = false)
         {
-            Vector3 ret = Vector3.Transform(vector, Matrix.CreateFromAxisAngle(Vector3.Up, Math3D.DegreeToRadian(90)));
+            var ret = Vector3.Transform(vector, Matrix.CreateFromAxisAngle(Vector3.Up, Math3D.DegreeToRadian(90)));
             if (zeroY) { ret.Y = 0.0f; ret.Normalize(); }
             return ret;
         }
@@ -68,9 +62,9 @@ namespace Nez.GeonBit
         /// <param name="vector">Vector to get right vector from.</param>
         /// <param name="zeroY">If true, will zero Y component.</param>
         /// <returns>Vector pointing to the right of the given vector.</returns>
-        static public Vector3 GetRightVector(Vector3 vector, bool zeroY = false)
+        public static Vector3 GetRightVector(Vector3 vector, bool zeroY = false)
         {
-            Vector3 ret = Vector3.Transform(vector, Matrix.CreateFromAxisAngle(Vector3.Up, Math3D.DegreeToRadian(-90)));
+            var ret = Vector3.Transform(vector, Matrix.CreateFromAxisAngle(Vector3.Up, Math3D.DegreeToRadian(-90)));
             if (zeroY) { ret.Y = 0.0f; ret.Normalize(); }
             return ret;
         }
@@ -80,10 +74,9 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="mat">Matrix to get scale from.</param>
         /// <returns>Matrix scale.</returns>
-        static public Vector3 GetScale(ref Matrix mat)
+        public static Vector3 GetScale(ref Matrix mat)
         {
-            Vector3 scale; Vector3 pos; Quaternion rot;
-            mat.Decompose(out scale, out rot, out pos);
+            mat.Decompose(out var scale, out var rot, out var pos);
             return scale;
         }
 
@@ -92,10 +85,9 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="mat">Matrix to get rotation from.</param>
         /// <returns>Matrix rotation.</returns>
-        static public Quaternion GetRotation(ref Matrix mat)
+        public static Quaternion GetRotation(ref Matrix mat)
         {
-            Vector3 scale; Vector3 pos; Quaternion rot;
-            mat.Decompose(out scale, out rot, out pos);
+            mat.Decompose(out var scale, out var rot, out var pos);
             return rot;
         }
 
@@ -118,7 +110,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="angle">Angle to wrap (degrees).</param>
         /// <returns>Wrapped angle.</returns>
-        static public uint WrapAngle(int angle)
+        public static uint WrapAngle(int angle)
         {
             while (angle < 0) { angle += 360; }
             while (angle > 360) { angle -= 360; }
@@ -130,7 +122,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="radian">Radian to wrap.</param>
         /// <returns>Wrapped radian.</returns>
-        static public float WrapRadian(float radian)
+        public static float WrapRadian(float radian)
         {
             float max = DegreeToRadian(360);
             while (radian < 0) { radian += max; }
@@ -146,7 +138,7 @@ namespace Nez.GeonBit
         /// <param name="angle1">First angle to check distance from (degrees).</param>
         /// <param name="angle2">Second angle to check distance from (degrees).</param>
         /// <returns>Return minimal degree between two angles.</returns>
-        static public uint AnglesDistance(uint angle1, uint angle2)
+        public static uint AnglesDistance(uint angle1, uint angle2)
         {
             // calc distance from 1 to 2
             int a = (int)angle1 - (int)angle2;
@@ -165,7 +157,7 @@ namespace Nez.GeonBit
         }
 
         // used as default random object if not provided
-        static System.Random _rand = new System.Random();
+        private static System.Random _rand = new System.Random();
 
         /// <summary>
         /// pick a random index based of list of probabilities (array of floats representing chances).
@@ -173,7 +165,7 @@ namespace Nez.GeonBit
         /// <param name="probabilities">Array of floats representing chance for every index.</param>
         /// <param name="rand">Optional random instance to provide (if null will create new one internally).</param>
         /// <returns>The index of the item picked randomly from the list of probabilities.</returns>
-        static public uint PickBasedOnProbability(float[] probabilities, System.Random rand = null)
+        public static uint PickBasedOnProbability(float[] probabilities, System.Random rand = null)
         {
             // if not provided, create default random object
             if (rand == null) { rand = _rand; }

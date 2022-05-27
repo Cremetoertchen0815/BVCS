@@ -27,12 +27,12 @@ namespace Nez.GeonBit.Physics
     public class RigidBody : BasePhysicsComponent
     {
         // the core rigid body
-        Core.Physics.RigidBody _body;
+        private Core.Physics.RigidBody _body;
 
         /// <summary>
         /// The physical body in the core layer.
         /// </summary>
-        internal override Core.Physics.BasicPhysicalBody _PhysicalBody { get { return _body; } }
+        internal override Core.Physics.BasicPhysicalBody _PhysicalBody => _body;
 
         /// <summary>
         /// The shape used for this physical body.
@@ -45,28 +45,28 @@ namespace Nez.GeonBit.Physics
         /// "tearing" due to physics / nodes update times.
         /// </summary>
         public GameObject SyncUpdateWith;
-        
+
         // body mass
-        float _mass;
+        private float _mass;
 
         // body inertia
-        float _intertia;
+        private float _intertia;
 
         // did we already updated body in current frame?
         // this is needed for optimization because draw calls and update calls are not 1:1.
-        bool _alreadyUpdatedBodyInFrame = false;
+        private bool _alreadyUpdatedBodyInFrame = false;
 
         /// <summary>
         /// Return true if you want this physical body to take over node transformations.
         /// </summary>
-        protected override bool TakeOverNodeTransformations { get { return true; } }
+        protected override bool TakeOverNodeTransformations => true;
 
         /// <summary>
         /// Get / set body mass.
         /// </summary>
         public float Mass
         {
-            get { return _mass; }
+            get => _mass;
             set { _mass = value; _body.SetMassAndInertia(_mass, _intertia); }
         }
 
@@ -75,10 +75,10 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public float Inertia
         {
-            get { return _intertia; }
+            get => _intertia;
             set { _intertia = value; _body.SetMassAndInertia(_mass, _intertia); }
         }
-        
+
         /// <summary>
         /// Optional constant velocity to set for this physical body.
         /// </summary>
@@ -100,7 +100,7 @@ namespace Nez.GeonBit.Physics
         public Vector3? ConstTorqueForce = null;
 
         // are we currently in physics world?
-        bool _isInWorld = false;
+        private bool _isInWorld = false;
 
         /// <summary>
         /// Create the physical body.
@@ -109,10 +109,7 @@ namespace Nez.GeonBit.Physics
         /// <param name="mass">Body mass (0 for static).</param>
         /// <param name="inertia">Body inertia (0 for static).</param>
         /// <param name="friction">Body friction.</param>
-        public RigidBody(IBodyShapeInfo shapeInfo, float mass = 0f, float inertia = 0f, float friction = 1f)
-        {
-            CreateBody(shapeInfo.CreateShape(), mass, inertia, friction);
-        }
+        public RigidBody(IBodyShapeInfo shapeInfo, float mass = 0f, float inertia = 0f, float friction = 1f) => CreateBody(shapeInfo.CreateShape(), mass, inertia, friction);
 
         /// <summary>
         /// Create the physical body from shape instance.
@@ -121,10 +118,7 @@ namespace Nez.GeonBit.Physics
         /// <param name="mass">Body mass (0 for static).</param>
         /// <param name="inertia">Body inertia (0 for static).</param>
         /// <param name="friction">Body friction.</param>
-        public RigidBody(Core.Physics.CollisionShapes.ICollisionShape shape, float mass = 0f, float inertia = 0f, float friction = 1f)
-        {
-            CreateBody(shape, mass, inertia, friction);
-        }
+        public RigidBody(Core.Physics.CollisionShapes.ICollisionShape shape, float mass = 0f, float inertia = 0f, float friction = 1f) => CreateBody(shape, mass, inertia, friction);
 
         /// <summary>
         /// Create the actual collision body.
@@ -138,8 +132,10 @@ namespace Nez.GeonBit.Physics
             // store params and create the body
             _mass = mass;
             _intertia = inertia;
-            _body = new Core.Physics.RigidBody(shape, mass, inertia);
-            _body.Friction = friction;
+            _body = new Core.Physics.RigidBody(shape, mass, inertia)
+            {
+                Friction = friction
+            };
             _shape = shape;
 
             // set self as attached data (needed for collision events)
@@ -150,10 +146,10 @@ namespace Nez.GeonBit.Physics
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component Clone()
         {
             // create cloned component to return
-            RigidBody ret = (RigidBody)CopyBasics(new RigidBody(_shape.Clone(), Mass, Inertia, _body.Friction));
+            var ret = (RigidBody)CopyBasics(new RigidBody(_shape.Clone(), Mass, Inertia, _body.Friction));
 
             // copy current state
             ret._body.CopyConditionFrom(_body);
@@ -203,7 +199,7 @@ namespace Nez.GeonBit.Physics
             if (!_GameObject.SceneNode.WasDrawnThisFrame && NeedToUpdataNode)
             {
                 UpdateNodeTransforms();
-            } 
+            }
         }
 
         /// <summary>
@@ -211,7 +207,7 @@ namespace Nez.GeonBit.Physics
         /// Note: this is called only if GameObject is enabled.
         /// </summary>
         protected override void OnBeforeDraw()
-        { 
+        {
             // update scene node
             if (!_alreadyUpdatedBodyInFrame && NeedToUpdataNode)
             {
@@ -222,10 +218,7 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Return if the physical body was updated and currently need to update the scene node.
         /// </summary>
-        bool NeedToUpdataNode
-        {
-            get { return _body.IsActive && _body.IsDirty; }
-        }
+        private bool NeedToUpdataNode => _body.IsActive && _body.IsDirty;
 
         /// <summary>
         /// Update scene node transformations.
@@ -251,18 +244,15 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         /// <param name="linear">Linear damping.</param>
         /// <param name="angular">Angular damping.</param>
-        public void SetDamping(float linear, float angular)
-        {
-            _body.SetDamping(linear, angular);
-        }
+        public void SetDamping(float linear, float angular) => _body.SetDamping(linear, angular);
 
         /// <summary>
         /// Get / set linear damping.
         /// </summary>
         public float LinearDamping
         {
-            get { return _body.LinearDamping; }
-            set { _body.LinearDamping = value; }
+            get => _body.LinearDamping;
+            set => _body.LinearDamping = value;
         }
 
         /// <summary>
@@ -270,82 +260,61 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public float AngularDamping
         {
-            get { return _body.AngularDamping; }
-            set { _body.AngularDamping = value; }
+            get => _body.AngularDamping;
+            set => _body.AngularDamping = value;
         }
 
         /// <summary>
         /// Clear all forces from the body.
         /// </summary>
         /// <param name="clearVelocity">If true, will also clear velocity.</param>
-        public void ClearForces(bool clearVelocity = true)
-        {
-            _body.ClearForces(clearVelocity);
-        }
+        public void ClearForces(bool clearVelocity = true) => _body.ClearForces(clearVelocity);
 
         /// <summary>
         /// Clear velocity from the body.
         /// </summary>
-        public void ClearVelocity()
-        {
-            _body.ClearVelocity();
-        }
+        public void ClearVelocity() => _body.ClearVelocity();
 
         /// <summary>
         /// Apply force on the physical body, from its center.
         /// </summary>
         /// <param name="force">Force vector to apply.</param>
-        public void ApplyForce(Vector3 force)
-        {
-            _body.ApplyForce(force);
-        }
+        public void ApplyForce(Vector3 force) => _body.ApplyForce(force);
 
         /// <summary>
         /// Apply force on the physical body, from given position.
         /// </summary>
         /// <param name="force">Force vector to apply.</param>
         /// <param name="from">Force source position.</param>
-        public void ApplyForce(Vector3 force, Vector3 from)
-        {
-            _body.ApplyForce(force, from);
-        }
+        public void ApplyForce(Vector3 force, Vector3 from) => _body.ApplyForce(force, from);
 
         /// <summary>
         /// Apply force on the physical body, from its center.
         /// </summary>
         /// <param name="impulse">Impulse vector to apply.</param>
-        public void ApplyImpulse(Vector3 impulse)
-        {
-            _body.ApplyImpulse(impulse);
-        }
+        public void ApplyImpulse(Vector3 impulse) => _body.ApplyImpulse(impulse);
 
         /// <summary>
         /// Apply impulse on the physical body, from given position.
         /// </summary>
         /// <param name="impulse">Impulse vector to apply.</param>
         /// <param name="from">Impulse source position.</param>
-        public void ApplyImpulse(Vector3 impulse, Vector3 from)
-        {
-            _body.ApplyImpulse(impulse, from);
-        }
+        public void ApplyImpulse(Vector3 impulse, Vector3 from) => _body.ApplyImpulse(impulse, from);
 
         /// <summary>
         /// Apply torque force on the body.
         /// </summary>
         /// <param name="torque">Torque force to apply.</param>
         /// <param name="asImpulse">If true, will apply torque as an impulse.</param>
-        public void ApplyTorque(Vector3 torque, bool asImpulse = false)
-        {
-            _body.ApplyTorque(torque, asImpulse);
-        }
+        public void ApplyTorque(Vector3 torque, bool asImpulse = false) => _body.ApplyTorque(torque, asImpulse);
 
         /// <summary>
         /// Get / set current body linear velocity.
         /// </summary>
         public Vector3 LinearVelocity
         {
-            get { return _body.LinearVelocity; }
-            set { _body.LinearVelocity = value; }
+            get => _body.LinearVelocity;
+            set => _body.LinearVelocity = value;
         }
 
         /// <summary>
@@ -353,8 +322,8 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public Vector3 LinearFactor
         {
-            get { return _body.LinearFactor; }
-            set { _body.LinearFactor = value; }
+            get => _body.LinearFactor;
+            set => _body.LinearFactor = value;
         }
 
         /// <summary>
@@ -362,8 +331,8 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public Vector3 AngularVelocity
         {
-            get { return _body.AngularVelocity; }
-            set { _body.AngularVelocity = value; }
+            get => _body.AngularVelocity;
+            set => _body.AngularVelocity = value;
         }
 
         /// <summary>
@@ -371,8 +340,8 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public Vector3 AngularFactor
         {
-            get { return _body.AngularFactor; }
-            set { _body.AngularFactor = value; }
+            get => _body.AngularFactor;
+            set => _body.AngularFactor = value;
         }
 
         /// <summary>
@@ -380,17 +349,14 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public Vector3? Gravity
         {
-            get { return _body.Gravity; }
-            set { _body.Gravity = value; }
+            get => _body.Gravity;
+            set => _body.Gravity = value;
         }
 
         /// <summary>
         /// Get the bounding box of the physical body.
         /// </summary>
-        public BoundingBox BoundingBox
-        {
-            get { return _body.BoundingBox; }
-        }
+        public BoundingBox BoundingBox => _body.BoundingBox;
 
         /// <summary>
         /// Force the scene node to calculate world transformations and copy them into the rigid body transformations.
@@ -403,7 +369,7 @@ namespace Nez.GeonBit.Physics
             if (clearForces) { _body.ClearForces(true); }
 
             // note: we can't just use SceneNode.WorldTransformations because its calculated differently because there's a physical body attached (ourselves..)
-            WorldTransform = _GameObject.SceneNode.BuildTransformationsMatrix() * 
+            WorldTransform = _GameObject.SceneNode.BuildTransformationsMatrix() *
                 (_GameObject.SceneNode.Parent != null ? _GameObject.SceneNode.Parent.WorldTransformations : Matrix.Identity);
         }
 

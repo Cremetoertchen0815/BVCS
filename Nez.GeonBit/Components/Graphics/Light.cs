@@ -18,7 +18,6 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit
 {
@@ -28,40 +27,35 @@ namespace Nez.GeonBit
     public class Light : BaseComponent
     {
         // the core light source.
-        Core.Graphics.Lights.LightSource _light;
+        private Lights.LightSource _light;
+        private GeonNode Node;
 
         /// <summary>
         /// Light direction, if its a directional light.
         /// </summary>
         public Vector3? Direction
         {
-            get { return _light.Direction; }
-            set { _light.Direction = value; }
+            get => _light.Direction;
+            set => _light.Direction = value;
         }
 
         /// <summary>
         /// Return if this light source is infinite, eg has no range and reach anywhere (like a directional light).
         /// </summary>
-        virtual public bool IsInfinite
-        {
-            get { return _light.IsInfinite; }
-        }
+        public virtual bool IsInfinite => _light.IsInfinite;
 
         /// <summary>
         /// Return if this light is a directional light.
         /// </summary>
-        public bool IsDirectionalLight
-        {
-            get { return _light.IsDirectionalLight; }
-        }
+        public bool IsDirectionalLight => _light.IsDirectionalLight;
 
         /// <summary>
         /// Light range.
         /// </summary>
         public float Range
         {
-            get { return _light.Range; }
-            set { _light.Range = value; }
+            get => _light.Range;
+            set => _light.Range = value;
         }
 
         /// <summary>
@@ -69,8 +63,8 @@ namespace Nez.GeonBit
         /// </summary>
         public Color Color
         {
-            get { return _light.Color; }
-            set { _light.Color = value; }
+            get => _light.Color;
+            set => _light.Color = value;
         }
 
         /// <summary>
@@ -78,8 +72,8 @@ namespace Nez.GeonBit
         /// </summary>
         public float Intensity
         {
-            get { return _light.Intensity; }
-            set { _light.Intensity = value; }
+            get => _light.Intensity;
+            set => _light.Intensity = value;
         }
 
         /// <summary>
@@ -87,50 +81,44 @@ namespace Nez.GeonBit
         /// </summary>
         public float Specular
         {
-            get { return _light.Specular; }
-            set { _light.Specular = value; }
+            get => _light.Specular;
+            set => _light.Specular = value;
         }
 
         /// <summary>
         /// Create the light component.
         /// </summary>
-        public Light()
-        {
+        public Light() =>
             // create the light source
-            _light = new Core.Graphics.Lights.LightSource();
-        }
+            _light = new Lights.LightSource();
 
         /// <summary>
         /// Clone this component.
         /// </summary>
         /// <returns>Cloned copy of this component.</returns>
-        override public BaseComponent Clone()
+        public override Component Clone()
         {
-            Light ret = new Light();
-            ret.Intensity = Intensity;
-            ret.Specular = Specular;
-            ret.Color = Color;
-            ret.Direction = Direction;
-            ret.Range = Range;
-            CopyBasics(ret);
+            var ret = new Light
+            {
+                Intensity = Intensity,
+                Specular = Specular,
+                Color = Color,
+                Direction = Direction,
+                Range = Range
+            };
+            
             return ret;
         }
 
         /// <summary>
         /// Called when GameObject turned disabled.
         /// </summary>
-        protected override void OnDisabled()
-        {
-            _light.Visible = false;
-        }
+        public override void OnDisabled() => _light.Visible = false;
 
         /// <summary>
         /// Called when GameObject is enabled.
         /// </summary>
-        protected override void OnEnabled()
-        {
-            _light.Visible = true;
-        }
+        public override void OnEnabled() => _light.Visible = true;
 
         /// <summary>
         /// Called every time scene node transformation updates.
@@ -138,25 +126,23 @@ namespace Nez.GeonBit
         /// </summary>
         protected override void OnTransformationUpdate()
         {
-            if (!_light.IsInfinite) { _light.Position = _GameObject.SceneNode.WorldPosition; }
+            if (!_light.IsInfinite) { _light.Position = Node.WorldPosition; }
         }
 
         /// <summary>
         /// Called when this component is effectively removed from scene, eg when removed
         /// from a GameObject or when its GameObject is removed from scene.
         /// </summary>
-        protected override void OnRemoveFromScene()
-        {
-            _light.Remove();
-        }
+        public override void OnRemovedFromEntity() => _light.Remove();
 
         /// <summary>
         /// Called when this component is effectively added to scene, eg when added
         /// to a GameObject currently in scene or when its GameObject is added to scene.
         /// </summary>
-        protected override void OnAddToScene()
+        public override void OnAddedToEntity()
         {
-            _GameObject.ParentScene.Lights.AddLight(_light);
+            base.OnAddedToEntity();
+            GeonBitRenderer.Lights.AddLight(_light);
         }
     }
 }

@@ -34,11 +34,11 @@ namespace Nez.GeonBit
     public class MaterialOverrides
     {
         // optional per-entity properties that override material's defaults
-        Color? _diffuseColor = null;
-        Color? _specularColor = null;
-        Color? _emissiveLight = null;
-        float? _alpha = null;
-        Texture2D _texture = null;
+        private Color? _diffuseColor = null;
+        private Color? _specularColor = null;
+        private Color? _emissiveLight = null;
+        private float? _alpha = null;
+        private Texture2D _texture = null;
 
         /// <summary>
         /// Override diffuse color for this specific entity.
@@ -46,7 +46,7 @@ namespace Nez.GeonBit
         /// </summary>
         public Color? DiffuseColor
         {
-            get { return _diffuseColor; }
+            get => _diffuseColor;
             set { _diffuseColor = value; UpdateOverridePropertiesState(); }
         }
 
@@ -56,7 +56,7 @@ namespace Nez.GeonBit
         /// </summary>
         public Color? SpecularColor
         {
-            get { return _specularColor; }
+            get => _specularColor;
             set { _specularColor = value; UpdateOverridePropertiesState(); }
         }
 
@@ -66,7 +66,7 @@ namespace Nez.GeonBit
         /// </summary>
         public Color? EmissiveLight
         {
-            get { return _emissiveLight; }
+            get => _emissiveLight;
             set { _emissiveLight = value; UpdateOverridePropertiesState(); }
         }
 
@@ -76,7 +76,7 @@ namespace Nez.GeonBit
         /// </summary>
         public float? Alpha
         {
-            get { return _alpha; }
+            get => _alpha;
             set { _alpha = value; UpdateOverridePropertiesState(); }
         }
 
@@ -86,7 +86,7 @@ namespace Nez.GeonBit
         /// </summary>
         public Texture2D Texture
         {
-            get { return _texture; }
+            get => _texture;
             set { _texture = value; UpdateOverridePropertiesState(); }
         }
 
@@ -99,18 +99,12 @@ namespace Nez.GeonBit
         /// Return if this entity should use material override properties (properties like texture, color, etc
         /// which override the material defaults).
         /// </summary>
-        private bool HaveOverrideProperties
-        {
-            get { return Alpha != null || DiffuseColor != null || Texture != null || SpecularColor != null || EmissiveLight != null; }
-        }
+        private bool HaveOverrideProperties => Alpha != null || DiffuseColor != null || Texture != null || SpecularColor != null || EmissiveLight != null;
 
         /// <summary>
         /// Update if currently using override properties or not.
         /// </summary>
-        private void UpdateOverridePropertiesState()
-        {
-            UsingOverrideProperties = HaveOverrideProperties;
-        }
+        private void UpdateOverridePropertiesState() => UsingOverrideProperties = HaveOverrideProperties;
 
         /// <summary>
         /// Clone custom render settings.
@@ -118,18 +112,20 @@ namespace Nez.GeonBit
         /// <returns>Cloned settings.</returns>
         public MaterialOverrides Clone()
         {
-            MaterialOverrides ret = new MaterialOverrides();
-            ret._diffuseColor = _diffuseColor;
-            ret._specularColor = _specularColor;
-            ret._emissiveLight = _emissiveLight;
-            ret._alpha = _alpha;
-            ret._texture = _texture;
+            var ret = new MaterialOverrides
+            {
+                _diffuseColor = _diffuseColor,
+                _specularColor = _specularColor,
+                _emissiveLight = _emissiveLight,
+                _alpha = _alpha,
+                _texture = _texture
+            };
             ret.UpdateOverridePropertiesState();
             return ret;
         }
 
         // dictionary of cached material clones for original materials replacement
-        Dictionary<Materials.MaterialAPI, Materials.MaterialAPI> _materialsCahce = new Dictionary<Materials.MaterialAPI, Materials.MaterialAPI>();
+        private Dictionary<Materials.MaterialAPI, Materials.MaterialAPI> _materialsCahce = new Dictionary<Materials.MaterialAPI, Materials.MaterialAPI>();
 
         /// <summary>
         /// Apply all custom render properties on a given material, and return either the given material or a clone of it, if needed.
@@ -147,7 +143,7 @@ namespace Nez.GeonBit
             }
 
             // we need to apply custom properties. get the cached material with properties or create a new one
-            Materials.MaterialAPI original = material;
+            var original = material;
             if (!_materialsCahce.TryGetValue(material, out material))
             {
                 material = original.Clone();

@@ -17,7 +17,6 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
-using GeonBit.Core.Graphics.Animation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections;
@@ -51,13 +50,13 @@ namespace Nez.GeonBit
     public class SkinnedModelEntity : CompositeModelEntity
     {
         // model animations
-        Animations _animations;
+        private Animations _animations;
 
         // if during animation transition, this is the "previous" transformations we transform from
-        Matrix[] _transitionFromTransforms;
+        private Matrix[] _transitionFromTransforms;
 
         // if during animation transition, this is the current transformations state
-        Matrix[] _transitionCurrTransforms;
+        private Matrix[] _transitionCurrTransforms;
 
         /// <summary>
         /// If > 0f, whenever we change clip we will transition into new animation clip, in an interpolation
@@ -66,7 +65,7 @@ namespace Nez.GeonBit
         public float TransitionTime = 0.25f;
 
         // time to finish current clip transition.
-        float _timeToFinishTransition = 0f;
+        private float _timeToFinishTransition = 0f;
 
         /// <summary>
         /// If true, and trying to change animation while still transitioning from previous animation, will not replace animation
@@ -75,12 +74,12 @@ namespace Nez.GeonBit
         public bool LockWhileTransitioning = true;
 
         // if set to lock while transitioning animations, this will be the next animation to play when finish current transition.
-        string _nextAnimation = null;
+        private string _nextAnimation = null;
 
         /// <summary>
         /// Are we animating in CPU or in GPU?
         /// </summary>
-        AnimatedMode _animateMode;
+        private AnimatedMode _animateMode;
 
         /// <summary>
         /// Optional callback to invoke every time an animation cycle ends.
@@ -145,13 +144,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Get the currently playing animation clip (or null if none defined).
         /// </summary>
-        public string CurrentClipName
-        {
-            get
-            {
-                return _animations.CurrentClipName;
-            }
-        }
+        public string CurrentClipName => _animations.CurrentClipName;
 
         /// <summary>
         /// Update animation step.
@@ -223,15 +216,13 @@ namespace Nez.GeonBit
         /// <param name="result">Output matrix.</param>
         public static void SlerpMatrix(ref Matrix start, ref Matrix end, float slerpAmount, out Matrix result)
         {
-            Quaternion qStart, qEnd, qResult;
-            Vector3 curTrans, nextTrans, lerpedTrans, curScale, nextScale, lerpedScale;
 
-            start.Decompose(out curScale, out qStart, out curTrans);
-            end.Decompose(out nextScale, out qEnd, out nextTrans);
+            start.Decompose(out var curScale, out var qStart, out var curTrans);
+            end.Decompose(out var nextScale, out var qEnd, out var nextTrans);
 
-            Quaternion.Lerp(ref qStart, ref qEnd, slerpAmount, out qResult);
-            Vector3.Lerp(ref curTrans, ref nextTrans, slerpAmount, out lerpedTrans);
-            Vector3.Lerp(ref curScale, ref nextScale, slerpAmount, out lerpedScale);
+            Quaternion.Lerp(ref qStart, ref qEnd, slerpAmount, out var qResult);
+            Vector3.Lerp(ref curTrans, ref nextTrans, slerpAmount, out var lerpedTrans);
+            Vector3.Lerp(ref curScale, ref nextScale, slerpAmount, out var lerpedScale);
 
             result = Matrix.CreateScale(lerpedScale)
                    * Matrix.CreateFromQuaternion(qResult)
@@ -273,7 +264,7 @@ namespace Nez.GeonBit
             foreach (DictionaryEntry entry in _meshes)
             {
                 // get mesh
-                MeshEntity mesh = entry.Value as MeshEntity;
+                var mesh = entry.Value as MeshEntity;
 
                 // iterate parts and set bones
                 foreach (var part in mesh.Mesh.MeshParts)

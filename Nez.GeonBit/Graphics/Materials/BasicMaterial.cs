@@ -19,8 +19,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System;
 
 namespace Nez.GeonBit.Materials
 {
@@ -30,15 +28,15 @@ namespace Nez.GeonBit.Materials
     public class BasicMaterial : MaterialAPI
     {
         // the effect instance of this material.
-        BasicEffect _effect;
+        private BasicEffect _effect;
 
         /// <summary>
         /// Get the effect instance.
         /// </summary>
-        public override Effect Effect { get { return _effect; } }
+        public override Effect Effect => _effect;
 
         // empty effect instance to clone when creating new material
-        static BasicEffect _emptyEffect = new BasicEffect(GraphicsManager.GraphicsDevice);
+        private static BasicEffect _emptyEffect = new BasicEffect(GraphicsManager.GraphicsDevice);
 
         /// <summary>
         /// Create the default material from empty effect.
@@ -90,7 +88,7 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Apply this material.
         /// </summary>
-        override protected void MaterialSpecificApply(bool wasLastMaterial)
+        protected override void MaterialSpecificApply(bool wasLastMaterial)
         {
             // set world matrix
             if (IsDirty(MaterialDirtyFlags.World))
@@ -131,27 +129,18 @@ namespace Nez.GeonBit.Materials
         /// Update material view matrix.
         /// </summary>
         /// <param name="view">New view to set.</param>
-        override protected void UpdateView(ref Matrix view)
-        {
-            _effect.View = View;
-        }
+        protected override void UpdateView(ref Matrix view) => _effect.View = View;
 
         /// <summary>
         /// Update material projection matrix.
         /// </summary>
         /// <param name="projection">New projection to set.</param>
-        override protected void UpdateProjection(ref Matrix projection)
-        {
-            _effect.Projection = Projection;
-        }
+        protected override void UpdateProjection(ref Matrix projection) => _effect.Projection = Projection;
 
         /// <summary>
         /// Clone this material.
         /// </summary>
         /// <returns>Copy of this material.</returns>
-        public override MaterialAPI Clone()
-        {
-            return new BasicMaterial(this);
-        }
+        public override MaterialAPI Clone() => new BasicMaterial(this);
     }
 }

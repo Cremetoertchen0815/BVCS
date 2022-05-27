@@ -35,17 +35,17 @@ namespace Nez.GeonBit.Physics
         /// <summary>
         /// Return if this is a static object.
         /// </summary>
-        public bool IsStatic { get { return _PhysicalBody.IsStatic; } }
+        public bool IsStatic => _PhysicalBody.IsStatic;
 
         /// <summary>
         /// Return if this is a kinematic object.
         /// </summary>
-        public bool IsKinematic { get { return _PhysicalBody.IsKinematic; } }
+        public bool IsKinematic => _PhysicalBody.IsKinematic;
 
         /// <summary>
         /// Return true if you want this physical body to take over node transformations.
         /// </summary>
-        protected virtual bool TakeOverNodeTransformations { get { return false; } }
+        protected virtual bool TakeOverNodeTransformations => false;
 
         /// <summary>
         /// Optional user data you can attach to this physical component.
@@ -57,8 +57,8 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public Vector3 Scale
         {
-            get { return _PhysicalBody.Scale; }
-            set { _PhysicalBody.Scale = value; }
+            get => _PhysicalBody.Scale;
+            set => _PhysicalBody.Scale = value;
         }
 
         /// <summary>
@@ -68,17 +68,17 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public bool EnableSimulation
         {
-            get { return _PhysicalBody.EnableSimulation; }
-            set { _PhysicalBody.EnableSimulation = value; }
+            get => _PhysicalBody.EnableSimulation;
+            set => _PhysicalBody.EnableSimulation = value;
         }
-        
+
         /// <summary>
         /// Get / set physical body world transformation.
         /// </summary>
         public Matrix WorldTransform
         {
-            get { return _PhysicalBody.WorldTransform; }
-            set { _PhysicalBody.WorldTransform = value; }
+            get => _PhysicalBody.WorldTransform;
+            set => _PhysicalBody.WorldTransform = value;
         }
 
         /// <summary>
@@ -86,8 +86,8 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public Vector3 Position
         {
-            get { return _PhysicalBody.Position; }
-            set { _PhysicalBody.Position = value; }
+            get => _PhysicalBody.Position;
+            set => _PhysicalBody.Position = value;
         }
 
         /// <summary>
@@ -96,8 +96,8 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public short CollisionGroup
         {
-            get { return _PhysicalBody.CollisionGroup; }
-            set { _PhysicalBody.CollisionGroup = value; }
+            get => _PhysicalBody.CollisionGroup;
+            set => _PhysicalBody.CollisionGroup = value;
         }
 
         /// <summary>
@@ -106,8 +106,8 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public short CollisionMask
         {
-            get { return _PhysicalBody.CollisionMask; }
-            set { _PhysicalBody.CollisionMask = value; }
+            get => _PhysicalBody.CollisionMask;
+            set => _PhysicalBody.CollisionMask = value;
         }
 
         /// <summary>
@@ -116,8 +116,8 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public bool InvokeCollisionEvents
         {
-            get { return _PhysicalBody.InvokeCollisionEvents; }
-            set { _PhysicalBody.InvokeCollisionEvents = value; }
+            get => _PhysicalBody.InvokeCollisionEvents;
+            set => _PhysicalBody.InvokeCollisionEvents = value;
         }
 
         /// <summary>
@@ -125,8 +125,8 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public bool IsEthereal
         {
-            get { return _PhysicalBody.IsEthereal; }
-            set { _PhysicalBody.IsEthereal = value; }
+            get => _PhysicalBody.IsEthereal;
+            set => _PhysicalBody.IsEthereal = value;
         }
 
         /// <summary>
@@ -134,13 +134,13 @@ namespace Nez.GeonBit.Physics
         /// </summary>
         public float Restitution
         {
-            get { return _PhysicalBody.Restitution; }
-            set { _PhysicalBody.Restitution = value; }
+            get => _PhysicalBody.Restitution;
+            set => _PhysicalBody.Restitution = value;
         }
 
         // are we currently in physics world?
-        bool _isInWorld = false;
-        
+        private bool _isInWorld = false;
+
         /// <summary>
         /// Called when this physical body start colliding with another body.
         /// </summary>
@@ -183,15 +183,15 @@ namespace Nez.GeonBit.Physics
             {
                 _GameObject.CallCollisionProcess(other._GameObject);
             }
-        }  
-        
+        }
+
         /// <summary>
         /// Get / set body friction.
         /// </summary>
         public float Friction
         {
-            get { return _PhysicalBody.Friction; }
-            set { _PhysicalBody.Friction = Friction; }
+            get => _PhysicalBody.Friction;
+            set => _PhysicalBody.Friction = Friction;
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Nez.GeonBit.Physics
         /// <returns>The object we are copying properties to.</returns>
         protected override BaseComponent CopyBasics(BaseComponent copyTo)
         {
-            BasePhysicsComponent ret = copyTo as BasePhysicsComponent;
+            var ret = copyTo as BasePhysicsComponent;
             ret.InvokeCollisionEvents = InvokeCollisionEvents;
             ret.IsEthereal = IsEthereal;
             ret.CollisionGroup = CollisionGroup;

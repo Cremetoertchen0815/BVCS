@@ -24,29 +24,31 @@ namespace Nez.GeonBit
     /// <summary>
     /// Base implementation for most graphics-related components.
     /// </summary>
-    public abstract class BaseRendererComponent : BaseComponent
+    public abstract class BaseRendererComponent : Component
     {
         /// <summary>
         /// Get the main entity instance of this renderer.
         /// </summary>
-        protected abstract Core.Graphics.BaseRenderableEntity Entity { get; }
+        protected abstract BaseRenderableEntity RenderableEntity { get; }
+
+        internal GeonNode Node;
 
         /// <summary>
         /// Set / get Entity blending state.
         /// </summary>
         public BlendState BlendingState
         {
-            set { Entity.BlendingState = value; }
-            get { return Entity.BlendingState; }
+            set => RenderableEntity.BlendingState = value;
+            get => RenderableEntity.BlendingState;
         }
 
         /// <summary>
         /// Set / get the rendering queue of this entity.
         /// </summary>
-        virtual public Core.Graphics.RenderingQueue RenderingQueue
+        public virtual RenderingQueue RenderingQueue
         {
-            get { return Entity.RenderingQueue; }
-            set { Entity.RenderingQueue = value; }
+            get => RenderableEntity.RenderingQueue;
+            set => RenderableEntity.RenderingQueue = value;
         }
 
         /// <summary>
@@ -54,49 +56,24 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="copyTo">Other component to copy values to.</param>
         /// <returns>The object we are copying properties to.</returns>
-        protected override BaseComponent CopyBasics(BaseComponent copyTo)
+        public virtual Component CopyBasics(Component copyTo)
         {
-            base.CopyBasics(copyTo);
-            BaseRendererComponent otherRenderer = copyTo as BaseRendererComponent;
+            var otherRenderer = copyTo as BaseRendererComponent;
             otherRenderer.RenderingQueue = RenderingQueue;
             otherRenderer.BlendingState = BlendingState;
             return copyTo;
         }
 
+        public override void OnAddedToEntity() => Node = Entity.GetComponent<GeonNode>();
+
         /// <summary>
         /// Called when GameObject turned disabled.
         /// </summary>
-        protected override void OnDisabled()
-        {
-            Entity.Visible = false;
-        }
+        public override void OnDisabled() => RenderableEntity.Visible = false;
 
         /// <summary>
         /// Called when GameObject is enabled.
         /// </summary>
-        protected override void OnEnabled()
-        {
-            Entity.Visible = true;
-        }
-
-        /// <summary>
-        /// Change component parent GameObject.
-        /// </summary>
-        /// <param name="prevParent">Previous parent.</param>
-        /// <param name="newParent">New parent.</param>
-        override protected void OnParentChange(GameObject prevParent, GameObject newParent)
-        {
-            // remove from previous parent
-            if (prevParent != null && prevParent.SceneNode != null)
-            {
-                prevParent.SceneNode.RemoveEntity(Entity);
-            }
-
-            // add model entity to new parent
-            if (newParent != null && newParent.SceneNode != null)
-            {
-                newParent.SceneNode.AddEntity(Entity);
-            }
-        }
+        public override void OnEnabled() => RenderableEntity.Visible = true;
     }
 }
