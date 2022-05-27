@@ -828,10 +828,6 @@
       <Project>{e565ae63-effc-4019-93e8-325961284b22}</Project>
       <Name>GeonBit.UI.DataTypes</Name>
     </ProjectReference>
-    <ProjectReference Include="Libs\Extend\Animations\Animations.csproj">
-      <Project>{775b85f8-1a9a-4766-9b1b-db3f1da33631}</Project>
-      <Name>Animations</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets" Condition="Exists('..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets')" />

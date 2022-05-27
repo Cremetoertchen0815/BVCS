@@ -5,8 +5,6 @@ VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeonBit", "GeonBit\GeonBit.csproj", "{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animations", "GeonBit\Libs\Extend\Animations\Animations.csproj", "{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betreten Verboten", "Betreten Verboten\Betreten Verboten.csproj", "{4F0C1790-E472-4901-BC38-562F9206FE68}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeonBit.UI.DataTypes", "GeonBit\Libs\DataTypes\GeonBit.UI.DataTypes.csproj", "{E565AE63-EFFC-4019-93E8-325961284B22}"
@@ -39,18 +37,6 @@ Global
 		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Release|x64.Build.0 = Release|Any CPU
 		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Release|x86.ActiveCfg = Release|Any CPU
 		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Release|x86.Build.0 = Release|Any CPU
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Debug|x64.ActiveCfg = Debug|x64
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Debug|x64.Build.0 = Debug|x64
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Debug|x86.ActiveCfg = Debug|x86
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Debug|x86.Build.0 = Debug|x86
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Release|Any CPU.Build.0 = Release|Any CPU
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Release|x64.ActiveCfg = Release|x64
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Release|x64.Build.0 = Release|x64
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Release|x86.ActiveCfg = Release|x86
-		{775B85F8-1A9A-4766-9B1B-DB3F1DA33631}.Release|x86.Build.0 = Release|x86
 		{4F0C1790-E472-4901-BC38-562F9206FE68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4F0C1790-E472-4901-BC38-562F9206FE68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F0C1790-E472-4901-BC38-562F9206FE68}.Debug|x64.ActiveCfg = Debug|Any CPU

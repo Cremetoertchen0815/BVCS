@@ -32,6 +32,5 @@
   <ItemGroup>
     <ProjectReference Include="..\GeonBit\GeonBit.csproj" />
     <ProjectReference Include="..\GeonBit\Libs\DataTypes\GeonBit.UI.DataTypes.csproj" />
-    <ProjectReference Include="..\GeonBit\Libs\Extend\Animations\Animations.csproj" />
   </ItemGroup>
 </Project>
