@@ -96,10 +96,6 @@
       <Project>{775b85f8-1a9a-4766-9b1b-db3f1da33631}</Project>
       <Name>Animations</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GraphicsImporters\GraphicsImporters.csproj">
-      <Project>{7451da40-4f7b-4675-9999-5ab5efef3b86}</Project>
-      <Name>GraphicsImporters</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
