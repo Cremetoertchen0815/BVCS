@@ -57,6 +57,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Core\CoreManager.cs" />
     <Compile Include="Source\Core\Exceptions.cs" />
+    <Compile Include="Source\Core\Graphics\Animation\Animations.cs" />
+    <Compile Include="Source\Core\Graphics\Animation\Clip.cs" />
+    <Compile Include="Source\Core\Graphics\Animation\CpuAnimatedVertexBuffer.cs" />
+    <Compile Include="Source\Core\Graphics\Animation\Extensions.cs" />
+    <Compile Include="Source\Core\Graphics\Animation\Keyframe.cs" />
+    <Compile Include="Source\Core\Graphics\Animation\NativeExtensions.cs" />
+    <Compile Include="Source\Core\Graphics\Animation\VertexIndicesWeightsPositionNormal.cs" />
     <Compile Include="Source\Core\Graphics\Entities\BaseRenderableEntity.cs" />
     <Compile Include="Source\Core\Graphics\Entities\BoundingBoxEntity.cs" />
     <Compile Include="Source\Core\Graphics\Entities\CombinedMeshesEntity.cs" />

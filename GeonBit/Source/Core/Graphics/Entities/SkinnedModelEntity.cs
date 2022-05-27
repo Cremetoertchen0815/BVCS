@@ -17,11 +17,10 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
+using GeonBit.Core.Graphics.Animation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GeonBit.Extend.Animation;
 using System.Collections;
-using System.Collections.Specialized;
 
 namespace GeonBit.Core.Graphics
 {
