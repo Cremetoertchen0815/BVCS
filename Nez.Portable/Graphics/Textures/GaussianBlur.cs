@@ -1,0 +1,201 @@
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+
+
+namespace Nez.Textures
+{
+    public class GaussianBlur
+    {
+        /// <summary>
+        /// creates a new texture that is a gaussian blurred version of the original
+        /// </summary>
+        /// <returns>The blurred texture.</returns>
+        /// <param name="image">Image.</param>
+        /// <param name="deviation">Deviation.</param>
+        public static Texture2D CreateBlurredTexture(Texture2D image, double deviation = 1)
+        {
+            var resultTex = new Texture2D(Core.GraphicsDevice, image.Width, image.Height, false, SurfaceFormat.Color);
+            var srcData = new Color[image.Width * image.Height];
+            image.GetData<Color>(srcData);
+
+            var destData = CreateBlurredTexture(srcData, image.Width, image.Height, deviation);
+            resultTex.SetData(destData);
+
+            return resultTex;
+        }
+
+
+        public static Color[] CreateBlurredTexture(Color[] srcData, int width, int height, double deviation = 1)
+        {
+            double[,] matrixR = new double[width, height];
+            double[,] matrixG = new double[width, height];
+            double[,] matrixB = new double[width, height];
+            double[,] matrixA = new double[width, height];
+
+            var destData = new Color[width * height];
+
+            // first we calculate the grayscale and store it in matrix
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    matrixR[i, j] = srcData[i + j * width].R;
+                    matrixG[i, j] = srcData[i + j * width].G;
+                    matrixB[i, j] = srcData[i + j * width].B;
+                    matrixA[i, j] = srcData[i + j * width].A;
+                }
+            }
+
+            matrixR = GaussianConvolution(matrixR, deviation);
+            matrixG = GaussianConvolution(matrixG, deviation);
+            matrixB = GaussianConvolution(matrixB, deviation);
+            matrixA = GaussianConvolution(matrixA, deviation);
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    int r = (int)Math.Min(255, matrixR[i, j]);
+                    int g = (int)Math.Min(255, matrixG[i, j]);
+                    int b = (int)Math.Min(255, matrixB[i, j]);
+                    int a = (int)Math.Min(255, matrixA[i, j]);
+                    destData[i + j * width] = new Color(r, g, b, a);
+                }
+            }
+
+            return destData;
+        }
+
+
+        /// <summary>
+        /// creates a new texture that is a gaussian blurred version of the original in grayscale
+        /// </summary>
+        /// <returns>The blurred texture.</returns>
+        /// <param name="image">Image.</param>
+        /// <param name="deviation">Deviation.</param>
+        public static Texture2D CreateBlurredGrayscaleTexture(Texture2D image, double deviation = 1)
+        {
+            var resultTex = new Texture2D(Core.GraphicsDevice, image.Width, image.Height, false, SurfaceFormat.Color);
+            var srcData = new Color[image.Width * image.Height];
+            image.GetData<Color>(srcData);
+
+            var destData = CreateBlurredGrayscaleTexture(srcData, image.Width, image.Height, deviation);
+            resultTex.SetData(destData);
+
+            return resultTex;
+        }
+
+
+        public static Color[] CreateBlurredGrayscaleTexture(Color[] srcData, int width, int height,
+                                                            double deviation = 1)
+        {
+            var destData = new Color[width * height];
+            double[,] matrix = new double[width, height];
+
+            // first we calculate the grayscale and store it in matrix
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                    matrix[i, j] = srcData[i + j * width].Grayscale().R;
+            }
+
+            matrix = GaussianConvolution(matrix, deviation);
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    int val = (int)Math.Min(255, matrix[i, j]);
+                    destData[i + j * width] = new Color(val, val, val, srcData[i + j * width].A);
+                }
+            }
+
+            return destData;
+        }
+
+        private static double[,] Calculate1DSampleKernel(double deviation, int size)
+        {
+            double[,] ret = new double[size, 1];
+            double sum = 0;
+
+            //int half = size / 2; // originally used this but I dont think it is correct since it creates incorrect half values
+            double half = (size - 1) / 2;
+            for (int i = 0; i < size; i++)
+            {
+                ret[i, 0] = 1 / (Math.Sqrt(2 * Math.PI) * deviation) *
+                            Math.Exp(-(i - half) * (i - half) / (2 * deviation * deviation));
+                sum += ret[i, 0];
+            }
+
+            return ret;
+        }
+
+        private static double[,] Calculate1DSampleKernel(double deviation)
+        {
+            int size = (int)Math.Ceiling(deviation * 3) * 2 + 1;
+            return Calculate1DSampleKernel(deviation, size);
+        }
+
+        private static double[,] CalculateNormalized1DSampleKernel(double deviation) => NormalizeMatrix(Calculate1DSampleKernel(deviation));
+
+        private static double[,] NormalizeMatrix(double[,] matrix)
+        {
+            double[,] ret = new double[matrix.GetLength(0), matrix.GetLength(1)];
+            double sum = 0;
+            for (int i = 0; i < ret.GetLength(0); i++)
+            {
+                for (int j = 0; j < ret.GetLength(1); j++)
+                    sum += matrix[i, j];
+            }
+
+            if (sum != 0)
+            {
+                for (int i = 0; i < ret.GetLength(0); i++)
+                {
+                    for (int j = 0; j < ret.GetLength(1); j++)
+                        ret[i, j] = matrix[i, j] / sum;
+                }
+            }
+
+            return ret;
+        }
+
+        private static double[,] GaussianConvolution(double[,] matrix, double deviation)
+        {
+            double[,] kernel = CalculateNormalized1DSampleKernel(deviation);
+            double[,] res1 = new double[matrix.GetLength(0), matrix.GetLength(1)];
+            double[,] res2 = new double[matrix.GetLength(0), matrix.GetLength(1)];
+
+            // x-direction
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                    res1[i, j] = ProcessPoint(matrix, i, j, kernel, 0);
+            }
+
+            // y-direction
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                    res2[i, j] = ProcessPoint(res1, i, j, kernel, 1);
+            }
+
+            return res2;
+        }
+
+        private static double ProcessPoint(double[,] matrix, int x, int y, double[,] kernel, int direction)
+        {
+            double res = 0;
+            int half = kernel.GetLength(0) / 2;
+            for (int i = 0; i < kernel.GetLength(0); i++)
+            {
+                int cox = direction == 0 ? x + i - half : x;
+                int coy = direction == 1 ? y + i - half : y;
+                if (cox >= 0 && cox < matrix.GetLength(0) && coy >= 0 && coy < matrix.GetLength(1))
+                    res += matrix[cox, coy] * kernel[i, 0];
+            }
+
+            return res;
+        }
+    }
+}
