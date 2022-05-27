@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace Nez
 {
-    public class Transform : IFrameInterpolatable
+    public class Transform : IVariableUpdatable
     {
         [Flags]
         private enum DirtyType
@@ -585,7 +585,7 @@ namespace Nez
                 "[Transform: parent: {0}, position: {1}, rotation: {2}, scale: {3}, localPosition: {4}, localRotation: {5}, localScale: {6}]",
                 Parent != null, Position, Rotation, Scale, LocalPosition, LocalRotation, LocalScale);
 
-        public void LockStep()
+        public void VariableUpdate()
         {
             _lastlocalPosition = _localPosition;
             _lastlocalRotation = _localRotation;

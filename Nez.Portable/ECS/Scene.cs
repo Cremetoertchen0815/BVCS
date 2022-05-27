@@ -425,6 +425,8 @@ namespace Nez
             RenderableComponents.UpdateLists();
         }
 
+        internal void VariableUpdate() => Entities.VariableUpdate();
+
         internal void Render()
         {
             if (_renderers.Length == 0)

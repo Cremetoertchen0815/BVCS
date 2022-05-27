@@ -45,11 +45,6 @@ namespace GeonBit.Core.Graphics
         protected bool _isCullingDirty = true;
 
         /// <summary>
-        /// Get if this node was visible (not culled) in last frame.
-        /// </summary>
-        private bool _wasLastVisible;
-
-        /// <summary>
         /// Draw the node and its children.
         /// </summary>
         /// <param name="forceEvenIfAlreadyDrawn">If true, will draw this node even if it was already drawn in current frame.</param>
@@ -72,16 +67,6 @@ namespace GeonBit.Core.Graphics
                 UpdateCullingData();
                 _isCullingDirty = false;
             }
-
-            // if this node is out of screen, don't draw it
-            if (ShouldCull)
-            {
-                _wasLastVisible = false;
-                return;
-            }
-
-            // if got here it means node is currently visible / not culled
-            _wasLastVisible = true;
 
             // draw all child nodes
             foreach (Node node in _childNodes)

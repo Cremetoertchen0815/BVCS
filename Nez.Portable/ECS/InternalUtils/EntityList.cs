@@ -147,10 +147,14 @@ namespace Nez
 
                 var entity = _entities.Buffer[i];
 
-                entity.UpdateInterpolation();
                 if (entity.Enabled && (entity.UpdateInterval == 1 || Time.FrameCount % entity.UpdateInterval == 0))
                     entity.Update();
             }
+        }
+
+        internal void VariableUpdate()
+        {
+            for (int i = 0; i < _entities.Length; i++) _entities.Buffer[i].UpdateVariable();
         }
 
         public void UpdateLists()

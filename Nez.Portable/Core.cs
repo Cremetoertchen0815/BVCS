@@ -297,7 +297,13 @@ namespace Nez
 
         }
 
-        protected void VariableUpdate() => EndDebugUpdate();
+        protected void VariableUpdate()
+        {
+            EndDebugUpdate(); 
+            if (SceneTransition == null || (SceneTransition != null && (!SceneTransition._loadsNewScene || SceneTransition._isNewSceneLoaded)))
+                if (_scene.Enabled)
+                    _scene.VariableUpdate();
+        }
 
         protected override void Draw(GameTime gameTime)
         {

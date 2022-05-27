@@ -319,7 +319,7 @@ namespace Nez
         /// the CopyFrom method should be called which will clone all Components, Colliders and Transform children for you. Note
         /// that the cloned Entity will not be added to any Scene! You must add them yourself!
         /// </summary>
-        public virtual Entity Clone(Vector2 position = default(Vector2))
+        public virtual Entity Clone(Vector2 position = default)
         {
             var entity = Activator.CreateInstance(GetType()) as Entity;
             entity.Name = Name + "(clone)";
@@ -385,16 +385,16 @@ namespace Nez
         /// </summary>
         public virtual void Update() => Components.Update();
 
-        public void UpdateInterpolation()
+        internal void UpdateVariable()
         {
             var cmp = Components.GetArray();
             for (int i = 0; i < cmp.Length; i++)
             {
-                if (cmp[i] is IFrameInterpolatable) (cmp[i] as IFrameInterpolatable).LockStep();
+                if (cmp[i] is IVariableUpdatable) (cmp[i] as IVariableUpdatable).VariableUpdate();
 
             }
 
-            Transform.LockStep();
+            Transform.VariableUpdate();
         }
 
         /// <summary>
