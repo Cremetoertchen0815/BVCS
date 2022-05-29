@@ -46,6 +46,8 @@ namespace Nez.GeonBit
 
         protected GeonNode _camNode = new GeonNode();
 
+        public GeonNode Node { get => _camNode; }
+
         /// <summary>
         /// Default field of view.
         /// </summary>

@@ -234,7 +234,7 @@ namespace Nez.GeonBit
         public override void Render(Scene scene)
         {
             NodesManager.StartFrame();
-            foreach (var item in scene.EntitiesOfType<Entity>()) item.GetComponent<GeonNode>().Draw();
+            foreach (var item in scene.EntitiesOfType<Entity>()) item.GetComponent<GeonNode>()?.Draw();
             NodesManager.EndFrame();
         }
 

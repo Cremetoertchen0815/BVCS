@@ -790,7 +790,7 @@ namespace Nez.GeonBit
             {
                 return;
             }
-
+            
             // draw node
             DrawSpecific(forceEvenIfAlreadyDrawn);
 
