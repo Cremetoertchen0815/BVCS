@@ -1,5 +1,3 @@
 ﻿-Add visibility control to entities
--Migrate different node types to "Node3D" components as 3D to 2D nodes(they mainly handle 3D transforms and culling) in 
--Migrate GeonBit core Graphics system to Nez renderer
--Migrate GeonBit core Physics system to Nez components
--Migrate other shit to Nez components
+-Rename "renderers" in GeonBit to Renderables
+-Rename "entities" in GeonBit to Renderers
