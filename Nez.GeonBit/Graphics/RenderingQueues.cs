@@ -383,7 +383,7 @@ namespace Nez.GeonBit
                 // if need to sort by distance from camera, do the sorting
                 if (queue.SortByCamera)
                 {
-                    var camPos = GeonBitRenderer.ActiveCamera.Position;
+                    var camPos = GeonRenderer.ActiveCamera.Position;
                     queue.Entities.Sort(delegate (EntityInQueue x, EntityInQueue y)
                     {
                         return (int)(Vector3.Distance(camPos, y.World.Translation) * 100f - System.Math.Floor(y.Entity.CameraDistanceBias)) -

@@ -231,7 +231,7 @@ namespace Nez.GeonBit.Lights
                                     continue;
 
                                 // if light is out of camera, skip it
-                                if (!GeonBitRenderer.ActiveCamera.ViewFrustum.Intersects(light.BoundingSphere))
+                                if (!GeonRenderer.ActiveCamera.ViewFrustum.Intersects(light.BoundingSphere))
                                     continue;
 
                                 // add light to return array

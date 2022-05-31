@@ -29,7 +29,7 @@ namespace Nez.GeonBit
     /// When testing for culling we first test top-level bounding boxes, then those contained by them, and so forth.
     /// This is the optimal culling node that covers most basic 3d use-cases.
     /// </summary>
-    internal class OctreeCullingNode : GeonNode
+    internal class OctreeCullingNode : Node
     {
         /// <summary>
         /// Data that only the top octree holds.
@@ -70,12 +70,12 @@ namespace Nez.GeonBit
 
         // nodes that are actually inside this octree node, and not under one of its children
         // this is for child nodes that are too big for the subdivision nodes.
-        private List<GeonNode> _nodesUnderThisOctreeBox = new List<GeonNode>();
+        private List<Node> _nodesUnderThisOctreeBox = new List<Node>();
 
         /// <summary>
         /// Cache of nodes directly under this octree node.
         /// </summary>
-        private GeonNode[] _nodesUnderThisOctreeBoxArray;
+        private Node[] _nodesUnderThisOctreeBoxArray;
 
         /// <summary>
         /// Do we need to update array with nodes directly under this octree?
@@ -199,7 +199,7 @@ namespace Nez.GeonBit
         /// Called every time one of the child nodes recalculate world transformations.
         /// </summary>
         /// <param name="node">The child node that updated.</param>
-        public override void OnChildWorldMatrixChange(GeonNode node)
+        public override void OnChildWorldMatrixChange(Node node)
         {
             // call base world matrix change
             base.OnChildWorldMatrixChange(node);
@@ -214,7 +214,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="node">GeonNode that was added / removed.</param>
         /// <param name="wasAdded">If true its a node that was added, if false, a node that was removed.</param>
-        protected override void OnChildNodesListChange(GeonNode node, bool wasAdded)
+        protected override void OnChildNodesListChange(Node node, bool wasAdded)
         {
             // call base child node list change
             base.OnChildNodesListChange(node, wasAdded);
@@ -235,7 +235,7 @@ namespace Nez.GeonBit
         /// Called whenever we need to push a node to the octree.
         /// </summary>
         /// <param name="node">GeonNode to push into tree.</param>
-        protected void PushToTree(GeonNode node)
+        protected void PushToTree(Node node)
         {
             // since we just got a child node, reset the counter until destroying self
             _countToRemoveSelf = 0;
@@ -283,7 +283,7 @@ namespace Nez.GeonBit
         /// Add a new child node into one of the subdivision branches.
         /// This also create the subdivision octree if needed.
         /// </summary>
-        protected void AddToSubTree(GeonNode node, int x, int y, int z)
+        protected void AddToSubTree(Node node, int x, int y, int z)
         {
             // create the subdivision branch if needed
             if (_childOctrees[x, y, z] == null)
@@ -299,7 +299,7 @@ namespace Nez.GeonBit
         /// Add a node to be directly under this octree node, and not under one of its children.
         /// </summary>
         /// <param name="node"></param>
-        private void AddToSelf(GeonNode node)
+        private void AddToSelf(Node node)
         {
             // add to list of nodes under this bounding box
             _nodesUnderThisOctreeBox.Add(node);
@@ -313,7 +313,7 @@ namespace Nez.GeonBit
         /// Called whenever we need to remove a node from the octree.
         /// </summary>
         /// <param name="node">GeonNode to push into tree.</param>
-        protected void RemoveFromTree(GeonNode node)
+        protected void RemoveFromTree(Node node)
         {
             // remove from all octree nodes
             foreach (var linked in node.LinkedNodes)
@@ -354,7 +354,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Remove a node from this octree list.
         /// </summary>
-        private void RemoveFromSelf(GeonNode node)
+        private void RemoveFromSelf(Node node)
         {
             // remove from list
             _nodesUnderThisOctreeBox.Remove(node);

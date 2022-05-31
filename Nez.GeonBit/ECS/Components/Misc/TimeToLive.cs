@@ -23,7 +23,7 @@ namespace Nez.GeonBit
     /// <summary>
     /// This component destroy game objects after given timer.
     /// </summary>
-    public class TimeToLive : BaseComponent, IUpdatable
+    public class TimeToLive : GeonComponent, IUpdatable
     {
         // how long left to live
         private float _timeToLive = 0f;

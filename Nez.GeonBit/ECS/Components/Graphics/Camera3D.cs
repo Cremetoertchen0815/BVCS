@@ -44,9 +44,9 @@ namespace Nez.GeonBit
     public class Camera3D : Component, IUpdatable
     {
 
-        protected GeonNode _camNode = new GeonNode();
+        protected Node _camNode = new Node();
 
-        public GeonNode Node { get => _camNode; }
+        public Node Node { get => _camNode; }
 
         /// <summary>
         /// Default field of view.
@@ -245,7 +245,7 @@ namespace Nez.GeonBit
             Entity.AddComponent(_camNode);
 
             // if there's no active camera, set self as the active camera
-            if (GeonBitRenderer.ActiveCamera == null) SetAsActive();
+            if (GeonRenderer.ActiveCamera == null) SetAsActive();
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace Nez.GeonBit
         /// Get if this camera is the active camera in its scene.
         /// Note: it doesn't mean that the scene this camera belongs to is currently active.
         /// </summary>
-        public bool IsActiveCamera => GeonBitRenderer.ActiveCamera == this;
+        public bool IsActiveCamera => GeonRenderer.ActiveCamera == this;
 
         /// <summary>
         /// Clone this component.
@@ -380,7 +380,7 @@ namespace Nez.GeonBit
             //}
 
             // update core graphics about new active camera
-            GeonBitRenderer.ActiveCamera = this;
+            GeonRenderer.ActiveCamera = this;
 
         /// <summary>
         /// Called every frame in the Update() loop.
@@ -404,7 +404,7 @@ namespace Nez.GeonBit
             // if there's a lookat target, override current LookAt
             if (LookAtTarget != null)
             {
-                LookAt = LookAtTarget.GetComponent<GeonNode>().WorldPosition + LookAtTargetOffset;
+                LookAt = LookAtTarget.GetComponent<Node>().WorldPosition + LookAtTargetOffset;
             }
 
             // new view matrix

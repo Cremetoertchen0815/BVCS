@@ -24,7 +24,7 @@ namespace Nez.GeonBit
     /// <summary>
     /// Base implementation for most graphics-related components.
     /// </summary>
-    public abstract class BaseRendererComponent : BaseComponent
+    public abstract class BaseRendererComponent : GeonComponent
     {
         /// <summary>
         /// Get the main entity instance of this renderer.

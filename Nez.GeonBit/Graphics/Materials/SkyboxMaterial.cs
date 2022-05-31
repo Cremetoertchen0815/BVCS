@@ -54,7 +54,7 @@ namespace Nez.GeonBit.Materials
             _effect = new BasicEffect(Core.GraphicsDevice)
             {
                 TextureEnabled = true,
-                Texture = GeonBitRenderer.CurrentContentManager.LoadTexture(texture),
+                Texture = GeonRenderer.CurrentContentManager.LoadTexture(texture),
                 LightingEnabled = false
             };
         }
@@ -78,8 +78,8 @@ namespace Nez.GeonBit.Materials
             // create world matrix which is camera position + scale large enough to cover far plane
             _effect.World =
                 (FlipYZ ? Matrix.CreateRotationX((float)Math.PI * -0.5f) : Matrix.Identity) *
-                Matrix.CreateScale(GeonBitRenderer.ActiveCamera.FarClipPlane * Vector3.One * 1.5f) *
-                Matrix.CreateTranslation(GeonBitRenderer.ActiveCamera.Position);
+                Matrix.CreateScale(GeonRenderer.ActiveCamera.FarClipPlane * Vector3.One * 1.5f) *
+                Matrix.CreateTranslation(GeonRenderer.ActiveCamera.Position);
 
         /// <summary>
         /// Update material view matrix.

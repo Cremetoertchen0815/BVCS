@@ -430,7 +430,7 @@ namespace Nez.GeonBit.Materials
             if (LightingEnabled && UseDefaultLightsManager)
             {
                 // get lights in rendering range
-                var lightsManager = GeonBitRenderer.ActiveLightsManager;
+                var lightsManager = GeonRenderer.ActiveLightsManager;
                 var lights = lightsManager.GetLights(this, ref boundingSphere, MaxLights);
                 AmbientLight = lightsManager.AmbientLight;
                 ApplyLights(lights, ref worldMatrix, ref boundingSphere);

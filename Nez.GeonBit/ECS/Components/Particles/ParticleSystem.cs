@@ -87,7 +87,7 @@ namespace Nez.GeonBit.Particles
     /// <summary>
     /// Particle system component that emit predefined particles.
     /// </summary>
-    public class ParticleSystem : BaseComponent, IUpdatable
+    public class ParticleSystem : GeonComponent, IUpdatable
     {
         // list of particle types
         private List<ParticleType> _particles;
@@ -202,13 +202,13 @@ namespace Nez.GeonBit.Particles
                     for (int i = 0; i < toSpawn; ++i)
                     {
                         // create new particle and add to self game object
-                        var newPart = particleType.ParticlePrototype.Clone().GetComponent<GeonNode>();
+                        var newPart = particleType.ParticlePrototype.Clone().GetComponent<Node>();
                         newPart.Parent = Node;
 
                         // if need to add particles to root
                         if (AddParticlesToRoot)
                         {
-                            var newNode = newPart.GetComponent<GeonNode>();
+                            var newNode = newPart.GetComponent<Node>();
                             var position = newNode.WorldPosition;
                             newPart.Parent = null;
                             newNode.Position = position;

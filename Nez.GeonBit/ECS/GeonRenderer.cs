@@ -59,7 +59,7 @@ namespace Nez.GeonBit
     /// <summary>
     /// A global static class for graphic utilities and management.
     /// </summary>
-    public class GeonBitRenderer : Renderer
+    public class GeonRenderer : Renderer
     {
         // sprite batch used by this manager
         private static Batcher _batcher = new Batcher(Core.GraphicsDevice);
@@ -83,19 +83,9 @@ namespace Nez.GeonBit
         /// <summary>
         /// Currently active camera.
         /// </summary>
-        public static Camera3D ActiveCamera;
+        public static Camera3D ActiveCamera { get; set; }
 
         internal static Systems.NezContentManager CurrentContentManager = Core.Content;
-
-        /// <summary>
-        /// The physical world of this scene.
-        /// </summary>
-        public static Physics.PhysicsWorld _physics;
-
-        /// <summary>
-        /// Get the physical world instance.
-        /// </summary>
-        public static Physics.PhysicsWorld Physics => _physics;
 
         /// <summary>
         /// Enable deferred lighting.
@@ -233,17 +223,29 @@ namespace Nez.GeonBit
         {
             StartDrawFrame();
 
-            foreach (var item in scene.EntitiesOfType<Entity>()) item.GetComponent<GeonNode>()?.Draw();
+            foreach (var item in scene.EntitiesOfType<Entity>()) item.GetComponent<Node>()?.Draw();
 
             EndDrawFrame();
+
+            if (ShouldDebugRender && Core.DebugRenderEnabled)
+                DebugRender(scene, null);
 
             // reset stencil state
             Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
         }
 
-        public GeonBitRenderer(int renderOrder, Scene sourceScene) : base(renderOrder)
+
+        private Physics.PhysicsWorld _physics;
+		protected override void DebugRender(Scene scene, Camera cam)
+		{
+
+            if (_physics == null) _physics = scene.GetSceneComponent<Physics.PhysicsWorld>();
+            _physics?.DebugDraw();
+
+        }
+
+		public GeonRenderer(int renderOrder, Scene sourceScene) : base(renderOrder)
         {
-            _physics = new Physics.PhysicsWorld();
             CurrentContentManager = sourceScene.Content;
             RenderingQueues.Initialize();
         }

@@ -26,8 +26,10 @@ namespace Nez.GeonBit
     /// Basic physical component.
     /// All physical components, such as Rigid body, Kinematic body etc, should inherit from this class.
     /// </summary>
-    public abstract class BasePhysicsComponent : BaseComponent
+    public abstract class BasePhysicsComponent : GeonComponent
     {
+        protected PhysicsWorld _world;
+
         /// <summary>
         /// The physical body in the core layer.
         /// </summary>
@@ -200,7 +202,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="prevParent">Previous parent.</param>
         /// <param name="newParent">New parent.</param>
-        public override void OnParentChange(GeonNode prevParent, GeonNode newParent)
+        public override void OnParentChange(Node prevParent, Node newParent)
         {
             // make previous parent scene node no longer use external transformations
             if (prevParent != null)
@@ -232,7 +234,7 @@ namespace Nez.GeonBit
             // remove from physics world
             if (_isInWorld)
             {
-                GeonBitRenderer.Physics.RemoveBody(_PhysicalBody);
+                _world.RemoveBody(_PhysicalBody);
                 _isInWorld = false;
             }
         }
@@ -243,10 +245,14 @@ namespace Nez.GeonBit
         /// </summary>
         public override void OnAddedToEntity()
         {
+            base.OnAddedToEntity();
+
+            _world = Entity.Scene.GetSceneComponent<PhysicsWorld>();
+
             // add to physics world
             if (!_isInWorld)
             {
-                GeonBitRenderer.Physics.AddBody(_PhysicalBody);
+                _world.AddBody(_PhysicalBody);
                 _isInWorld = true;
             }
         }
@@ -256,7 +262,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="copyTo">Other component to copy values to.</param>
         /// <returns>The object we are copying properties to.</returns>
-        public override BaseComponent CopyBasics(BaseComponent copyTo)
+        public override GeonComponent CopyBasics(GeonComponent copyTo)
         {
             var ret = copyTo as BasePhysicsComponent;
             ret.InvokeCollisionEvents = InvokeCollisionEvents;

@@ -107,7 +107,7 @@ namespace Nez.GeonBit
         /// Create the model entity from asset path.
         /// </summary>
         /// <param name="path">Path of the model to load.</param>
-        public SkinnedModelEntity(string path) : this(GeonBitRenderer.CurrentContentManager.Load<Model>(path))
+        public SkinnedModelEntity(string path) : this(GeonRenderer.CurrentContentManager.Load<Model>(path))
         {
         }
 
@@ -256,7 +256,7 @@ namespace Nez.GeonBit
         /// <param name="parent">Parent node that's currently drawing this entity.</param>
         /// <param name="localTransformations">Local transformations from the direct parent node.</param>
         /// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
-        public override void Draw(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
+        public override void Draw(Node parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // call base drawing
             base.Draw(parent, ref localTransformations, ref worldTransformations);

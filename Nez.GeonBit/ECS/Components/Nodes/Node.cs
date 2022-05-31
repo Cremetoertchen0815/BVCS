@@ -27,20 +27,20 @@ namespace Nez.GeonBit
     /// A callback function you can register on different node-related events.
     /// </summary>
     /// <param name="node">The node instance the event came from.</param>
-    public delegate void NodeEventCallback(GeonNode node);
+    public delegate void NodeEventCallback(Node node);
 
     /// <summary>
     /// A basic scene node with transformations. 
     /// You can attach renderable entities to it, or child nodes that will inherit its transformations.
     /// </summary>
-    public class GeonNode : Component
+    public class Node : Component
     {
         /// <summary>
         /// Parent node.
         /// </summary>
-        public GeonNode Parent { get; internal set; } = null;
+        public Node Parent { get; internal set; } = null;
 
-        internal GeonBitRenderer Renderer { get; private set; }
+        internal GeonRenderer Renderer { get; private set; }
 
         /// <summary>
         /// Callback that triggers every time a node updates its matrix.
@@ -66,7 +66,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Special internal list used when we need to link this node to other nodes, like the case with octree.
         /// </summary>
-        private List<GeonNode> _linkedNodes = null;
+        private List<Node> _linkedNodes = null;
 
         /// <summary>
         /// Get the transformations instance directly.
@@ -124,7 +124,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Child nodes under this node.
         /// </summary>
-        protected List<GeonNode> _childNodes = new List<GeonNode>();
+        protected List<Node> _childNodes = new List<Node>();
 
         /// <summary>
         /// Child entities under this node.
@@ -183,12 +183,12 @@ namespace Nez.GeonBit
         /// Add a link to another node.
         /// </summary>
         /// <param name="node"></param>
-        internal void LinkToNode(GeonNode node) => LinkedNodes.Add(node);
+        internal void LinkToNode(Node node) => LinkedNodes.Add(node);
 
         /// <summary>
         /// Create the node.
         /// </summary>
-        public GeonNode() =>
+        public Node() =>
             // count the object creation
             CountAndAlert.Count(CountAndAlert.PredefAlertTypes.AddedOrCreated);
 
@@ -403,18 +403,18 @@ namespace Nez.GeonBit
         /// Other nodes this node is linked to.
         /// This mechanism is used to connect nodes internally.
         /// </summary>
-        internal List<GeonNode> LinkedNodes
+        internal List<Node> LinkedNodes
         {
             get
             {
-                if (_linkedNodes == null) { _linkedNodes = new List<GeonNode>(); }
+                if (_linkedNodes == null) { _linkedNodes = new List<Node>(); }
                 return _linkedNodes;
             }
         }
         #endregion
 
 
-        public override void OnAddedToEntity() => Renderer = Entity.Scene.GetRenderer<GeonBitRenderer>();
+        public override void OnAddedToEntity() => Renderer = Entity.Scene.GetRenderer<GeonRenderer>();
 
         /// <summary>
         /// Add an entity to this node.
@@ -457,7 +457,7 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="node">GeonNode that was added / removed.</param>
         /// <param name="wasAdded">If true its a node that was added, if false, a node that was removed.</param>
-        protected virtual void OnChildNodesListChange(GeonNode node, bool wasAdded)
+        protected virtual void OnChildNodesListChange(Node node, bool wasAdded)
         {
         }
 
@@ -465,7 +465,7 @@ namespace Nez.GeonBit
         /// Add a child node to this node.
         /// </summary>
         /// <param name="node">GeonNode to add.</param>
-        public void AddChildNode(GeonNode node)
+        public Node AddChildNode(Node node)
         {
             // node already got a parent?
             if (node.Parent != null)
@@ -479,13 +479,15 @@ namespace Nez.GeonBit
             // set self as node's parent
             node.SetParent(this);
             OnChildNodesListChange(node, true);
+
+            return node;
         }
 
         /// <summary>
         /// Remove a child node from this node.
         /// </summary>
         /// <param name="node">GeonNode to add.</param>
-        public void RemoveChildNode(GeonNode node)
+        public void RemoveChildNode(Node node)
         {
             // if node is null skip
             if (node == null) { return; }
@@ -510,7 +512,7 @@ namespace Nez.GeonBit
         /// <param name="identifier">GeonNode identifier to search for.</param>
         /// <param name="searchInChildren">If true, will also search recurisvely in children.</param>
         /// <returns>GeonNode with given identifier or null if not found.</returns>
-        public GeonNode FindChildNode(string identifier, bool searchInChildren = true)
+        public Node FindChildNode(string identifier, bool searchInChildren = true)
         {
             foreach (var node in _childNodes)
             {
@@ -591,7 +593,7 @@ namespace Nez.GeonBit
         /// Set the parent of this node.
         /// </summary>
         /// <param name="newParent">New parent node to set, or null for no parent.</param>
-        protected virtual void SetParent(GeonNode newParent)
+        protected virtual void SetParent(Node newParent)
         {
             // count the event
             CountAndAlert.Count(CountAndAlert.PredefAlertTypes.ValueChanged);
@@ -758,7 +760,7 @@ namespace Nez.GeonBit
         /// <returns>GeonNode copy.</returns>
         public override Component Clone()
         {
-            var ret = new GeonNode
+            var ret = new Node
             {
                 Transformations = Transformations.Clone(),
                 Visible = Visible,
@@ -871,7 +873,7 @@ namespace Nez.GeonBit
         /// Called every time one of the child nodes recalculate world transformations.
         /// </summary>
         /// <param name="node">The child node that updated.</param>
-        public virtual void OnChildWorldMatrixChange(GeonNode node)
+        public virtual void OnChildWorldMatrixChange(Node node)
         {
             // mark bounding-box and bounding-sphere as dirty
             _boundingBoxDirty = true;

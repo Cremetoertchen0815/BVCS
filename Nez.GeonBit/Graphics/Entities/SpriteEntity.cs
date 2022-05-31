@@ -238,14 +238,14 @@ namespace Nez.GeonBit
                 if (LockedAxis != null)
                 {
                     newWorld = Matrix.CreateScale(scale) *
-                               Matrix.CreateConstrainedBillboard(position, GeonBitRenderer.ActiveCamera.Position,
+                               Matrix.CreateConstrainedBillboard(position, GeonRenderer.ActiveCamera.Position,
                                LockedAxis.Value, null, null);
                 }
                 // set rotation based on camera without any locked axis
                 else
                 {
                     newWorld = Matrix.CreateScale(scale) *
-                               Matrix.CreateBillboard(position, GeonBitRenderer.ActiveCamera.Position,
+                               Matrix.CreateBillboard(position, GeonRenderer.ActiveCamera.Position,
                                Vector3.Up, null);
                 }
             }
@@ -280,7 +280,7 @@ namespace Nez.GeonBit
         /// <param name="localTransformations">Local transformations from the direct parent node.</param>
         /// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
         /// <returns>Bounding box of the entity.</returns>
-        protected override BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
+        protected override BoundingBox CalcBoundingBox(Node parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // decompose transformations
             worldTransformations.Decompose(out var scale, out var rotation, out var position);
@@ -299,7 +299,7 @@ namespace Nez.GeonBit
         /// <param name="localTransformations">Local transformations from the direct parent node.</param>
         /// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
         /// <returns>Bounding sphere of the entity.</returns>
-        protected override BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
+        protected override BoundingSphere CalcBoundingSphere(Node parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // decompose transformations
             worldTransformations.Decompose(out var scale, out var rotation, out var position);

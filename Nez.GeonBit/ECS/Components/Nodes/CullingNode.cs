@@ -24,7 +24,7 @@ namespace Nez.GeonBit
     /// <summary>
     /// A base culling node class for nodes capable of culling optimization.
     /// </summary>
-    public abstract class CullingNode : GeonNode
+    public abstract class CullingNode : Node
     {
         /// <summary>
         /// The camera frustum to cull by. You need to update this every time the camera frustum changes in order
@@ -74,7 +74,7 @@ namespace Nez.GeonBit
             }
 
             // call draw callback
-            GeonNode.__OnNodeDraw?.Invoke(this);
+            Node.__OnNodeDraw?.Invoke(this);
 
             // draw all child entities
             foreach (var entity in _childEntities)
@@ -114,7 +114,7 @@ namespace Nez.GeonBit
         /// Called every time one of the child nodes recalculate world transformations.
         /// </summary>
         /// <param name="node">The child node that updated.</param>
-        public override void OnChildWorldMatrixChange(GeonNode node)
+        public override void OnChildWorldMatrixChange(Node node)
         {
             base.OnChildWorldMatrixChange(node);
             _isCullingDirty = true;
@@ -144,6 +144,6 @@ namespace Nez.GeonBit
         /// </summary>
         /// <param name="node">GeonNode that was added / removed.</param>
         /// <param name="wasAdded">If true its a node that was added, if false, a node that was removed.</param>
-        protected override void OnChildNodesListChange(GeonNode node, bool wasAdded) => _isCullingDirty = true;
+        protected override void OnChildNodesListChange(Node node, bool wasAdded) => _isCullingDirty = true;
     }
 }

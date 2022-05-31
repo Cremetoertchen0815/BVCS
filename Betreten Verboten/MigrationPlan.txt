@@ -1,3 +1,2 @@
-﻿-Add visibility control to entities
--Rename "renderers" in GeonBit to Renderables
+﻿-Rename "renderers" in GeonBit to Renderables
 -Rename "entities" in GeonBit to Renderers

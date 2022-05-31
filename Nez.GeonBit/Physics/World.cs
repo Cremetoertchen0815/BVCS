@@ -97,7 +97,7 @@ namespace Nez.GeonBit.Physics
     /// <summary>
     /// The physical world.
     /// </summary>
-    public class PhysicsWorld
+    public class PhysicsWorld : SceneComponent
     {
         // physical world components
         private BulletSharp.CollisionConfiguration _config;
@@ -157,6 +157,8 @@ namespace Nez.GeonBit.Physics
 
             // set default gravity
             SetGravity(Vector3.Down * 9.8f);
+
+            Initialize();
         }
 
         /// <summary>
@@ -243,10 +245,10 @@ namespace Nez.GeonBit.Physics
         /// Called every frame to advance physics simulator.
         /// </summary>
         /// <param name="timeFactor">How much to advance this world step (or: time since last frame).</param>
-        public void Update(float timeFactor)
+        public override void Update()
         {
             if (TimeFactor == 0) { return; }
-            _world.StepSimulation(timeFactor * TimeFactor, MaxSubStep, FixedTimeStep);
+            _world.StepSimulation(Time.DeltaTime * TimeFactor, MaxSubStep, FixedTimeStep);
         }
 
         /// <summary>
@@ -405,5 +407,7 @@ namespace Nez.GeonBit.Physics
         /// Debug-draw the physical world.
         /// </summary>
         public void DebugDraw() => _debugDraw.DrawDebugWorld(_world);
+
+
     }
 }

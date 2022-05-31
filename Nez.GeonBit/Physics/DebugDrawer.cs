@@ -135,7 +135,7 @@ namespace Nez.GeonBit.Physics
         public void DrawDebugWorld(DynamicsWorld world)
         {
             // no camera? skip
-            if (GeonBitRenderer.ActiveCamera == null)
+            if (GeonRenderer.ActiveCamera == null)
             {
                 return;
             }
@@ -150,8 +150,8 @@ namespace Nez.GeonBit.Physics
             }
 
             // set effect properties
-            _effect.View = GeonBitRenderer.ActiveCamera.View;
-            _effect.Projection = GeonBitRenderer.ActiveCamera.Projection;
+            _effect.View = GeonRenderer.ActiveCamera.View;
+            _effect.Projection = GeonRenderer.ActiveCamera.Projection;
 
             // set self as the debug drawer
             world.DebugDrawer = this;

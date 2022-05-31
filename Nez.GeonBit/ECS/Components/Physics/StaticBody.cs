@@ -89,19 +89,6 @@ namespace Nez.GeonBit
         /// </summary>
         public override void OnTransformationUpdate() => _body.WorldTransform = Node.WorldTransformations;
 
-        /// <summary>
-        /// Called when this component is effectively removed from scene, eg when removed
-        /// from a GameObject or when its GameObject is removed from scene.
-        /// </summary>
-        public override void OnRemovedFromEntity()
-        {
-            // remove from physics world
-            if (_isInWorld)
-            {
-                GeonBitRenderer.Physics.RemoveBody(_body);
-                _isInWorld = false;
-            }
-        }
 
         /// <summary>
         /// Called when this component is effectively added to scene, eg when added
@@ -109,12 +96,7 @@ namespace Nez.GeonBit
         /// </summary>
         public override void OnAddedToEntity()
         {
-            // add to physics world
-            if (!_isInWorld)
-            {
-                GeonBitRenderer.Physics.AddBody(_body);
-                _isInWorld = true;
-            }
+            base.OnAddedToEntity();
 
             // transform to match game object transformations
             OnTransformationUpdate();

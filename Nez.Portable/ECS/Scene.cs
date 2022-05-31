@@ -84,7 +84,7 @@ namespace Nez
         /// <summary>
         /// default scene Camera
         /// </summary>
-        public Camera Camera;
+        public Camera Camera { get; set; }
 
         public bool Enabled = true;
 
@@ -107,7 +107,7 @@ namespace Nez
         /// Scene-specific ContentManager. Use it to load up any resources that are needed only by this scene. If you have global/multi-scene
         /// resources you can use Core.contentManager to load them since Nez will not ever unload them.
         /// </summary>
-        public readonly NezContentManager Content;
+        public NezContentManager Content { get; protected set; }
 
         /// <summary>
         /// global toggle for PostProcessors
@@ -117,12 +117,12 @@ namespace Nez
         /// <summary>
         /// The list of entities within this Scene
         /// </summary>
-        public readonly EntityList Entities;
+        public EntityList Entities { get; protected set; }
 
         /// <summary>
         /// Manages a list of all the RenderableComponents that are currently on scene Entitys
         /// </summary>
-        public readonly RenderableComponentList RenderableComponents;
+        public RenderableComponentList RenderableComponents { get; protected set; }
 
         /// <summary>
         /// gets the size of the sceneRenderTarget
@@ -301,15 +301,12 @@ namespace Nez
         #endregion
 
 
-        public Scene()
+        public Scene(bool callInitialize = true)
         {
+
             Entities = new EntityList(this);
             RenderableComponents = new RenderableComponentList();
             Content = new NezContentManager();
-
-            //Add camera
-            var cameraEntity = CreateEntity("camera");
-            Camera = cameraEntity.AddComponent(new Camera());
 
 #if DEBUG
             //Implement debug delta analyzer
@@ -319,12 +316,20 @@ namespace Nez
             //Release mouse
             Input.EndlessMouseMode = false;
 
+            //Add camera
+            var cameraEntity = CreateEntity("camera");
+            Camera = cameraEntity.AddComponent(new Camera());
+
+            SetupResolutionPolicy();
+            if (callInitialize) Initialize();
+        }
+
+        protected void SetupResolutionPolicy()
+		{
             // setup our resolution policy. we'll commit it in begin
             _resolutionPolicy = _defaultSceneResolutionPolicy;
             _designResolutionSize = _defaultDesignResolutionSize;
             _designBleedSize = _defaultDesignBleedSize;
-
-            Initialize();
         }
 
 

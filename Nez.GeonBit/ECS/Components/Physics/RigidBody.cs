@@ -45,17 +45,13 @@ namespace Nez.GeonBit
         /// Useful if you want to attach a camera to a gameobject that is affected by this body and want to prevent
         /// "tearing" due to physics / nodes update times.
         /// </summary>
-        public GeonNode SyncUpdateWith;
+        public Node SyncUpdateWith;
 
         // body mass
         private float _mass;
 
         // body inertia
         private float _intertia;
-
-        // did we already updated body in current frame?
-        // this is needed for optimization because draw calls and update calls are not 1:1.
-        private bool _alreadyUpdatedBodyInFrame = false;
 
         /// <summary>
         /// Return true if you want this physical body to take over node transformations.
@@ -190,17 +186,7 @@ namespace Nez.GeonBit
             {
                 _body.ApplyTorque(ConstTorqueForce.Value);
             }
-
-            // reset the "update this frame" flag
-            _alreadyUpdatedBodyInFrame = false;
-
-            // normally, we want to update node before drawing entity.
-            // but if our node is currently not visible or culled out, we still want to update it.
-            // for that purpose we do the test below - if node was not drawn, update from within update() call.
-            if (!Node.WasDrawnThisFrame && NeedToUpdataNode)
-            {
-                UpdateNodeTransforms();
-            }
+            if (NeedToUpdataNode) UpdateNodeTransforms();
         }
 
         /// <summary>
@@ -216,7 +202,6 @@ namespace Nez.GeonBit
             // update transforms
             var newTrans = _body.WorldTransform;
             Node.SetWorldTransforms(ref newTrans);
-            _alreadyUpdatedBodyInFrame = true;
 
             // if have object to sync update with, update the object as well
             if (SyncUpdateWith != null)
@@ -362,43 +347,17 @@ namespace Nez.GeonBit
         }
 
         /// <summary>
-        /// Called when parent GameObject changes (after the change).
-        /// </summary>
-        /// <param name="prevParent">Previous parent.</param>
-        /// <param name="newParent">New parent.</param>
-        public override void OnParentChange(GeonNode prevParent, GeonNode newParent)
-        {
-            _alreadyUpdatedBodyInFrame = false;
-            base.OnParentChange(prevParent, newParent);
-        }
-
-        /// <summary>
-        /// Called when this component is effectively removed from scene, eg when removed
-        /// from a GameObject or when its GameObject is removed from scene.
-        /// </summary>
-        public override void OnRemovedFromEntity()
-        {
-            // remove from physics world
-            if (_isInWorld)
-            {
-                GeonBitRenderer.Physics.RemoveBody(_body);
-                _isInWorld = false;
-            }
-        }
-
-        /// <summary>
         /// Called when this component is effectively added to scene, eg when added
         /// to a GameObject currently in scene or when its GameObject is added to scene.
         /// </summary>
         public override void OnAddedToEntity()
         {
+            base.OnAddedToEntity();
+
+            if (Position == default) Position = Node.Position;
+
             // add to physics world
-            if (!_isInWorld)
-            {
-                GeonBitRenderer.Physics.AddBody(_body);
-                UpdateNodeTransforms();
-                _isInWorld = true;
-            }
+            if (!_isInWorld) UpdateNodeTransforms();
         }
     }
 }

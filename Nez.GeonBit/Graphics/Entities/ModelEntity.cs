@@ -82,7 +82,7 @@ namespace Nez.GeonBit
         /// Create the model entity from asset path.
         /// </summary>
         /// <param name="path">Path of the model to load.</param>
-        public ModelEntity(string path) : this(GeonBitRenderer.CurrentContentManager.Load<Model>(path))
+        public ModelEntity(string path) : this(GeonRenderer.CurrentContentManager.Load<Model>(path))
         {
         }
 
@@ -256,7 +256,7 @@ namespace Nez.GeonBit
         /// <param name="localTransformations">Local transformations from the direct parent node.</param>
         /// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
         /// <returns>Bounding box of the entity.</returns>
-        protected override BoundingSphere CalcBoundingSphere(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
+        protected override BoundingSphere CalcBoundingSphere(Node parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             var modelBoundingSphere = ModelUtils.GetBoundingSphere(Model);
             modelBoundingSphere.Radius *= Math3D.GetScale(ref worldTransformations).Length();
@@ -272,7 +272,7 @@ namespace Nez.GeonBit
         /// <param name="localTransformations">Local transformations from the direct parent node.</param>
         /// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
         /// <returns>Bounding box of the entity.</returns>
-        protected override BoundingBox CalcBoundingBox(GeonNode parent, ref Matrix localTransformations, ref Matrix worldTransformations)
+        protected override BoundingBox CalcBoundingBox(Node parent, ref Matrix localTransformations, ref Matrix worldTransformations)
         {
             // get bounding box in local space
             var modelBoundingBox = ModelUtils.GetBoundingBox(Model);

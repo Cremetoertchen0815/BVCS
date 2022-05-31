@@ -113,15 +113,15 @@ namespace Nez.GeonBit
         public override void DoEntityDraw(ref Matrix worldTransformations)
         {
             // not visible / no active camera? skip
-            if (!Visible || GeonBitRenderer.ActiveCamera == null)
+            if (!Visible || GeonRenderer.ActiveCamera == null)
             {
                 return;
             }
 
             // set world / view / projection matrix
             _boxEffect.World = IsBoxAlreadyTransformed ? Matrix.Identity : worldTransformations;
-            _boxEffect.View = GeonBitRenderer.ActiveCamera.View;
-            _boxEffect.Projection = GeonBitRenderer.ActiveCamera.Projection;
+            _boxEffect.View = GeonRenderer.ActiveCamera.View;
+            _boxEffect.Projection = GeonRenderer.ActiveCamera.Projection;
 
             // Draw the box with a LineList
             foreach (var pass in _boxEffect.CurrentTechnique.Passes)

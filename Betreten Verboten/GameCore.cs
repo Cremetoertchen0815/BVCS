@@ -9,28 +9,61 @@ namespace Betreten_Verboten
         protected override void Initialize()
         {
             base.Initialize();
+            DebugRenderEnabled = true;
             Scene = new FunniTestClass();
 
         }
     }
 
-    public class FunniTestClass : Scene
+    public class FunniTestClass : GeonScene
     {
+
+        VirtualJoystick con;
+        VirtualJoystick cam;
+
         public override void Initialize()
         {
-            base.Initialize();
+            AddSceneComponent(new Nez.GeonBit.Physics.PhysicsWorld());
+            AddRenderer(new GeonRenderer(0, this));
+            Camera.Node.PositionZ = 40;
 
-            AddRenderer(new GeonBitRenderer(0, this));
-
-            var soos = Camera.Entity.AddComponent(new Camera3D());
-            soos.Node.PositionZ = 5;
+            con = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.A, Microsoft.Xna.Framework.Input.Keys.D, Microsoft.Xna.Framework.Input.Keys.W, Microsoft.Xna.Framework.Input.Keys.S));
+            cam = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.Right, Microsoft.Xna.Framework.Input.Keys.Up, Microsoft.Xna.Framework.Input.Keys.Down));
 
             /// Example 3: add 3d shape to scene
-            var lol = CreateEntity("test");
-            lol.AddComponent(new GeonNode());
-            lol.AddComponent(new ShapeRenderer(ShapeMeshes.Sphere));
+            var lol = CreateGeonEntity("test", Vector3.Up * 10);
+            var pop = lol.AddComponent(new ShapeRenderer(ShapeMeshes.Cube));
 
 
+            // create a physical body for the player (note: make it start height in the air so the player ship will "drop" into scene).
+            Vector3 bodySize = new Vector3(2f, 2f, 2f);
+            RigidBody shipPhysics = new RigidBody(new BoxInfo(bodySize), mass: 10f, inertia: 4f, 1f);
+            shipPhysics.SetDamping(0.5f, 0.5f);
+            shipPhysics.Restitution = 1f;
+            shipPhysics.AngularVelocity = new Vector3(5, 5, 0);
+            shipPhysics.LinearVelocity = new Vector3(5, 5, 0);
+            shipPhysics.Gravity = Vector3.Down * 25;
+            shipPhysics.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.Player;
+            lol.AddComponent(shipPhysics);
+
+            var floor = CreateGeonEntity("floor", new Vector3(0, -5, 0));
+            var popp = floor.AddComponent(new ShapeRenderer(ShapeMeshes.Plane));
+            var noo = floor.GetComponent<Node>(false);
+            //noo.Rotation = new Vector3(0, 0, MathHelper.PiOver2);
+            //noo.RotationType = RotationType.Euler;
+            var kin = floor.AddComponent(new KinematicBody(new EndlessPlaneInfo(Vector3.Up)));
+            kin.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.Terrain;
+            kin.Restitution = 0.4f;
+            kin.Friction = 1f;
         }
-    }
+
+        RigidBody nonononode;
+		public override void Update()
+		{
+			base.Update();
+            if (nonononode == null) nonononode = FindEntity("test").GetComponent<RigidBody>();
+            nonononode.AngularVelocity += new Vector3(con.Value.X, 0, con.Value.Y) * 0.4f;
+            Camera.Node.Position += new Vector3(cam.Value.X, 0, cam.Value.Y);
+        }
+	}
 }

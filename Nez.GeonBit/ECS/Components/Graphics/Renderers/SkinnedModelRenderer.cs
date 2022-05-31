@@ -164,7 +164,7 @@ namespace Nez.GeonBit
             // check distance optimization
             if (MaxAnimationDistance != 0f)
             {
-                float distance = Vector3.Distance(GeonBitRenderer.ActiveCamera.Position, Node.WorldPosition);
+                float distance = Vector3.Distance(GeonRenderer.ActiveCamera.Position, Node.WorldPosition);
                 if (distance > MaxAnimationDistance)
                 {
                     return;

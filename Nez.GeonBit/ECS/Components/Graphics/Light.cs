@@ -24,7 +24,7 @@ namespace Nez.GeonBit
     /// <summary>
     /// This component implements a light source.
     /// </summary>
-    public class Light : BaseComponent
+    public class Light : GeonComponent
     {
         // the core light source.
         private Lights.LightSource _light;
@@ -141,7 +141,7 @@ namespace Nez.GeonBit
         public override void OnAddedToEntity()
         {
             base.OnAddedToEntity();
-            GeonBitRenderer.ActiveLightsManager.AddLight(_light);
+            GeonRenderer.ActiveLightsManager.AddLight(_light);
         }
     }
 }

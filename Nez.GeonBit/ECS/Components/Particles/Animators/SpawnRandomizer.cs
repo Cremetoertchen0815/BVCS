@@ -24,7 +24,7 @@ namespace Nez.GeonBit.Particles.Animators
     /// <summary>
     /// A component that create random starting properties, then destroy self.
     /// </summary>
-    public class SpawnRandomizer : BaseComponent
+    public class SpawnRandomizer : GeonComponent
     {
         // all jitters
         private float? _minAlpha = null;

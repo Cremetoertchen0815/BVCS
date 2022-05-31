@@ -85,7 +85,7 @@ namespace Nez.GeonBit.Particles.Animators
     /// <summary>
     /// Base class for all particle animators.
     /// </summary>
-    public abstract class BaseAnimator : BaseComponent
+    public abstract class BaseAnimator : GeonComponent
     {
         /// <summary>
         /// For how long, in seconds, this animator was alive (including initial delay time).
