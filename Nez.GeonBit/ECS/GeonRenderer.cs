@@ -223,9 +223,9 @@ namespace Nez.GeonBit
 		{
 			StartDrawFrame();
 
-			foreach (var item in scene.EntitiesOfType<Entity>())
+			foreach (var item in scene.EntitiesOfType<GeonEntity>())
 			{
-				item.GetComponent<Node>()?.Draw();
+				item.Node?.Draw();
 			}
 
 			EndDrawFrame();

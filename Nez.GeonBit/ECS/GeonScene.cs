@@ -50,7 +50,7 @@ namespace Nez.GeonBit
 		public GeonScene() : base(false)
 		{
 			//Add camera
-			var cameraEntity = CreateEntity("camera");
+			var cameraEntity = CreateGeonEntity("camera");
 			Camera = cameraEntity.AddComponent(new Camera3D());
 
 			Initialize();
@@ -89,8 +89,9 @@ namespace Nez.GeonBit
 			}
 
 			entity.Node.Position = position;
+			entity.Node.Entity = entity;
+			entity.Scene = this;
 
-			entity.AddComponent(entity.Node);
 			return entity;
 		}
 

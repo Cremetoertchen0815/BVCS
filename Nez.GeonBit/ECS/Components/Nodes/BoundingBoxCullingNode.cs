@@ -31,7 +31,7 @@ namespace Nez.GeonBit
 		/// Clone this scene node.
 		/// </summary>
 		/// <returns>GeonNode copy.</returns>
-		public override Component Clone()
+		public override Node Clone()
 		{
 			var ret = new BoundingBoxCullingNode
 			{

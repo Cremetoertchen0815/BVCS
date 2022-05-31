@@ -41,12 +41,8 @@ namespace Nez.GeonBit
 	/// <summary>
 	/// This component implements a 3d camera.
 	/// </summary>
-	public class Camera3D : Component, IUpdatable
+	public class Camera3D : GeonComponent, IUpdatable
 	{
-
-		protected Node _camNode = new Node();
-
-		public Node Node => _camNode;
 
 		/// <summary>
 		/// Default field of view.
@@ -218,8 +214,8 @@ namespace Nez.GeonBit
                 height = deviceManager.PreferredBackBufferHeight;
             }
             */
-			width = Entity.Scene.SceneRenderTargetSize.Width;
-			height = Screen.Height;
+			width = Entity?.Scene.SceneRenderTargetSize.X ?? Screen.Width;
+			height = Entity?.Scene.SceneRenderTargetSize.Y ?? Screen.Height;
 
 			// calc aspect ratio
 			_aspectRatio = width / height;
@@ -242,7 +238,6 @@ namespace Nez.GeonBit
 
 		public override void OnAddedToEntity()
 		{
-			Entity.AddComponent(_camNode);
 
 			// if there's no active camera, set self as the active camera
 			if (GeonRenderer.ActiveCamera == null)
@@ -312,7 +307,7 @@ namespace Nez.GeonBit
 		/// Set a target that the camera will always look at, regardless of scene node rotation.
 		/// Note: this override the LookAt position, even if set.
 		/// </summary>
-		public Entity LookAtTarget = null;
+		public GeonEntity LookAtTarget = null;
 
 		/// <summary>
 		/// If 'LookAtTarget' is used, this vector will be offset from target position.
@@ -407,14 +402,14 @@ namespace Nez.GeonBit
 			// if there's a lookat target, override current LookAt
 			if (LookAtTarget != null)
 			{
-				LookAt = LookAtTarget.GetComponent<Node>().WorldPosition + LookAtTargetOffset;
+				LookAt = LookAtTarget.Node.WorldPosition + LookAtTargetOffset;
 			}
 
 			// new view matrix
 			Matrix view;
 
 			// get current world position (of the camera)
-			var worldPos = _camNode.WorldPosition;
+			var worldPos = Node.WorldPosition;
 
 			// if we have lookat-target, create view from look-at matrix.
 			if (LookAt != null)
@@ -424,7 +419,7 @@ namespace Nez.GeonBit
 			// if we don't have a look-at target, create view matrix from scene node transformations
 			else
 			{
-				var target = worldPos + Vector3.Transform(Vector3.Forward, _camNode.WorldRotation);
+				var target = worldPos + Vector3.Transform(Vector3.Forward, Node.WorldRotation);
 				view = Matrix.CreateLookAt(worldPos, target, Vector3.Up);
 			}
 

@@ -33,14 +33,14 @@ namespace Nez.GeonBit
 	/// A basic scene node with transformations. 
 	/// You can attach renderable entities to it, or child nodes that will inherit its transformations.
 	/// </summary>
-	public class Node : Component
+	public class Node
 	{
 		/// <summary>
 		/// Parent node.
 		/// </summary>
 		public Node Parent { get; internal set; } = null;
 
-		internal GeonRenderer Renderer { get; private set; }
+		public GeonEntity Entity { get; internal set; }
 
 		/// <summary>
 		/// Callback that triggers every time a node updates its matrix.
@@ -414,8 +414,6 @@ namespace Nez.GeonBit
 		#endregion
 
 
-		public override void OnAddedToEntity() => Renderer = Entity.Scene.GetRenderer<GeonRenderer>();
-
 		/// <summary>
 		/// Add an entity to this node.
 		/// </summary>
@@ -758,7 +756,7 @@ namespace Nez.GeonBit
 		/// Clone this scene node.
 		/// </summary>
 		/// <returns>GeonNode copy.</returns>
-		public override Component Clone()
+		public virtual Node Clone()
 		{
 			var ret = new Node
 			{

@@ -2,11 +2,9 @@
 {
 	public class GeonComponent : Component
 	{
-		public Node Node { get; internal set; }
 
-		public override void OnAddedToEntity() => Node = Node ?? Entity.GetComponent<Node>() ?? throw new System.Exception("Entity must have a GeonNode component!");
-
-		public override void OnRemovedFromEntity() => Node?.RemoveComponent(this);
+		public new GeonEntity Entity;
+		public Node Node;
 
 		public virtual GeonComponent CopyBasics(GeonComponent c) => c;
 

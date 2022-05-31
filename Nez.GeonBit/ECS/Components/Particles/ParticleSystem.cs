@@ -29,7 +29,7 @@ namespace Nez.GeonBit.Particles
 		/// <summary>
 		/// The particle GameObject (we emit clone of these objects).
 		/// </summary>
-		public Entity ParticlePrototype { get; private set; }
+		public GeonEntity ParticlePrototype { get; private set; }
 
 		/// <summary>
 		/// How often to spawn particles (value range should be 0f - 1f).
@@ -68,7 +68,7 @@ namespace Nez.GeonBit.Particles
 		/// <param name="minCountPerSpawn">How many min particles to spawn every time.</param>
 		/// <param name="maxCountPerSpawn">How many max particles to spawn every time.</param>
 		/// <param name="frequencyChange">Change frequency over time.</param>
-		public ParticleType(Entity particle, float frequency = 0.01f, uint minCountPerSpawn = 1, uint maxCountPerSpawn = 1, float frequencyChange = 0f)
+		public ParticleType(GeonEntity particle, float frequency = 0.01f, uint minCountPerSpawn = 1, uint maxCountPerSpawn = 1, float frequencyChange = 0f)
 		{
 			ParticlePrototype = particle.Clone();
 			Frequency = frequency;
@@ -190,7 +190,7 @@ namespace Nez.GeonBit.Particles
 				float frequency = particleType.GetFrequency(_timeAlive);
 
 				// negative? skip
-				if (frequency <= 0f) { continue; }
+				if (frequency <= 0f) continue; 
 
 				// check if should spawn particles
 				if (frequency >= Random.NextFloat())
@@ -202,13 +202,13 @@ namespace Nez.GeonBit.Particles
 					for (int i = 0; i < toSpawn; ++i)
 					{
 						// create new particle and add to self game object
-						var newPart = particleType.ParticlePrototype.Clone().GetComponent<Node>();
+						var newPart = particleType.ParticlePrototype.Clone().Node;
 						newPart.Parent = Node;
 
 						// if need to add particles to root
 						if (AddParticlesToRoot)
 						{
-							var newNode = newPart.GetComponent<Node>();
+							var newNode = newPart.Entity.Node;
 							var position = newNode.WorldPosition;
 							newPart.Parent = null;
 							newNode.Position = position;

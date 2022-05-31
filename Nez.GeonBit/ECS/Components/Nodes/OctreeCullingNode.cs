@@ -146,7 +146,7 @@ namespace Nez.GeonBit
 		/// Clone this scene node.
 		/// </summary>
 		/// <returns>GeonNode copy.</returns>
-		public override Component Clone() => new OctreeCullingNode(LastBoundingBox, _octreeData.MaxDivisions);
+		public override Node Clone() => new OctreeCullingNode(LastBoundingBox, _octreeData.MaxDivisions);
 
 		/// <summary>
 		/// Initialize this octree node.
