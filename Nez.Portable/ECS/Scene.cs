@@ -193,6 +193,8 @@ namespace Nez
         /// </summary>
         private Point _designResolutionSize;
 
+        public Point GetDesignResolution() => _designResolutionSize;
+
         /// <summary>
         /// bleed size for <see cref="SceneResolutionPolicy.BestFit"/> resolution policy
         /// </summary>

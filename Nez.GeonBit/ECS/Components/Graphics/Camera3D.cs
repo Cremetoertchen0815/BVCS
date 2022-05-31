@@ -218,7 +218,7 @@ namespace Nez.GeonBit
                 height = deviceManager.PreferredBackBufferHeight;
             }
             */
-			width = Screen.Width;
+			width = Entity.Scene.SceneRenderTargetSize.Width;
 			height = Screen.Height;
 
 			// calc aspect ratio

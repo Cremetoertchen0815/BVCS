@@ -452,7 +452,7 @@ namespace Nez
         /// <returns>Scene.</returns>
         /// <param name="component">Component.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public T AddComponent<T>(T component) where T : Component
+        public virtual T AddComponent<T>(T component) where T : Component
         {
             component.Entity = this;
             Components.Add(component);
@@ -465,7 +465,7 @@ namespace Nez
         /// </summary>
         /// <returns>Scene.</returns>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public T AddComponent<T>() where T : Component, new()
+        public virtual T AddComponent<T>() where T : Component, new()
         {
             var component = new T
             {

@@ -41,9 +41,6 @@ namespace Nez.GeonBit
 		/// </summary>
 		private Physics.CollisionShapes.ICollisionShape _shape = null;
 
-		// are we currently in physics world?
-		private readonly bool _isInWorld = false;
-
 		/// <summary>
 		/// Create the kinematic body from shape info.
 		/// </summary>

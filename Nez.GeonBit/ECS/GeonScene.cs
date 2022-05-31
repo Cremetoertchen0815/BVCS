@@ -59,39 +59,38 @@ namespace Nez.GeonBit
 		public GeonEntity CreateGeonEntity(string name, Vector3 position, NodeType nodeType = NodeType.Simple)
 		{
 			var entity = AddEntity(new GeonEntity(name));
-			Node node;
 
 			switch (nodeType)
 			{
 
 				// scene node with bounding-box culling
 				case NodeType.BoundingBoxCulling:
-					node = new BoundingBoxCullingNode();
+					entity.Node = new BoundingBoxCullingNode();
 					break;
 
 				// scene node with bounding-sphere culling
 				case NodeType.BoundingSphereCulling:
-					node = new BoundingSphereCullingNode();
+					entity.Node = new BoundingSphereCullingNode();
 					break;
 
 				// scene node optimized for particles
 				case NodeType.ParticlesNode:
-					node = new ParticleNode();
+					entity.Node = new ParticleNode();
 					break;
 
 				// scene node with octree-based culling
 				case NodeType.OctreeCulling:
-					node = new OctreeCullingNode(OctreeSceneBoundaries, OctreeMaxDivisions);
+					entity.Node = new OctreeCullingNode(OctreeSceneBoundaries, OctreeMaxDivisions);
 					break;
 				// a simple scene node without culling
 				default:
-					node = new Node();
+					entity.Node = new Node();
 					break;
 			}
 
-			node.Position = position;
+			entity.Node.Position = position;
 
-			entity.AddComponent(node);
+			entity.AddComponent(entity.Node);
 			return entity;
 		}
 
