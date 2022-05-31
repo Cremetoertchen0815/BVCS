@@ -22,39 +22,39 @@ using Microsoft.Xna.Framework;
 namespace Nez.GeonBit.Physics.CollisionShapes
 {
 
-    /// <summary>
-    /// Convex-Hull collision shape.
-    /// </summary>
-    public class CollisionConvexHull : ICollisionShape
-    {
-        /// <summary>
-        /// Create the collision convext hull.
-        /// </summary>
-        /// <param name="points">Points to create convex hull from.</param>
-        public CollisionConvexHull(Vector3[] points)
-        {
-            // convert to bullet vectors and create the shape
-            var bvectors = ToBullet.Vectors(points);
-            _shape = new BulletSharp.ConvexHullShape(bvectors);
-        }
+	/// <summary>
+	/// Convex-Hull collision shape.
+	/// </summary>
+	public class CollisionConvexHull : ICollisionShape
+	{
+		/// <summary>
+		/// Create the collision convext hull.
+		/// </summary>
+		/// <param name="points">Points to create convex hull from.</param>
+		public CollisionConvexHull(Vector3[] points)
+		{
+			// convert to bullet vectors and create the shape
+			var bvectors = ToBullet.Vectors(points);
+			_shape = new BulletSharp.ConvexHullShape(bvectors);
+		}
 
-        /// <summary>
-        /// Clone the physical shape.
-        /// </summary>
-        /// <returns>Cloned shape.</returns>
-        protected override ICollisionShape CloneImp()
-        {
-            // extract points from shape
-            var shape = _shape as BulletSharp.ConvexHullShape;
-            var points = new Vector3[shape.NumPoints];
-            int i = 0;
-            foreach (var point in shape.Points)
-            {
-                points[i++] = ToMonoGame.Vector(point);
-            }
+		/// <summary>
+		/// Clone the physical shape.
+		/// </summary>
+		/// <returns>Cloned shape.</returns>
+		protected override ICollisionShape CloneImp()
+		{
+			// extract points from shape
+			var shape = _shape as BulletSharp.ConvexHullShape;
+			var points = new Vector3[shape.NumPoints];
+			int i = 0;
+			foreach (var point in shape.Points)
+			{
+				points[i++] = ToMonoGame.Vector(point);
+			}
 
-            // create and return clone
-            return new CollisionConvexHull(points);
-        }
-    }
+			// create and return clone
+			return new CollisionConvexHull(points);
+		}
+	}
 }

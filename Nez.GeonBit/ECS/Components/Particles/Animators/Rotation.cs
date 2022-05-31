@@ -21,119 +21,119 @@ using Microsoft.Xna.Framework;
 
 namespace Nez.GeonBit.Particles.Animators
 {
-    /// <summary>
-    /// Rotation animator (change rotation).
-    /// </summary>
-    public class RotationAnimator : BaseAnimator
-    {
-        /// <summary>
-        /// Rotation vector.
-        /// </summary>
-        public Vector3 RotationDirection { get; private set; }
+	/// <summary>
+	/// Rotation animator (change rotation).
+	/// </summary>
+	public class RotationAnimator : BaseAnimator
+	{
+		/// <summary>
+		/// Rotation vector.
+		/// </summary>
+		public Vector3 RotationDirection { get; private set; }
 
-        // store jitters, for cloning
-        private Vector3? _directionJitter = null;
-        private float _minSpeed = 0f;
-        private float _maxSpeed = 0f;
+		// store jitters, for cloning
+		private Vector3? _directionJitter = null;
+		private readonly float _minSpeed = 0f;
+		private readonly float _maxSpeed = 0f;
 
-        /// <summary>
-        /// Rotation speed.
-        /// </summary>
-        public float RotationSpeed { get; private set; }
+		/// <summary>
+		/// Rotation speed.
+		/// </summary>
+		public float RotationSpeed { get; private set; }
 
-        /// <summary>
-        /// Clone this component.
-        /// </summary>
-        /// <returns>Cloned copy of this component.</returns>
-        public override Component Clone() =>
-            // note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitter
-            // so we'll still have the random factor applied on the cloned entity.
-            new RotationAnimator(BaseProperties, RotationDirection,
-                _directionJitter, _minSpeed, _maxSpeed);
+		/// <summary>
+		/// Clone this component.
+		/// </summary>
+		/// <returns>Cloned copy of this component.</returns>
+		public override Component Clone() =>
+			// note: unlike in other clones that try to copy the entity perfectly, in this clone we create new with jitter
+			// so we'll still have the random factor applied on the cloned entity.
+			new RotationAnimator(BaseProperties, RotationDirection,
+				_directionJitter, _minSpeed, _maxSpeed);
 
-        /// <summary>
-        /// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
-        /// </summary>
-        protected override bool IsDone => false;
+		/// <summary>
+		/// Get if this animator is done, unrelated to time to live (for example, if transition is complete).
+		/// </summary>
+		protected override bool IsDone => false;
 
-        /// <summary>
-        /// Create the rotation animator.
-        /// </summary>
-        /// <param name="properties">Base animator properties.</param>
-        /// <param name="rotationDirection">Base rotation vector.</param>
-        /// <param name="directionJitter">Rotation vector jitter.</param>
-        /// <param name="minSpeed">Minimum rotation speed.</param>
-        /// <param name="maxSpeed">Maximum rotation speed.</param>
-        public RotationAnimator(BaseAnimatorProperties properties, Vector3 rotationDirection,
-            Vector3? directionJitter = null, float minSpeed = 1f, float maxSpeed = 1f) : base(properties)
-        {
-            // set basic properties
-            RotationDirection = rotationDirection;
-            _directionJitter = directionJitter;
-            _minSpeed = minSpeed;
-            _maxSpeed = maxSpeed;
-        }
+		/// <summary>
+		/// Create the rotation animator.
+		/// </summary>
+		/// <param name="properties">Base animator properties.</param>
+		/// <param name="rotationDirection">Base rotation vector.</param>
+		/// <param name="directionJitter">Rotation vector jitter.</param>
+		/// <param name="minSpeed">Minimum rotation speed.</param>
+		/// <param name="maxSpeed">Maximum rotation speed.</param>
+		public RotationAnimator(BaseAnimatorProperties properties, Vector3 rotationDirection,
+			Vector3? directionJitter = null, float minSpeed = 1f, float maxSpeed = 1f) : base(properties)
+		{
+			// set basic properties
+			RotationDirection = rotationDirection;
+			_directionJitter = directionJitter;
+			_minSpeed = minSpeed;
+			_maxSpeed = maxSpeed;
+		}
 
-        /// <summary>
-        /// Create the rotation animator.
-        /// </summary>
-        /// <param name="properties">Base animator properties.</param>
-        /// <param name="rotationDirection">Base rotation direction vector.</param>
-        /// <param name="speed">Rotation speed.</param>
-        public RotationAnimator(BaseAnimatorProperties properties, Vector3 rotationDirection, float speed = 1f) : base(properties)
-        {
-            // set basic properties
-            RotationDirection = rotationDirection;
-            _directionJitter = null;
-            _minSpeed = speed;
-            _maxSpeed = speed;
-        }
+		/// <summary>
+		/// Create the rotation animator.
+		/// </summary>
+		/// <param name="properties">Base animator properties.</param>
+		/// <param name="rotationDirection">Base rotation direction vector.</param>
+		/// <param name="speed">Rotation speed.</param>
+		public RotationAnimator(BaseAnimatorProperties properties, Vector3 rotationDirection, float speed = 1f) : base(properties)
+		{
+			// set basic properties
+			RotationDirection = rotationDirection;
+			_directionJitter = null;
+			_minSpeed = speed;
+			_maxSpeed = speed;
+		}
 
-        /// <summary>
-        /// Create the rotation animator for random direction.
-        /// </summary>
-        /// <param name="properties">Base animator properties.</param>
-        /// <param name="speed">Rotation speed.</param>
-        /// <param name="speedJitter">Optional speed jiterring.</param>
-        public RotationAnimator(BaseAnimatorProperties properties, float speed = 1f, float speedJitter = 0f) : base(properties)
-        {
-            // set basic properties
-            RotationDirection = Vector3.Zero;
-            _directionJitter = Vector3.One;
-            _minSpeed = speed;
-            _maxSpeed = speed + speedJitter;
-        }
+		/// <summary>
+		/// Create the rotation animator for random direction.
+		/// </summary>
+		/// <param name="properties">Base animator properties.</param>
+		/// <param name="speed">Rotation speed.</param>
+		/// <param name="speedJitter">Optional speed jiterring.</param>
+		public RotationAnimator(BaseAnimatorProperties properties, float speed = 1f, float speedJitter = 0f) : base(properties)
+		{
+			// set basic properties
+			RotationDirection = Vector3.Zero;
+			_directionJitter = Vector3.One;
+			_minSpeed = speed;
+			_maxSpeed = speed + speedJitter;
+		}
 
-        /// <summary>
-        /// Called when GameObject spawns.
-        /// </summary>
-        public override void OnAddedToEntity()
-        {
-            base.OnAddedToEntity();
+		/// <summary>
+		/// Called when GameObject spawns.
+		/// </summary>
+		public override void OnAddedToEntity()
+		{
+			base.OnAddedToEntity();
 
-            // add rotation jitter
-            if (_directionJitter != null)
-            {
-                RotationDirection = RandDirection(RotationDirection, _directionJitter.Value);
-            }
+			// add rotation jitter
+			if (_directionJitter != null)
+			{
+				RotationDirection = RandDirection(RotationDirection, _directionJitter.Value);
+			}
 
-            // normalize rotation direction
-            RotationDirection.Normalize();
+			// normalize rotation direction
+			RotationDirection.Normalize();
 
-            // random rotation speed
-            RotationSpeed = _minSpeed == _maxSpeed ?
-                _minSpeed :
-                _minSpeed + (Random.NextFloat() * (_maxSpeed - _minSpeed));
+			// random rotation speed
+			RotationSpeed = _minSpeed == _maxSpeed ?
+				_minSpeed :
+				_minSpeed + (Random.NextFloat() * (_maxSpeed - _minSpeed));
 
-            // apply speed
-            RotationDirection *= RotationSpeed;
-        }
+			// apply speed
+			RotationDirection *= RotationSpeed;
+		}
 
-        /// <summary>
-        /// The animator implementation.
-        /// </summary>
-        protected override void DoAnimation(float speedFactor) =>
-            // rotate scene node
-            Node.Rotation += RotationDirection * speedFactor;
-    }
+		/// <summary>
+		/// The animator implementation.
+		/// </summary>
+		protected override void DoAnimation(float speedFactor) =>
+			// rotate scene node
+			Node.Rotation += RotationDirection * speedFactor;
+	}
 }

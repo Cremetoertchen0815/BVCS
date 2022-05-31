@@ -20,32 +20,32 @@
 
 namespace Nez.GeonBit
 {
-    /// <summary>
-    /// A scene node optimized for particles.
-    /// </summary>
-    public class ParticleNode : BoundingSphereCullingNode
-    {
-        /// <summary>
-        /// Clone this scene node.
-        /// </summary>
-        /// <returns>GeonNode copy.</returns>
-        public override Component Clone()
-        {
-            var ret = new ParticleNode
-            {
-                Transformations = Transformations.Clone(),
-                LastBoundingBox = LastBoundingBox,
-                Visible = Visible
-            };
-            return ret;
-        }
+	/// <summary>
+	/// A scene node optimized for particles.
+	/// </summary>
+	public class ParticleNode : BoundingSphereCullingNode
+	{
+		/// <summary>
+		/// Clone this scene node.
+		/// </summary>
+		/// <returns>GeonNode copy.</returns>
+		public override Component Clone()
+		{
+			var ret = new ParticleNode
+			{
+				Transformations = Transformations.Clone(),
+				LastBoundingBox = LastBoundingBox,
+				Visible = Visible
+			};
+			return ret;
+		}
 
-        /// <summary>
-        /// Update culling test / cached data.
-        /// This is called whenever trying to draw this node after transformations update
-        /// </summary>
-        protected override void UpdateCullingData()
-        {
-        }
-    }
+		/// <summary>
+		/// Update culling test / cached data.
+		/// This is called whenever trying to draw this node after transformations update
+		/// </summary>
+		protected override void UpdateCullingData()
+		{
+		}
+	}
 }

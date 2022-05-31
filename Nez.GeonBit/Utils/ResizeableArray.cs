@@ -22,78 +22,78 @@ using System;
 
 namespace Nez.GeonBit
 {
-    /// <summary>
-    /// An array you can add elements to, but still access the internal array object.
-    /// </summary>
-    /// <typeparam name="T">Type to store in array.</typeparam>
-    internal class ResizableArray<T>
-    {
-        /// <summary>
-        /// Items array.
-        /// </summary>
-        private T[] m_array;
+	/// <summary>
+	/// An array you can add elements to, but still access the internal array object.
+	/// </summary>
+	/// <typeparam name="T">Type to store in array.</typeparam>
+	internal class ResizableArray<T>
+	{
+		/// <summary>
+		/// Items array.
+		/// </summary>
+		private T[] m_array;
 
-        /// <summary>
-        /// Items count.
-        /// </summary>
-        private int m_count;
+		/// <summary>
+		/// Items count.
+		/// </summary>
+		private int m_count;
 
-        /// <summary>
-        /// Create the resizable array with default starting size.
-        /// </summary>
-        /// <param name="initialCapacity">Optional initial starting size.</param>
-        public ResizableArray(int? initialCapacity = null) => m_array = new T[initialCapacity ?? 4];
+		/// <summary>
+		/// Create the resizable array with default starting size.
+		/// </summary>
+		/// <param name="initialCapacity">Optional initial starting size.</param>
+		public ResizableArray(int? initialCapacity = null) => m_array = new T[initialCapacity ?? 4];
 
-        /// <summary>
-        /// Get the internal array.
-        /// </summary>
-        public T[] InternalArray => m_array;
+		/// <summary>
+		/// Get the internal array.
+		/// </summary>
+		public T[] InternalArray => m_array;
 
-        /// <summary>
-        /// Get array real size.
-        /// </summary>
-        public int Count => m_count;
+		/// <summary>
+		/// Get array real size.
+		/// </summary>
+		public int Count => m_count;
 
-        /// <summary>
-        /// Clear the array.
-        /// </summary>
-        public void Clear()
-        {
-            m_array = new T[4];
-            m_count = 0;
-        }
+		/// <summary>
+		/// Clear the array.
+		/// </summary>
+		public void Clear()
+		{
+			m_array = new T[4];
+			m_count = 0;
+		}
 
-        /// <summary>
-        /// Remove the extra buffer from array and resize it to actual size.
-        /// </summary>
-        public void Trim() => Array.Resize(ref m_array, m_count);
+		/// <summary>
+		/// Remove the extra buffer from array and resize it to actual size.
+		/// </summary>
+		public void Trim() => Array.Resize(ref m_array, m_count);
 
-        /// <summary>
-        /// Add element to array.
-        /// </summary>
-        /// <param name="element">Element to add.</param>
-        public void Add(T element)
-        {
-            // check if need to enlarge array
-            if (m_count == m_array.Length)
-            {
-                Array.Resize(ref m_array, m_array.Length * 2);
-            }
+		/// <summary>
+		/// Add element to array.
+		/// </summary>
+		/// <param name="element">Element to add.</param>
+		public void Add(T element)
+		{
+			// check if need to enlarge array
+			if (m_count == m_array.Length)
+			{
+				Array.Resize(ref m_array, m_array.Length * 2);
+			}
 
-            // add to array and increase count
-            m_array[m_count++] = element;
-        }
+			// add to array and increase count
+			m_array[m_count++] = element;
+		}
 
-        /// <summary>
-        /// Add range of values to array.
-        /// </summary>
-        /// <param name="values"></param>
-        public void AddRange(T[] values)
-        {
-            foreach (var val in values)
-            {
-                Add(val);
-            }
-        }
-    }
+		/// <summary>
+		/// Add range of values to array.
+		/// </summary>
+		/// <param name="values"></param>
+		public void AddRange(T[] values)
+		{
+			foreach (var val in values)
+			{
+				Add(val);
+			}
+		}
+	}
 }

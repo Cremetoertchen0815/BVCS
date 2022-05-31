@@ -23,113 +23,113 @@ using Nez.GeonBit.Materials;
 
 namespace Nez.GeonBit
 {
-    /// <summary>
-    /// This component combine together several meshes into a single static mesh.
-    /// It reduceses draw calls and optimize renderings.
-    /// Use this for stuff like building rooms, levels, etc. Anything made of multiple static meshes.
-    /// </summary>
-    public class CombinedMeshesRenderer<VertexType> : BaseRendererComponent where VertexType : struct, IVertexType
-    {
-        /// <summary>
-        /// The entity from the core layer used to draw the model.
-        /// </summary>
-        protected CombinedMeshesEntity<VertexType> _entity;
+	/// <summary>
+	/// This component combine together several meshes into a single static mesh.
+	/// It reduceses draw calls and optimize renderings.
+	/// Use this for stuff like building rooms, levels, etc. Anything made of multiple static meshes.
+	/// </summary>
+	public class CombinedMeshesRenderer<VertexType> : BaseRendererComponent where VertexType : struct, IVertexType
+	{
+		/// <summary>
+		/// The entity from the core layer used to draw the model.
+		/// </summary>
+		protected CombinedMeshesEntity<VertexType> _entity;
 
-        /// <summary>
-        /// Get the main entity instance of this renderer.
-        /// </summary>
-        protected override BaseRenderableEntity RenderableEntity => _entity;
+		/// <summary>
+		/// Get the main entity instance of this renderer.
+		/// </summary>
+		protected override BaseRenderableEntity RenderableEntity => _entity;
 
-        /// <summary>
-        /// Build the combined meshes.
-        /// </summary>
-        public void Build()
-        {
-            _entity.Build();
-            Node?.ForceFullUpdate(false);
-        }
+		/// <summary>
+		/// Build the combined meshes.
+		/// </summary>
+		public void Build()
+		{
+			_entity.Build();
+			Node?.ForceFullUpdate(false);
+		}
 
-        /// <summary>
-        /// Add a model from a model renderer component.
-        /// Will use its parent game object world transformations and material.
-        /// </summary>
-        /// <param name="renderer">Renderer component to add.</param>
-        /// <param name="removeAfterAdd">If true, will remove the renderer component from its parent once done.</param>
-        public void AddModelRenderer(ModelRenderer renderer, bool removeAfterAdd)
-        {
-            // add model to combined mesh
-            renderer.Node.ForceFullUpdate(true);
-            AddModel(renderer.Model, renderer.Node.WorldTransformations, renderer.GetFirstMaterial());
+		/// <summary>
+		/// Add a model from a model renderer component.
+		/// Will use its parent game object world transformations and material.
+		/// </summary>
+		/// <param name="renderer">Renderer component to add.</param>
+		/// <param name="removeAfterAdd">If true, will remove the renderer component from its parent once done.</param>
+		public void AddModelRenderer(ModelRenderer renderer, bool removeAfterAdd)
+		{
+			// add model to combined mesh
+			renderer.Node.ForceFullUpdate(true);
+			AddModel(renderer.Model, renderer.Node.WorldTransformations, renderer.GetFirstMaterial());
 
-            // if needed, remove form parent.
-            if (removeAfterAdd)
-            {
-                renderer.Entity.RemoveComponent(renderer);
-            }
-        }
+			// if needed, remove form parent.
+			if (removeAfterAdd)
+			{
+				renderer.Entity.RemoveComponent(renderer);
+			}
+		}
 
-        /// <summary>
-        /// Add a model to the combined mesh.
-        /// Note: will not take effect until 'Build()' is called.
-        /// </summary>
-        /// <param name="model">Model to add.</param>
-        /// <param name="transform">World transformations.</param>
-        /// <param name="material">Optional material to use instead of the model default materials.</param>
-        public void AddModel(Model model, Matrix transform, MaterialAPI material = null) => _entity.AddModel(model, transform, material);
+		/// <summary>
+		/// Add a model to the combined mesh.
+		/// Note: will not take effect until 'Build()' is called.
+		/// </summary>
+		/// <param name="model">Model to add.</param>
+		/// <param name="transform">World transformations.</param>
+		/// <param name="material">Optional material to use instead of the model default materials.</param>
+		public void AddModel(Model model, Matrix transform, MaterialAPI material = null) => _entity.AddModel(model, transform, material);
 
-        /// <summary>
-        /// Add a model mesh to the combined mesh.
-        /// Note: will not take effect until 'Build()' is called.
-        /// </summary>
-        /// <param name="mesh">Mesh to add.</param>
-        /// <param name="transform">World transformations.</param>
-        /// <param name="material">Optional material to use instead of the mesh default materials.</param>
-        public void AddModelMesh(ModelMesh mesh, Matrix transform, MaterialAPI material = null) => _entity.AddModelMesh(mesh, transform, material);
+		/// <summary>
+		/// Add a model mesh to the combined mesh.
+		/// Note: will not take effect until 'Build()' is called.
+		/// </summary>
+		/// <param name="mesh">Mesh to add.</param>
+		/// <param name="transform">World transformations.</param>
+		/// <param name="material">Optional material to use instead of the mesh default materials.</param>
+		public void AddModelMesh(ModelMesh mesh, Matrix transform, MaterialAPI material = null) => _entity.AddModelMesh(mesh, transform, material);
 
-        /// <summary>
-        /// Add array of vertices to the combined mesh.
-        /// Note: will not take effect until 'Build()' is called.
-        /// </summary>
-        /// <param name="vertices">Vertices array to add.</param>
-        /// <param name="indexes">Draw order / indexes array.</param>
-        /// <param name="material">Material to use with the vertices.</param>
-        public void AddVertices(VertexType[] vertices, ushort[] indexes, MaterialAPI material) => _entity.AddVertices(vertices, indexes, material);
+		/// <summary>
+		/// Add array of vertices to the combined mesh.
+		/// Note: will not take effect until 'Build()' is called.
+		/// </summary>
+		/// <param name="vertices">Vertices array to add.</param>
+		/// <param name="indexes">Draw order / indexes array.</param>
+		/// <param name="material">Material to use with the vertices.</param>
+		public void AddVertices(VertexType[] vertices, ushort[] indexes, MaterialAPI material) => _entity.AddVertices(vertices, indexes, material);
 
-        /// <summary>
-        /// Add array of vertices to the combined mesh.
-        /// Note: will not take effect until 'Build()' is called.
-        /// </summary>
-        /// <param name="vertices">Vertices array to add.</param>
-        /// <param name="indexes">Draw order / indexes array.</param>
-        /// <param name="transform">World transformations.</param>
-        /// <param name="material">Material to use with the vertices.</param>
-        public void AddVertices(VertexType[] vertices, ushort[] indexes, Matrix transform, MaterialAPI material) => _entity.AddVertices(vertices, indexes, transform, material);
+		/// <summary>
+		/// Add array of vertices to the combined mesh.
+		/// Note: will not take effect until 'Build()' is called.
+		/// </summary>
+		/// <param name="vertices">Vertices array to add.</param>
+		/// <param name="indexes">Draw order / indexes array.</param>
+		/// <param name="transform">World transformations.</param>
+		/// <param name="material">Material to use with the vertices.</param>
+		public void AddVertices(VertexType[] vertices, ushort[] indexes, Matrix transform, MaterialAPI material) => _entity.AddVertices(vertices, indexes, transform, material);
 
-        /// <summary>
-        /// Clear everything from the combined meshes renderer.
-        /// </summary>
-        public void Clear()
-        {
-            _entity.Clear();
-            Node?.ForceFullUpdate(false);
-        }
+		/// <summary>
+		/// Clear everything from the combined meshes renderer.
+		/// </summary>
+		public void Clear()
+		{
+			_entity.Clear();
+			Node?.ForceFullUpdate(false);
+		}
 
-        /// <summary>
-        /// Create the Combined Meshes Renderer component.
-        /// </summary>
-        public CombinedMeshesRenderer() => _entity = new CombinedMeshesEntity<VertexType>();
+		/// <summary>
+		/// Create the Combined Meshes Renderer component.
+		/// </summary>
+		public CombinedMeshesRenderer() => _entity = new CombinedMeshesEntity<VertexType>();
 
-        /// <summary>
-        /// Clone this component.
-        /// </summary>
-        /// <returns>Cloned copy of this component.</returns>
-        public override Component Clone()
-        {
-            var ret = new CombinedMeshesRenderer<VertexType>
-            {
-                _entity = _entity.Clone()
-            };
-            return ret;
-        }
-    }
+		/// <summary>
+		/// Clone this component.
+		/// </summary>
+		/// <returns>Cloned copy of this component.</returns>
+		public override Component Clone()
+		{
+			var ret = new CombinedMeshesRenderer<VertexType>
+			{
+				_entity = _entity.Clone()
+			};
+			return ret;
+		}
+	}
 }

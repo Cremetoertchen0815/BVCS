@@ -22,8 +22,8 @@
 
 namespace Nez.GeonBit.Animation
 {
-    internal static class NativeExtensions
-    {
+	internal static class NativeExtensions
+	{
 #if USE_NATIVE_ANIMATION
 
         internal static Native.Animation.VertexTypes.VertexIndicesWeightsPositionNormal ToNativeCpuVertex(this VertexIndicesWeightsPositionNormal source)
@@ -72,6 +72,6 @@ namespace Nez.GeonBit.Animation
         }
 
 #endif
-    }
+	}
 }
 

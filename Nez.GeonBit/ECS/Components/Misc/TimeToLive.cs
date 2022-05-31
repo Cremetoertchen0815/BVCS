@@ -20,37 +20,37 @@
 
 namespace Nez.GeonBit
 {
-    /// <summary>
-    /// This component destroy game objects after given timer.
-    /// </summary>
-    public class TimeToLive : GeonComponent, IUpdatable
-    {
-        // how long left to live
-        private float _timeToLive = 0f;
+	/// <summary>
+	/// This component destroy game objects after given timer.
+	/// </summary>
+	public class TimeToLive : GeonComponent, IUpdatable
+	{
+		// how long left to live
+		private float _timeToLive = 0f;
 
-        /// <summary>
-        /// Create the time to live component.
-        /// </summary>
-        /// <param name="timeToLive">How long to wait before destroying this object.</param>
-        public TimeToLive(float timeToLive) => _timeToLive = timeToLive;
+		/// <summary>
+		/// Create the time to live component.
+		/// </summary>
+		/// <param name="timeToLive">How long to wait before destroying this object.</param>
+		public TimeToLive(float timeToLive) => _timeToLive = timeToLive;
 
-        /// <summary>
-        /// Clone this component.
-        /// </summary>
-        /// <returns>Cloned copy of this component.</returns>
-        public override Component Clone() => new TimeToLive(_timeToLive);
+		/// <summary>
+		/// Clone this component.
+		/// </summary>
+		/// <returns>Cloned copy of this component.</returns>
+		public override Component Clone() => new TimeToLive(_timeToLive);
 
-        /// <summary>
-        /// Called every frame in the Update() loop.
-        /// Note: this is called only if GameObject is enabled.
-        /// </summary>
-        public void Update()
-        {
-            _timeToLive -= Time.DeltaTime;
-            if (_timeToLive <= 0f)
-            {
-                Entity.Destroy();
-            }
-        }
-    }
+		/// <summary>
+		/// Called every frame in the Update() loop.
+		/// Note: this is called only if GameObject is enabled.
+		/// </summary>
+		public void Update()
+		{
+			_timeToLive -= Time.DeltaTime;
+			if (_timeToLive <= 0f)
+			{
+				Entity.Destroy();
+			}
+		}
+	}
 }

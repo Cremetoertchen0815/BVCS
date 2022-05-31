@@ -24,41 +24,41 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit.Animation
 {
-    public static class Extensions
-    {
-        /// <summary>
-        /// Get the animations of this model, if loaded.
-        /// </summary>
-        /// <param name="model">Model to get animations for.</param>
-        /// <param name="cloned">If true, will return a clone of the animations.</param>
-        /// <returns></returns>
-        public static Animations GetAnimations(this Model model, bool cloned)
-        {
-            var animations = model.Tag as Animations;
-            if (animations == null) { throw new System.Exception("No animations data found on model. Make sure the model processor is set to an animated model in the content manager."); }
-            if (cloned) { animations = animations.Clone(); }
-            return animations;
-        }
+	public static class Extensions
+	{
+		/// <summary>
+		/// Get the animations of this model, if loaded.
+		/// </summary>
+		/// <param name="model">Model to get animations for.</param>
+		/// <param name="cloned">If true, will return a clone of the animations.</param>
+		/// <returns></returns>
+		public static Animations GetAnimations(this Model model, bool cloned)
+		{
+			var animations = model.Tag as Animations;
+			if (animations == null) { throw new System.Exception("No animations data found on model. Make sure the model processor is set to an animated model in the content manager."); }
+			if (cloned) { animations = animations.Clone(); }
+			return animations;
+		}
 
-        /// <summary>
-        /// Update mesh vertices based on animation (animate in CPU).
-        /// </summary>
-        /// <param name="meshPart">Mesh part to animate.</param>
-        /// <param name="boneTransforms">Bone transformations.</param>
-        public static void UpdateVertices(this ModelMeshPart meshPart, Matrix[] boneTransforms)
-        {
-            var animatedVertexBuffer = meshPart.VertexBuffer as CpuAnimatedVertexBuffer;
-            if (animatedVertexBuffer == null) { throw new System.Exception("Cannot find CPU-animated data. Make sure the model processor is set to CPU-animated model in the content manager."); }
-            animatedVertexBuffer.UpdateVertices(boneTransforms, meshPart.VertexOffset, meshPart.NumVertices);
-        }
+		/// <summary>
+		/// Update mesh vertices based on animation (animate in CPU).
+		/// </summary>
+		/// <param name="meshPart">Mesh part to animate.</param>
+		/// <param name="boneTransforms">Bone transformations.</param>
+		public static void UpdateVertices(this ModelMeshPart meshPart, Matrix[] boneTransforms)
+		{
+			var animatedVertexBuffer = meshPart.VertexBuffer as CpuAnimatedVertexBuffer;
+			if (animatedVertexBuffer == null) { throw new System.Exception("Cannot find CPU-animated data. Make sure the model processor is set to CPU-animated model in the content manager."); }
+			animatedVertexBuffer.UpdateVertices(boneTransforms, meshPart.VertexOffset, meshPart.NumVertices);
+		}
 
-        /// <summary>
-        /// Get if a given model is CPU-animated.
-        /// </summary>
-        public static bool IsCpuAnimated(this Model model)
-        {
-            var animatedVertexBuffer = model.Meshes[0].MeshParts[0].VertexBuffer as CpuAnimatedVertexBuffer;
-            return animatedVertexBuffer != null;
-        }
-    }
+		/// <summary>
+		/// Get if a given model is CPU-animated.
+		/// </summary>
+		public static bool IsCpuAnimated(this Model model)
+		{
+			var animatedVertexBuffer = model.Meshes[0].MeshParts[0].VertexBuffer as CpuAnimatedVertexBuffer;
+			return animatedVertexBuffer != null;
+		}
+	}
 }

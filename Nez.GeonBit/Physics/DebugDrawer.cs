@@ -40,148 +40,148 @@ using System;
 
 namespace Nez.GeonBit.Physics
 {
-    /// <summary>
-    /// Draw Bullet3d physical world using MonoGame graphic device, for debug purposes.
-    /// </summary>
-    public class PhysicsDebugDraw : DebugDraw
-    {
-        // graphic device instance
-        private GraphicsDevice _device;
+	/// <summary>
+	/// Draw Bullet3d physical world using MonoGame graphic device, for debug purposes.
+	/// </summary>
+	public class PhysicsDebugDraw : DebugDraw
+	{
+		// graphic device instance
+		private readonly GraphicsDevice _device;
 
-        // effect to use for debug drawings
-        private BasicEffect _effect = null;
+		// effect to use for debug drawings
+		private BasicEffect _effect = null;
 
-        /// <summary>
-        /// Get if in debug mode or not.
-        /// </summary>
-        public override DebugDrawModes DebugMode
-        {
-            get => DebugDrawModes.DrawWireframe | DebugDrawModes.DrawContactPoints | DebugDrawModes.NoHelpText;
-            set { }
-        }
+		/// <summary>
+		/// Get if in debug mode or not.
+		/// </summary>
+		public override DebugDrawModes DebugMode
+		{
+			get => DebugDrawModes.DrawWireframe | DebugDrawModes.DrawContactPoints | DebugDrawModes.NoHelpText;
+			set { }
+		}
 
-        /// <summary>
-        /// Create the debug drawer.
-        /// </summary>
-        /// <param name="device">MonoGame graphic device.</param>
-        public PhysicsDebugDraw(GraphicsDevice device) => _device = device;
+		/// <summary>
+		/// Create the debug drawer.
+		/// </summary>
+		/// <param name="device">MonoGame graphic device.</param>
+		public PhysicsDebugDraw(GraphicsDevice device) => _device = device;
 
-        /// <summary>
-        /// Draw 3d text.
-        /// </summary>
-        /// <param name="location">Psition to draw.</param>
-        /// <param name="textString">String to render.</param>
+		/// <summary>
+		/// Draw 3d text.
+		/// </summary>
+		/// <param name="location">Psition to draw.</param>
+		/// <param name="textString">String to render.</param>
 
-        public override void Draw3DText(ref BulletSharp.Math.Vector3 location, string textString) => throw new NotImplementedException();
+		public override void Draw3DText(ref BulletSharp.Math.Vector3 location, string textString) => throw new NotImplementedException();
 
-        /// <summary>
-        /// Draw contact point.
-        /// </summary>
-        /// <param name="pointOnB"></param>
-        /// <param name="normalOnB"></param>
-        /// <param name="distance"></param>
-        /// <param name="lifeTime"></param>
-        /// <param name="color"></param>
-        public void DrawContactPoint(ref Vector3 pointOnB, ref Vector3 normalOnB, float distance, int lifeTime, Color color)
-        {
-            var vertices = new[]
-            {
-                new VertexPositionColor(pointOnB, color),
-                new VertexPositionColor(pointOnB + normalOnB, color)
-            };
-            _device.DrawUserPrimitives(PrimitiveType.LineList, vertices, 0, 1);
-        }
+		/// <summary>
+		/// Draw contact point.
+		/// </summary>
+		/// <param name="pointOnB"></param>
+		/// <param name="normalOnB"></param>
+		/// <param name="distance"></param>
+		/// <param name="lifeTime"></param>
+		/// <param name="color"></param>
+		public void DrawContactPoint(ref Vector3 pointOnB, ref Vector3 normalOnB, float distance, int lifeTime, Color color)
+		{
+			var vertices = new[]
+			{
+				new VertexPositionColor(pointOnB, color),
+				new VertexPositionColor(pointOnB + normalOnB, color)
+			};
+			_device.DrawUserPrimitives(PrimitiveType.LineList, vertices, 0, 1);
+		}
 
-        /// <summary>
-        /// Draw a line with a single color.
-        /// </summary>
-        /// <param name="from">Starting pos.</param>
-        /// <param name="to">Ending pos.</param>
-        /// <param name="color">Color.</param>
-        public override void DrawLine(ref BulletSharp.Math.Vector3 from, ref BulletSharp.Math.Vector3 to, ref BulletSharp.Math.Vector3 color)
-        {
-            var col = new Color(color.X, color.Y, color.Z);
-            var vertices = new[]
-            {
-                new VertexPositionColor(ToMonoGame.Vector(from), col),
-                new VertexPositionColor(ToMonoGame.Vector(to), col)
-            };
-            _device.DrawUserPrimitives(PrimitiveType.LineList, vertices, 0, 1);
-        }
+		/// <summary>
+		/// Draw a line with a single color.
+		/// </summary>
+		/// <param name="from">Starting pos.</param>
+		/// <param name="to">Ending pos.</param>
+		/// <param name="color">Color.</param>
+		public override void DrawLine(ref BulletSharp.Math.Vector3 from, ref BulletSharp.Math.Vector3 to, ref BulletSharp.Math.Vector3 color)
+		{
+			var col = new Color(color.X, color.Y, color.Z);
+			var vertices = new[]
+			{
+				new VertexPositionColor(ToMonoGame.Vector(from), col),
+				new VertexPositionColor(ToMonoGame.Vector(to), col)
+			};
+			_device.DrawUserPrimitives(PrimitiveType.LineList, vertices, 0, 1);
+		}
 
-        /// <summary>
-        /// Draw a line with graduate colors.
-        /// </summary>
-        /// <param name="from">Starting pos.</param>
-        /// <param name="to">Ending pos.</param>
-        /// <param name="color">Starting color.</param>
-        /// <param name="color2">Ending color.</param>
-        public void DrawLine(ref Vector3 from, ref Vector3 to, ref Vector3 color, ref Vector3 color2)
-        {
-            var col = new Color(color.X, color.Y, color.Z);
-            var col2 = new Color(color2.X, color2.Y, color2.Z);
-            var vertices = new[]
-            {
-                new VertexPositionColor(from, col),
-                new VertexPositionColor(to, col2)
-            };
-            _device.DrawUserPrimitives(PrimitiveType.LineList, vertices, 0, 1);
-        }
+		/// <summary>
+		/// Draw a line with graduate colors.
+		/// </summary>
+		/// <param name="from">Starting pos.</param>
+		/// <param name="to">Ending pos.</param>
+		/// <param name="color">Starting color.</param>
+		/// <param name="color2">Ending color.</param>
+		public void DrawLine(ref Vector3 from, ref Vector3 to, ref Vector3 color, ref Vector3 color2)
+		{
+			var col = new Color(color.X, color.Y, color.Z);
+			var col2 = new Color(color2.X, color2.Y, color2.Z);
+			var vertices = new[]
+			{
+				new VertexPositionColor(from, col),
+				new VertexPositionColor(to, col2)
+			};
+			_device.DrawUserPrimitives(PrimitiveType.LineList, vertices, 0, 1);
+		}
 
-        /// <summary>
-        /// Draw the physical world.
-        /// </summary>
-        /// <param name="world">World to draw.</param>
-        public void DrawDebugWorld(DynamicsWorld world)
-        {
-            // no camera? skip
-            if (GeonRenderer.ActiveCamera == null)
-            {
-                return;
-            }
+		/// <summary>
+		/// Draw the physical world.
+		/// </summary>
+		/// <param name="world">World to draw.</param>
+		public void DrawDebugWorld(DynamicsWorld world)
+		{
+			// no camera? skip
+			if (GeonRenderer.ActiveCamera == null)
+			{
+				return;
+			}
 
-            // create effect if needed
-            if (_effect == null)
-            {
-                _effect = new BasicEffect(_device)
-                {
-                    VertexColorEnabled = true
-                };
-            }
+			// create effect if needed
+			if (_effect == null)
+			{
+				_effect = new BasicEffect(_device)
+				{
+					VertexColorEnabled = true
+				};
+			}
 
-            // set effect properties
-            _effect.View = GeonRenderer.ActiveCamera.View;
-            _effect.Projection = GeonRenderer.ActiveCamera.Projection;
+			// set effect properties
+			_effect.View = GeonRenderer.ActiveCamera.View;
+			_effect.Projection = GeonRenderer.ActiveCamera.Projection;
 
-            // set self as the debug drawer
-            world.DebugDrawer = this;
+			// set self as the debug drawer
+			world.DebugDrawer = this;
 
-            // reset depth stencil and rasterizer states
-            var RasterizerState = new RasterizerState();
-            var DepthStencilState = new DepthStencilState();
-            RasterizerState.CullMode = CullMode.None;
-            RasterizerState.DepthClipEnable = true;
-            RasterizerState.FillMode = FillMode.Solid;
-            DepthStencilState.DepthBufferEnable = true;
-            DepthStencilState.DepthBufferWriteEnable = true;
-            Core.GraphicsDevice.RasterizerState = RasterizerState;
-            Core.GraphicsDevice.DepthStencilState = DepthStencilState;
+			// reset depth stencil and rasterizer states
+			var RasterizerState = new RasterizerState();
+			var DepthStencilState = new DepthStencilState();
+			RasterizerState.CullMode = CullMode.None;
+			RasterizerState.DepthClipEnable = true;
+			RasterizerState.FillMode = FillMode.Solid;
+			DepthStencilState.DepthBufferEnable = true;
+			DepthStencilState.DepthBufferWriteEnable = true;
+			Core.GraphicsDevice.RasterizerState = RasterizerState;
+			Core.GraphicsDevice.DepthStencilState = DepthStencilState;
 
-            // apply effect
-            foreach (var pass in _effect.CurrentTechnique.Passes)
-            {
-                // draw current pass
-                pass.Apply();
+			// apply effect
+			foreach (var pass in _effect.CurrentTechnique.Passes)
+			{
+				// draw current pass
+				pass.Apply();
 
-                // draw world
-                world.DebugDrawWorld();
-            }
-        }
+				// draw world
+				world.DebugDrawWorld();
+			}
+		}
 
-        /// <summary>
-        /// Report error warning from Bullet3d.
-        /// </summary>
-        /// <param name="warningString">Warning to report.</param>
-        public override void ReportErrorWarning(string warningString) => throw new NotImplementedException();
-    }
+		/// <summary>
+		/// Report error warning from Bullet3d.
+		/// </summary>
+		/// <param name="warningString">Warning to report.</param>
+		public override void ReportErrorWarning(string warningString) => throw new NotImplementedException();
+	}
 }

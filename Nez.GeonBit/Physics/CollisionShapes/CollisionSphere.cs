@@ -20,25 +20,25 @@
 
 namespace Nez.GeonBit.Physics.CollisionShapes
 {
-    /// <summary>
-    /// Sphere shape.
-    /// </summary>
-    public class CollisionSphere : ICollisionShape
-    {
-        /// <summary>
-        /// Create the collision sphere.
-        /// </summary>
-        /// <param name="radius">Sphere radius.</param>
-        public CollisionSphere(float radius = 1f) => _shape = new BulletSharp.SphereShape(radius);
+	/// <summary>
+	/// Sphere shape.
+	/// </summary>
+	public class CollisionSphere : ICollisionShape
+	{
+		/// <summary>
+		/// Create the collision sphere.
+		/// </summary>
+		/// <param name="radius">Sphere radius.</param>
+		public CollisionSphere(float radius = 1f) => _shape = new BulletSharp.SphereShape(radius);
 
-        /// <summary>
-        /// Clone the physical shape.
-        /// </summary>
-        /// <returns>Cloned shape.</returns>
-        protected override ICollisionShape CloneImp()
-        {
-            var shape = _shape as BulletSharp.SphereShape;
-            return new CollisionSphere(shape.Radius);
-        }
-    }
+		/// <summary>
+		/// Clone the physical shape.
+		/// </summary>
+		/// <returns>Cloned shape.</returns>
+		protected override ICollisionShape CloneImp()
+		{
+			var shape = _shape as BulletSharp.SphereShape;
+			return new CollisionSphere(shape.Radius);
+		}
+	}
 }

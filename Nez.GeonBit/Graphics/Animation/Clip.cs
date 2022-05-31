@@ -23,15 +23,15 @@ using System;
 
 namespace Nez.GeonBit.Animation
 {
-    public class Clip
-    {
-        public TimeSpan Duration { get; internal set; }
-        public Keyframe[] Keyframes { get; private set; }
+	public class Clip
+	{
+		public TimeSpan Duration { get; internal set; }
+		public Keyframe[] Keyframes { get; private set; }
 
-        internal Clip(TimeSpan duration, Keyframe[] keyframes)
-        {
-            Duration = duration;
-            Keyframes = keyframes;
-        }
-    }
+		internal Clip(TimeSpan duration, Keyframe[] keyframes)
+		{
+			Duration = duration;
+			Keyframes = keyframes;
+		}
+	}
 }

@@ -20,51 +20,51 @@
 
 namespace Nez.GeonBit.Physics.CollisionShapes
 {
-    /// <summary>
-    /// GeonBit.Physics.CollisionShapes contain all the physical shapes we can use for rigid bodies.
-    /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated]
-    internal class NamespaceDoc
-    {
-    }
+	/// <summary>
+	/// GeonBit.Physics.CollisionShapes contain all the physical shapes we can use for rigid bodies.
+	/// </summary>
+	[System.Runtime.CompilerServices.CompilerGenerated]
+	internal class NamespaceDoc
+	{
+	}
 
-    /// <summary>
-    /// The interface of a physical collision shape.
-    /// </summary>
-    public abstract class ICollisionShape
-    {
-        /// <summary>
-        /// Get the bullet collision shape.
-        /// </summary>
-        internal BulletSharp.CollisionShape BulletCollisionShape => _shape;
+	/// <summary>
+	/// The interface of a physical collision shape.
+	/// </summary>
+	public abstract class ICollisionShape
+	{
+		/// <summary>
+		/// Get the bullet collision shape.
+		/// </summary>
+		internal BulletSharp.CollisionShape BulletCollisionShape => _shape;
 
-        /// <summary>
-        /// Bullet shape instance (must be set by the inheriting class).
-        /// </summary>
-        protected BulletSharp.CollisionShape _shape;
+		/// <summary>
+		/// Bullet shape instance (must be set by the inheriting class).
+		/// </summary>
+		protected BulletSharp.CollisionShape _shape;
 
-        /// <summary>
-        /// Clone the physical shape.
-        /// </summary>
-        /// <returns>Cloned shape.</returns>
-        public ICollisionShape Clone()
-        {
-            // store old scale and reset scaling
-            var oldScale = _shape.LocalScaling;
-            _shape.LocalScaling = BulletSharp.Math.Vector3.One;
+		/// <summary>
+		/// Clone the physical shape.
+		/// </summary>
+		/// <returns>Cloned shape.</returns>
+		public ICollisionShape Clone()
+		{
+			// store old scale and reset scaling
+			var oldScale = _shape.LocalScaling;
+			_shape.LocalScaling = BulletSharp.Math.Vector3.One;
 
-            // call the per-shape cloning logic
-            var ret = CloneImp();
+			// call the per-shape cloning logic
+			var ret = CloneImp();
 
-            // turn scale back to normal and return cloned shape
-            _shape.LocalScaling = oldScale;
-            return ret;
-        }
+			// turn scale back to normal and return cloned shape
+			_shape.LocalScaling = oldScale;
+			return ret;
+		}
 
-        /// <summary>
-        /// Implement per-shape cloning logic.
-        /// </summary>
-        /// <returns>Cloned shape.</returns>
-        protected abstract ICollisionShape CloneImp();
-    }
+		/// <summary>
+		/// Implement per-shape cloning logic.
+		/// </summary>
+		/// <returns>Cloned shape.</returns>
+		protected abstract ICollisionShape CloneImp();
+	}
 }

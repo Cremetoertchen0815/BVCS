@@ -21,56 +21,56 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit.Materials
 {
-    /// <summary>
-    /// A material that support ambient + several point / directional lights.
-    /// </summary>
-    public class NormalMapLitMaterial : LitMaterial
-    {
-        // effect path
-        private static readonly string _effectPath = EffectsPath + "NormalMapLitEffect";
+	/// <summary>
+	/// A material that support ambient + several point / directional lights.
+	/// </summary>
+	public class NormalMapLitMaterial : LitMaterial
+	{
+		// effect path
+		private static readonly string _effectPath = EffectsPath + "NormalMapLitEffect";
 
-        /// <summary>
-        /// Create new lit effect instance.
-        /// </summary>
-        /// <returns>New lit effect instance.</returns>
-        public override Effect CreateEffect() => GeonRenderer.CurrentContentManager.LoadEffect(_effectPath).Clone();
+		/// <summary>
+		/// Create new lit effect instance.
+		/// </summary>
+		/// <returns>New lit effect instance.</returns>
+		public override Effect CreateEffect() => GeonRenderer.CurrentContentManager.LoadEffect(_effectPath).Clone();
 
-        /// <summary>
-        /// Create the lit material from an empty effect.
-        /// </summary>
-        public NormalMapLitMaterial() : base()
-        {
-        }
+		/// <summary>
+		/// Create the lit material from an empty effect.
+		/// </summary>
+		public NormalMapLitMaterial() : base()
+		{
+		}
 
-        /// <summary>
-        /// Create the material from another material instance.
-        /// </summary>
-        /// <param name="other">Other material to clone.</param>
-        public NormalMapLitMaterial(LitMaterial other) : base(other)
-        {
-        }
+		/// <summary>
+		/// Create the material from another material instance.
+		/// </summary>
+		/// <param name="other">Other material to clone.</param>
+		public NormalMapLitMaterial(LitMaterial other) : base(other)
+		{
+		}
 
-        /// <summary>
-        /// Create the lit material.
-        /// </summary>
-        /// <param name="fromEffect">Effect to create material from.</param>
-        public NormalMapLitMaterial(Effect fromEffect) : base(fromEffect)
-        {
-        }
+		/// <summary>
+		/// Create the lit material.
+		/// </summary>
+		/// <param name="fromEffect">Effect to create material from.</param>
+		public NormalMapLitMaterial(Effect fromEffect) : base(fromEffect)
+		{
+		}
 
-        /// <summary>
-        /// Create the lit material.
-        /// </summary>
-        /// <param name="fromEffect">Effect to create material from.</param>
-        /// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-        public NormalMapLitMaterial(BasicEffect fromEffect, bool copyEffectProperties = true) : base(fromEffect, copyEffectProperties)
-        {
-        }
+		/// <summary>
+		/// Create the lit material.
+		/// </summary>
+		/// <param name="fromEffect">Effect to create material from.</param>
+		/// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
+		public NormalMapLitMaterial(BasicEffect fromEffect, bool copyEffectProperties = true) : base(fromEffect, copyEffectProperties)
+		{
+		}
 
-        /// <summary>
-        /// Clone this material.
-        /// </summary>
-        /// <returns>Copy of this material.</returns>
-        public override MaterialAPI Clone() => new NormalMapLitMaterial(this);
-    }
+		/// <summary>
+		/// Clone this material.
+		/// </summary>
+		/// <returns>Copy of this material.</returns>
+		public override MaterialAPI Clone() => new NormalMapLitMaterial(this);
+	}
 }

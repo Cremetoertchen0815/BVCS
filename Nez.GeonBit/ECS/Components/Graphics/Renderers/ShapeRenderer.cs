@@ -20,49 +20,49 @@
 
 namespace Nez.GeonBit
 {
-    /// <summary>
-    /// Possible shapes we can draw.
-    /// </summary>
-    public enum ShapeMeshes
-    {
-        /// <summary>Low-poly sphere shape.</summary>
-        SphereLowPoly,
+	/// <summary>
+	/// Possible shapes we can draw.
+	/// </summary>
+	public enum ShapeMeshes
+	{
+		/// <summary>Low-poly sphere shape.</summary>
+		SphereLowPoly,
 
-        /// <summary>Sphere shape.</summary>
-        Sphere,
+		/// <summary>Sphere shape.</summary>
+		Sphere,
 
-        /// <summary>Sphere with smooth normals.</summary>
-        SphereSmooth,
+		/// <summary>Sphere with smooth normals.</summary>
+		SphereSmooth,
 
-        /// <summary>Cube shape.</summary>
-        Cube,
+		/// <summary>Cube shape.</summary>
+		Cube,
 
-        /// <summary>Cylinder shape.</summary>
-        Cylinder,
+		/// <summary>Cylinder shape.</summary>
+		Cylinder,
 
-        /// <summary>Cone shape.</summary>
-        Cone,
+		/// <summary>Cone shape.</summary>
+		Cone,
 
-        /// <summary>Plane shape.</summary>
-        Plane,
-    }
+		/// <summary>Plane shape.</summary>
+		Plane,
+	}
 
-    /// <summary>
-    /// This component renders a 3D shape from a collection of predefined meshes.
-    /// </summary>
-    public class ShapeRenderer : ModelRenderer
-    {
-        /// <summary>
-        /// Path of the shape models folder.
-        /// </summary>
-        public static readonly string ShapeModelsRoot = "GeonBit.Core/BasicMeshes/";
+	/// <summary>
+	/// This component renders a 3D shape from a collection of predefined meshes.
+	/// </summary>
+	public class ShapeRenderer : ModelRenderer
+	{
+		/// <summary>
+		/// Path of the shape models folder.
+		/// </summary>
+		public static readonly string ShapeModelsRoot = "GeonBit.Core/BasicMeshes/";
 
-        /// <summary>
-        /// Create the model renderer component.
-        /// </summary>
-        /// <param name="shape">Shape to draw.</param>
-        public ShapeRenderer(ShapeMeshes shape) : base(ShapeModelsRoot + shape.ToString())
-        {
-        }
-    }
+		/// <summary>
+		/// Create the model renderer component.
+		/// </summary>
+		/// <param name="shape">Shape to draw.</param>
+		public ShapeRenderer(ShapeMeshes shape) : base(ShapeModelsRoot + shape.ToString())
+		{
+		}
+	}
 }
