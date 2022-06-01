@@ -123,10 +123,10 @@ namespace Nez.GeonBit
 			_boxEffect.View = GeonRenderer.ActiveCamera.View;
 			_boxEffect.Projection = GeonRenderer.ActiveCamera.Projection;
 
-			// Draw the box with a LineList
-			foreach (var pass in _boxEffect.CurrentTechnique.Passes)
-			{
-				pass.Apply();
+            // Draw the box with a LineList
+            for (int i = 0; i < _boxEffect.CurrentTechnique.Passes.Count; i++)
+            {
+				_boxEffect.CurrentTechnique.Passes[i].Apply();
 				Core.GraphicsDevice.DrawUserIndexedPrimitives(
 					PrimitiveType.LineList, _primitiveList, 0, 8,
 					_bBoxIndices, 0, 12);

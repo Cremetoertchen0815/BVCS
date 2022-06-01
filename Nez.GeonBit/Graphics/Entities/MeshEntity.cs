@@ -128,10 +128,11 @@ namespace Nez.GeonBit
 
 			// iterate over mesh parts
 			int index = 0;
-			foreach (var meshPart in Mesh.MeshParts)
+            for (int i = 0; i < Mesh.MeshParts.Count; i++)
 			{
-				// get material for this mesh and effect index
-				var material = GetMaterial(index);
+                var meshPart = Mesh.MeshParts[i];
+                // get material for this mesh and effect index
+                var material = GetMaterial(index);
 
 				// no material found? skip.
 				// note: this can happen if user set alternative materials array with less materials than original mesh file
@@ -158,9 +159,10 @@ namespace Nez.GeonBit
 			// this is to prevent applying the same material more than once
 			if (gotSharedEffects)
 			{
-				foreach (var effect in Mesh.Effects)
+                for (int i = 0; i < Mesh.Effects.Count; i++)
 				{
-					effect.GetMaterial().Apply(ref worldTransformations, ref _lastBoundingSphere);
+                    var effect = Mesh.Effects[i];
+                    effect.GetMaterial().Apply(ref worldTransformations, ref _lastBoundingSphere);
 				}
 			}
 
@@ -170,10 +172,11 @@ namespace Nez.GeonBit
 			// draw the mesh itself
 			Mesh.Draw();
 
-			// restore original effect to mesh parts
-			foreach (var meshPart in Mesh.MeshParts)
+            // restore original effect to mesh parts
+            for (int i = 0; i < Mesh.MeshParts.Count; i++)
 			{
-				meshPart.Effect = meshPart.Tag as Effect;
+                var meshPart = Mesh.MeshParts[i];
+                meshPart.Effect = meshPart.Tag as Effect;
 				meshPart.Tag = null;
 			}
 		}

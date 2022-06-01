@@ -108,8 +108,10 @@ namespace Nez.GeonBit
 			/// <param name="drawOrder">Array of indexes to push.</param>
 			public void PushIndexes(ushort[] drawOrder)
 			{
-				foreach (short currIndex in drawOrder)
-				{
+                for (int i = 0; i < drawOrder.Length; i++)
+                {
+					short currIndex = (short)drawOrder[i];
+
 					// calculate absolute index
 					ushort absIndex = (ushort)(currIndex + (ushort)IndexOffset);
 
@@ -227,10 +229,11 @@ namespace Nez.GeonBit
 			// sanity check - if build was called assert
 			if (_wasBuilt) { throw new System.InvalidOperationException("Cannot add model to Combined Mesh Entity after it was built!"); }
 
-			// iterate model meshes and add them
-			foreach (var mesh in model.Meshes)
+            // iterate model meshes and add them
+            for (int i = 0; i < model.Meshes.Count; i++)
 			{
-				AddModelMesh(mesh, transform, material);
+                var mesh = model.Meshes[i];
+                AddModelMesh(mesh, transform, material);
 			}
 		}
 
@@ -262,11 +265,12 @@ namespace Nez.GeonBit
 			// did we get material override to set?
 			bool externalMaterial = material != null;
 
-			// iterate mesh parts
-			foreach (var meshPart in mesh.MeshParts)
+            // iterate mesh parts
+            for (int i1 = 0; i1 < mesh.MeshParts.Count; i1++)
 			{
-				// if we didn't get external material to use, get material from mesh part.
-				if (!externalMaterial)
+                var meshPart = mesh.MeshParts[i1];
+                // if we didn't get external material to use, get material from mesh part.
+                if (!externalMaterial)
 				{
 					material = meshPart.GetMaterial();
 				}
@@ -410,10 +414,11 @@ namespace Nez.GeonBit
 			// transform all vertices from array
 			int i = 0;
 			var processed = new VertexType[vertices.Length];
-			foreach (var vertex in vertices)
+            for (int j = 0; j < vertices.Length; j++)
 			{
-				// get current vertex
-				var curr = vertex;
+                var vertex = vertices[j];
+                // get current vertex
+                var curr = vertex;
 
 				// apply transformations
 				switch (_vtype)
@@ -504,9 +509,10 @@ namespace Nez.GeonBit
 
 			// add vertices to combined part
 			combinedPart.Vertices.AddRange(vertices);
-			foreach (var vertex in vertices)
+            for (int i = 0; i < vertices.Length; i++)
 			{
-				_allPoints.Add(GetPosition(vertex));
+                var vertex = vertices[i];
+                _allPoints.Add(GetPosition(vertex));
 			}
 
 			// set indexes
@@ -578,7 +584,7 @@ namespace Nez.GeonBit
 			// get graphic device
 			var device = Core.GraphicsDevice;
 
-			// iterate combined parts
+            // iterate combined parts
 			foreach (var combinedPart in _parts)
 			{
 				// get and setup material
@@ -653,11 +659,13 @@ namespace Nez.GeonBit
 			var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 			var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-			// iterate bounding box corners and transform them
-			foreach (var corner in modelBoundingBox.GetCorners())
+            // iterate bounding box corners and transform them
+            var array = modelBoundingBox.GetCorners();
+            for (int i = 0; i < array.Length; i++)
 			{
-				// get curr position and update min / max
-				var currPosition = Vector3.Transform(corner, worldTransformations);
+                var corner = array[i];
+                // get curr position and update min / max
+                var currPosition = Vector3.Transform(corner, worldTransformations);
 				min = Vector3.Min(min, currPosition);
 				max = Vector3.Max(max, currPosition);
 			}

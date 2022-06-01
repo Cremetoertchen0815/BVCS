@@ -367,11 +367,12 @@ namespace Nez.GeonBit
 		/// </summary>
 		public static void DrawQueues()
 		{
-			// iterate drawing queues
-			foreach (var queue in _renderingQueues)
+            // iterate drawing queues
+            for (int i = 0; i < _renderingQueues.Count; i++)
 			{
-				// if no entities in queue, skip
-				if (queue.Entities.Count == 0)
+                var queue = _renderingQueues[i];
+                // if no entities in queue, skip
+                if (queue.Entities.Count == 0)
 				{
 					continue;
 				}
@@ -391,10 +392,11 @@ namespace Nez.GeonBit
 					});
 				}
 
-				// draw all entities in queue
-				foreach (var entityData in queue.Entities)
+                // draw all entities in queue
+                for (int j = 0; j < queue.Entities.Count; j++)
 				{
-					entityData.Entity.DoEntityDraw(ref entityData.World);
+                    var entityData = queue.Entities[j];
+                    entityData.Entity.DoEntityDraw(ref entityData.World);
 				}
 
 				// clear queue

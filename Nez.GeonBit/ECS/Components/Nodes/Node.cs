@@ -809,19 +809,21 @@ namespace Nez.GeonBit
 			// update transformations (only if needed, testing logic is inside)
 			DoTransformationsUpdateIfNeeded();
 
-			// draw all child nodes
-			foreach (var node in _childNodes)
+            // draw all child nodes
+            for (int i = 0; i < _childNodes.Count; i++)
 			{
-				node.Draw(forceEvenIfAlreadyDrawn);
+                var node = _childNodes[i];
+                node.Draw(forceEvenIfAlreadyDrawn);
 			}
 
 			// trigger draw event
 			__OnNodeDraw?.Invoke(this);
 
-			// draw all child entities
-			foreach (var entity in _childEntities)
+            // draw all child entities
+            for (int i = 0; i < _childEntities.Count; i++)
 			{
-				entity.Draw(this, ref _localTransform, ref _worldTransform);
+                var entity = _childEntities[i];
+                entity.Draw(this, ref _localTransform, ref _worldTransform);
 			}
 		}
 

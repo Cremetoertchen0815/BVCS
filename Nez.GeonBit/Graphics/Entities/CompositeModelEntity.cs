@@ -46,6 +46,7 @@ namespace Nez.GeonBit
 		/// Dictionary with all the mesh entities.
 		/// </summary>
 		protected OrderedDictionary _meshes = new OrderedDictionary();
+		protected List<MeshEntity> _meshAccess;
 
 		/// <summary>
 		/// Create the model entity from model instance.
@@ -54,9 +55,16 @@ namespace Nez.GeonBit
 		public CompositeModelEntity(Model model)
 		{
 			Model = model;
-			foreach (var mesh in Model.Meshes)
+            for (int i = 0; i < Model.Meshes.Count; i++)
 			{
-				_meshes[mesh.Name] = new MeshEntity(model, mesh);
+                var mesh = Model.Meshes[i];
+				var meshEnt = new MeshEntity(model, mesh);
+
+				var rem = _meshes.Contains(mesh.Name) ? _meshes[mesh.Name] : null;
+				if (rem is MeshEntity m) _meshAccess.Remove(m);
+
+				_meshes[mesh.Name] = meshEnt;
+				_meshAccess.Add(meshEnt);
 			}
 		}
 
@@ -86,9 +94,9 @@ namespace Nez.GeonBit
 		public List<MeshEntity> GetMeshes()
 		{
 			var ret = new List<MeshEntity>(_meshes.Values.Count);
-			foreach (object mesh in _meshes.Values)
+            for (int i = 0; i < _meshAccess.Count; i++)
 			{
-				ret.Add(mesh as MeshEntity);
+                ret.Add(_meshAccess[i]);
 			}
 			return ret;
 		}
@@ -102,10 +110,10 @@ namespace Nez.GeonBit
 		public List<Materials.MaterialAPI> GetMaterials()
 		{
 			var ret = new List<Materials.MaterialAPI>();
-			foreach (DictionaryEntry entry in _meshes)
+            for (int j = 0; j < _meshAccess.Count; j++)
 			{
-				var mesh = entry.Value as MeshEntity;
-				for (int i = 0; i < mesh.Mesh.MeshParts.Count; ++i)
+                var mesh = _meshAccess[j];
+                for (int i = 0; i < mesh.Mesh.MeshParts.Count; ++i)
 				{
 					var material = mesh.GetMaterial(i);
 					if (!ret.Contains(material))
@@ -134,10 +142,10 @@ namespace Nez.GeonBit
 			// call draw callback
 			OnDraw?.Invoke(this);
 
-			// draw all meshes
-			foreach (DictionaryEntry mesh in _meshes)
+            // draw all meshes
+            for (int i = 0; i < _meshAccess.Count; i++)
 			{
-				GeonRenderer.DrawEntity(mesh.Value as MeshEntity, worldTransformations);
+                GeonRenderer.DrawEntity(_meshAccess[i], worldTransformations);
 			}
 		}
 
@@ -189,11 +197,13 @@ namespace Nez.GeonBit
 			var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 			var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-			// iterate bounding box corners and transform them
-			foreach (var corner in modelBoundingBox.GetCorners())
+            // iterate bounding box corners and transform them
+            var array = modelBoundingBox.GetCorners();
+            for (int i = 0; i < array.Length; i++)
 			{
-				// get curr position and update min / max
-				var currPosition = Vector3.Transform(corner, worldTransformations);
+                var corner = array[i];
+                // get curr position and update min / max
+                var currPosition = Vector3.Transform(corner, worldTransformations);
 				min = Vector3.Min(min, currPosition);
 				max = Vector3.Max(max, currPosition);
 			}

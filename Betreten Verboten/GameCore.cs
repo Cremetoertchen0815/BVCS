@@ -9,7 +9,7 @@ namespace Betreten_Verboten
 		protected override void Initialize()
 		{
 			base.Initialize();
-			DebugRenderEnabled = true;
+			DebugRenderEnabled = false;
 			Scene = new FunniTestClass();
 			Window.AllowUserResizing = true;
 			Scene.SetDefaultDesignResolution(1920, 1080, Scene.SceneResolutionPolicy.BestFit);
@@ -70,7 +70,7 @@ namespace Betreten_Verboten
 			kin.Restitution = 5f;
 			kin.Friction = 1f;
 
-			for (int i = 0; i < 500; i++) SpawnRandomCube();
+			for (int i = 0; i < 1000; i++) SpawnRandomCube();
 		}
 
 		private void SpawnRandomCube()
@@ -82,7 +82,7 @@ namespace Betreten_Verboten
 			p.Restitution = 5f;
 			//p.AngularVelocity = new Vector3(Random.NextFloat(), Random.NextFloat(), Random.NextFloat());
 			//p.LinearVelocity = new Vector3(Random.NextFloat(), Random.NextFloat(), Random.NextFloat());
-			p.Gravity = Vector3.Down * 2;
+			p.Gravity = Vector3.Down * 5;
 			p.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.DynamicObjects;
 			var r = e.AddComponent(new ShapeRenderer(ShapeMeshes.Cube), e.Node);
 			r.Node.Scale = new Vector3(0.5f);

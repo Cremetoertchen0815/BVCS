@@ -223,10 +223,12 @@ namespace Nez.GeonBit
 		{
 			StartDrawFrame();
 
-			foreach (var item in scene.EntitiesOfType<GeonEntity>())
+			var lst = scene.EntitiesOfType<GeonEntity>();
+			foreach (var item in lst)
 			{
 				item.Node?.Draw();
 			}
+			ListPool<GeonEntity>.Free(lst);
 
 			EndDrawFrame();
 

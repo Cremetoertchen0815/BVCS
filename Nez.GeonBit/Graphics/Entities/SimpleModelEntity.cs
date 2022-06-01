@@ -73,13 +73,15 @@ namespace Nez.GeonBit
 			_lastRadius = 0f;
 			float scaleLen = Math3D.GetScale(ref worldTransformations).Length();
 
-			// iterate model meshes
-			foreach (var mesh in Model.Meshes)
+            // iterate model meshes
+            for (int i = 0; i < Model.Meshes.Count; i++)
 			{
-				// iterate over mesh effects and apply them (set world matrix etc)
-				foreach (var effect in mesh.Effects)
+                var mesh = Model.Meshes[i];
+                // iterate over mesh effects and apply them (set world matrix etc)
+                for (int j = 0; j < mesh.Effects.Count; j++)
 				{
-					var material = effect.GetMaterial();
+                    var effect = mesh.Effects[j];
+                    var material = effect.GetMaterial();
 					material.Apply(ref worldTransformations, ref _lastBoundingSphere);
 				}
 
@@ -132,11 +134,13 @@ namespace Nez.GeonBit
 			var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 			var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-			// iterate bounding box corners and transform them
-			foreach (var corner in modelBoundingBox.GetCorners())
+            // iterate bounding box corners and transform them
+            var array = modelBoundingBox.GetCorners();
+            for (int i = 0; i < array.Length; i++)
 			{
-				// get curr position and update min / max
-				var currPosition = Vector3.Transform(corner, worldTransformations);
+                var corner = array[i];
+                // get curr position and update min / max
+                var currPosition = Vector3.Transform(corner, worldTransformations);
 				min = Vector3.Min(min, currPosition);
 				max = Vector3.Max(max, currPosition);
 			}

@@ -141,9 +141,10 @@ namespace Nez.GeonBit
 		public List<Materials.MaterialAPI> GetMaterials()
 		{
 			var ret = new List<Materials.MaterialAPI>();
-			foreach (var mesh in Model.Meshes)
+            for (int j = 0; j < Model.Meshes.Count; j++)
 			{
-				for (int i = 0; i < mesh.MeshParts.Count; ++i)
+                var mesh = Model.Meshes[j];
+                for (int i = 0; i < mesh.MeshParts.Count; ++i)
 				{
 					var material = GetMaterial(mesh.Name, i);
 					if (!ret.Contains(material))
@@ -174,16 +175,20 @@ namespace Nez.GeonBit
 			_lastRadius = 0f;
 			float scaleLen = Math3D.GetScale(ref worldTransformations).Length();
 
-			// iterate model meshes
-			foreach (var mesh in Model.Meshes)
-			{
+            // iterate model meshes
+            for (int k = 0; k < Model.Meshes.Count; k++)
+            {
+				var mesh = Model.Meshes[k];
+
 				// check if in this mesh we have shared materials, eg same effects used for several mesh parts
 				bool gotSharedEffects = mesh.Effects.Count != mesh.MeshParts.Count;
 
 				// iterate over mesh parts
 				int index = 0;
-				foreach (var meshPart in mesh.MeshParts)
-				{
+                for (int j = 0; j < mesh.MeshParts.Count; j++)
+                {
+					var meshPart = mesh.MeshParts[j];
+
 					// get material for this mesh and effect index
 					var material = GetMaterial(mesh.Name, index);
 
@@ -212,9 +217,9 @@ namespace Nez.GeonBit
 				// this is to prevent applying the same material more than once
 				if (gotSharedEffects)
 				{
-					foreach (var effect in mesh.Effects)
+                    for (int i = 0; i < mesh.Effects.Count; i++)
 					{
-						effect.GetMaterial().Apply(ref worldTransformations, ref _lastBoundingSphere);
+						mesh.Effects[i].GetMaterial().Apply(ref worldTransformations, ref _lastBoundingSphere);
 					}
 				}
 
@@ -224,19 +229,20 @@ namespace Nez.GeonBit
 				// iterate mesh parts
 				if (ProcessMeshParts)
 				{
-					foreach (var part in mesh.MeshParts)
+                    for (int i = 0; i < mesh.MeshParts.Count; i++)
 					{
 						// call the before-drawing-mesh-part callback
-						BeforeDrawingMeshPart(part);
+						BeforeDrawingMeshPart(mesh.MeshParts[i]);
 					}
 				}
 
 				// draw the mesh itself
 				mesh.Draw();
 
-				// restore original effect to mesh parts
-				foreach (var meshPart in mesh.MeshParts)
-				{
+                // restore original effect to mesh parts
+                for (int i = 0; i < mesh.MeshParts.Count; i++)
+                {
+					var meshPart = mesh.MeshParts[i];
 					meshPart.Effect = meshPart.Tag as Effect;
 					meshPart.Tag = null;
 				}
@@ -285,8 +291,12 @@ namespace Nez.GeonBit
 			var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
 			// iterate bounding box corners and transform them
-			foreach (var corner in modelBoundingBox.GetCorners())
-			{
+			var corners = modelBoundingBox.GetCorners();
+
+			for (int i = 0; i < corners.Length; i++)
+            {
+				var corner = corners[i];
+
 				// get curr position and update min / max
 				var currPosition = Vector3.Transform(corner, worldTransformations);
 				min = Vector3.Min(min, currPosition);

@@ -261,18 +261,18 @@ namespace Nez.GeonBit
 			// call base drawing
 			base.Draw(parent, ref localTransformations, ref worldTransformations);
 
-			// animate parts by updating bones transformations
-			foreach (DictionaryEntry entry in _meshes)
+            // animate parts by updating bones transformations
+            for (int i = 0; i < _meshAccess.Count; i++)
 			{
-				// get mesh
-				var mesh = entry.Value as MeshEntity;
+                var mesh = _meshAccess[i];
 
-				// iterate parts and set bones
-				foreach (var part in mesh.Mesh.MeshParts)
+                // iterate parts and set bones
+                for (int j = 0; j < mesh.Mesh.MeshParts.Count; j++)
 				{
+                    var part = mesh.Mesh.MeshParts[j];
 
-					// animate mesh parts by chosen method
-					switch (_animateMode)
+                    // animate mesh parts by chosen method
+                    switch (_animateMode)
 					{
 						// animate in gpu
 						case AnimatedMode.GPU:
