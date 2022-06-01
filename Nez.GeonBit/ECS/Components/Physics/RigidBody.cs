@@ -204,13 +204,13 @@ namespace Nez.GeonBit
 		{
 			// update transforms
 			var newTrans = _body.WorldTransform;
-			Node.SetWorldTransforms(ref newTrans);
+			Node.Root.SetWorldTransforms(ref newTrans);
 
 			// if have object to sync update with, update the object as well
 			if (SyncUpdateWith != null)
 			{
-				Node.ForceFullUpdate(false);
-				Node.UpdateTransformations(true);
+				Node.Root.ForceFullUpdate(false);
+				Node.Root.UpdateTransformations(true);
 				SyncUpdateWith.UpdateTransformations(true);
 			}
 		}

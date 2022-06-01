@@ -1,2 +1,6 @@
-﻿-Rename "renderers" in GeonBit to Renderables
--Rename "entities" in GeonBit to Renderers
+﻿( -Rename "renderers" in GeonBit to Renderables
+  -Rename "entities" in GeonBit to Renderers     )
+-Test performance of physics engine & renderer with polygon test
+-Fiddle around with Geon features(especially deferred rendering)
+-Port demo projects over to Nez and make sure they all run
+-Look for posibillity to implement normal maps, reflection maps, light maps & shadows into the renderer

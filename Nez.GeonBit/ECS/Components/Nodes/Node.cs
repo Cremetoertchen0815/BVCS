@@ -40,6 +40,8 @@ namespace Nez.GeonBit
 		/// </summary>
 		public Node Parent { get; internal set; } = null;
 
+		public Node Root => Entity?.Node ?? Parent;
+
 		public GeonEntity Entity { get; internal set; }
 
 		/// <summary>

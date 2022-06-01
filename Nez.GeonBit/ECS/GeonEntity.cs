@@ -41,7 +41,21 @@ namespace Nez.GeonBit
 			if (component is GeonComponent g)
 			{
 				g.Entity = this;
-				g.Node = Node;
+				g.Node =  Node.AddChildNode(new Node());
+			}
+			Components.Add(component);
+			component.Initialize();
+			return component;
+		}
+
+		public T AddComponent<T>(T component, Node parentNode) where T : GeonComponent
+        {
+
+			component.Entity = this;
+			if (component is GeonComponent g)
+			{
+				g.Entity = this;
+				g.Node = (parentNode ?? Node).AddChildNode(new Node());
 			}
 			Components.Add(component);
 			component.Initialize();
