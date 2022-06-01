@@ -105,7 +105,11 @@ namespace Nez.GeonBit.Lights
 		/// <summary>
 		/// Call when a frame ends to resolve the g-buffer.
 		/// </summary>
-		public void FrameEnd() => ResolveGBuffer();
+		public void FrameEnd()
+		{
+			var device = Core.GraphicsDevice;
+			device.SetRenderTarget(null);
+		}
 
 		/// <summary>
 		/// Set the g-buffer.
@@ -114,15 +118,6 @@ namespace Nez.GeonBit.Lights
 		{
 			var device = Core.GraphicsDevice;
 			device.SetRenderTargets(new RenderTargetBinding[] { _rtColorSpecularIntensity, _rtNormalsSpecularPower, _rtDepth });
-		}
-
-		/// <summary>
-		/// Resolve the g-buffer.
-		/// </summary>
-		private void ResolveGBuffer()
-		{
-			var device = Core.GraphicsDevice;
-			device.SetRenderTarget(null);
 		}
 
 		/// <summary>

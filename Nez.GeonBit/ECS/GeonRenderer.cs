@@ -67,18 +67,18 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Deferred lighting manager.
 		/// </summary>
-		private static Lights.DeferredLighting _DeferredLighting;
+		private Lights.DeferredLighting _DeferredLighting;
 
 		/// <summary>
 		/// Manage lights and serve them to materials.
 		/// This object holds the currently active lights manager, given by the scene.
 		/// </summary>
-		public static Lights.ILightsManager ActiveLightsManager { get; internal set; }
+		public static Lights.ILightsManager ActiveLightsManager { get; internal set; } = new Lights.LightsManager();
 
 		/// <summary>
 		/// Return if deferred lighting is currently enabled.
 		/// </summary>
-		public static bool IsDeferredLightingEnabled => _DeferredLighting != null;
+		public bool IsDeferredLightingEnabled => _DeferredLighting != null;
 
 		/// <summary>
 		/// Currently active camera.
@@ -91,7 +91,7 @@ namespace Nez.GeonBit
 		/// Enable deferred lighting.
 		/// </summary>
 		/// <returns></returns>
-		public static void EnableDeferredLighting() => _DeferredLighting = new Lights.DeferredLighting();
+		public void EnableDeferredLighting() => _DeferredLighting = new Lights.DeferredLighting();
 
 		public override void OnSceneBackBufferSizeChanged(int newWidth, int newHeight)
 		{
@@ -124,7 +124,7 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Start a drawing frame.
 		/// </summary>
-		public static void StartDrawFrame()
+		public void StartDrawFrame()
 		{
 			// update culling nodes camera frustum
 			CullingNode.CurrentCameraFrustum = ActiveCamera != null ? ActiveCamera.ViewFrustum : null;
@@ -148,7 +148,7 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Finish a drawing frame and render everything in queues.
 		/// </summary>
-		public static void EndDrawFrame()
+		public void EndDrawFrame()
 		{
 			// draw rendering queues
 			RenderingQueues.DrawQueues();

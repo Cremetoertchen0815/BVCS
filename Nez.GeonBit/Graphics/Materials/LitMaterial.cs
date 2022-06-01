@@ -116,7 +116,7 @@ namespace Nez.GeonBit.Materials
 		/// Create new lit effect instance.
 		/// </summary>
 		/// <returns>New lit effect instance.</returns>
-		public virtual Effect CreateEffect() => Core.Content.LoadEffect(_effectPath).Clone();
+		public virtual Effect CreateEffect() => Core.Content.Load<Effect>(_effectPath).Clone();
 
 		/// <summary>
 		/// Create the lit material from an empty effect.

@@ -75,7 +75,7 @@ namespace GeonBit.Core.Graphics
         /// <summary>
         /// Deferred lighting manager.
         /// </summary>
-        static private Lights.DeferredLighting _DeferredLighting;
+        static private Lights.DeferredLighting _DeferredLighting { get; set; }
 
         /// <summary>
         /// Manage lights and serve them to materials.

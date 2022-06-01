@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
+using Nez.GeonBit.Materials;
 
 namespace Betreten_Verboten
 {
@@ -10,6 +11,7 @@ namespace Betreten_Verboten
 		{
 			base.Initialize();
 			DebugRenderEnabled = false;
+			
 			Scene = new FunniTestClass();
 			Window.AllowUserResizing = true;
 			Scene.SetDefaultDesignResolution(1920, 1080, Scene.SceneResolutionPolicy.BestFit);
@@ -26,8 +28,21 @@ namespace Betreten_Verboten
 
 		public override void Initialize()
 		{
+			ClearColor = Color.Black;
+
 			var phy = AddSceneComponent(new Nez.GeonBit.Physics.PhysicsWorld() { Enabled = false });
 			AddRenderer(new GeonRenderer(0, this));
+			GeonRenderer.ActiveLightsManager.AmbientLight = Color.White * 0.05f;
+			GeonRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.White, Position = new Vector3() });
+			GeonRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.Green, Position = new Vector3(1, 5, 5), Specular = 5 });
+			AddRenderer(new DefaultRenderer(-1));
+			
+			CreateEntity("Waddup").AddComponent(new TextComponent(Graphics.Instance.BitmapFont, "Halloel", new Vector2(50, 50), Color.White));
+
+
+			CreateGeonEntity("sky").AddComponent(new SkyBox(null));
+
+
 			Camera.Node.PositionZ = 40;
 			Camera.Node.PositionY = 5;
 			Core.Schedule(1.5f, x => phy.Enabled = true);
@@ -38,65 +53,32 @@ namespace Betreten_Verboten
 
 			/// Example 3: add 3d shape to scene
 			var lol = CreateGeonEntity("test", Vector3.Up * 5);
-			var pop = lol.AddComponent(new ShapeRenderer(ShapeMeshes.Sphere), lol.Node);
+			var pop = lol.AddComponent(new ModelRenderer("laal"), lol.Node);
+			popo = pop.Node;
 			pop.Node.Scale = new Vector3(2.7f);
-			pop.MaterialOverride.DiffuseColor = Color.Lime;
+			pop.Node.RotationX = 0.2f;
+			pop.Node.RotationY = 0.2f;
+
+			var nuMat = new NormalMapLitMaterial();
+			nuMat.NormalTexture = Content.LoadTexture("normal");
+			nuMat.Texture = Content.LoadTexture("tex");
+			nuMat.TextureEnabled = true;
+			nuMat.DiffuseColor = Color.White;
+			nuMat.SpecularColor = Color.White;
+			nuMat.SpecularPower = 5;
 
 
-			// create a physical body for the player (note: make it start height in the air so the player ship will "drop" into scene).
-			Vector3 bodySize = new Vector3(2f, 2f, 2f);
-			RigidBody shipPhysics = new RigidBody(new SphereInfo(3), mass: 50f, inertia: 4f, 1f);
-			shipPhysics.SetDamping(0.5f, 0.5f);
-			shipPhysics.Restitution = 1f;
-			//shipPhysics.AngularVelocity = new Vector3(5, 5, 0);
-			//shipPhysics.LinearVelocity = new Vector3(5, 5, 0);
-			shipPhysics.Gravity = Vector3.Down * 27;
-			shipPhysics.AngularFactor = new Vector3(4f);
-			shipPhysics.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.Player;
-			lol.AddComponent(shipPhysics);
-
-			var floor = CreateGeonEntity("floor", new Vector3(0, -2, 0));
-			var popp = floor.AddComponent(new ShapeRenderer(ShapeMeshes.Plane), floor.Node);
-			popp.RenderingQueue = RenderingQueue.BackgroundNoCull;
-			popp.MaterialOverride.DiffuseColor = Color.Violet;
-			spos = popp.Node;
-			popp.Node.Rotation = new Vector3(MathHelper.PiOver2, 0, 0);
-			popp.Node.RotationType = RotationType.Euler;
-			popp.Node.Position = new Vector3(0, 2f, 0);
-			popp.Node.Scale = new Vector3(50);
-
-			var kin = floor.AddComponent(new KinematicBody(new EndlessPlaneInfo(Vector3.Up)));
-			kin.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.Terrain;
-			kin.Restitution = 5f;
-			kin.Friction = 1f;
-
-			for (int i = 0; i < 1000; i++) SpawnRandomCube();
+			pop.SetMaterial(nuMat);
 		}
 
-		private void SpawnRandomCube()
+		Node popo;
+
+        public override void Update()
         {
-			var e = CreateGeonEntity("lol", new Vector3(Random.NextFloat() * 40 - 20, 15, Random.NextFloat() * 40 - 20));
-			var p = e.AddComponent(new RigidBody(new BoxInfo(new Vector3(1, 1, 1)), 1, 2, 0.8f));
-			p.Position = e.Node.Position;
-			p.SetDamping(0.8f, 0.8f);
-			p.Restitution = 5f;
-			//p.AngularVelocity = new Vector3(Random.NextFloat(), Random.NextFloat(), Random.NextFloat());
-			//p.LinearVelocity = new Vector3(Random.NextFloat(), Random.NextFloat(), Random.NextFloat());
-			p.Gravity = Vector3.Down * 5;
-			p.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.DynamicObjects;
-			var r = e.AddComponent(new ShapeRenderer(ShapeMeshes.Cube), e.Node);
-			r.Node.Scale = new Vector3(0.5f);
-		}
-
-		Node spos;
-		RigidBody nonononode;
-		public override void Update()
-		{
 			base.Update();
-			if (nonononode == null) nonononode = FindEntity("test").GetComponent<RigidBody>();
-			if (joomp.IsPressed) nonononode.ApplyForce(Vector3.Up * 10000);
-			nonononode.LinearVelocity += new Vector3(con.Value.X, 0, con.Value.Y) * 0.4f;
-			Camera.Node.Position += new Vector3(cam.Value.X, 0, cam.Value.Y) * 0.4f;
+			popo.RotationX += 0.005f;
+			popo.RotationY += 0.005f;
+
 		}
-	}
+    }
 }
