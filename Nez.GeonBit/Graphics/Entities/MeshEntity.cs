@@ -105,8 +105,8 @@ namespace Nez.GeonBit
 				return meshPartIndex < _materials.Length ? _materials[meshPartIndex] : null;
 			}
 
-			// if not found, return the default material attached to the mesh effect (via 'Tag')
-			return Mesh.MeshParts[meshPartIndex].GetMaterial();
+			// if not found, return the default material attached to the default mesh effect (via 'Tag')
+			return Mesh.MeshParts[meshPartIndex].GetDefaultMaterial();
 		}
 
 		/// <summary>
@@ -148,8 +148,8 @@ namespace Nez.GeonBit
 				}
 
 				// apply material effect on the mesh part. note: we first store original effect in mesh part's tag.
-				meshPart.Tag = meshPart.Effect;
-				meshPart.Effect = material.Effect;
+				if (meshPart.Tag == null) meshPart.Tag = meshPart.Effect;
+				if (meshPart.Effect != material.Effect) meshPart.Effect = material.Effect;
 
 				// next index.
 				++index;
@@ -171,14 +171,6 @@ namespace Nez.GeonBit
 
 			// draw the mesh itself
 			Mesh.Draw();
-
-            // restore original effect to mesh parts
-            for (int i = 0; i < Mesh.MeshParts.Count; i++)
-			{
-                var meshPart = Mesh.MeshParts[i];
-                meshPart.Effect = meshPart.Tag as Effect;
-				meshPart.Tag = null;
-			}
 		}
 
 		/// <summary>

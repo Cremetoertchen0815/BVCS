@@ -138,6 +138,11 @@ namespace Nez.GeonBit
 				{
 					effect.Tag = Materials.DefaultMaterialsFactory.GetDefaultMaterial(effect);
 				}
+
+                foreach (var part in mesh.MeshParts)
+                {
+					part.Tag = part.Effect;
+                }
 			}
 
 			// add to processed models dict
@@ -177,5 +182,7 @@ namespace Nez.GeonBit
 		/// Get a material from a mesh part.
 		/// </summary>
 		public static Materials.MaterialAPI GetMaterial(this ModelMeshPart meshpart) => meshpart.Effect.GetMaterial();
+
+		public static Materials.MaterialAPI GetDefaultMaterial(this ModelMeshPart meshpart) => (meshpart.Tag as Effect).GetMaterial();
 	}
 }

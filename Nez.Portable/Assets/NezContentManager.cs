@@ -121,6 +121,10 @@ namespace Nez.Systems
                 {
                     effect.Tag = tagProcessor(effect);
                 }
+                foreach (var part in mesh.MeshParts)
+                {
+                    part.Tag = part.Effect;
+                }
             }
 
             // return the model

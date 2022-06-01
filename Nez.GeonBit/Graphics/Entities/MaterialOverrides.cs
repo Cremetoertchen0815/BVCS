@@ -141,7 +141,7 @@ namespace Nez.GeonBit
 				_materialsCahce.Clear();
 				return material;
 			}
-
+			
 			// we need to apply custom properties. get the cached material with properties or create a new one
 			var original = material;
 			if (!_materialsCahce.TryGetValue(material, out material))

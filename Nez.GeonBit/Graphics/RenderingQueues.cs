@@ -123,7 +123,7 @@ namespace Nez.GeonBit
 	/// <summary>
 	/// A single entity in a rendering queue.
 	/// </summary>
-	internal class EntityInQueue
+	internal struct EntityInQueue
 	{
 		/// <summary>
 		/// The renderable entity.

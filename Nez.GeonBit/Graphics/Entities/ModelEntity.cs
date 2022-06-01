@@ -129,7 +129,7 @@ namespace Nez.GeonBit
 			}
 
 			// if not found, return the default material attached to the mesh effect
-			return Model.Meshes[meshId].MeshParts[meshPartIndex].GetMaterial();
+			return Model.Meshes[meshId].MeshParts[meshPartIndex].GetDefaultMaterial();
 		}
 
 		/// <summary>
@@ -205,9 +205,8 @@ namespace Nez.GeonBit
 						material.Apply(ref worldTransformations, ref _lastBoundingSphere);
 					}
 
-					// apply material effect on the mesh part. note: we first store original effect in mesh part's tag.
-					meshPart.Tag = meshPart.Effect;
-					meshPart.Effect = material.Effect;
+					//Only change effect if really necessairy(every setting of the effect causes Monogame to internally generate enumerator objects)
+					if (meshPart.Effect != material.Effect) meshPart.Effect = material.Effect;
 
 					// next index.
 					++index;
@@ -238,14 +237,6 @@ namespace Nez.GeonBit
 
 				// draw the mesh itself
 				mesh.Draw();
-
-                // restore original effect to mesh parts
-                for (int i = 0; i < mesh.MeshParts.Count; i++)
-                {
-					var meshPart = mesh.MeshParts[i];
-					meshPart.Effect = meshPart.Tag as Effect;
-					meshPart.Tag = null;
-				}
 			}
 		}
 
