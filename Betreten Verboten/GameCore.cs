@@ -32,9 +32,9 @@ namespace Betreten_Verboten
 
 			var phy = AddSceneComponent(new Nez.GeonBit.Physics.PhysicsWorld() { Enabled = false });
 			AddRenderer(new GeonRenderer(0, this));
-			GeonRenderer.ActiveLightsManager.AmbientLight = Color.White * 0.05f;
+			GeonRenderer.ActiveLightsManager.AmbientLight = Color.White * 0.2f;
 			GeonRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.White, Position = new Vector3() });
-			GeonRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.Green, Position = new Vector3(1, 5, 5), Specular = 5 });
+			GeonRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.LightYellow, Position = new Vector3(1, 5, 5), Specular = 1 });
 			AddRenderer(new DefaultRenderer(-1));
 			
 			CreateEntity("Waddup").AddComponent(new TextComponent(Graphics.Instance.BitmapFont, "Halloel", new Vector2(50, 50), Color.White));
@@ -59,16 +59,7 @@ namespace Betreten_Verboten
 			pop.Node.RotationX = 0.2f;
 			pop.Node.RotationY = 0.2f;
 
-			var nuMat = new NormalMapLitMaterial();
-			nuMat.NormalTexture = Content.LoadTexture("normal");
-			nuMat.Texture = Content.LoadTexture("tex");
-			nuMat.TextureEnabled = true;
-			nuMat.DiffuseColor = Color.White;
-			nuMat.SpecularColor = Color.White;
-			nuMat.SpecularPower = 5;
-
-
-			pop.SetMaterial(nuMat);
+			pop.SetMaterial(new NormalMapLitMaterial() { NormalTexture = Content.LoadTexture("normal"), Texture = Content.LoadTexture("tex"), TextureEnabled = true });
 		}
 
 		Node popo;
