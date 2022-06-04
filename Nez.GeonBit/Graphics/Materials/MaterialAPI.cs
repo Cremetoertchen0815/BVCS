@@ -178,6 +178,8 @@ namespace Nez.GeonBit.Materials
 		/// </summary>
 		public virtual bool LightingEnabled => false;
 
+		public bool CastsShadows = true;
+
 		/// <summary>
 		/// Get how many lights this material support on the same render pass.
 		/// </summary>
