@@ -326,7 +326,7 @@ namespace Nez.GeonBit.Materials
 		/// <summary>
 		/// Sampler state.
 		/// </summary>
-		public SamplerState SamplerState = DefaultSamplerState;
+		public SamplerState SamplerState { get; set; } = DefaultSamplerState;
 
 		/// <summary>
 		/// If true, will use the currently set lights manager in `Graphics.GeonBitRenderer.LightsManager` and call ApplyLights() with the lights from manager.

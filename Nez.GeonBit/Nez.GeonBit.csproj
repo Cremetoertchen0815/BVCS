@@ -113,6 +113,7 @@
     <Compile Include="Graphics\Materials\LitMaterialAlphaTest.cs" />
     <Compile Include="Graphics\Materials\MaterialAPI.cs" />
     <Compile Include="Graphics\Materials\NormalMapLitMaterial.cs" />
+    <Compile Include="Graphics\Materials\ReflectiveMaterial.cs" />
     <Compile Include="Graphics\Materials\SkinnedMaterial.cs" />
     <Compile Include="Graphics\Materials\SkyboxMaterial.cs" />
     <Compile Include="Graphics\Materials\SpriteMaterial.cs" />

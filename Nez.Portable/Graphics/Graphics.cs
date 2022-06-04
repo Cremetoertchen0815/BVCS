@@ -32,7 +32,6 @@ namespace Nez
 
         public Sprite CircleTexture;
 
-
         public Graphics()
         {
         }

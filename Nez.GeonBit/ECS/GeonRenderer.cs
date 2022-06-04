@@ -85,6 +85,8 @@ namespace Nez.GeonBit
 		/// </summary>
 		public static Camera3D ActiveCamera { get; set; }
 
+		private static Scene _scene;
+
 		internal static Systems.NezContentManager CurrentContentManager = Core.Content;
 
 		/// <summary>
@@ -124,7 +126,7 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Start a drawing frame.
 		/// </summary>
-		public void StartDrawFrame()
+		public void StartDrawFrame(Matrix? viewMatrix = null, Matrix? projectionMatrix = null)
 		{
 			// update culling nodes camera frustum
 			CullingNode.CurrentCameraFrustum = ActiveCamera != null ? ActiveCamera.ViewFrustum : null;
@@ -132,7 +134,7 @@ namespace Nez.GeonBit
 			// update materials view and projection matrix
 			if (ActiveCamera != null)
 			{
-				Materials.MaterialAPI.SetViewProjection(ActiveCamera.View, ActiveCamera.Projection);
+				Materials.MaterialAPI.SetViewProjection(viewMatrix ?? ActiveCamera.View, projectionMatrix ?? ActiveCamera.Projection);
 			}
 
 			// start frame for deferred lighting manager
@@ -241,6 +243,57 @@ namespace Nez.GeonBit
 			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 		}
 
+		public void RenderFromPoint(Vector3 position, Vector3 direction, Vector3 up, Matrix projMatrix)
+		{
+			StartDrawFrame(Matrix.CreateLookAt(position, position + direction, up), projMatrix);
+
+			var lst = _scene.EntitiesOfType<GeonEntity>();
+			foreach (var item in lst)
+			{
+				item.Node?.Draw();
+			}
+			ListPool<GeonEntity>.Free(lst);
+
+			EndDrawFrame();
+
+			// reset stencil state
+			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+		}
+
+		public TextureCube CaptureEnvironmentMap(RenderTargetCube r, Vector3 position, int size)
+        {
+			var proj = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, 1f, 1f, 1000f);
+			//Core.GraphicsDevice.SetRenderTarget(rr);
+			Core.GraphicsDevice.SetRenderTarget(r, CubeMapFace.PositiveX);
+			//Core.GraphicsDevice.Clear(Color.Black);
+			RenderFromPoint(position, Vector3.Left, Vector3.Up, proj);
+			//rr.SaveAsPng(System.IO.File.OpenWrite("C:/Users/Creme/Desktop/cubemap/left_b.png"), 1000, 1000);
+			Core.GraphicsDevice.SetRenderTarget(r, CubeMapFace.NegativeX);
+			//Core.GraphicsDevice.Clear(Color.Black);
+			RenderFromPoint(position, Vector3.Right, Vector3.Up, proj);
+			//rr.SaveAsPng(System.IO.File.OpenWrite("C:/Users/Creme/Desktop/cubemap/right_b.png"), 1000, 1000);
+			Core.GraphicsDevice.SetRenderTarget(r, CubeMapFace.PositiveY);
+			//Core.GraphicsDevice.Clear(Color.Black);
+			RenderFromPoint(position, Vector3.Up, Vector3.Backward, proj);
+			//rr.SaveAsPng(System.IO.File.OpenWrite("C:/Users/Creme/Desktop/cubemap/top_b.png"), 1000, 1000);
+			Core.GraphicsDevice.SetRenderTarget(r, CubeMapFace.NegativeY);
+			//Core.GraphicsDevice.Clear(Color.Black);
+			RenderFromPoint(position, Vector3.Down, Vector3.Forward, proj);
+			//rr.SaveAsPng(System.IO.File.OpenWrite("C:/Users/Creme/Desktop/cubemap/down_b.png"), 1000, 1000);
+			Core.GraphicsDevice.SetRenderTarget(r, CubeMapFace.PositiveZ);
+			//Core.GraphicsDevice.Clear(Color.Black);
+			RenderFromPoint(position, Vector3.Forward, Vector3.Up, proj);
+			//rr.SaveAsPng(System.IO.File.OpenWrite("C:/Users/Creme/Desktop/cubemap/front_b.png"), 1000, 1000);
+			Core.GraphicsDevice.SetRenderTarget(r, CubeMapFace.NegativeZ);
+			//Core.GraphicsDevice.Clear(Color.Black);
+			RenderFromPoint(position, Vector3.Backward, Vector3.Up, proj);
+			//rr.SaveAsPng(System.IO.File.OpenWrite("C:/Users/Creme/Desktop/cubemap/back_b.png"), 1000, 1000);
+
+
+
+			return r;
+        }
+
 
 		private Physics.PhysicsWorld _physics;
 		protected override void DebugRender(Scene scene, Camera cam)
@@ -257,6 +310,7 @@ namespace Nez.GeonBit
 
 		public GeonRenderer(int renderOrder, Scene sourceScene) : base(renderOrder)
 		{
+			_scene = sourceScene;
 			CurrentContentManager = sourceScene.Content;
 			RenderingQueues.Initialize();
 		}

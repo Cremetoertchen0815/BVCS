@@ -93,6 +93,13 @@ namespace Nez
             set => _graphicsManager.SupportedOrientations = value;
         }
 
+        public static bool EnableAA
+        {
+            get => _graphicsManager.PreferMultiSampling;
+            set => _graphicsManager.PreferMultiSampling = value;
+        }
+
+
         public static void ApplyChanges() => _graphicsManager.ApplyChanges();
 
         public static GraphicsDeviceManager GetManager() => _graphicsManager;
