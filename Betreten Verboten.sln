@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeonBit", "GeonBit\GeonBit.csproj", "{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betreten Verboten", "Betreten Verboten\Betreten Verboten.csproj", "{4F0C1790-E472-4901-BC38-562F9206FE68}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeonBit.UI.DataTypes", "GeonBit\Libs\DataTypes\GeonBit.UI.DataTypes.csproj", "{E565AE63-EFFC-4019-93E8-325961284B22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nez", "Nez.Portable\Nez.csproj", "{2E7F8CF8-790F-4781-A73B-222FAC71B3C7}"
 EndProject
@@ -25,18 +21,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Debug|x64.Build.0 = Debug|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Debug|x86.Build.0 = Debug|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Release|x64.ActiveCfg = Release|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Release|x64.Build.0 = Release|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Release|x86.ActiveCfg = Release|Any CPU
-		{7E8D53FB-E5EB-4C64-99A7-3867C1D7621E}.Release|x86.Build.0 = Release|Any CPU
 		{4F0C1790-E472-4901-BC38-562F9206FE68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4F0C1790-E472-4901-BC38-562F9206FE68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F0C1790-E472-4901-BC38-562F9206FE68}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -49,18 +33,6 @@ Global
 		{4F0C1790-E472-4901-BC38-562F9206FE68}.Release|x64.Build.0 = Release|Any CPU
 		{4F0C1790-E472-4901-BC38-562F9206FE68}.Release|x86.ActiveCfg = Release|Any CPU
 		{4F0C1790-E472-4901-BC38-562F9206FE68}.Release|x86.Build.0 = Release|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Debug|x64.Build.0 = Debug|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Debug|x86.Build.0 = Debug|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Release|x64.ActiveCfg = Release|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Release|x64.Build.0 = Release|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Release|x86.ActiveCfg = Release|Any CPU
-		{E565AE63-EFFC-4019-93E8-325961284B22}.Release|x86.Build.0 = Release|Any CPU
 		{2E7F8CF8-790F-4781-A73B-222FAC71B3C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2E7F8CF8-790F-4781-A73B-222FAC71B3C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E7F8CF8-790F-4781-A73B-222FAC71B3C7}.Debug|x64.ActiveCfg = Debug|Any CPU

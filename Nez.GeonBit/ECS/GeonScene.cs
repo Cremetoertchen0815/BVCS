@@ -51,6 +51,7 @@ namespace Nez.GeonBit
 		{
 			//Add camera
 			var cameraEntity = CreateGeonEntity("camera");
+			base.Camera = cameraEntity.AddComponent<Camera>();
 			Camera = cameraEntity.AddComponent(new Camera3D());
 
 			Initialize();
@@ -95,6 +96,6 @@ namespace Nez.GeonBit
 			return entity;
 		}
 
-		public Entity CreateGeonEntity(string name, NodeType nodeType = NodeType.Simple) => CreateGeonEntity(name, Vector3.Zero, nodeType);
+		public GeonEntity CreateGeonEntity(string name, NodeType nodeType = NodeType.Simple) => CreateGeonEntity(name, Vector3.Zero, nodeType);
 	}
 }

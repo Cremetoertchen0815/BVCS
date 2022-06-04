@@ -12,15 +12,15 @@ namespace Betreten_Verboten
 		{
 			base.Initialize();
 			DebugRenderEnabled = false;
-			
-			Scene = new FunniTestClass();
 			Window.AllowUserResizing = true;
+			RegisterGlobalManager(new SceneManager(System.Reflection.Assembly.GetAssembly(GetType()), "Betreten_Verboten.Scenes"));
 
-			Core.GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
+			GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
 			Screen.EnableAA = true;
 			Screen.ApplyChanges();
-
 			Scene.SetDefaultDesignResolution(1920, 1080, Scene.SceneResolutionPolicy.BestFit);
+
+			Scene = new Scenes.Main.BaseGame();
 
 		}
 	}
@@ -54,28 +54,6 @@ namespace Betreten_Verboten
 
 			Camera.Node.PositionZ = 40;
 			Camera.Node.PositionY = 5;
-			/*
-			Core.Schedule(3, x =>
-			{
-				var leel = CreateGeonEntity("ref", Vector3.Up * 5);
-				RigidBody ss = new RigidBody(new SphereInfo(3), mass: 50f, inertia: 4f, 1f);
-				ss.SetDamping(0.95f, 0.95f);
-				ss.Restitution = 1f;
-				//shipPhysics.AngularVelocity = new Vector3(5, 5, 0);
-				//shipPhysics.LinearVelocity = new Vector3(5, 5, 0);
-				ss.Gravity = Vector3.Down * 27;
-				ss.AngularFactor = new Vector3(4f);
-				ss.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.Player;
-				leel.AddComponent(ss);
-
-
-				var peep = leel.AddComponent(new ShapeRenderer(ShapeMeshes.Cube), leel.Node);
-				peep.Node.Scale = new Vector3(2.7f);
-				var soooooos = rend.CaptureEnvironmentMap(peep.Node.WorldPosition, 128);
-				
-				peep.SetMaterial(new ReflectiveMaterial() { EnvironmentMap = soooooos });
-				return;
-			}); */
 
 			var leel = CreateGeonEntity("ref", Vector3.Up * 5);
 			RigidBody ss = new RigidBody(new SphereInfo(3), mass: 50f, inertia: 4f, 1f);
@@ -155,12 +133,12 @@ namespace Betreten_Verboten
 
 			pop.SetMaterial(new NormalMapLitMaterial() { NormalTexture = Content.LoadTexture("normal"), Texture = Content.LoadTexture("albedo"), TextureEnabled = true, SamplerState = SamplerStates.AnisotropicClamp });
 
-			//var r = new RenderTargetCube(Core.GraphicsDevice, 128, true, SurfaceFormat.Color, DepthFormat.Depth24Stencil8);
-			/*Core.Schedule(0.2f, true, x =>
+			var r = new RenderTargetCube(Core.GraphicsDevice, 128, true, SurfaceFormat.Color, DepthFormat.Depth24Stencil8);
+			Core.Schedule(0.2f, true, x =>
 			{
 				var soooooos = rend.CaptureEnvironmentMap(r, peep.Node.WorldPosition, 128);
 				pop.SetMaterial(new ReflectiveMaterial() { EnvironmentMap = soooooos, EnvironmentAmount = 0.8f, EnvironmentSpecular = Color.Red * 0.4f, SpecularPower = 2, FresnelFactor = 0.7f, SamplerState = SamplerState.AnisotropicWrap });
-			}); */
+			}); 
 		}
 
 		private void SpawnRandomCube()

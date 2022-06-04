@@ -318,12 +318,16 @@ namespace Nez
             //Release mouse
             Input.EndlessMouseMode = false;
 
-            //Add camera
-            var cameraEntity = CreateEntity("camera");
-            Camera = cameraEntity.AddComponent(new Camera());
 
             SetupResolutionPolicy();
-            if (callInitialize) Initialize();
+            if (callInitialize)
+            {
+                //Add camera
+                var cameraEntity = CreateEntity("camera");
+                Camera = cameraEntity.AddComponent(new Camera());
+
+                Initialize();
+            }
         }
 
         protected void SetupResolutionPolicy()

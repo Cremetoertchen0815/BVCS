@@ -198,24 +198,8 @@ namespace Nez.GeonBit
 			}
 
 			// screen width and height
-			float width; float height;
-			/*
-            // if we have alternative screen size defined, use it
-            if (ForceScreenSize != null)
-            {
-                width = ForceScreenSize.Value.X;
-                height = ForceScreenSize.Value.Y;
-            }
-            // if we don't have alternative screen size defined, get current backbuffer size
-            else
-            {
-                var deviceManager = GeonBitRenderer.GraphicsDeviceManager;
-                width = deviceManager.PreferredBackBufferWidth;
-                height = deviceManager.PreferredBackBufferHeight;
-            }
-            */
-			width = Entity?.Scene.SceneRenderTargetSize.X ?? Screen.Width;
-			height = Entity?.Scene.SceneRenderTargetSize.Y ?? Screen.Height;
+			float width = Entity?.Scene.SceneRenderTargetSize.X ?? Screen.Width;
+			float height = Entity?.Scene.SceneRenderTargetSize.Y ?? Screen.Height;
 
 			// calc aspect ratio
 			_aspectRatio = width / height;

@@ -33,4 +33,9 @@
     <ProjectReference Include="..\Nez.GeonBit\Nez.GeonBit.csproj" />
     <ProjectReference Include="..\Nez.Portable\Nez.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\Base\HUD\" />
+    <Folder Include="Scenes\Menu\" />
+    <Folder Include="Scenes\Debug\" />
+  </ItemGroup>
 </Project>

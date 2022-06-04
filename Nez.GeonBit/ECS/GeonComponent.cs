@@ -4,6 +4,8 @@
 	{
 
 		public new GeonEntity Entity;
+
+		[Inspectable]
 		public Node Node;
 
 		public virtual GeonComponent CopyBasics(GeonComponent c) => c;
