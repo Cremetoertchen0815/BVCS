@@ -1,4 +1,1 @@
-﻿-Implement husks(model clone of an entity that uses a plain effect)
--Implement RenderDepth function(render scene with custom view matrix with plain material, just to capture depth)
--Write shadow shader(lol)
--Restructure lit shader to offer togglable options(normal maps, receiving shadows, directional lights, light maps, etc...)
+﻿-Implement light map shader with blur amount
