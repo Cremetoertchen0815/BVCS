@@ -82,7 +82,7 @@
     <Compile Include="ECS\Components\Physics\StaticBody.cs" />
     <Compile Include="ECS\GeonEntity.cs" />
     <Compile Include="ECS\GeonScene.cs" />
-    <Compile Include="ECS\Renderers\ShadowRenderer.cs" />
+    <Compile Include="ECS\Renderers\ShadowPlaneRenderer.cs" />
     <Compile Include="Graphics\Animation\Animations.cs" />
     <Compile Include="Graphics\Animation\Clip.cs" />
     <Compile Include="Graphics\Animation\CpuAnimatedVertexBuffer.cs" />
@@ -115,6 +115,7 @@
     <Compile Include="Graphics\Materials\MaterialAPI.cs" />
     <Compile Include="Graphics\Materials\NormalMapLitMaterial.cs" />
     <Compile Include="Graphics\Materials\ReflectiveMaterial.cs" />
+    <Compile Include="Graphics\Materials\ShadowPlaneMaterial.cs" />
     <Compile Include="Graphics\Materials\SkinnedMaterial.cs" />
     <Compile Include="Graphics\Materials\SkyboxMaterial.cs" />
     <Compile Include="Graphics\Materials\SpriteMaterial.cs" />

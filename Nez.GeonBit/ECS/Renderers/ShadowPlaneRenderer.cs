@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Nez.GeonBit
 {
-    public class ShadowRenderer : Renderer
+    public class ShadowPlaneRenderer : Renderer
     {
 
         private Matrix _projection;
         private Texture2D _filler;
         private Lights.ILightsManager lightsManager => GeonDefaultRenderer.ActiveLightsManager;
         private SpriteBatch _batch;
-        public ShadowRenderer(int renderOrder) : base(renderOrder)
+        public ShadowPlaneRenderer(int renderOrder) : base(renderOrder)
         {
             RenderTexture = GeonDefaultRenderer.ActiveLightsManager.ShadowMap = new RenderTexture(1000, 1000, SurfaceFormat.Color, DepthFormat.Depth24Stencil8) { ResizeBehavior = Textures.RenderTexture.RenderTextureResizeBehavior.None };
             _batch = new SpriteBatch(Core.GraphicsDevice);
