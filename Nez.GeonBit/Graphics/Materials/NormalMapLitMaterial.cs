@@ -33,7 +33,7 @@ namespace Nez.GeonBit.Materials
 		/// Create new lit effect instance.
 		/// </summary>
 		/// <returns>New lit effect instance.</returns>
-		public override Effect CreateEffect() => GeonRenderer.CurrentContentManager.Load<Effect>(_effectPath).Clone();
+		public override Effect CreateEffect() => GeonDefaultRenderer.CurrentContentManager.Load<Effect>(_effectPath).Clone();
 
 		/// <summary>
 		/// Create the lit material from an empty effect.

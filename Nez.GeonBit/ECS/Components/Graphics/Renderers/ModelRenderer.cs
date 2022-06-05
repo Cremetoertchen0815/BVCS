@@ -102,7 +102,7 @@ namespace Nez.GeonBit
 		/// Create the model renderer component.
 		/// </summary>
 		/// <param name="model">Path of the model asset to draw.</param>
-		public ModelRenderer(string model) => _entity = new ModelEntity(GeonRenderer.CurrentContentManager.LoadModel(model, x => Materials.DefaultMaterialsFactory.GetDefaultMaterial(x)));
+		public ModelRenderer(string model) => _entity = new ModelEntity(GeonDefaultRenderer.CurrentContentManager.LoadModel(model, x => Materials.DefaultMaterialsFactory.GetDefaultMaterial(x)));
 
 		/// <summary>
 		/// Copy basic properties to another component (helper function to help with Cloning).

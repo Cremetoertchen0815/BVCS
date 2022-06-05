@@ -11,7 +11,7 @@ namespace Betreten_Verboten
 		protected override void Initialize()
 		{
 			base.Initialize();
-			DebugRenderEnabled = false;
+			DebugRenderEnabled = true;
 			Window.AllowUserResizing = true;
 			RegisterGlobalManager(new SceneManager(System.Reflection.Assembly.GetAssembly(GetType()), "Betreten_Verboten.Scenes"));
 
@@ -37,11 +37,11 @@ namespace Betreten_Verboten
 			ClearColor = Color.Black;
 
 			var phy = AddSceneComponent(new Nez.GeonBit.Physics.PhysicsWorld() { Enabled = false });
-			var rend = AddRenderer(new GeonRenderer(0, this));
-			GeonRenderer.ActiveLightsManager.AmbientLight = Color.White * 0.2f;
-			GeonRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.White, Position = new Vector3() });
-			GeonRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.LightYellow, Position = new Vector3(1, 5, 5), Specular = 1 });
-			GeonRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.Lime, Position = new Vector3(-1, 5, 0), Specular = 1 });
+			var rend = AddRenderer(new GeonDefaultRenderer(0, this));
+			GeonDefaultRenderer.ActiveLightsManager.AmbientLight = Color.White * 0.2f;
+			GeonDefaultRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.White, Position = new Vector3() });
+			GeonDefaultRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.LightYellow, Position = new Vector3(1, 5, 5), Specular = 1 });
+			GeonDefaultRenderer.ActiveLightsManager.AddLight(new Nez.GeonBit.Lights.LightSource() { Color = Color.Lime, Position = new Vector3(-1, 5, 0), Specular = 1 });
 			AddRenderer(new DefaultRenderer(-1));
 			Core.Schedule(1.5f, x => phy.Enabled = true);
 

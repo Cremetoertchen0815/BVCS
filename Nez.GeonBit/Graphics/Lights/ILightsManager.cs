@@ -18,6 +18,8 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Nez.Textures;
 
 namespace Nez.GeonBit.Lights
 {
@@ -49,6 +51,13 @@ namespace Nez.GeonBit.Lights
 		/// Enable / disable all lights.
 		/// </summary>
 		bool Enabled { get; set; }
+
+
+		bool ShadowsEnabed { get; set; }
+
+		RenderTexture ShadowMap { get; set; }
+
+		Matrix ShadowViewMatrix { get; set; }
 
 		/// <summary>
 		/// Get all lights for a given bounding sphere and material.

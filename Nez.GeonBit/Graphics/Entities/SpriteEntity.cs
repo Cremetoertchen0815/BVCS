@@ -238,14 +238,14 @@ namespace Nez.GeonBit
 				if (LockedAxis != null)
 				{
 					newWorld = Matrix.CreateScale(scale) *
-							   Matrix.CreateConstrainedBillboard(position, GeonRenderer.ActiveCamera.Position,
+							   Matrix.CreateConstrainedBillboard(position, GeonDefaultRenderer.ActiveCamera.Position,
 							   LockedAxis.Value, null, null);
 				}
 				// set rotation based on camera without any locked axis
 				else
 				{
 					newWorld = Matrix.CreateScale(scale) *
-							   Matrix.CreateBillboard(position, GeonRenderer.ActiveCamera.Position,
+							   Matrix.CreateBillboard(position, GeonDefaultRenderer.ActiveCamera.Position,
 							   Vector3.Up, null);
 				}
 			}

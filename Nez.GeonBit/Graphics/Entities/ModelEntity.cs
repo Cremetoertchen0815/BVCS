@@ -82,7 +82,7 @@ namespace Nez.GeonBit
 		/// Create the model entity from asset path.
 		/// </summary>
 		/// <param name="path">Path of the model to load.</param>
-		public ModelEntity(string path) : this(GeonRenderer.CurrentContentManager.Load<Model>(path))
+		public ModelEntity(string path) : this(GeonDefaultRenderer.CurrentContentManager.Load<Model>(path))
 		{
 		}
 
@@ -207,6 +207,7 @@ namespace Nez.GeonBit
 
 					//Only change effect if really necessairy(every setting of the effect causes Monogame to internally generate enumerator objects)
 					if (meshPart.Effect != material.Effect) meshPart.Effect = material.Effect;
+
 
 					// next index.
 					++index;

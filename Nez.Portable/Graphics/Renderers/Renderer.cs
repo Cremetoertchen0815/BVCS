@@ -107,7 +107,7 @@ namespace Nez
             }
 
             _currentMaterial = Material;
-            Graphics.Instance.Batcher.Begin(_currentMaterial, cam.TransformMatrix);
+            if (cam != null) Graphics.Instance.Batcher.Begin(_currentMaterial, cam.TransformMatrix);
         }
 
         public abstract void Render(Scene scene);

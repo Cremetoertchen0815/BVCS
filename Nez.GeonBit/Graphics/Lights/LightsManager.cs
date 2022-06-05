@@ -18,6 +18,8 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Nez.Textures;
 using System.Collections.Generic;
 
 
@@ -94,11 +96,16 @@ namespace Nez.GeonBit.Lights
 			set { _regionSize = value; UpdateLightsRegionSize(); }
 		}
 
-		/// <summary>
-		/// Add a light source to lights manager.
-		/// </summary>
-		/// <param name="light">Light to add.</param>
-		public void AddLight(LightSource light)
+		public bool ShadowsEnabed { get; set; } = true;
+
+        public RenderTexture ShadowMap { get; set; }
+        public Matrix ShadowViewMatrix { get; set; }
+
+        /// <summary>
+        /// Add a light source to lights manager.
+        /// </summary>
+        /// <param name="light">Light to add.</param>
+        public void AddLight(LightSource light)
 		{
 			// if light already got parent, assert
 			if (light.LightsManager != null)
@@ -237,7 +244,7 @@ namespace Nez.GeonBit.Lights
 								}
 
 								// if light is out of camera, skip it
-								if (!GeonRenderer.ActiveCamera.ViewFrustum.Intersects(light.BoundingSphere))
+								if (!GeonDefaultRenderer.ActiveCamera.ViewFrustum.Intersects(light.BoundingSphere))
 								{
 									continue;
 								}

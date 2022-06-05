@@ -365,7 +365,7 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Draw rendering queues.
 		/// </summary>
-		public static void DrawQueues()
+		public static void DrawQueues(bool clearQueues = true, bool sortEntities = true)
 		{
             // iterate drawing queues
             for (int i = 0; i < _renderingQueues.Count; i++)
@@ -382,9 +382,9 @@ namespace Nez.GeonBit
 				Core.GraphicsDevice.DepthStencilState = queue.DepthStencilState;
 
 				// if need to sort by distance from camera, do the sorting
-				if (queue.SortByCamera)
+				if (sortEntities && queue.SortByCamera)
 				{
-					var camPos = GeonRenderer.ActiveCamera.Position;
+					var camPos = GeonDefaultRenderer.ActiveCamera.Position;
 					queue.Entities.Sort(delegate (EntityInQueue x, EntityInQueue y)
 					{
 						return (int)(Vector3.Distance(camPos, y.World.Translation) * 100f - System.Math.Floor(y.Entity.CameraDistanceBias)) -
@@ -400,7 +400,7 @@ namespace Nez.GeonBit
 				}
 
 				// clear queue
-				queue.Entities.Clear();
+				if (clearQueues) queue.Entities.Clear();
 			}
 
 			// reset device states

@@ -56,7 +56,7 @@ namespace Nez.GeonBit
 		/// Create the model entity from asset path.
 		/// </summary>
 		/// <param name="path">Path of the model to load.</param>
-		public SimpleModelEntity(string path) : this(GeonRenderer.CurrentContentManager.Load<Model>(path))
+		public SimpleModelEntity(string path) : this(GeonDefaultRenderer.CurrentContentManager.Load<Model>(path))
 		{
 		}
 

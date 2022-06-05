@@ -224,7 +224,7 @@ namespace Nez.GeonBit
 		{
 
 			// if there's no active camera, set self as the active camera
-			if (GeonRenderer.ActiveCamera == null)
+			if (GeonDefaultRenderer.ActiveCamera == null)
 			{
 				SetAsActive();
 			}
@@ -309,7 +309,7 @@ namespace Nez.GeonBit
 		/// Get if this camera is the active camera in its scene.
 		/// Note: it doesn't mean that the scene this camera belongs to is currently active.
 		/// </summary>
-		public bool IsActiveCamera => GeonRenderer.ActiveCamera == this;
+		public bool IsActiveCamera => GeonDefaultRenderer.ActiveCamera == this;
 
 		/// <summary>
 		/// Clone this component.
@@ -362,7 +362,7 @@ namespace Nez.GeonBit
 			//}
 
 			// update core graphics about new active camera
-			GeonRenderer.ActiveCamera = this;
+			GeonDefaultRenderer.ActiveCamera = this;
 
 		/// <summary>
 		/// Called every frame in the Update() loop.

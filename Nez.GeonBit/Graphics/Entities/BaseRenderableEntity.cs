@@ -122,7 +122,7 @@ namespace Nez.GeonBit
 		public virtual void Draw(Node parent, ref Matrix localTransformations, ref Matrix worldTransformations)
 		{
 			// not visible / no active camera? skip
-			if (!Visible || GeonRenderer.ActiveCamera == null)
+			if (!Visible || GeonDefaultRenderer.ActiveCamera == null)
 			{
 				return;
 			}
@@ -134,7 +134,7 @@ namespace Nez.GeonBit
 			GetBoundingSphere(parent, ref localTransformations, ref worldTransformations);
 
 			// call to draw this entity - this will either add to the corresponding rendering queue, or draw immediately if have no drawing queue.
-			GeonRenderer.DrawEntity(this, worldTransformations);
+			GeonDefaultRenderer.DrawEntity(this, worldTransformations);
 		}
 
 		/// <summary>

@@ -134,7 +134,7 @@ namespace Nez.GeonBit
 		public override void Draw(Node parent, ref Matrix localTransformations, ref Matrix worldTransformations)
 		{
 			// not visible / no active camera? skip
-			if (!Visible || GeonRenderer.ActiveCamera == null)
+			if (!Visible || GeonDefaultRenderer.ActiveCamera == null)
 			{
 				return;
 			}
@@ -145,7 +145,7 @@ namespace Nez.GeonBit
             // draw all meshes
             for (int i = 0; i < _meshAccess.Count; i++)
 			{
-                GeonRenderer.DrawEntity(_meshAccess[i], worldTransformations);
+                GeonDefaultRenderer.DrawEntity(_meshAccess[i], worldTransformations);
 			}
 		}
 
@@ -153,7 +153,7 @@ namespace Nez.GeonBit
 		/// Create the model entity from asset path.
 		/// </summary>
 		/// <param name="path">Path of the model to load.</param>
-		public CompositeModelEntity(string path) : this(GeonRenderer.CurrentContentManager.Load<Model>(path))
+		public CompositeModelEntity(string path) : this(GeonDefaultRenderer.CurrentContentManager.Load<Model>(path))
 		{
 		}
 

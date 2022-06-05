@@ -14,6 +14,7 @@ namespace Betreten_Verboten.Components.Base
 
         private RenderTexture _boardTexture;
         protected ShapeRenderer _shapeRenderer;
+        protected RenderTexture _shadowProjection;
         protected StaticBody _kinematicBody;
 
         public override void OnAddedToEntity()
@@ -22,24 +23,28 @@ namespace Betreten_Verboten.Components.Base
             Insist.IsNotNull(Entity as GeonEntity, "Board has to be added to GeonEntity!");
 
             //Add board texture renderer
+            _shadowProjection = Entity.Scene.AddRenderer(new ShadowRenderer(-2)).RenderTexture;
             Entity.Scene.AddRenderer(new RenderLayerRenderer(-1, RENDER_LAYER_BOARD) { RenderTexture = _boardTexture = new RenderTexture(TEX_RES, TEX_RES) { ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None }, RenderTargetClearColor = Color.Black });
 
             //Configure 3D renderer
             var geonEntity = Entity as GeonEntity;
-            _shapeRenderer = geonEntity.AddComponent(new ShapeRenderer(ShapeMeshes.Plane), null);
+            _shapeRenderer = geonEntity.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Plane));
             _shapeRenderer.Node.Rotation = new Vector3(-MathHelper.PiOver2, 0, 0);
             _shapeRenderer.Node.RotationType = RotationType.Euler;
-            _shapeRenderer.Node.Position = new Vector3(0, 0, 0);
-            _shapeRenderer.Node.Scale = new Vector3(100);
-            _shapeRenderer.RenderingQueue = RenderingQueue.Terrain;
-            _shapeRenderer.SetMaterial(new BasicMaterial() { Texture = _boardTexture, TextureEnabled = true, DiffuseColor = Color.White });
+            _shapeRenderer.Node.Scale = new Vector3(20);
+            _shapeRenderer.Node.Position = new Vector3(0, 1, 0);
+            _shapeRenderer.RenderingQueue = RenderingQueue.BackgroundNoCull;
+            _shapeRenderer.SetMaterial(new LitMaterial() { Texture = _shadowProjection, TextureEnabled = true, DiffuseColor = Color.White });
 
             //Configure physics
             _kinematicBody = geonEntity.AddComponent(new StaticBody(new EndlessPlaneInfo(Vector3.Up)));
             _kinematicBody.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Terrain;
+            _kinematicBody.Restitution = 1.1f;
 
             //Config renderable 
             SetRenderLayer(RENDER_LAYER_BOARD);
+
+
 
         }
 

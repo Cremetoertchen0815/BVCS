@@ -141,7 +141,7 @@ namespace Nez.GeonBit
 		public override void OnAddedToEntity()
 		{
 			base.OnAddedToEntity();
-			GeonRenderer.ActiveLightsManager.AddLight(_light);
+			GeonDefaultRenderer.ActiveLightsManager.AddLight(_light);
 		}
 	}
 }

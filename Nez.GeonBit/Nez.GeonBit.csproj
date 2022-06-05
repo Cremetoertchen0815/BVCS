@@ -82,6 +82,7 @@
     <Compile Include="ECS\Components\Physics\StaticBody.cs" />
     <Compile Include="ECS\GeonEntity.cs" />
     <Compile Include="ECS\GeonScene.cs" />
+    <Compile Include="ECS\Renderers\ShadowRenderer.cs" />
     <Compile Include="Graphics\Animation\Animations.cs" />
     <Compile Include="Graphics\Animation\Clip.cs" />
     <Compile Include="Graphics\Animation\CpuAnimatedVertexBuffer.cs" />
@@ -101,7 +102,7 @@
     <Compile Include="Graphics\Entities\SkinnedModelEntity.cs" />
     <Compile Include="Graphics\Entities\SpriteEntity.cs" />
     <Compile Include="Graphics\Entities\SpriteSheet.cs" />
-    <Compile Include="ECS\GeonRenderer.cs" />
+    <Compile Include="ECS\Renderers\GeonDefaultRenderer.cs" />
     <Compile Include="Graphics\Lights\DeferredLighting.cs" />
     <Compile Include="Graphics\Lights\ILightsManager.cs" />
     <Compile Include="Graphics\Lights\LightsManager.cs" />

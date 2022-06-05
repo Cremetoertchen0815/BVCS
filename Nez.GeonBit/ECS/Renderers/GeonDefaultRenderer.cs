@@ -59,7 +59,7 @@ namespace Nez.GeonBit
 	/// <summary>
 	/// A global static class for graphic utilities and management.
 	/// </summary>
-	public class GeonRenderer : Renderer
+	public class GeonDefaultRenderer : Renderer
 	{
 		// sprite batch used by this manager
 		private static readonly Batcher _batcher = new Batcher(Core.GraphicsDevice);
@@ -131,6 +131,7 @@ namespace Nez.GeonBit
 			// update culling nodes camera frustum
 			CullingNode.CurrentCameraFrustum = ActiveCamera != null ? ActiveCamera.ViewFrustum : null;
 
+
 			// update materials view and projection matrix
 			if (ActiveCamera != null)
 			{
@@ -142,9 +143,8 @@ namespace Nez.GeonBit
 			{
 				_DeferredLighting.FrameStart();
 			}
-
 			// notify nodes manager that a frame started
-			NodesManager.StartFrame();
+			if (!ActiveLightsManager.ShadowsEnabed) NodesManager.StartFrame();
 		}
 
 		/// <summary>
@@ -153,7 +153,7 @@ namespace Nez.GeonBit
 		public void EndDrawFrame()
 		{
 			// draw rendering queues
-			RenderingQueues.DrawQueues();
+			RenderingQueues.DrawQueues(true, !ActiveLightsManager.ShadowsEnabed);
 
 			// notify nodes manager that a frame ended
 			NodesManager.EndFrame();
@@ -221,9 +221,14 @@ namespace Nez.GeonBit
 		/// </summary>
 		public static Point ViewportSize => new Point(Core.GraphicsDevice.Viewport.Width, Core.GraphicsDevice.Viewport.Height);
 
-		public override void Render(Scene scene)
+        public override void Render(Scene scene)
 		{
-			StartDrawFrame();
+			/*
+			var file = System.IO.File.OpenWrite("C:/Users/Creme/Desktop/laaals.png");
+			ActiveLightsManager.ShadowMap.RenderTarget.SaveAsPng(file, 1000, 1000);
+			file.Close();*/
+
+			 StartDrawFrame();
 
 			var lst = scene.EntitiesOfType<GeonEntity>();
 			foreach (var item in lst)
@@ -308,7 +313,7 @@ namespace Nez.GeonBit
 
 		}
 
-		public GeonRenderer(int renderOrder, Scene sourceScene) : base(renderOrder)
+		public GeonDefaultRenderer(int renderOrder, Scene sourceScene) : base(renderOrder)
 		{
 			_scene = sourceScene;
 			CurrentContentManager = sourceScene.Content;
