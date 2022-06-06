@@ -26,6 +26,7 @@ namespace Betreten_Verboten.Components.Base
             _shadowProjection = Entity.Scene.AddRenderer(new ShadowPlaneRenderer(-2)).RenderTexture;
             Entity.Scene.AddRenderer(new RenderLayerRenderer(-1, RENDER_LAYER_BOARD) { RenderTexture = _boardTexture = new RenderTexture(TEX_RES, TEX_RES) { ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None }, RenderTargetClearColor = Color.Black });
 
+            var texx = Entity.Scene.Content.LoadTexture("tex");
             //Configure 3D renderer
             var geonEntity = Entity as GeonEntity;
             _shapeRenderer = geonEntity.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Plane));
@@ -34,12 +35,12 @@ namespace Betreten_Verboten.Components.Base
             _shapeRenderer.Node.Scale = new Vector3(20);
             _shapeRenderer.Node.Position = new Vector3(0, 1, 0);
             _shapeRenderer.RenderingQueue = RenderingQueue.BackgroundNoCull;
-            _shapeRenderer.SetMaterial(new LitMaterial() { Texture = _shadowProjection, TextureEnabled = true, DiffuseColor = Color.White });
+            _shapeRenderer.SetMaterial(new ShadowPlaneMaterial() { Texture = texx, ShadowMap = _shadowProjection, TextureEnabled = true, DiffuseColor = Color.DarkGray, AmbientLight = Color.White * 0.25f });
 
             //Configure physics
             _kinematicBody = geonEntity.AddComponent(new StaticBody(new EndlessPlaneInfo(Vector3.Up)));
             _kinematicBody.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Terrain;
-            _kinematicBody.Restitution = 1.1f;
+            _kinematicBody.Restitution = 6f;
 
             //Config renderable 
             SetRenderLayer(RENDER_LAYER_BOARD);

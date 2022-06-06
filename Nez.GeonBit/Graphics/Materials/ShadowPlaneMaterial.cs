@@ -8,53 +8,62 @@ using System.Threading.Tasks;
 
 namespace Nez.GeonBit.Materials
 {
-    internal class ShadowPlaneMaterial : MaterialAPI
+    public class ShadowPlaneMaterial : MaterialAPI
     {
+		// effect path
+		private static readonly string _effectPath = EffectsPath + "ShadowPlaneEffect";
+
 		// the effect instance of this material.
 		private readonly Effect _effect;
-
-		private Matrix _effectWorld { get => _effect.Parameters["World"].GetValueMatrix(); set => _effect.Parameters["World"].SetValue(value); }
-		private Matrix _effectView { get => _effect.Parameters["World"].GetValueMatrix(); set => _effect.Parameters["World"].SetValue(value); }
-		private Matrix _effectProjection { get => _effect.Parameters["World"].GetValueMatrix(); set => _effect.Parameters["World"].SetValue(value); }
-		private Texture2D _effectTexture { get => _effect.Parameters["Texture"].GetValueTexture2D(); set => _effect.Parameters["Texture"].SetValue(value); }
-		private Texture2D _effectShadowStencil { get => _effect.Parameters["ShadowStencil"].GetValueTexture2D(); set => _effect.Parameters["ShadowStencil"].SetValue(value); }
-		private bool _effectTextureEnabled { get => _effect.Parameters["TextureEnabled"].GetValueBoolean(); set => _effect.Parameters["TextureEnabled"].SetValue(value); }
-		private Vector3 _effectAmbient { get => _effect.Parameters["Ambient"].GetValueVector3(); set => _effect.Parameters["Ambient"].SetValue(value); }
-		private Vector3 _effectDiffuse { get => _effect.Parameters["Diffuse"].GetValueVector3(); set => _effect.Parameters["Diffuse"].SetValue(value); }
-		private Vector3 _effectSpecular { get => _effect.Parameters["Specular"].GetValueVector3(); set => _effect.Parameters["Specular"].SetValue(value); }
-		private float _effectAlpha { get => _effect.Parameters["Alpha"].GetValueSingle(); set => _effect.Parameters["Alpha"].SetValue(value); }
-		private float _effectBlurRadius { get => _effect.Parameters["BlurRadius"].GetValueSingle(); set => _effect.Parameters["BlurRadius"].SetValue(value); }
-		private float _effectSpecularPower { get => _effect.Parameters["SpecularPower"].GetValueSingle(); set => _effect.Parameters["SpecularPower"].SetValue(value); }
 
 		/// <summary>
 		/// Get the effect instance.
 		/// </summary>
 		public override Effect Effect => _effect;
 
-		public virtual Texture2D ShadowStencilTexture
-		{
-			get => _shadowStencilTexture;
-			set { _shadowStencilTexture = value; SetAsDirty(MaterialDirtyFlags.TextureParams); }
-		}
+		/// <summary>
+		/// If true, will use the currently set lights manager in `Graphics.GeonBitRenderer.LightsManager` and call ApplyLights() with the lights from manager.
+		/// </summary>
+		protected override bool UseDefaultLightsManager => false;
 
-		private Texture2D _shadowStencilTexture;
-
-		public virtual float BlurRadius
-		{
-			get => _blurRadius;
-			set { _blurRadius = value; SetAsDirty(MaterialDirtyFlags.TextureParams); }
-		}
-
-		private float _blurRadius;
-
-		// empty effect instance to clone when creating new material
-		private static readonly Effect _emptyEffect = Core.Content.Load<Effect>("");
+		// effect parameters
+		private EffectParameterCollection _effectParams;
 
 		/// <summary>
-		/// Create the default material from empty effect.
+		/// Normal map texture.
 		/// </summary>
-		public ShadowPlaneMaterial() : this(_emptyEffect, true)
+		public virtual Texture2D ShadowMap
 		{
+			get => _shadowMap;
+			set { _shadowMap = value; SetAsDirty(MaterialDirtyFlags.TextureParams); }
+		}
+
+		private Texture2D _shadowMap;
+
+		/// <summary>
+		/// Get how many samplers this material uses.
+		/// </summary>
+		protected override int SamplersCount => 2;
+
+		/// <summary>
+		/// Return if this material support dynamic lighting.
+		/// </summary>
+		public override bool LightingEnabled => false;
+
+		/// <summary>
+		/// Create new lit effect instance.
+		/// </summary>
+		/// <returns>New lit effect instance.</returns>
+		public virtual Effect CreateEffect() => Core.Content.Load<Effect>(_effectPath).Clone();
+
+		/// <summary>
+		/// Create the lit material from an empty effect.
+		/// </summary>
+		public ShadowPlaneMaterial()
+		{
+			_effect = CreateEffect();
+			SetDefaults();
+			InitLightParams();
 		}
 
 		/// <summary>
@@ -63,37 +72,63 @@ namespace Nez.GeonBit.Materials
 		/// <param name="other">Other material to clone.</param>
 		public ShadowPlaneMaterial(ShadowPlaneMaterial other)
 		{
-			_effect = other._effect.Clone() as BasicEffect;
+			// clone effect and set defaults
+			_effect = other._effect.Clone();
 			MaterialAPI asBase = this;
 			other.CloneBasics(ref asBase);
+
+			// init light params
+			InitLightParams();
 		}
 
 		/// <summary>
-		/// Create the default material.
+		/// Create the lit material.
+		/// </summary>
+		/// <param name="fromEffect">Effect to create material from.</param>
+		public ShadowPlaneMaterial(Effect fromEffect)
+		{
+			// clone effect and set defaults
+			_effect = fromEffect.Clone();
+			SetDefaults();
+
+			// init light params
+			InitLightParams();
+		}
+
+		/// <summary>
+		/// Create the lit material.
 		/// </summary>
 		/// <param name="fromEffect">Effect to create material from.</param>
 		/// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-		public ShadowPlaneMaterial(Effect fromEffect, bool copyEffectProperties = true)
+		public ShadowPlaneMaterial(BasicEffect fromEffect, bool copyEffectProperties = true)
 		{
 			// store effect and set default properties
-			_effect = fromEffect.Clone() as Effect;
+			_effect = CreateEffect();
 			SetDefaults();
 
 			// copy properties from effect itself
 			if (copyEffectProperties)
 			{
 				// set effect defaults
-				Texture = fromEffect.Parameters["Texture"].GetValueTexture2D();
-				Texture = fromEffect.Parameters["ShadowStencil"].GetValueTexture2D();
-				TextureEnabled = fromEffect.Parameters["TextureEnabled"].GetValueBoolean();
-				AmbientLight = new Color(fromEffect.Parameters["Ambient"].GetValueVector3());
-				DiffuseColor = new Color(fromEffect.Parameters["Diffuse"].GetValueVector3());
-				SpecularColor = new Color(fromEffect.Parameters["Specular"].GetValueVector3());
-				SpecularPower = fromEffect.Parameters["SpecularPower"].GetValueSingle();
-				Alpha = fromEffect.Parameters["Alpha"].GetValueSingle();
-				BlurRadius = fromEffect.Parameters["BlurRadius"].GetValueSingle();
-
+				Texture = fromEffect.Texture;
+				TextureEnabled = fromEffect.TextureEnabled;
+				Alpha = fromEffect.Alpha;
+				AmbientLight = new Color(fromEffect.AmbientLightColor.X, fromEffect.AmbientLightColor.Y, fromEffect.AmbientLightColor.Z);
+				DiffuseColor = new Color(fromEffect.DiffuseColor.X, fromEffect.DiffuseColor.Y, fromEffect.DiffuseColor.Z);
+				SpecularColor = new Color(fromEffect.SpecularColor.X, fromEffect.SpecularColor.Y, fromEffect.SpecularColor.Z);
+				SpecularPower = fromEffect.SpecularPower;
 			}
+
+			// init light params
+			InitLightParams();
+		}
+
+		/// <summary>
+		/// Init light-related params from shader.
+		/// </summary>
+		private void InitLightParams()
+		{
+			_effectParams = _effect.Parameters;
 		}
 
 		/// <summary>
@@ -102,35 +137,38 @@ namespace Nez.GeonBit.Materials
 		protected override void MaterialSpecificApply(bool wasLastMaterial)
 		{
 			// set world matrix
-			if (IsDirty(MaterialDirtyFlags.World))
-			{
-				_effectWorld = World;
-			}
-
-			// if it was last material used, stop here - no need for the following settings
-			if (wasLastMaterial) { return; }
+			_effectParams["WorldViewProjection"].SetValue(World * ViewProjection);
 
 			// set all effect params
 			if (IsDirty(MaterialDirtyFlags.TextureParams))
 			{
-				_effectTexture = Texture;
-				_effectTextureEnabled = TextureEnabled;
-				_effectShadowStencil = ShadowStencilTexture;
-				_effectBlurRadius = BlurRadius;
+				// set main texture
+				var textureParam = _effectParams["MainTexture"];
+				if (textureParam != null)
+				{
+					_effectParams["TextureEnabled"].SetValue(TextureEnabled && Texture != null);
+					textureParam.SetValue(Texture);
+				}
+
+				_effectParams["ShadowMap"].SetValue(ShadowMap);
 			}
 			if (IsDirty(MaterialDirtyFlags.Alpha))
 			{
-				_effectAlpha = Alpha;
-			}
-			if (IsDirty(MaterialDirtyFlags.AmbientLight))
-			{
-				_effectAmbient = AmbientLight.ToVector3();
+				_effectParams["Alpha"].SetValue(Alpha);
 			}
 			if (IsDirty(MaterialDirtyFlags.MaterialColors))
 			{
-				_effectDiffuse = DiffuseColor.ToVector3();
-				_effectSpecular = SpecularColor.ToVector3();
-				_effectSpecularPower = SpecularPower;
+				_effectParams["DiffuseColor"].SetValue(DiffuseColor.ToVector3());
+			}
+
+			// set global light params
+			if (IsDirty(MaterialDirtyFlags.EmissiveLight))
+			{
+				_effectParams["EmissiveColor"].SetValue(EmissiveLight.ToVector3());
+			}
+			if (IsDirty(MaterialDirtyFlags.AmbientLight))
+			{
+				_effectParams["AmbientColor"].SetValue(AmbientLight.ToVector3());
 			}
 		}
 
@@ -138,13 +176,17 @@ namespace Nez.GeonBit.Materials
 		/// Update material view matrix.
 		/// </summary>
 		/// <param name="view">New view to set.</param>
-		protected override void UpdateView(ref Matrix view) => _effectView = View;
+		protected override void UpdateView(ref Matrix view)
+		{
+		}
 
 		/// <summary>
 		/// Update material projection matrix.
 		/// </summary>
 		/// <param name="projection">New projection to set.</param>
-		protected override void UpdateProjection(ref Matrix projection) => _effectProjection = Projection;
+		protected override void UpdateProjection(ref Matrix projection)
+		{
+		}
 
 		/// <summary>
 		/// Clone this material.

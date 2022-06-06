@@ -1,6 +1,1 @@
-﻿-Implement shadow plane shader(Copy lit material, remove direct lighting, add blur and stencil)
-
-Ambient color as addition for lit and unlit parts
-Diffuse color as multiplier for "base color"
-Lit area is represents original pixel at diffuse (1) and ambient (0)
-ShadeFactor is factor of darkening unlit areas
+﻿-Implement shadow plane shader(Add blur)

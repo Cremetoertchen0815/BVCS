@@ -27,27 +27,32 @@ namespace Betreten_Verboten.Scenes.Main
             base.Initialize();
 
             //Register rendering system(Renderers drawing on RenderTextures have negative renderOrders)
+            ClearColor = Color.Black;
+            Core.DebugRenderEnabled = false;
             AddRenderer(_geonRenderer = new GeonDefaultRenderer(0, this)); //Render render 3D space
             AddRenderer(new ScreenSpaceRenderer(1, RENDER_LAYER_HUD) { WantsToRenderAfterPostProcessors = true}); //Afterwards render HUD on top
+            AddPostProcessor(new QualityBloomPostProcessor(0) { BloomPreset = QualityBloomPostProcessor.BloomPresets.Focussed, BloomStrengthMultiplier = 0.6f, BloomThreshold = 0.5f});
 
             GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = true;
             GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
 
-            var soooooos = CreateGeonEntity("sadadsf", new Vector3(0, 0, 0)).AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Cube));
-            soooooos.Node.Scale = new Vector3(2.5f);
-            var sdop = soooooos.Entity.AddComponent(new Nez.GeonBit.RigidBody(new BoxInfo(Vector3.One * 5), 10, 10, 1));
-            sdop.SetDamping(0.95f, 0.95f);
-            sdop.Restitution = 2f;
-            //shipPhysics.AngularVelocity = new Vector3(5, 5, 0);
-            //shipPhysics.LinearVelocity = new Vector3(5, 5, 0);
-            sdop.Position = new Vector3(0, 100, 0);
-            sdop.Gravity = Vector3.Down * 50;
-            sdop.CollisionGroup = CollisionGroups.Player;
-
-            for (int i = 0; i < 50; i++)
+            Core.Schedule(10f, x =>
             {
-                SpawnRandomCube();
-            }
+                var soooooos = CreateGeonEntity("sadadsf", new Vector3(0, 0, 0)).AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Cube));
+                soooooos.Node.Scale = new Vector3(2.5f);
+                var sdop = soooooos.Entity.AddComponent(new Nez.GeonBit.RigidBody(new BoxInfo(Vector3.One * 5), 50, 10, 1));
+                sdop.SetDamping(0.95f, 0.95f);
+                sdop.Restitution = 1.5f;
+                sdop.Position = new Vector3(0, 100, 0);
+                sdop.Gravity = Vector3.Down * 50;
+                sdop.CollisionGroup = CollisionGroups.Player;
+
+                for (int i = 0; i < 100; i++)
+                {
+                    SpawnRandomCube();
+                }
+            });
+            
 
             //Config camera
             Camera.Node.Position = new Vector3(0, 1, 50);
@@ -63,16 +68,17 @@ namespace Betreten_Verboten.Scenes.Main
 
         private void SpawnRandomCube()
         {
-            var e = CreateGeonEntity("lol", new Vector3(Nez.Random.NextFloat() * 40 - 20, 15, Nez.Random.NextFloat() * 40 - 20));
-            var p = e.AddComponent(new Nez.GeonBit.RigidBody(new BoxInfo(new Vector3(1, 1, 1)), 1, 2, 0.8f));
+            var e = CreateGeonEntity("lol", new Vector3(Nez.Random.NextFloat() * 40 - 20, 25, Nez.Random.NextFloat() * 40 - 20));
+            var p = e.AddComponent(new Nez.GeonBit.RigidBody(new BoxInfo(new Vector3(1, 1, 1)), 30, 2, 0.8f));
             p.Position = e.Node.Position;
             p.SetDamping(0.95f, 0.95f);
-            p.Restitution = 2f;
-            //p.AngularVelocity = new Vector3(Random.NextFloat(), Random.NextFloat(), Random.NextFloat());
-            //p.LinearVelocity = new Vector3(Random.NextFloat(), Random.NextFloat(), Random.NextFloat());
-            p.Gravity = Vector3.Down * 50;
+            p.Restitution = 6f;
+            p.AngularVelocity = new Vector3(Nez.Random.NextFloat(), Nez.Random.NextFloat(), Nez.Random.NextFloat()) * 15;
+            p.LinearVelocity = new Vector3(Nez.Random.NextFloat(), Nez.Random.NextFloat(), Nez.Random.NextFloat()) * 15;
+            p.Gravity = Vector3.Down * 5;
             p.CollisionGroup = (short)CollisionGroups.DynamicObjects;
             var r = e.AddComponent(new ShapeRenderer(ShapeMeshes.Cube), e.Node);
+            r.SetMaterial(new BasicMaterial() { DiffuseColor = Nez.Random.NextColor() });
             r.Node.Scale = new Vector3(0.5f);
         }
 
@@ -85,7 +91,7 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected void InitEnvironment()
         {
-            CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
+            //CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
 
             //Create playing field
             CreateGeonEntity("board", NodeType.Simple).AddComponent(new Board());

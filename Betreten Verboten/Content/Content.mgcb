@@ -285,6 +285,12 @@
 /processorParam:DebugMode=Auto
 /build:GeonBit.Core/Effects/NormalMapLitEffect.fx
 
+#begin GeonBit.Core/Effects/ShadowPlaneEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:GeonBit.Core/Effects/ShadowPlaneEffect.fx
+
 #begin GeonBit.Core/Textures/geonbit.png
 /importer:TextureImporter
 /processor:TextureProcessor
