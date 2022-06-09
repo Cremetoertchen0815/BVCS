@@ -40,7 +40,7 @@ namespace Betreten_Verboten.Components.Base
             //Configure physics
             _kinematicBody = geonEntity.AddComponent(new StaticBody(new EndlessPlaneInfo(Vector3.Up)));
             _kinematicBody.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Terrain;
-            _kinematicBody.Restitution = 6f;
+            _kinematicBody.Restitution = 1f;
 
             //Config renderable 
             SetRenderLayer(RENDER_LAYER_BOARD);

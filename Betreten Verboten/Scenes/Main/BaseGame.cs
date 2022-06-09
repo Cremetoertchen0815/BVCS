@@ -33,29 +33,14 @@ namespace Betreten_Verboten.Scenes.Main
             AddRenderer(new ScreenSpaceRenderer(1, RENDER_LAYER_HUD) { WantsToRenderAfterPostProcessors = true}); //Afterwards render HUD on top
             AddPostProcessor(new QualityBloomPostProcessor(0) { BloomPreset = QualityBloomPostProcessor.BloomPresets.Focussed, BloomStrengthMultiplier = 0.6f, BloomThreshold = 0.5f});
 
-            GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = true;
+            GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
             GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
 
-            Core.Schedule(10f, x =>
-            {
-                var soooooos = CreateGeonEntity("sadadsf", new Vector3(0, 0, 0)).AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Cube));
-                soooooos.Node.Scale = new Vector3(2.5f);
-                var sdop = soooooos.Entity.AddComponent(new Nez.GeonBit.RigidBody(new BoxInfo(Vector3.One * 5), 50, 10, 1));
-                sdop.SetDamping(0.95f, 0.95f);
-                sdop.Restitution = 1.5f;
-                sdop.Position = new Vector3(0, 100, 0);
-                sdop.Gravity = Vector3.Down * 50;
-                sdop.CollisionGroup = CollisionGroups.Player;
-
-                for (int i = 0; i < 100; i++)
-                {
-                    SpawnRandomCube();
-                }
-            });
-            
+            //Create dice
+            CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice());
 
             //Config camera
-            Camera.Node.Position = new Vector3(0, 1, 50);
+            Camera.Node.Position = new Vector3(0, 5, 50);
 
             //Prepare physics
             AddSceneComponent(new PhysicsWorld());
@@ -63,23 +48,6 @@ namespace Betreten_Verboten.Scenes.Main
 
             VirtualJoystick = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.A, Microsoft.Xna.Framework.Input.Keys.D, Microsoft.Xna.Framework.Input.Keys.W, Microsoft.Xna.Framework.Input.Keys.S));
             VirtualJoystickB = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.Right, Microsoft.Xna.Framework.Input.Keys.Up, Microsoft.Xna.Framework.Input.Keys.Down));
-        }
-
-
-        private void SpawnRandomCube()
-        {
-            var e = CreateGeonEntity("lol", new Vector3(Nez.Random.NextFloat() * 40 - 20, 25, Nez.Random.NextFloat() * 40 - 20));
-            var p = e.AddComponent(new Nez.GeonBit.RigidBody(new BoxInfo(new Vector3(1, 1, 1)), 30, 2, 0.8f));
-            p.Position = e.Node.Position;
-            p.SetDamping(0.95f, 0.95f);
-            p.Restitution = 6f;
-            p.AngularVelocity = new Vector3(Nez.Random.NextFloat(), Nez.Random.NextFloat(), Nez.Random.NextFloat()) * 15;
-            p.LinearVelocity = new Vector3(Nez.Random.NextFloat(), Nez.Random.NextFloat(), Nez.Random.NextFloat()) * 15;
-            p.Gravity = Vector3.Down * 5;
-            p.CollisionGroup = (short)CollisionGroups.DynamicObjects;
-            var r = e.AddComponent(new ShapeRenderer(ShapeMeshes.Cube), e.Node);
-            r.SetMaterial(new BasicMaterial() { DiffuseColor = Nez.Random.NextColor() });
-            r.Node.Scale = new Vector3(0.5f);
         }
 
         public override void Update()
@@ -91,7 +59,7 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected void InitEnvironment()
         {
-            //CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
+            CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
 
             //Create playing field
             CreateGeonEntity("board", NodeType.Simple).AddComponent(new Board());
