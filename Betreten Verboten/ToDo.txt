@@ -1,0 +1,7 @@
+﻿-Add texture to dice
+-Implement dice side detection/laydown detection
+-Implement rendering play field
+-Implement basic game logic
+-Implement rendering character on correct position
+-Implement character aniamtions
+-Implement game loop
