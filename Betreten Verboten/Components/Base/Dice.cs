@@ -13,7 +13,7 @@ namespace Betreten_Verboten.Components.Base
 {
     internal class Dice : GeonComponent, IUpdatable
     {
-        private const float cMeasureSpeed = 0.01f;
+        private const float cMeasureSpeed = 0.02f;
 
 
         private RigidBody _rigidBody;
@@ -26,12 +26,12 @@ namespace Betreten_Verboten.Components.Base
         {
             var renderer = Entity.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Cube));
             renderer.SetMaterial(new BasicMaterial() { Texture = Entity.Scene.Content.LoadTexture("mesh/dice_cubemap"), TextureEnabled = true  });
-            renderer.Node.Scale = new Vector3(25f);
-            _rigidBody = Entity.AddComponent(new RigidBody(new BoxInfo(new Vector3(50f)), 20f, 0.2f));
+            renderer.Node.Scale = new Vector3(30f);
+            _rigidBody = Entity.AddComponent(new RigidBody(new BoxInfo(new Vector3(60f)), 20f, 0.1f));
             _rigidBody.Gravity = new Vector3(0, -350, 0);
             _rigidBody.SetDamping(0.20f, 0.5f);
             _rigidBody.Restitution = 0f;
-            _rigidBody.Scale = new Vector3(0.1f);
+            _rigidBody.Scale = new Vector3(0.07f);
             _rigidBody.Position = Entity.Node.Position;
             _rigidBody.LinearVelocity = new Vector3(Nez.Random.NextFloat(), 0, Nez.Random.NextFloat()) * 45;
             _rigidBody.AngularVelocity = new Vector3(Nez.Random.NextFloat(), 0, Nez.Random.NextFloat()) * 15;
