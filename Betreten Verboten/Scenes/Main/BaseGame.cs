@@ -40,7 +40,7 @@ namespace Betreten_Verboten.Scenes.Main
             CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice());
 
             //Config camera
-            Camera.Node.Position = new Vector3(0, 5, 50);
+            Camera.Node.Position = new Vector3(0, 15, 50);
 
             //Prepare physics
             AddSceneComponent(new PhysicsWorld());

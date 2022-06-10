@@ -5101,6 +5101,18 @@
 /processorParam:TextureFormat=Compressed
 /build:laal.fbx
 
+#begin mesh/dice_cubemap.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:mesh/dice_cubemap.png
+
 #begin nez/effects/Bevels.mgfxo
 /copy:nez/effects/Bevels.mgfxo
 
