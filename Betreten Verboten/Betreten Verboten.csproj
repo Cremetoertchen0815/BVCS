@@ -34,6 +34,8 @@
     <ProjectReference Include="..\Nez.Portable\Nez.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Components\Base\Boards\Special\" />
+    <Folder Include="Components\Base\Boards\Vanilla\" />
     <Folder Include="Components\Base\HUD\" />
     <Folder Include="Scenes\Menu\" />
     <Folder Include="Scenes\Debug\" />

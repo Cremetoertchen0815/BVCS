@@ -28,7 +28,7 @@ namespace Nez
         /// Will be generated at startup, but you can replace this with a sprite from your atlas to reduce texture swaps.
         /// Should be a 1x1 white pixel
         /// </summary>
-        public Sprite PixelTexture;
+        public Sprite PixelTexture { get; set; }
 
         public Sprite CircleTexture;
 
@@ -42,11 +42,7 @@ namespace Nez
             Batcher = new Batcher(Core.GraphicsDevice);
             BitmapFont = font;
 
-            // the bottom/right pixel is white on the default font so we'll use that for the pixelTexture
-            var fontTex =
-                BitmapFont.Textures[
-                    BitmapFont.DefaultCharacter.TexturePage]; // bitmapFont.defaultCharacterRegion.sprite.texture2D;
-            PixelTexture = new Sprite(fontTex, fontTex.Width - 1, fontTex.Height - 1, 1, 1);
+            PixelTexture = new Sprite(CreateSingleColorTexture(1, 1, Color.White), 0, 0, 1, 1);
 
             CircleTexture = new Sprite(Texture2D.FromFile(Core.GraphicsDevice, Core.Content.RootDirectory + "/nez/textures/circle.png"));
         }

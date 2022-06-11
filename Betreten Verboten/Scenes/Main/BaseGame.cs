@@ -1,4 +1,5 @@
 ﻿using Betreten_Verboten.Components.Base;
+using Betreten_Verboten.Components.Base.Boards.BV;
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
@@ -62,7 +63,7 @@ namespace Betreten_Verboten.Scenes.Main
             CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
 
             //Create playing field
-            CreateGeonEntity("board", NodeType.Simple).AddComponent(new Board());
+            CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
         }
     }
 }
