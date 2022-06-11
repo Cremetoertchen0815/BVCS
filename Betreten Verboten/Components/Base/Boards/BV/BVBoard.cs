@@ -13,6 +13,7 @@ namespace Betreten_Verboten.Components.Base
 
         private const int TEX_RES = 950;
         private const int CIRCLE_RES = 5;
+        private const float CLEAR_COLOR = 0.1f;
 
         //Cached field positions
         private Vector2[] _connectingSegments;
@@ -32,7 +33,7 @@ namespace Betreten_Verboten.Components.Base
 
             //Add board texture renderer
             _shadowProjection = Entity.Scene.AddRenderer(new ShadowPlaneRenderer(-2)).RenderTexture;
-            Entity.Scene.AddRenderer(new RenderLayerRenderer(-1, RENDER_LAYER_BOARD) { RenderTexture = _boardTexture = new RenderTexture(TEX_RES, TEX_RES) { ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None }, RenderTargetClearColor = Color.Black });
+            Entity.Scene.AddRenderer(new RenderLayerRenderer(-1, RENDER_LAYER_BOARD) { RenderTexture = _boardTexture = new RenderTexture(TEX_RES, TEX_RES) { ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None }, RenderTargetClearColor = new Color(Color.White * CLEAR_COLOR, 1f) });
 
             //Configure 3D renderer
             var geonEntity = Entity as GeonEntity;
@@ -50,6 +51,7 @@ namespace Betreten_Verboten.Components.Base
             _kinematicBody.Restitution = 1f;
 
             //Config renderable 
+            
             SetRenderLayer(RENDER_LAYER_BOARD);
 
             //Calculate and cache rendering coords and segments
@@ -94,7 +96,9 @@ namespace Betreten_Verboten.Components.Base
 
         }
 
-
+        /// <summary>
+        /// Calculates the coordinates of fields on the board and caches them to speed up rendering.
+        /// </summary>
         protected void CalculateCachedFields()
         {
             //Init arrays
@@ -104,10 +108,10 @@ namespace Betreten_Verboten.Components.Base
             _fieldsHome = new Vector2[PlayerCount * FigureCount];
 
             //Define variables
-            var invFieldDistance = 1f / FieldDistance;
-            bool isFirstElement = true;
+            var invFieldDistance = (float)FieldPlayerDiameter / FieldDistance; //Multiplier for calculating the overlap between connection segments and their respective fields
+            bool isFirstElement = true; //Flag used for skipping the segment, as it requires a previous field, gets handled later
             Vector2 nuPos = Vector2.Zero, lastPos, conVec;
-            int idxPt = 0, idxSeg = 0, idxSpc = 0;
+            int idxPt = 0, idxSeg = 0, idxSpc = 0; //Indices pointing to the next item in the respective array, for Regular Field(Pt), Connection Segment(Seg) & Home/House Fields(Spc)
 
             //Loop through every connection field
             for (int i = 0; i < PlayerCount; i++)
@@ -124,7 +128,7 @@ namespace Betreten_Verboten.Components.Base
                         isFirstElement = false;
                     else
                     {
-                        conVec = (nuPos - lastPos) * invFieldDistance * FieldPlayerDiameter;
+                        conVec = (nuPos - lastPos) * invFieldDistance;
                         _connectingSegments[idxSeg++] = lastPos + conVec;
                         _connectingSegments[idxSeg++] = nuPos - conVec;
                         lastPos = nuPos;
@@ -142,7 +146,7 @@ namespace Betreten_Verboten.Components.Base
             //Add in last missing segment
             lastPos = nuPos;
             nuPos = GetFieldPosition(0, 0, FieldType.Regular);
-            conVec = (nuPos - lastPos) * invFieldDistance * FieldPlayerDiameter;
+            conVec = (nuPos - lastPos) * invFieldDistance;
             _connectingSegments[idxSeg++] = lastPos + conVec;
             _connectingSegments[idxSeg++] = nuPos - conVec;
 
