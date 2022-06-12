@@ -8,7 +8,7 @@ using static Betreten_Verboten.GlobalFields;
 
 namespace Betreten_Verboten.Components.Base
 {
-    public abstract class BVBoard : RenderableComponent
+    public abstract class BVBoard : RenderableComponent, ITelegramReceiver
     {
 
         private const int TEX_RES = 950;
@@ -56,9 +56,13 @@ namespace Betreten_Verboten.Components.Base
 
             //Calculate and cache rendering coords and segments
             CalculateCachedFields();
-            
+
+            //Register in telegram system
+            TelegramService.Register(this, "common", "board");
 
         }
+
+        public override void OnRemovedFromEntity() => TelegramService.Deregister(this, "common", "board");
 
         protected Vector2 _centerOffset = new Vector2(TEX_RES / 2);
 
@@ -149,6 +153,11 @@ namespace Betreten_Verboten.Components.Base
             conVec = (nuPos - lastPos) * invFieldDistance;
             _connectingSegments[idxSeg++] = lastPos + conVec;
             _connectingSegments[idxSeg++] = nuPos - conVec;
+
+        }
+
+        public void MessageReceived(Telegram message)
+        {
 
         }
     }

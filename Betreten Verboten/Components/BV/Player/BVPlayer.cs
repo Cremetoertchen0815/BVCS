@@ -9,7 +9,7 @@ namespace Betreten_Verboten.Components.BV.Player
 {
     public abstract class BVPlayer : Base.Player
     {
-        public int AngerCount { get; set; }
+        public virtual int AngerCount { get; set; }
         public int AdditionalPoints { get; set; }
         public override int Points => AdditionalPoints;
     }
