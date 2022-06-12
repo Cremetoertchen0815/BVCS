@@ -56,12 +56,12 @@ namespace Betreten_Verboten.Components.Base
             _players = new Player[PlayerCount]; //Create player array
             SetRenderLayer(RENDER_LAYER_BOARD); //Config renderable 
             CalculateCachedFields(); //Calculate and cache rendering coords and segments
-            TelegramService.Register(this, "common", "board"); //Register in telegram service
-
+            this.TeleRegister(); //Register in telegram service
+            
 
         }
 
-        public override void OnRemovedFromEntity() => TelegramService.Deregister(this, "common", "board");
+        public override void OnRemovedFromEntity() => this.TeleDeregister();
 
         protected Vector2 _centerOffset = new Vector2(TEX_RES / 2);
 
@@ -75,8 +75,12 @@ namespace Betreten_Verboten.Components.Base
         public abstract int PlayerCount { get; }
         public abstract Vector2 GetFieldPosition(int player, int fieldNr, FieldType fieldType);
 
+
         public override bool IsVisibleFromCamera(Camera camera) => true;
         public override RectangleF Bounds => new RectangleF(0, 0, TEX_RES, TEX_RES);
+        public string TelegramSender => "board";
+
+
         protected override void Render(Batcher batcher, Camera camera)
         {
 

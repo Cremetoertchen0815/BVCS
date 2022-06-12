@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nez
 {
-    public static class TelegramService
+    internal static class TelegramService
     {
         private static Dictionary<string, List<ITelegramReceiver>> receivers = new Dictionary<string, List<ITelegramReceiver>>();
         internal static bool LogToConsole = false;
@@ -28,12 +28,15 @@ namespace Nez
                     receivers.Add(ID, new List<ITelegramReceiver>() { reg });
             }
         }
-        public static void Deregister(ITelegramReceiver reg, params string[] IDs)
+        public static void Deregister(ITelegramReceiver reg)
         {
-            foreach (string ID in IDs)
-            {
-                if (receivers.ContainsKey(ID) && receivers[ID].Contains(reg)) receivers[ID].Remove(reg);
-            }
+            var IDs = new List<string>();
+
+            foreach (var item in receivers)
+                if (item.Value.Contains(reg)) IDs.Add(item.Key);
+
+            foreach (var ID in IDs)
+                if (receivers[ID].Contains(reg)) receivers[ID].Remove(reg);
         }
 
         public static void DeregisterAll() => receivers.Clear();
@@ -54,7 +57,7 @@ namespace Nez
                 {
                     case "execute_double":
                         DebugConsole.Instance.Log("Telegram transmitted: " + message.Sender + " -> " + message.Receiver + "; " + message.Head + message.Body != string.Empty ? " | " + message.Body : string.Empty);
-                        var resultingtwo = Newtonsoft.Json.JsonConvert.DeserializeObject<(Telegram, Telegram)>(message.Body);
+                        var resultingtwo = Newtonsoft.Json.JsonConvert.DeserializeObject<(Telegram, Telegram)>((string)message.Body);
                         SendPrivate(resultingtwo.Item1);
                         SendPrivate(resultingtwo.Item2);
                         return true;

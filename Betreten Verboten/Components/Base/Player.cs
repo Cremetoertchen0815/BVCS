@@ -44,9 +44,8 @@ namespace Betreten_Verboten.Components.Base
             }
 
             //Register in telegram service
-            TelegramService.Register(this, "players");
-
-            TelegramService.SendPublic()
+            this.TeleRegister("players");
+            this.TeleSendPublic("player_registered", this);
         }
 
         public abstract void MessageReceived(Telegram message);
