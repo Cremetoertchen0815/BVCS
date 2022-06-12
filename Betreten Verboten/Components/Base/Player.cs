@@ -17,12 +17,16 @@ namespace Betreten_Verboten.Components.Base
         public string ID { get; set; }
         public bool MissingTurn { get; set; }
         public abstract int Points { get; }
+        public string TelegramSender => "player_" + Nr;
         public CharConfig CharacterConfig { get; set; }
 
 
         private Component[] _figures;
         private Player[] _otherPlayers;
         private BVBoard _board;
+
+        //ctor
+        public Player(int Nr) => this.Nr = Nr;
 
         public override void OnAddedToEntity()
         {
@@ -39,6 +43,10 @@ namespace Betreten_Verboten.Components.Base
                 _figures[i] = ent.AddComponent(new Component());
             }
 
+            //Register in telegram service
+            TelegramService.Register(this, "players");
+
+            TelegramService.SendPublic()
         }
 
         public abstract void MessageReceived(Telegram message);

@@ -7,9 +7,9 @@ namespace Nez
         public string Sender;
         public string Receiver;
         public string Head;
-        public string Body;
+        public object Body;
 
-        public Telegram(string Sender, string Receiver, string Head, string Body)
+        public Telegram(string Sender, string Receiver, string Head, object Body)
         {
             this.Sender = Sender;
             this.Receiver = Receiver;

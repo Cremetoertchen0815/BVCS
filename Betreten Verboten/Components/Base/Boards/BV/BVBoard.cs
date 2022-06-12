@@ -21,6 +21,8 @@ namespace Betreten_Verboten.Components.Base
         private Vector2[] _fieldsHome;
         private Vector2[] _fieldsHouse;
 
+        private Player[] _players;
+
         private RenderTexture _boardTexture;
         protected ShapeRenderer _shapeRenderer;
         protected RenderTexture _shadowProjection;
@@ -50,15 +52,12 @@ namespace Betreten_Verboten.Components.Base
             _kinematicBody.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Terrain;
             _kinematicBody.Restitution = 1f;
 
-            //Config renderable 
-            
-            SetRenderLayer(RENDER_LAYER_BOARD);
 
-            //Calculate and cache rendering coords and segments
-            CalculateCachedFields();
+            _players = new Player[PlayerCount]; //Create player array
+            SetRenderLayer(RENDER_LAYER_BOARD); //Config renderable 
+            CalculateCachedFields(); //Calculate and cache rendering coords and segments
+            TelegramService.Register(this, "common", "board"); //Register in telegram service
 
-            //Register in telegram system
-            TelegramService.Register(this, "common", "board");
 
         }
 
@@ -158,7 +157,15 @@ namespace Betreten_Verboten.Components.Base
 
         public void MessageReceived(Telegram message)
         {
-
+            switch (message.Head)
+            {
+                case "player_registered":
+                    int source = int.Parse(message.Sender.Substring(7));
+                    _players[source] = (Player)message.Body;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
