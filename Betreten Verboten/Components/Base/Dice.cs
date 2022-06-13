@@ -33,8 +33,9 @@ namespace Betreten_Verboten.Components.Base
             _rigidBody.Restitution = 0f;
             _rigidBody.Scale = new Vector3(0.07f);
             _rigidBody.Position = Entity.Node.Position;
-            _rigidBody.LinearVelocity = new Vector3(Nez.Random.NextFloat(), 0, Nez.Random.NextFloat()) * 45 * 0.5f;
-            _rigidBody.AngularVelocity = new Vector3(Nez.Random.NextFloat(), 0, Nez.Random.NextFloat()) * 15 * 0.5f;
+            _rigidBody.Enabled = true;
+            _rigidBody.LinearVelocity = new Vector3(Nez.Random.NextFloat(), 0, Nez.Random.NextFloat()) * 0f;
+            _rigidBody.AngularVelocity = new Vector3(Nez.Random.NextFloat(), 0, Nez.Random.NextFloat()) * 20f;
 
         }
 

@@ -1,5 +1,6 @@
 ﻿using Betreten_Verboten.Components.Base;
 using Betreten_Verboten.Components.Base.Boards.BV;
+using Betreten_Verboten.Components.BV.Player;
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
@@ -38,7 +39,7 @@ namespace Betreten_Verboten.Scenes.Main
             GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
 
             //Create dice
-            CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice());
+            Core.Schedule(5f, x => CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice()));
 
             //Config camera
             Camera.Node.Position = new Vector3(0, 15, 50);
@@ -63,7 +64,11 @@ namespace Betreten_Verboten.Scenes.Main
             CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
 
             //Create playing field
-            CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
+            var board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
+			for (int i = 0; i < board.PlayerCount; i++)
+			{
+                CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
+			}
         }
     }
 }

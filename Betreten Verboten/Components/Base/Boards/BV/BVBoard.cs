@@ -11,9 +11,9 @@ namespace Betreten_Verboten.Components.Base
     public abstract class BVBoard : RenderableComponent, ITelegramReceiver
     {
 
-        private const int TEX_RES = 950;
+        private const int TEX_RES = 1000;
         private const int CIRCLE_RES = 5;
-        private const float CLEAR_COLOR = 0.8f;
+        private const float CLEAR_COLOR = 0.15f;
 
         //Cached field positions
         private Vector2[] _connectingSegments;
@@ -45,7 +45,7 @@ namespace Betreten_Verboten.Components.Base
             _shapeRenderer.Node.Scale = new Vector3(20);
             _shapeRenderer.Node.Position = new Vector3(0, 1, 0);
             _shapeRenderer.RenderingQueue = RenderingQueue.BackgroundNoCull;
-            _shapeRenderer.SetMaterial(new ShadowPlaneMaterial() { Texture = _boardTexture, ShadowMap = _shadowProjection, TextureEnabled = true, DiffuseColor = Color.DarkGray, AmbientLight = Color.White * 0.25f });
+            _shapeRenderer.SetMaterial(new ShadowPlaneMaterial() { Texture = _boardTexture, ShadowMap = _shadowProjection, TextureEnabled = true, DiffuseColor = Color.LightGray, AmbientLight = Color.White * 0.20f });
 
             //Configure physics
             _kinematicBody = geonEntity.AddComponent(new StaticBody(new EndlessPlaneInfo(Vector3.Up)));
@@ -73,7 +73,8 @@ namespace Betreten_Verboten.Components.Base
         public abstract int FieldCount { get; }
         public abstract int FigureCount { get; }
         public abstract int PlayerCount { get; }
-        public abstract Vector2 GetFieldPosition(int player, int fieldNr, FieldType fieldType);
+        public abstract float CharScale { get; }
+        public abstract Vector2 GetFieldPosition(int player, int fieldNr, FieldType fieldType, bool centerOffset = true);
 
 
         public override bool IsVisibleFromCamera(Camera camera) => true;

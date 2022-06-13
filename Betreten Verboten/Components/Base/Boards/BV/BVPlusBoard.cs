@@ -19,13 +19,14 @@ namespace Betreten_Verboten.Components.Base.Boards.BV
 
         public override int FieldHouseDiameter => 20;
         public override int FieldHomeDiameter => 20;
-        public override int FieldPlayerDiameter => 30;
+        public override int FieldPlayerDiameter => 28;
         public override int FieldCount => 10;
         public override int FigureCount => 4;
         public override int PlayerCount => 4;
         public override int FieldDistance => 85;
+        public override float CharScale => 0.105f;
 
-        public override Vector2 GetFieldPosition(int player, int fieldNr, FieldType fieldType)
+        public override Vector2 GetFieldPosition(int player, int fieldNr, FieldType fieldType, bool centerOffset = true)
         {
             //Get unrotated position
             Vector2 positionUnrotated;
@@ -42,7 +43,7 @@ namespace Betreten_Verboten.Components.Base.Boards.BV
                     break;
             }
 
-            return Vector2.Transform(positionUnrotated, transmatrices0[player]) + _centerOffset;
+            return Vector2.Transform(positionUnrotated, transmatrices0[player]) + (centerOffset ? _centerOffset : Vector2.Zero);
         }
 
         private Vector2 GetHouseFieldUnrotated(int fieldNr)
