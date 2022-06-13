@@ -27,15 +27,15 @@ namespace Betreten_Verboten.Components.Base
             var renderer = Entity.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Cube));
             renderer.SetMaterial(new BasicMaterial() { Texture = Entity.Scene.Content.LoadTexture("mesh/dice_cubemap"), TextureEnabled = true  });
             renderer.Node.Scale = new Vector3(30f);
-            _rigidBody = Entity.AddComponent(new RigidBody(new BoxInfo(new Vector3(60f)), 20f, 0.1f));
+            _rigidBody = Entity.AddComponent(new RigidBody(new BoxInfo(new Vector3(60f)), 10f, 0.1f));
             _rigidBody.Gravity = new Vector3(0, -350, 0);
             _rigidBody.SetDamping(0.20f, 0.5f);
             _rigidBody.Restitution = 0f;
             _rigidBody.Scale = new Vector3(0.07f);
             _rigidBody.Position = Entity.Node.Position;
             _rigidBody.Enabled = true;
-            _rigidBody.LinearVelocity = new Vector3(Nez.Random.NextFloat(), 0, Nez.Random.NextFloat()) * 0f;
-            _rigidBody.AngularVelocity = new Vector3(Nez.Random.NextFloat(), 0, Nez.Random.NextFloat()) * 20f;
+            _rigidBody.LinearVelocity = new Vector3(Nez.Random.MinusOneToOne(), 0, Nez.Random.MinusOneToOne()) * 0f;
+            _rigidBody.AngularVelocity = new Vector3(Nez.Random.MinusOneToOne(), 0, Nez.Random.MinusOneToOne()) * 20f;
 
         }
 
