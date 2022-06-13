@@ -17,12 +17,14 @@ namespace Nez
         public string Namespace;
         public Assembly BaseAssembly;
 
-        public SceneManager(Assembly baseAssembly, string rootNamespace)
+		public string TelegramSender => "sceneman";
+
+		public SceneManager(Assembly baseAssembly, string rootNamespace)
         {
             Rescan(baseAssembly, rootNamespace); //First scan
 
             //Register telegram service
-            TelegramService.Register(this, "sceneman");
+            this.TeleRegister();
         }
 
         public void Rescan(Assembly baseAssembly = null, string rootNamespace = null)
@@ -196,7 +198,7 @@ namespace Nez
             switch (message.Head)
             {
                 case "sc_switch":
-                    SwitchToScene(message.Body);
+                    SwitchToScene((string)message.Body);
                     break;
                 default:
                     break;

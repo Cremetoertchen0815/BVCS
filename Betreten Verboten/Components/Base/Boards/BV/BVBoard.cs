@@ -13,7 +13,7 @@ namespace Betreten_Verboten.Components.Base
 
         private const int TEX_RES = 950;
         private const int CIRCLE_RES = 5;
-        private const float CLEAR_COLOR = 0.1f;
+        private const float CLEAR_COLOR = 0.8f;
 
         //Cached field positions
         private Vector2[] _connectingSegments;
