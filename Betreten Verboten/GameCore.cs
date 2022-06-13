@@ -6,7 +6,7 @@ using Nez.GeonBit.Materials;
 
 namespace Betreten_Verboten
 {
-	class GameCore : Core
+	internal class GameCore : Core
 	{
 		protected override void Initialize()
 		{
@@ -27,10 +27,9 @@ namespace Betreten_Verboten
 
 	public class FunniTestClass : GeonScene
 	{
-
-		VirtualJoystick con;
-		VirtualJoystick cam;
-		VirtualButton joomp;
+		private VirtualJoystick con;
+		private VirtualJoystick cam;
+		private VirtualButton joomp;
 
 		public override void Initialize()
 		{
@@ -49,8 +48,8 @@ namespace Betreten_Verboten
 
 
 			CreateGeonEntity("sky").AddComponent(new SkyBox(null)).RenderingQueue = RenderingQueue.BackgroundNoCull;
-			AddPostProcessor(new QualityBloomPostProcessor(1) { BloomPreset = QualityBloomPostProcessor.BloomPresets.Focussed, BloomThreshold = 0.3f, BloomStrengthMultiplier = 0.8f});
-			
+			AddPostProcessor(new QualityBloomPostProcessor(1) { BloomPreset = QualityBloomPostProcessor.BloomPresets.Focussed, BloomThreshold = 0.3f, BloomStrengthMultiplier = 0.8f });
+
 
 			Camera.Node.PositionZ = 40;
 			Camera.Node.PositionY = 5;
@@ -63,7 +62,7 @@ namespace Betreten_Verboten
 			//shipPhysics.LinearVelocity = new Vector3(5, 5, 0);
 			ss.Gravity = Vector3.Down * 27;
 			ss.AngularFactor = new Vector3(4f);
-			ss.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.Player;
+			ss.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Player;
 			leel.AddComponent(ss);
 
 
@@ -109,7 +108,7 @@ namespace Betreten_Verboten
 			//shipPhysics.LinearVelocity = new Vector3(5, 5, 0);
 			shipPhysics.Gravity = Vector3.Down * 27;
 			shipPhysics.AngularFactor = new Vector3(4f);
-			shipPhysics.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.Player;
+			shipPhysics.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Player;
 			lol.AddComponent(shipPhysics);
 
 			var floor = CreateGeonEntity("floor", new Vector3(0, -2, 0));
@@ -123,13 +122,16 @@ namespace Betreten_Verboten
 			popp.Node.Scale = new Vector3(50); */
 
 			var kin = floor.AddComponent(new KinematicBody(new EndlessPlaneInfo(Vector3.Up)));
-			kin.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.Terrain;
+			kin.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Terrain;
 			kin.Restitution = 1f;
 			kin.Friction = 1f;
 
 			NormalMapLitMaterial = new LitMaterial() { Texture = Content.LoadTexture("tex"), TextureEnabled = true };
 			NormalMapLitMaterial.SamplerState = SamplerState.AnisotropicClamp;
-			for (int i = 0; i < 1000; i++) SpawnRandomCube();
+			for (int i = 0; i < 1000; i++)
+			{
+				SpawnRandomCube();
+			}
 
 			pop.SetMaterial(new NormalMapLitMaterial() { NormalTexture = Content.LoadTexture("normal"), Texture = Content.LoadTexture("albedo"), TextureEnabled = true, SamplerState = SamplerStates.AnisotropicClamp });
 
@@ -138,7 +140,7 @@ namespace Betreten_Verboten
 			{
 				var soooooos = rend.CaptureEnvironmentMap(r, peep.Node.WorldPosition, 128);
 				pop.SetMaterial(new ReflectiveMaterial() { EnvironmentMap = soooooos, EnvironmentAmount = 0.8f, EnvironmentSpecular = Color.Red * 0.4f, SpecularPower = 2, FresnelFactor = 0.7f, SamplerState = SamplerState.AnisotropicWrap });
-			}); 
+			});
 		}
 
 		private void SpawnRandomCube()
@@ -151,20 +153,28 @@ namespace Betreten_Verboten
 			//p.AngularVelocity = new Vector3(Random.NextFloat(), Random.NextFloat(), Random.NextFloat());
 			//p.LinearVelocity = new Vector3(Random.NextFloat(), Random.NextFloat(), Random.NextFloat());
 			p.Gravity = Vector3.Down * 20;
-			p.CollisionGroup = (short)Nez.GeonBit.Physics.CollisionGroups.DynamicObjects;
+			p.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.DynamicObjects;
 			var r = e.AddComponent(new ShapeRenderer(ShapeMeshes.Cube), e.Node);
 			r.Node.Scale = new Vector3(0.5f);
 			r.SetMaterial(NormalMapLitMaterial);
 		}
 
-		Node spos;
-		RigidBody nonononode;
-		LitMaterial NormalMapLitMaterial;
+		private readonly Node spos;
+		private RigidBody nonononode;
+		private LitMaterial NormalMapLitMaterial;
 		public override void Update()
 		{
 			base.Update();
-			if (nonononode == null) nonononode = FindEntity("test").GetComponent<RigidBody>();
-			if (joomp.IsPressed) nonononode.ApplyForce(Vector3.Up * 10000);
+			if (nonononode == null)
+			{
+				nonononode = FindEntity("test").GetComponent<RigidBody>();
+			}
+
+			if (joomp.IsPressed)
+			{
+				nonononode.ApplyForce(Vector3.Up * 10000);
+			}
+
 			nonononode.LinearVelocity += new Vector3(con.Value.X, 0, con.Value.Y) * 0.4f;
 			Camera.Node.Position += new Vector3(cam.Value.X, 0, cam.Value.Y) * 0.4f;
 		}
