@@ -30,7 +30,7 @@ namespace Betreten_Verboten.Components.Base.Characters
 
 			var rb = ent.AddComponent(new RigidBody(new ConeInfo(CHAR_HITBOX_WIDTH, CHAR_HITBOX_HEIGHT), 10, 1, 1));
 			rb.Position = ent.Node.Position;
-			rb.AngularDamping = rb.LinearDamping = 0.50f;
+			rb.AngularDamping = rb.LinearDamping = 0.80f;
 		}
 
 		public void Update()
