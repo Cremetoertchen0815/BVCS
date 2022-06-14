@@ -38,7 +38,7 @@ namespace Betreten_Verboten.Scenes.Main
 			Camera.Node.Position = new Vector3(0, 15, 50);
 
 			//Prepare physics
-			AddSceneComponent(new PhysicsWorld());
+			AddSceneComponent(new PhysicsWorld()).SetGravity(new Vector3(0, -100, 0));
 			InitEnvironment();
 
 			VirtualJoystick = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.A, Microsoft.Xna.Framework.Input.Keys.D, Microsoft.Xna.Framework.Input.Keys.W, Microsoft.Xna.Framework.Input.Keys.S));
