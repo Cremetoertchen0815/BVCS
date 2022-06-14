@@ -32,7 +32,7 @@ namespace Betreten_Verboten.Scenes.Main
 			GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
 
 			//Create dice
-			Core.Schedule(5f, x => CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice()));
+			Core.Schedule(8f, x => CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice()));
 
 			//Config camera
 			Camera.Node.Position = new Vector3(0, 15, 50);
