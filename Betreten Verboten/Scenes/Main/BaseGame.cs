@@ -13,6 +13,14 @@ namespace Betreten_Verboten.Scenes.Main
 	[ManagedScene(100, false)]
 	public class BaseGame : GeonScene
 	{
+		private const int ABUTTON_WIDTH = 350;
+		private const int ABUTTON_HEIGHT = 70;
+		private const int ABUTTON_MARGIN_RIGHT = 20;
+		private const int ABUTTON_MARGIN_BOTTOM = 20;
+		private const int ABUTTON_PADDING_X = 20;
+		private const int ABUTTON_PADDING_Y = 20;
+		private const int ABUTTON_SPACING = 20;
+
 		protected GeonDefaultRenderer _geonRenderer;
 
 		private VirtualJoystick VirtualJoystick;
@@ -31,6 +39,8 @@ namespace Betreten_Verboten.Scenes.Main
 
 			GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
 			GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
+
+			//CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice())
 
 			//Config camera
 			Camera.Node.Position = new Vector3(0, 15, 50);
@@ -67,9 +77,26 @@ namespace Betreten_Verboten.Scenes.Main
         {
 			var canvas = CreateEntity("UI").AddComponent(new UICanvas());
 			canvas.SetRenderLayer(RENDER_LAYER_HUD);
-			var button = canvas.Stage.AddElement(new Button(ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red)));
-			button.SetBounds(200, 200, 200, 200);
-			button.OnClicked += x => CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice());
+			//var button = canvas.Stage.AddElement(new Button(ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red)));
+			//button.SetBounds(200, 200, 200, 200);
+			//button.AddElement(new Label("Moin"));
+			//Generate action buttons
+			var actBtnStyle = ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red);
+			var labelStyle = new LabelStyle();
+			var actBtnPanel = canvas.Stage.AddElement(new Container());
+			var panelSize = new Vector2(ABUTTON_WIDTH + ABUTTON_MARGIN_RIGHT + ABUTTON_PADDING_X * 2, ABUTTON_HEIGHT * 4 + ABUTTON_SPACING * 3 + ABUTTON_PADDING_Y * 2);
+			actBtnPanel.SetBounds(1920 - panelSize.X, 1080 - panelSize.Y - ABUTTON_MARGIN_BOTTOM, panelSize.X, panelSize.Y);
+			string[] btnNames = { "Dice", "Anger", "Sacrifice", "AfK" };
+            for (int i = 0; i < 4; i++)
+			{
+				//Generate button base
+				var actBtnA = actBtnPanel.AddElement(new Button(actBtnStyle));
+				actBtnA.SetBounds(ABUTTON_SPACING, ABUTTON_SPACING + (ABUTTON_HEIGHT + ABUTTON_SPACING) * i, ABUTTON_WIDTH, ABUTTON_HEIGHT);
+				//Add label
+				var actBtnLabel = actBtnA.AddElement(new Label(btnNames[i]));
+				//actBtnPanel.AddElement(actBtnA);
+				//actBtnA.Pad(20, 20, 20, 20);
+			}
 		}
 	}
 }

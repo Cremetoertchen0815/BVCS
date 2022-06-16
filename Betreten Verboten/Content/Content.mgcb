@@ -91,6 +91,13 @@
 /processorParam:TextureFormat=Color
 /build:cubemap/top.png
 
+#begin fonts/action_btn.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/action_btn.spritefont
+
 #begin GeonBit.Core/BasicMeshes/Cone.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
