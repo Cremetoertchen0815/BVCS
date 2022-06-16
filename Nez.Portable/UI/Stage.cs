@@ -8,7 +8,7 @@ namespace Nez.UI
     public class Stage
     {
         public static bool Debug;
-        public Entity Entity;
+        public Entity Entity { get; set; }
 
         /// <summary>
         /// if true, the rawMousePosition will be used else the scaledMousePosition will be used. If your UI is in screen space

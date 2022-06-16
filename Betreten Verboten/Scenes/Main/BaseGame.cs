@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.Physics;
+using Nez.UI;
 using static Betreten_Verboten.GlobalFields;
 
 namespace Betreten_Verboten.Scenes.Main
@@ -31,15 +32,13 @@ namespace Betreten_Verboten.Scenes.Main
 			GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
 			GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
 
-			//Create dice
-			Core.Schedule(8f, x => CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice()));
-
 			//Config camera
 			Camera.Node.Position = new Vector3(0, 15, 50);
 
 			//Prepare physics
 			AddSceneComponent(new PhysicsWorld()).SetGravity(new Vector3(0, -100, 0));
 			InitEnvironment();
+			InitUI();
 
 			VirtualJoystick = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.A, Microsoft.Xna.Framework.Input.Keys.D, Microsoft.Xna.Framework.Input.Keys.W, Microsoft.Xna.Framework.Input.Keys.S));
 			VirtualJoystickB = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.Right, Microsoft.Xna.Framework.Input.Keys.Up, Microsoft.Xna.Framework.Input.Keys.Down));
@@ -62,6 +61,15 @@ namespace Betreten_Verboten.Scenes.Main
 			{
 				CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
 			}
+		}
+
+		protected void InitUI()
+        {
+			var canvas = CreateEntity("UI").AddComponent(new UICanvas());
+			canvas.SetRenderLayer(RENDER_LAYER_HUD);
+			var button = canvas.Stage.AddElement(new Button(ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red)));
+			button.SetBounds(200, 200, 200, 200);
+			button.OnClicked += x => CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice());
 		}
 	}
 }
