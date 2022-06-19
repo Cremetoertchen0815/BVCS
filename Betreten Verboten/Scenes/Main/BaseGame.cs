@@ -26,6 +26,10 @@ namespace Betreten_Verboten.Scenes.Main
 		private VirtualJoystick VirtualJoystick;
 		private VirtualJoystick VirtualJoystickB;
 
+		//UI
+		private Container _uiPlayerControls;
+		private Button _uiPlayerReroll;
+
 		public override void Initialize()
 		{
 			base.Initialize();
@@ -80,23 +84,48 @@ namespace Betreten_Verboten.Scenes.Main
 			//var button = canvas.Stage.AddElement(new Button(ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red)));
 			//button.SetBounds(200, 200, 200, 200);
 			//button.AddElement(new Label("Moin"));
+
 			//Generate action buttons
 			var actBtnStyle = ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red);
 			var labelStyle = new LabelStyle();
-			var actBtnPanel = canvas.Stage.AddElement(new Container());
-			var panelSize = new Vector2(ABUTTON_WIDTH + ABUTTON_MARGIN_RIGHT + ABUTTON_PADDING_X * 2, ABUTTON_HEIGHT * 4 + ABUTTON_SPACING * 3 + ABUTTON_PADDING_Y * 2);
-			actBtnPanel.SetBounds(1920 - panelSize.X, 1080 - panelSize.Y - ABUTTON_MARGIN_BOTTOM, panelSize.X, panelSize.Y);
+			_uiPlayerControls = canvas.Stage.AddElement(new Container());
+			var panelSize = new Vector2(ABUTTON_WIDTH + ABUTTON_MARGIN_RIGHT + ABUTTON_PADDING_X * 2, ABUTTON_MARGIN_BOTTOM + ABUTTON_HEIGHT * 4 + ABUTTON_SPACING * 3 + ABUTTON_PADDING_Y * 2);
+			_uiPlayerControls.SetBounds(1920 - panelSize.X, 1080 - panelSize.Y - ABUTTON_MARGIN_BOTTOM, panelSize.X, panelSize.Y);
 			string[] btnNames = { "Dice", "Anger", "Sacrifice", "AfK" };
             for (int i = 0; i < 4; i++)
 			{
 				//Generate button base
-				var actBtnA = actBtnPanel.AddElement(new Button(actBtnStyle));
+				var actBtnA = _uiPlayerControls.AddElement(new Button(actBtnStyle));
 				actBtnA.SetBounds(ABUTTON_SPACING, ABUTTON_SPACING + (ABUTTON_HEIGHT + ABUTTON_SPACING) * i, ABUTTON_WIDTH, ABUTTON_HEIGHT);
 				//Add label
 				var actBtnLabel = actBtnA.AddElement(new Label(btnNames[i]));
-				//actBtnPanel.AddElement(actBtnA);
-				//actBtnA.Pad(20, 20, 20, 20);
-			}
+
+                switch (i)
+                {
+					case 0:
+						actBtnA.OnClicked += x => RollDice();
+						break;
+                    default:
+                        break;
+                }
+            }
+
+			//Generate reroll button
+			_uiPlayerReroll = canvas.Stage.AddElement(new Button(actBtnStyle));
+			_uiPlayerReroll.SetBounds(1920 - ABUTTON_WIDTH - ABUTTON_MARGIN_RIGHT * 2, 1080 - ABUTTON_HEIGHT - ABUTTON_MARGIN_BOTTOM, ABUTTON_WIDTH, ABUTTON_HEIGHT);
+			_uiPlayerReroll.SetIsVisible(false);
+			_uiPlayerReroll.OnClicked += x => RollDice();
+		}
+
+		private void RollDice()
+        {
+			//Set camera position
+			Camera.LookAt = new Vector3(-500, 2, -500);
+			Camera.OverridePosition = new Vector3(-480, 25, -480);
+			Dice.Throw(this);
+			_uiPlayerControls.SetIsVisible(false);
+			_uiPlayerReroll.SetIsVisible(true);
+
 		}
 	}
 }

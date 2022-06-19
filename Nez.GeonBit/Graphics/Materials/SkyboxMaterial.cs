@@ -79,7 +79,7 @@ namespace Nez.GeonBit.Materials
 			_effect.World =
 				(FlipYZ ? Matrix.CreateRotationX((float)Math.PI * -0.5f) : Matrix.Identity) *
 				Matrix.CreateScale(GeonDefaultRenderer.ActiveCamera.FarClipPlane * Vector3.One * 1.5f) *
-				Matrix.CreateTranslation(GeonDefaultRenderer.ActiveCamera.Position);
+				Matrix.CreateTranslation(GeonDefaultRenderer.ActiveCamera.OverridePosition ?? GeonDefaultRenderer.ActiveCamera.Position);
 
 		/// <summary>
 		/// Update material view matrix.

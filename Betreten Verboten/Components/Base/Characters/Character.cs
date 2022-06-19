@@ -35,14 +35,8 @@ namespace Betreten_Verboten.Components.Base.Characters
 
 		public void Update()
 		{
-			Console.WriteLine();
-
 			var ent = (GeonEntity)Entity;
 			var siis = ent.GetComponent<ModelRenderer>();
-			if (siis.Node == ent.Node)
-			{
-				Console.WriteLine();
-			}
 		}
 	}
 }

@@ -6,9 +6,23 @@ namespace Betreten_Verboten.Components.BV.Player
 	{
 		public LocalPlayer(int Nr) : base(Nr)
 		{
-
+			//Register UI fields
 		}
 
-		public override void MessageReceived(Telegram message) { return; }
+		public void RegisterUI()
+        {
+
+        }
+
+		public override void MessageReceived(Telegram message) 
+		{
+            switch (message.Head)
+            {
+				case "player_active":
+					break;
+                default:
+                    break;
+            }
+        }
 	}
 }

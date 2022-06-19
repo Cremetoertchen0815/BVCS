@@ -282,10 +282,12 @@ namespace Nez.GeonBit
 			return new Ray(nearPoint, dir);
 		}
 
+		public Vector3? OverridePosition = null;
+
 		/// <summary>
 		/// If set, camera will always look at this point, regardless of scene node rotation.
 		/// </summary>
-		public Vector3? LookAt = null;
+		public Vector3? LookAt { get; set; } = null;
 
 		/// <summary>
 		/// Set a target that the camera will always look at, regardless of scene node rotation.
@@ -395,17 +397,9 @@ namespace Nez.GeonBit
 			// get current world position (of the camera)
 			var worldPos = Node.WorldPosition;
 
-			// if we have lookat-target, create view from look-at matrix.
-			if (LookAt != null)
-			{
-				view = Matrix.CreateLookAt(worldPos, (Vector3)LookAt, Vector3.Up);
-			}
-			// if we don't have a look-at target, create view matrix from scene node transformations
-			else
-			{
-				var target = worldPos + Vector3.Transform(Vector3.Forward, Node.WorldRotation);
-				view = Matrix.CreateLookAt(worldPos, target, Vector3.Up);
-			}
+			var source = OverridePosition ?? worldPos;
+			var target = LookAt ?? (worldPos + Vector3.Transform(Vector3.Forward, Node.WorldRotation));
+			view = Matrix.CreateLookAt(source, target, Vector3.Up);
 
 			// update the view matrix of the graphic camera component
 			UpdateViewPosition(view, worldPos);

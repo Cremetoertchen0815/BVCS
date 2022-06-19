@@ -17,7 +17,7 @@ namespace Betreten_Verboten.Components.Base
 		private readonly Vector3[] _sideNormals = { Vector3.Forward, Vector3.Down, Vector3.Backward, Vector3.Up, Vector3.Right, Vector3.Left };
 		private bool _isDoneRolling = false;
 
-
+		public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500, 25, -500)).AddComponent(new Dice());
 		public override void OnAddedToEntity()
 		{
 			var renderer = Entity.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Cube));
