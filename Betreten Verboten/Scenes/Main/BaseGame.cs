@@ -27,7 +27,8 @@ namespace Betreten_Verboten.Scenes.Main
 		private VirtualJoystick VirtualJoystick;
 		private VirtualJoystick VirtualJoystickB;
 
-		private readonly List<int> _diceNumbers = new List<int>();
+		private List<int> _diceNumbers = new List<int>();
+		private GameState _gameState = GameState.ActionSelect;
 
 		//UI
 		private Container _uiPlayerControls;
@@ -73,7 +74,7 @@ namespace Betreten_Verboten.Scenes.Main
 					var nr = (int)message.Body;
 					_diceNumbers.Add(nr);
 					System.Console.WriteLine(nr);
-					if (Dice.ShouldReroll(_diceNumbers)) _uiPlayerReroll.SetIsVisible(true); else SwitchToDefaultView();
+					if (Dice.ShouldReroll(_diceNumbers)) _uiPlayerReroll.SetIsVisible(true); else GameState = GameState.PieceSelect;
 					break;
 			}
 		}
@@ -123,7 +124,7 @@ namespace Betreten_Verboten.Scenes.Main
 				switch (i)
 				{
 					case 0:
-						actBtnA.OnClicked += x => SwitchToDiceRoll();
+						actBtnA.OnClicked += x => GameState = GameState.DiceRoll;
 						break;
 					default:
 						break;
@@ -137,21 +138,45 @@ namespace Betreten_Verboten.Scenes.Main
 			_uiPlayerReroll.OnClicked += x => RollDice();
 		}
 
-		private void SwitchToDiceRoll()
+		public GameState GameState
 		{
-			//Set camera position
-			Camera.LookAt = new Vector3(-500, 2, -500);
-			Camera.OverridePosition = new Vector3(-480, 25, -480);
-			_uiPlayerControls.SetIsVisible(false);
-			_uiPlayerReroll.SetIsVisible(true);
-		}
+			get => _gameState;
+			set
+			{
+				//Switch for old state
+				switch (_gameState)
+				{
+					case GameState.DiceRoll:
+						FindEntitiesWithTag(Dice.ENTITY_TAG).ForEach(x => x.Destroy());
+						break;
+				}
 
-		private void SwitchToDefaultView()
-		{
-			//Set camera position
-			Camera.OverridePosition = Camera.LookAt = null;
-			_uiPlayerControls.SetIsVisible(true);
-			_uiPlayerReroll.SetIsVisible(false);
+				//Switch for new state
+				switch (_gameState = value)
+				{
+					case GameState.DiceRoll:
+						//Set camera position
+						Camera.LookAt = new Vector3(-500, 2, -500);
+						Camera.OverridePosition = new Vector3(-480, 25, -480);
+						//Refresh UI elements
+						_uiPlayerControls.SetIsVisible(false);
+						_uiPlayerReroll.SetIsVisible(true);
+						_diceNumbers.Clear(); //Clear dice queue
+						break;
+					case GameState.ActionSelect:
+						//Set camera position
+						Camera.OverridePosition = Camera.LookAt = null;
+						_uiPlayerControls.SetIsVisible(true);
+						_uiPlayerReroll.SetIsVisible(false);
+						break;
+					default:
+						//Set camera position
+						Camera.OverridePosition = Camera.LookAt = null;
+						_uiPlayerControls.SetIsVisible(false);
+						_uiPlayerReroll.SetIsVisible(false);
+						break;
+				}
+			}
 		}
 
 		private void RollDice()

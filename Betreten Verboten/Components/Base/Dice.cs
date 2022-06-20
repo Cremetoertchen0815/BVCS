@@ -9,7 +9,8 @@ namespace Betreten_Verboten.Components.Base
 {
 	internal class Dice : GeonComponent, IUpdatable
 	{
-		private const float cMeasureSpeed = 0.05f;
+		private const float MEASURE_SPEED = 0.05f;
+		public const int ENTITY_TAG = 15;
 
 
 		private RigidBody _rigidBody;
@@ -29,15 +30,15 @@ namespace Betreten_Verboten.Components.Base
 			_rigidBody.Scale = new Vector3(0.07f);
 			_rigidBody.Position = Entity.Node.Position;
 			_rigidBody.Enabled = true;
-			_rigidBody.LinearVelocity = new Vector3(Nez.Random.MinusOneToOne(), 0, Nez.Random.MinusOneToOne()) * 15f;
-			_rigidBody.AngularVelocity = new Vector3(Nez.Random.MinusOneToOne(), 0, Nez.Random.MinusOneToOne()) * 20f;
+			_rigidBody.LinearVelocity = new Vector3(Random.MinusOneToOne(), 0, Random.MinusOneToOne()) * 15f;
+			_rigidBody.AngularVelocity = new Vector3(Random.MinusOneToOne(), 0, Random.MinusOneToOne()) * 20f;
 
 		}
 
 		public void Update()
 		{
 			//Check if the dice stopped rolling and if yes, calculate the number
-			if (_rigidBody.LinearVelocity.Length() < cMeasureSpeed && !_isDoneRolling)
+			if (_rigidBody.LinearVelocity.Length() < MEASURE_SPEED && !_isDoneRolling)
 			{
 				_isDoneRolling = true;
 				Core.Schedule(0.2f, x => GetDiceTopNumber().SendPrivateObj("dice", "base", "dice_value_set"));
@@ -59,7 +60,7 @@ namespace Betreten_Verboten.Components.Base
 		}
 
 
-		public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500, 25, -500)).AddComponent(new Dice());
+		public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500, 25, -500)).SetTag(ENTITY_TAG).AddComponent(new Dice());
 		public static bool ShouldReroll(List<int> nrs) => nrs.Count < 2;
 	}
 }
