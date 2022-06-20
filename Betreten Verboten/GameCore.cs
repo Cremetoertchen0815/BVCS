@@ -15,7 +15,7 @@ namespace Betreten_Verboten
 			Window.AllowUserResizing = true;
 			RegisterGlobalManager(new SceneManager(System.Reflection.Assembly.GetAssembly(GetType()), "Betreten_Verboten.Scenes"));
 
-			GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
+			GraphicsDevice.PresentationParameters.MultiSampleCount = 16;
 			Screen.EnableAA = true;
 			Screen.ApplyChanges();
 			Scene.SetDefaultDesignResolution(1920, 1080, Scene.SceneResolutionPolicy.BestFit);

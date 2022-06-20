@@ -6,12 +6,13 @@ using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.Physics;
 using Nez.UI;
+using System.Collections.Generic;
 using static Betreten_Verboten.GlobalFields;
 
 namespace Betreten_Verboten.Scenes.Main
 {
 	[ManagedScene(100, false)]
-	public class BaseGame : GeonScene
+	public class BaseGame : GeonScene, ITelegramReceiver
 	{
 		private const int ABUTTON_WIDTH = 350;
 		private const int ABUTTON_HEIGHT = 70;
@@ -26,9 +27,13 @@ namespace Betreten_Verboten.Scenes.Main
 		private VirtualJoystick VirtualJoystick;
 		private VirtualJoystick VirtualJoystickB;
 
+		private List<int> _diceNumbers = new List<int>();
+
 		//UI
 		private Container _uiPlayerControls;
 		private Button _uiPlayerReroll;
+
+		public string TelegramSender => "base";
 
 		public override void Initialize()
 		{
@@ -54,8 +59,23 @@ namespace Betreten_Verboten.Scenes.Main
 			InitEnvironment();
 			InitUI();
 
+			this.TeleRegister();
+
 			VirtualJoystick = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.A, Microsoft.Xna.Framework.Input.Keys.D, Microsoft.Xna.Framework.Input.Keys.W, Microsoft.Xna.Framework.Input.Keys.S));
 			VirtualJoystickB = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.Right, Microsoft.Xna.Framework.Input.Keys.Up, Microsoft.Xna.Framework.Input.Keys.Down));
+		}
+
+		public void MessageReceived(Telegram message)
+		{
+			switch(message.Head)
+			{
+				case "dice_value_set":
+					var nr = (int)message.Body;
+					_diceNumbers.Add(nr);
+					System.Console.WriteLine(nr);
+					if (Dice.ShouldReroll(_diceNumbers)) _uiPlayerReroll.SetIsVisible(true); else SwitchToDefaultView();
+					break;
+			}
 		}
 
 		public override void Update()
@@ -103,7 +123,7 @@ namespace Betreten_Verboten.Scenes.Main
                 switch (i)
                 {
 					case 0:
-						actBtnA.OnClicked += x => RollDice();
+						actBtnA.OnClicked += x => SwitchToDiceRoll();
 						break;
                     default:
                         break;
@@ -117,15 +137,27 @@ namespace Betreten_Verboten.Scenes.Main
 			_uiPlayerReroll.OnClicked += x => RollDice();
 		}
 
-		private void RollDice()
-        {
+		private void SwitchToDiceRoll()
+		{
 			//Set camera position
 			Camera.LookAt = new Vector3(-500, 2, -500);
 			Camera.OverridePosition = new Vector3(-480, 25, -480);
-			Dice.Throw(this);
 			_uiPlayerControls.SetIsVisible(false);
 			_uiPlayerReroll.SetIsVisible(true);
+		}
 
+		private void SwitchToDefaultView()
+		{
+			//Set camera position
+			Camera.OverridePosition = Camera.LookAt = null;
+			_uiPlayerControls.SetIsVisible(true);
+			_uiPlayerReroll.SetIsVisible(false);
+		}
+
+		private void RollDice()
+        {
+			Dice.Throw(this);
+			_uiPlayerReroll.SetIsVisible(false);
 		}
 	}
 }
