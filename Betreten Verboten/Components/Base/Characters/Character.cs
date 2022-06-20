@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
-using System;
 
 namespace Betreten_Verboten.Components.Base.Characters
 {

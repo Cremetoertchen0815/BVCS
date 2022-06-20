@@ -27,7 +27,7 @@ namespace Betreten_Verboten.Scenes.Main
 		private VirtualJoystick VirtualJoystick;
 		private VirtualJoystick VirtualJoystickB;
 
-		private List<int> _diceNumbers = new List<int>();
+		private readonly List<int> _diceNumbers = new List<int>();
 
 		//UI
 		private Container _uiPlayerControls;
@@ -67,7 +67,7 @@ namespace Betreten_Verboten.Scenes.Main
 
 		public void MessageReceived(Telegram message)
 		{
-			switch(message.Head)
+			switch (message.Head)
 			{
 				case "dice_value_set":
 					var nr = (int)message.Body;
@@ -98,7 +98,7 @@ namespace Betreten_Verboten.Scenes.Main
 		}
 
 		protected void InitUI()
-        {
+		{
 			var canvas = CreateEntity("UI").AddComponent(new UICanvas());
 			canvas.SetRenderLayer(RENDER_LAYER_HUD);
 			//var button = canvas.Stage.AddElement(new Button(ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red)));
@@ -112,7 +112,7 @@ namespace Betreten_Verboten.Scenes.Main
 			var panelSize = new Vector2(ABUTTON_WIDTH + ABUTTON_MARGIN_RIGHT + ABUTTON_PADDING_X * 2, ABUTTON_MARGIN_BOTTOM + ABUTTON_HEIGHT * 4 + ABUTTON_SPACING * 3 + ABUTTON_PADDING_Y * 2);
 			_uiPlayerControls.SetBounds(1920 - panelSize.X, 1080 - panelSize.Y - ABUTTON_MARGIN_BOTTOM, panelSize.X, panelSize.Y);
 			string[] btnNames = { "Dice", "Anger", "Sacrifice", "AfK" };
-            for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				//Generate button base
 				var actBtnA = _uiPlayerControls.AddElement(new Button(actBtnStyle));
@@ -120,15 +120,15 @@ namespace Betreten_Verboten.Scenes.Main
 				//Add label
 				var actBtnLabel = actBtnA.AddElement(new Label(btnNames[i]));
 
-                switch (i)
-                {
+				switch (i)
+				{
 					case 0:
 						actBtnA.OnClicked += x => SwitchToDiceRoll();
 						break;
-                    default:
-                        break;
-                }
-            }
+					default:
+						break;
+				}
+			}
 
 			//Generate reroll button
 			_uiPlayerReroll = canvas.Stage.AddElement(new Button(actBtnStyle));
@@ -155,7 +155,7 @@ namespace Betreten_Verboten.Scenes.Main
 		}
 
 		private void RollDice()
-        {
+		{
 			Dice.Throw(this);
 			_uiPlayerReroll.SetIsVisible(false);
 		}

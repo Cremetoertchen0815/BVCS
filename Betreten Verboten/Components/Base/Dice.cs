@@ -2,7 +2,6 @@
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.Materials;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -53,7 +52,7 @@ namespace Betreten_Verboten.Components.Base
 		{
 			var floatDots = new (float dot, int index)[_sideNormals.Length]; //Store dice face dot products with their indices
 			var norm = Vector3.TransformNormal(Vector3.Up, Matrix.Invert(_rigidBody.Entity.Node.WorldTransformations)); //Translate target normal into object space
-			//Calculate dot product between translated target normal and surface normal. Bigger means closer to the target normal.
+																														//Calculate dot product between translated target normal and surface normal. Bigger means closer to the target normal.
 			for (int i = 0; i < _sideNormals.Length; i++) floatDots[i] = (Vector3.Dot(norm, _sideNormals[i]), i);
 			//Effeciently calculate the face that is closest to matching the target normal and return the face index.
 			return floatDots.Aggregate((x, y) => x.dot > y.dot ? x : y).index + 1;
