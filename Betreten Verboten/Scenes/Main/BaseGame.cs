@@ -122,6 +122,7 @@ namespace Betreten_Verboten.Scenes.Main
 			//Set camera position
 			Camera.LookAt = new Vector3(-500, 2, -500);
 			Camera.OverridePosition = new Vector3(-480, 25, -480);
+			Camera.UpdateCameraView();
 			Dice.Throw(this);
 			_uiPlayerControls.SetIsVisible(false);
 			_uiPlayerReroll.SetIsVisible(true);

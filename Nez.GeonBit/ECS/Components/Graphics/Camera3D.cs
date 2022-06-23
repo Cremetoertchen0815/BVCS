@@ -398,7 +398,7 @@ namespace Nez.GeonBit
 			var worldPos = Node.WorldPosition;
 
 			var source = OverridePosition ?? worldPos;
-			var target = LookAt ?? (worldPos + Vector3.Transform(Vector3.Forward, Node.WorldRotation));
+			var target = LookAt ?? (source + Vector3.Transform(Vector3.Forward, Node.WorldRotation));
 			view = Matrix.CreateLookAt(source, target, Vector3.Up);
 
 			// update the view matrix of the graphic camera component
