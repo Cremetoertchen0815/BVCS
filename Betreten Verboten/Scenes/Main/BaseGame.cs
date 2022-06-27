@@ -6,12 +6,13 @@ using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.Physics;
 using Nez.UI;
+using System.Collections.Generic;
 using static Betreten_Verboten.GlobalFields;
 
 namespace Betreten_Verboten.Scenes.Main
 {
 	[ManagedScene(100, false)]
-	public class BaseGame : GeonScene
+	public class BaseGame : GeonScene, ITelegramReceiver
 	{
 		private const int ABUTTON_WIDTH = 350;
 		private const int ABUTTON_HEIGHT = 70;
@@ -26,9 +27,14 @@ namespace Betreten_Verboten.Scenes.Main
 		private VirtualJoystick VirtualJoystick;
 		private VirtualJoystick VirtualJoystickB;
 
+		private List<int> _diceNumbers = new List<int>();
+		private GameState _gameState = GameState.ActionSelect;
+
 		//UI
 		private Container _uiPlayerControls;
 		private Button _uiPlayerReroll;
+
+		public string TelegramSender => "base";
 
 		public override void Initialize()
 		{
@@ -54,8 +60,23 @@ namespace Betreten_Verboten.Scenes.Main
 			InitEnvironment();
 			InitUI();
 
+			this.TeleRegister();
+
 			VirtualJoystick = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.A, Microsoft.Xna.Framework.Input.Keys.D, Microsoft.Xna.Framework.Input.Keys.W, Microsoft.Xna.Framework.Input.Keys.S));
 			VirtualJoystickB = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.Right, Microsoft.Xna.Framework.Input.Keys.Up, Microsoft.Xna.Framework.Input.Keys.Down));
+		}
+
+		public void MessageReceived(Telegram message)
+		{
+			switch (message.Head)
+			{
+				case "dice_value_set":
+					var nr = (int)message.Body;
+					_diceNumbers.Add(nr);
+					System.Console.WriteLine(nr);
+					if (Dice.ShouldReroll(_diceNumbers)) _uiPlayerReroll.SetIsVisible(true); else GameState = GameState.PieceSelect;
+					break;
+			}
 		}
 
 		public override void Update()
@@ -78,7 +99,7 @@ namespace Betreten_Verboten.Scenes.Main
 		}
 
 		protected void InitUI()
-        {
+		{
 			var canvas = CreateEntity("UI").AddComponent(new UICanvas());
 			canvas.SetRenderLayer(RENDER_LAYER_HUD);
 			//var button = canvas.Stage.AddElement(new Button(ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red)));
@@ -92,7 +113,7 @@ namespace Betreten_Verboten.Scenes.Main
 			var panelSize = new Vector2(ABUTTON_WIDTH + ABUTTON_MARGIN_RIGHT + ABUTTON_PADDING_X * 2, ABUTTON_MARGIN_BOTTOM + ABUTTON_HEIGHT * 4 + ABUTTON_SPACING * 3 + ABUTTON_PADDING_Y * 2);
 			_uiPlayerControls.SetBounds(1920 - panelSize.X, 1080 - panelSize.Y - ABUTTON_MARGIN_BOTTOM, panelSize.X, panelSize.Y);
 			string[] btnNames = { "Dice", "Anger", "Sacrifice", "AfK" };
-            for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				//Generate button base
 				var actBtnA = _uiPlayerControls.AddElement(new Button(actBtnStyle));
@@ -100,15 +121,15 @@ namespace Betreten_Verboten.Scenes.Main
 				//Add label
 				var actBtnLabel = actBtnA.AddElement(new Label(btnNames[i]));
 
-                switch (i)
-                {
+				switch (i)
+				{
 					case 0:
-						actBtnA.OnClicked += x => RollDice();
+						actBtnA.OnClicked += x => GameState = GameState.DiceRoll;
 						break;
-                    default:
-                        break;
-                }
-            }
+					default:
+						break;
+				}
+			}
 
 			//Generate reroll button
 			_uiPlayerReroll = canvas.Stage.AddElement(new Button(actBtnStyle));
@@ -117,16 +138,51 @@ namespace Betreten_Verboten.Scenes.Main
 			_uiPlayerReroll.OnClicked += x => RollDice();
 		}
 
-		private void RollDice()
-        {
-			//Set camera position
-			Camera.LookAt = new Vector3(-500, 2, -500);
-			Camera.OverridePosition = new Vector3(-480, 25, -480);
-			Camera.UpdateCameraView();
-			Dice.Throw(this);
-			_uiPlayerControls.SetIsVisible(false);
-			_uiPlayerReroll.SetIsVisible(true);
+		public GameState GameState
+		{
+			get => _gameState;
+			set
+			{
+				//Switch for old state
+				switch (_gameState)
+				{
+					case GameState.DiceRoll:
+						FindEntitiesWithTag(Dice.ENTITY_TAG).ForEach(x => x.Destroy());
+						break;
+				}
 
+				//Switch for new state
+				switch (_gameState = value)
+				{
+					case GameState.DiceRoll:
+						//Set camera position
+						Camera.LookAt = new Vector3(-500, 2, -500);
+						Camera.OverridePosition = new Vector3(-480, 25, -480);
+						//Refresh UI elements
+						_uiPlayerControls.SetIsVisible(false);
+						_uiPlayerReroll.SetIsVisible(true);
+						_diceNumbers.Clear(); //Clear dice queue
+						break;
+					case GameState.ActionSelect:
+						//Set camera position
+						Camera.OverridePosition = Camera.LookAt = null;
+						_uiPlayerControls.SetIsVisible(true);
+						_uiPlayerReroll.SetIsVisible(false);
+						break;
+					default:
+						//Set camera position
+						Camera.OverridePosition = Camera.LookAt = null;
+						_uiPlayerControls.SetIsVisible(false);
+						_uiPlayerReroll.SetIsVisible(false);
+						break;
+				}
+			}
+		}
+
+		private void RollDice()
+		{
+			Dice.Throw(this);
+			_uiPlayerReroll.SetIsVisible(false);
 		}
 	}
 }

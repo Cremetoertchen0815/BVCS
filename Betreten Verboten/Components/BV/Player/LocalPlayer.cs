@@ -10,19 +10,19 @@ namespace Betreten_Verboten.Components.BV.Player
 		}
 
 		public void RegisterUI()
-        {
-
-        }
-
-		public override void MessageReceived(Telegram message) 
 		{
-            switch (message.Head)
-            {
+
+		}
+
+		public override void MessageReceived(Telegram message)
+		{
+			switch (message.Head)
+			{
 				case "player_active":
 					break;
-                default:
-                    break;
-            }
-        }
+				default:
+					break;
+			}
+		}
 	}
 }
