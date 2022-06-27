@@ -6,10 +6,13 @@ namespace Betreten_Verboten.Components.Base.Characters
 {
 	public class Character : Component
 	{
+		//Properties
 		public int Position { get; set; }
+		public bool CanBeSelect => true;
 		public ModelRenderer Renderer { get; private set; }
 		public RigidBody RigidBody { get; private set; }
 
+		//Fields
 		public const float CHAR_HITBOX_HEIGHT = 4f;
 		public const float CHAR_HITBOX_WIDTH = 0.8f;
 		private CharConfig _config;

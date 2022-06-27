@@ -13,20 +13,26 @@ namespace Betreten_Verboten.Components.Base
 {
     public class CharPicker : Component, IUpdatable
     {
+        private const float MAX_OBJ_DISTANCE = 1000f;
+
+        //Cached components
         private Player _owner;
         private Character[] _figures;
+        private Camera3D _camera;
+        private PhysicsWorld _world;
 
         private static MaterialOverrides _materialAvailable;
-        private static MaterialOverrides _materialHover;
 
         public override void OnAddedToEntity()
         {
             //Fetch components
+            _world = Entity.Scene.GetSceneComponent<PhysicsWorld>();
+            _camera = (Entity.Scene as GeonScene)?.Camera ?? throw new Exception("Character picker has to be added to a Geon Scene!");
             _owner = Entity.GetComponent<Player>() ?? throw new Exception("Character picker has to be added to a Player Entity!");
             _figures = _owner.GetFigures();
             
             //Set material overrides
-            foreach (var item in _figures) item.Renderer.MaterialOverride = _materialAvailable;
+            foreach (var item in _figures) if (item.CanBeSelect) item.Renderer.MaterialOverride = _materialAvailable;
         }
 
         //Clear material overrides for characters
@@ -34,8 +40,17 @@ namespace Betreten_Verboten.Components.Base
         
         public void Update()
         {
-            var loos = new PhysicsWorld();
-            loos.
+            if (Input.LeftMouseButtonPressed)
+            {
+                var ray = _camera.RayFromMouse();
+                var result = _world.Raycast(ray.Position, ray.Position + ray.Direction * MAX_OBJ_DISTANCE);
+                if (result.HasHit)
+                {
+                    var character = result.Collision.CollisionBody.Entity.GetComponent<Character>();
+                    if (!character.CanBeSelect) return;
+                    character.SendPrivateObj("char_picker", _owner.TelegramSender, "character_selected");
+                }
+            }
         }
     }
 }
