@@ -11,7 +11,7 @@ namespace Betreten_Verboten.Components.Base.Characters
 		public SoundEffect SoundEffects { get; set; }
 		public object[] Emotes { get; set; }
 		public string MOTD { get; set; }
-		public Color Color;
+		public Color Color { get; set; }
 		public Model Model { get; set; }
 
 		public MaterialAPI[] GetMaterials()

@@ -15,8 +15,8 @@ namespace Betreten_Verboten.Components.Base
 		public CharConfig CharacterConfig { get; set; }
 
 
-		private Character[] _figures;
-		private BVBoard _board;
+		protected Character[] _figures;
+		protected BVBoard _board;
 
 		//ctor
 		public Player(int Nr) => this.Nr = Nr;
@@ -33,7 +33,7 @@ namespace Betreten_Verboten.Components.Base
 			{
 				var pos = _board.GetFieldPosition(Nr, i, FieldType.Regular, false) * 0.04f;
 				var ent = geonScene.CreateGeonEntity("figure" + Nr + "-" + i, new Vector3(pos.X, Character.CHAR_HITBOX_HEIGHT, pos.Y), NodeType.BoundingBoxCulling);
-				_figures[i] = ent.AddComponent(new Character(CharacterConfig, _board.CharScale));
+				_figures[i] = ent.AddComponent(new Character(this, CharacterConfig, _board.CharScale));
 			}
 
 			//Register in telegram service
@@ -42,5 +42,7 @@ namespace Betreten_Verboten.Components.Base
 		}
 
 		public abstract void MessageReceived(Telegram message);
+
+		public Character[] GetFigures() => _figures;
 	}
 }

@@ -11,7 +11,7 @@ using static Betreten_Verboten.GlobalFields;
 
 namespace Betreten_Verboten.Scenes.Main
 {
-	[ManagedScene(100, false)]
+    [ManagedScene(100, false)]
 	public class BaseGame : GeonScene, ITelegramReceiver
 	{
 		private const int ABUTTON_WIDTH = 350;
@@ -23,9 +23,6 @@ namespace Betreten_Verboten.Scenes.Main
 		private const int ABUTTON_SPACING = 20;
 
 		protected GeonDefaultRenderer _geonRenderer;
-
-		private VirtualJoystick VirtualJoystick;
-		private VirtualJoystick VirtualJoystickB;
 
 		private List<int> _diceNumbers = new List<int>();
 		private GameState _gameState = GameState.ActionSelect;
@@ -50,20 +47,15 @@ namespace Betreten_Verboten.Scenes.Main
 			GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
 			GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
 
-			//CreateGeonEntity("dice", new Vector3(0, 25, 0)).AddComponent(new Dice())
-
 			//Config camera
 			Camera.Node.Position = new Vector3(0, 15, 50);
-
+			
 			//Prepare physics
 			AddSceneComponent(new PhysicsWorld()).SetGravity(new Vector3(0, -100, 0));
 			InitEnvironment();
 			InitUI();
 
 			this.TeleRegister();
-
-			VirtualJoystick = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.A, Microsoft.Xna.Framework.Input.Keys.D, Microsoft.Xna.Framework.Input.Keys.W, Microsoft.Xna.Framework.Input.Keys.S));
-			VirtualJoystickB = new VirtualJoystick(true, new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.Right, Microsoft.Xna.Framework.Input.Keys.Up, Microsoft.Xna.Framework.Input.Keys.Down));
 		}
 
 		public void MessageReceived(Telegram message)
@@ -77,13 +69,6 @@ namespace Betreten_Verboten.Scenes.Main
 					if (Dice.ShouldReroll(_diceNumbers)) _uiPlayerReroll.SetIsVisible(true); else GameState = GameState.PieceSelect;
 					break;
 			}
-		}
-
-		public override void Update()
-		{
-			base.Update();
-			Camera.Node.Rotation -= new Vector3(VirtualJoystick.Value.Y, VirtualJoystick.Value.X, 0) * 0.01f;
-			Camera.Node.Position -= new Vector3(0, VirtualJoystickB.Value.Y, VirtualJoystickB.Value.X);
 		}
 
 		protected void InitEnvironment()
@@ -102,9 +87,6 @@ namespace Betreten_Verboten.Scenes.Main
 		{
 			var canvas = CreateEntity("UI").AddComponent(new UICanvas());
 			canvas.SetRenderLayer(RENDER_LAYER_HUD);
-			//var button = canvas.Stage.AddElement(new Button(ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red)));
-			//button.SetBounds(200, 200, 200, 200);
-			//button.AddElement(new Label("Moin"));
 
 			//Generate action buttons
 			var actBtnStyle = ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red);

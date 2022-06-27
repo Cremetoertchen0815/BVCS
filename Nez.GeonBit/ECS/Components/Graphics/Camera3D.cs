@@ -235,11 +235,7 @@ namespace Nez.GeonBit
 		/// This is a helper function that help to get ray collision based on camera and mouse.
 		/// </summary>
 		/// <returns>Ray from camera to mouse.</returns>
-		public Ray RayFromMouse()
-		{
-			var mouseState = Mouse.GetState();
-			return RayFrom2dPoint(new Vector2(mouseState.X, mouseState.Y));
-		}
+		public Ray RayFromMouse() => RayFrom2dPoint(Input.MousePosition);
 
 		/// <summary>
 		/// Return a ray starting from the camera and pointing directly at a 3d position.

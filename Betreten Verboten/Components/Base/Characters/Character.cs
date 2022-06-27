@@ -4,15 +4,21 @@ using Nez.GeonBit;
 
 namespace Betreten_Verboten.Components.Base.Characters
 {
-	internal class Character : Component, IUpdatable
+	public class Character : Component
 	{
+		public int Position { get; set; }
+		public ModelRenderer Renderer { get; private set; }
+		public RigidBody RigidBody { get; private set; }
+
 		public const float CHAR_HITBOX_HEIGHT = 4f;
 		public const float CHAR_HITBOX_WIDTH = 0.8f;
 		private CharConfig _config;
+		private Player _owner;
 		private readonly float _scale;
 
-		public Character(CharConfig config, float Scale)
+		public Character(Player owner, CharConfig config, float Scale)
 		{
+			_owner = owner;
 			_config = config;
 			_scale = Scale;
 		}
@@ -20,22 +26,18 @@ namespace Betreten_Verboten.Components.Base.Characters
 		public override void OnAddedToEntity()
 		{
 			var ent = (GeonEntity)Entity;
-			var renderer = ent.AddComponentAsChild(new ModelRenderer("mesh/piece_std"));
-			renderer.SetMaterials(_config.GetMaterials());
 
-			renderer.Node.Position = Vector3.Down * CHAR_HITBOX_HEIGHT * 0.5f;
-			renderer.Node.Scale = new Vector3(_scale);
-			renderer.Node.Rotation = new Vector3(-MathHelper.PiOver2, 0, 0);
+			//Config renderer
+			Renderer = ent.AddComponentAsChild(new ModelRenderer("mesh/piece_std"));
+			Renderer.Node.Position = Vector3.Down * CHAR_HITBOX_HEIGHT * 0.5f;
+			Renderer.Node.Scale = new Vector3(_scale);
+			Renderer.Node.Rotation = new Vector3(-MathHelper.PiOver2, 0, 0);
+			Renderer.SetMaterials(_config.GetMaterials());
 
-			var rb = ent.AddComponent(new RigidBody(new ConeInfo(CHAR_HITBOX_WIDTH, CHAR_HITBOX_HEIGHT), 10, 1, 1));
-			rb.Position = ent.Node.Position;
-			rb.AngularDamping = rb.LinearDamping = 0.80f;
-		}
-
-		public void Update()
-		{
-			var ent = (GeonEntity)Entity;
-			var siis = ent.GetComponent<ModelRenderer>();
+			//Config rigid body
+			RigidBody = ent.AddComponent(new RigidBody(new ConeInfo(CHAR_HITBOX_WIDTH, CHAR_HITBOX_HEIGHT), 10, 1, 1));
+			RigidBody.Position = ent.Node.Position;
+			RigidBody.AngularDamping = RigidBody.LinearDamping = 0.80f;
 		}
 	}
 }
