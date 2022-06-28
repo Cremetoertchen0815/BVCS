@@ -41,6 +41,7 @@ namespace Betreten_Verboten.Components.Base.Characters
 			RigidBody = ent.AddComponent(new RigidBody(new ConeInfo(CHAR_HITBOX_WIDTH, CHAR_HITBOX_HEIGHT), 10, 1, 1));
 			RigidBody.Position = ent.Node.Position;
 			RigidBody.AngularDamping = RigidBody.LinearDamping = 0.80f;
+			RigidBody.Enabled = false;
 		}
 	}
 }

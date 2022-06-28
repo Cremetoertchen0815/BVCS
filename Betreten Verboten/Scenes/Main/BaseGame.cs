@@ -49,8 +49,9 @@ namespace Betreten_Verboten.Scenes.Main
 			GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
 			GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
 
-			//Config camera
-			Camera.Node.Position = new Vector3(0, 15, 50);
+			//Config camera5
+			Camera.Node.Position = new Vector3(0, 25, 40);
+			Camera.Node.RotationX = -0.5f;
 			
 			//Prepare physics
 			AddSceneComponent(new PhysicsWorld()).SetGravity(new Vector3(0, -100, 0));

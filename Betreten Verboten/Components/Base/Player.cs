@@ -33,7 +33,7 @@ namespace Betreten_Verboten.Components.Base
 			for (int i = 0; i < _figures.Length; i++)
 			{
 				var pos = _board.GetFieldPosition(Nr, i, FieldType.Regular, false) * 0.04f;
-				var ent = geonScene.CreateGeonEntity("figure" + Nr + "-" + i, new Vector3(pos.X, Character.CHAR_HITBOX_HEIGHT, pos.Y), NodeType.BoundingBoxCulling);
+				var ent = geonScene.CreateGeonEntity("figure" + Nr + "-" + i, new Vector3(pos.X, Character.CHAR_HITBOX_HEIGHT - 1f, pos.Y), NodeType.BoundingBoxCulling);
 				_figures[i] = ent.AddComponent(new Character(this, CharacterConfig, _board.CharScale));
 			}
 
