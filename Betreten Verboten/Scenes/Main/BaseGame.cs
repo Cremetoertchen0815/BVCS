@@ -24,6 +24,8 @@ namespace Betreten_Verboten.Scenes.Main
 
 		protected GeonDefaultRenderer _geonRenderer;
 
+		private Player _activePlayer;
+		private Player[] _players;
 		private List<int> _diceNumbers = new List<int>();
 		private GameState _gameState = GameState.ActionSelect;
 
@@ -65,8 +67,13 @@ namespace Betreten_Verboten.Scenes.Main
 				case "dice_value_set":
 					var nr = (int)message.Body;
 					_diceNumbers.Add(nr);
-					System.Console.WriteLine(nr);
-					if (Dice.ShouldReroll(_diceNumbers)) _uiPlayerReroll.SetIsVisible(true); else GameState = GameState.PieceSelect;
+					if (Dice.ShouldReroll(_diceNumbers))
+						_uiPlayerReroll.SetIsVisible(true);
+					else
+					{
+						_activePlayer.DecideAfterDiceroll(_diceNumbers);
+						GameState = GameState.PieceSelect;
+					}
 					break;
 			}
 		}
@@ -77,10 +84,9 @@ namespace Betreten_Verboten.Scenes.Main
 
 			//Create playing field
 			var board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
-			for (int i = 0; i < board.PlayerCount; i++)
-			{
-				CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
-			}
+			_players = new Player[board.PlayerCount];
+			for (int i = 0; i < board.PlayerCount; i++) _players[i] = CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
+			_activePlayer = _players[0];
 		}
 
 		protected void InitUI()

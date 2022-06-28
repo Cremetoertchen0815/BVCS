@@ -20,6 +20,10 @@ namespace Betreten_Verboten.Components.BV.Player
 			{
 				case "player_active":
 					break;
+				case "character_selected":
+					//Move character
+					System.Console.WriteLine(message.Body);
+					break;
 				default:
 					break;
 			}

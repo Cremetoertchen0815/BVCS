@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
+using System.Collections.Generic;
 
 namespace Betreten_Verboten.Components.Base
 {
@@ -44,5 +45,7 @@ namespace Betreten_Verboten.Components.Base
 		public abstract void MessageReceived(Telegram message);
 
 		public Character[] GetFigures() => _figures;
+
+		public void DecideAfterDiceroll(List<int> nrs) => Entity.AddComponent<CharPicker>();
 	}
 }

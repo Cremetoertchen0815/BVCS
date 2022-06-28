@@ -1,4 +1,5 @@
 ﻿using Betreten_Verboten.Components.Base.Characters;
+using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.Materials;
@@ -21,7 +22,7 @@ namespace Betreten_Verboten.Components.Base
         private Camera3D _camera;
         private PhysicsWorld _world;
 
-        private static MaterialOverrides _materialAvailable;
+        private static MaterialOverrides _materialAvailable = new MaterialOverrides() { DiffuseColor = Color.Red};
 
         public override void OnAddedToEntity()
         {
@@ -47,7 +48,7 @@ namespace Betreten_Verboten.Components.Base
                 if (result.HasHit)
                 {
                     var character = result.Collision.CollisionBody.Entity.GetComponent<Character>();
-                    if (!character.CanBeSelect) return;
+                    if (character == null || !character.CanBeSelect || character.Owner != _owner) return;
                     character.SendPrivateObj("char_picker", _owner.TelegramSender, "character_selected");
                 }
             }

@@ -9,6 +9,7 @@ namespace Betreten_Verboten.Components.Base.Characters
 		//Properties
 		public int Position { get; set; }
 		public bool CanBeSelect => true;
+		public Player Owner { get; private set; }
 		public ModelRenderer Renderer { get; private set; }
 		public RigidBody RigidBody { get; private set; }
 
@@ -16,12 +17,11 @@ namespace Betreten_Verboten.Components.Base.Characters
 		public const float CHAR_HITBOX_HEIGHT = 4f;
 		public const float CHAR_HITBOX_WIDTH = 0.8f;
 		private CharConfig _config;
-		private Player _owner;
 		private readonly float _scale;
 
 		public Character(Player owner, CharConfig config, float Scale)
 		{
-			_owner = owner;
+			Owner = owner;
 			_config = config;
 			_scale = Scale;
 		}
