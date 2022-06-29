@@ -42,6 +42,9 @@ namespace Nez
                 if (field.Name == "enabled")
                     continue;
 
+                //Ignore member with explicit ignore attribute
+                if (field.GetCustomAttributes<NotInspectableAttribute>().Count() > 0) continue;
+
                 var inspector = GetInspectorForType(field.FieldType, target, field);
                 if (inspector != null)
                 {
@@ -62,6 +65,9 @@ namespace Nez
                     continue;
                 }
 
+                //Ignore member with explicit ignore attribute
+                if (prop.GetCustomAttributes<NotInspectableAttribute>().Count() > 0) continue;
+
                 // skip Component.enabled which is handled elsewhere
                 if (prop.Name == "enabled")
                     continue;
@@ -77,12 +83,16 @@ namespace Nez
             var methods = ReflectionUtils.GetMethods(targetType);
             foreach (var method in methods)
             {
+                //Ignore member with explicit ignore attribute
+                if (method.GetCustomAttributes<NotInspectableAttribute>().Count() > 0) continue;
+
                 var attr = CustomAttributeExtensions.GetCustomAttribute<InspectorCallableAttribute>(method);
                 if (attr == null)
                     continue;
 
                 if (!MethodInspector.AreParametersValid(method.GetParameters()))
                     continue;
+
 
                 var inspector = new MethodInspector();
                 inspector.SetTarget(target, method);

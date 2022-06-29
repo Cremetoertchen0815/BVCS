@@ -78,6 +78,8 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Get / set physical body world transformation.
 		/// </summary>
+		/// 
+		[NotInspectable]
 		public Matrix WorldTransform
 		{
 			get => _PhysicalBody.WorldTransform;
