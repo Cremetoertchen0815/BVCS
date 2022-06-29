@@ -71,7 +71,7 @@ namespace Nez.GeonBit
 		/// </summary>
 		public bool EnableSimulation
 		{
-			get => _PhysicalBody.EnableSimulation;
+			get => _PhysicalBody.EnableSimulation && Enabled;
 			set => _PhysicalBody.EnableSimulation = value;
 		}
 

@@ -24,7 +24,7 @@ namespace Betreten_Verboten.Scenes.Main
 
 		protected GeonDefaultRenderer _geonRenderer;
 
-		private int _activePlayer = 0;
+		private int _activePlayer = 1;
 		private Player[] _players;
 		private BVBoard _board;
 		private List<int> _diceNumbers = new List<int>();
@@ -77,6 +77,7 @@ namespace Betreten_Verboten.Scenes.Main
 						GameState = GameState.PieceSelect;
 					}
 					break;
+				case "char_move_done":
 				case "advance_player":
 					AdvancePlayer();
 					break;
@@ -179,7 +180,7 @@ namespace Betreten_Verboten.Scenes.Main
 
 		public void AdvancePlayer()
         {
-			_activePlayer = _activePlayer++ % _board.PlayerCount;
+			_activePlayer = ++_activePlayer % _board.PlayerCount;
 			GameState = GameState.ActionSelect;
 		}
 	}
