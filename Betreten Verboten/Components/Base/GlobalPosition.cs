@@ -15,8 +15,8 @@ namespace Betreten_Verboten.Components.Base
         public static GlobalPosition FromChar(Character c)
         {
             var ret = new GlobalPosition();
-            var fcount = c.Owner.Board.FieldCount;
-            var plcount = c.Owner.Board.PlayerCount;
+            int fcount = c.Owner.Board.FieldCount;
+            int plcount = c.Owner.Board.PlayerCount;
             ret.Valid = c.Position >= 0 && c.Position <= fcount;
             ret.Position = ret.Valid ? (c.Position + fcount * c.Owner.Nr) % fcount * plcount : -1;
             return ret;
