@@ -9,9 +9,9 @@
 #endregion
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using GeonBit.UI.DataTypes;
+using Nez.GeonBit.UI.DataTypes;
 
-namespace GeonBit.UI.Entities
+namespace Nez.GeonBit.UI.Entities
 {
     /// <summary>
     /// Header entity is a subclass of Paragraph. Basically its the same, but with a different

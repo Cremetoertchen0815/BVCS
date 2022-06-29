@@ -12,11 +12,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using System;
-using GeonBit.UI.Entities;
-using GeonBit.UI.DataTypes;
+using Nez.GeonBit.UI.Entities;
+using Nez.GeonBit.UI.DataTypes;
 
 
-namespace GeonBit.UI
+namespace Nez.GeonBit.UI
 {
     /// <summary>
     /// A class to get texture with index and constant path part.
@@ -318,7 +318,7 @@ namespace GeonBit.UI
             SilhouetteEffect = content.Load<Effect>(_root + "effects/silhouette");
 
             // load default styleSheets
-            LoadDefaultStyles(ref Entity.DefaultStyle, "Entity", _root, content);
+            LoadDefaultStyles(ref Entities.Entity.DefaultStyle, "Entity", _root, content);
             LoadDefaultStyles(ref Paragraph.DefaultStyle, "Paragraph", _root, content);
             LoadDefaultStyles(ref Button.DefaultStyle, "Button", _root, content);
             LoadDefaultStyles(ref Button.DefaultParagraphStyle, "ButtonParagraph", _root, content);

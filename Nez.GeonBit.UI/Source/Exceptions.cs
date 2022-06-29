@@ -7,7 +7,7 @@
 using System;
 
 
-namespace GeonBit.UI.Exceptions
+namespace Nez.GeonBit.UI.Exceptions
 {
     /// <summary>
     /// Thrown when something is not found (key, value, index, etc.)

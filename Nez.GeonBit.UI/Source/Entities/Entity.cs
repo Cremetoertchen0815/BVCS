@@ -16,10 +16,10 @@ using System.Reflection;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GeonBit.UI.DataTypes;
+using Nez.GeonBit.UI.DataTypes;
 using System.Linq;
 
-namespace GeonBit.UI.Entities
+namespace Nez.GeonBit.UI.Entities
 {
     /// <summary>
     /// GeonBit.UI.Entities contains all the UI elements you can create and use in your layouts.

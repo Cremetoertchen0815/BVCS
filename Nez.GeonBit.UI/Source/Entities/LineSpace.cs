@@ -10,7 +10,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GeonBit.UI.Entities
+namespace Nez.GeonBit.UI.Entities
 {
     /// <summary>
     /// A line space is just a spacer for Auto-Anchored entities, eg a method to create artificial distance between rows.

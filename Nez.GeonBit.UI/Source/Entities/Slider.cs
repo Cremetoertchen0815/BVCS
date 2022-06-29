@@ -11,7 +11,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GeonBit.UI.Entities
+namespace Nez.GeonBit.UI.Entities
 {
     /// <summary>
     /// Different sliders skins (textures).

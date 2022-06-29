@@ -19,7 +19,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GeonBit.UI.Entities
+namespace Nez.GeonBit.UI.Entities
 {
     /// <summary>
     /// A sub-class of the slider entity, with graphics more fitting for a progress bar or things like hp bar etc.

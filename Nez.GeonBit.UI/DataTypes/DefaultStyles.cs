@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework.Content;
 
-namespace GeonBit.UI.DataTypes
+namespace Nez.GeonBit.UI.DataTypes
 {
     /// <summary>
     /// Font styles (should match the font styles defined in GeonBit.UI engine).

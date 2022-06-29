@@ -11,7 +11,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace GeonBit.UI
+namespace Nez.GeonBit.UI
 {
     /// <summary>
     /// Supported mouse buttons.

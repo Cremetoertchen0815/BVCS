@@ -9,7 +9,7 @@
 using Microsoft.Xna.Framework;
 
 
-namespace GeonBit.UI.Utils
+namespace Nez.GeonBit.UI.Utils
 {
     /// <summary>
     /// GeonBit.UI.Utils contain different utilities and helper classes to use GeonBit.UI.

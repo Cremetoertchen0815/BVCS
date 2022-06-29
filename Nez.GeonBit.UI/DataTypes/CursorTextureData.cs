@@ -1,4 +1,4 @@
-﻿namespace GeonBit.UI.DataTypes
+﻿namespace Nez.GeonBit.UI.DataTypes
 {
     /// <summary>
     /// Meta data we attach to cursor textures.

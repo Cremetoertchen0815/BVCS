@@ -10,13 +10,14 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GeonBit.UI.Entities;
+using Nez.GeonBit.UI.Entities;
 using Microsoft.Xna.Framework.Content;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using UIEntity = Nez.GeonBit.UI.Entities.Entity;
 
 
-namespace GeonBit.UI
+namespace Nez.GeonBit.UI
 {
     /// <summary>
     /// GeonBit.UI is part of the GeonBit project, and provide a simple yet extensive UI framework for MonoGame based projects.
@@ -31,14 +32,14 @@ namespace GeonBit.UI
     /// A callback function you can register on entity events, like on-click, on-mouse-leave, etc.
     /// </summary>
     /// <param name="entity">The entity instance the event came from.</param>
-    public delegate void EventCallback(Entity entity);
+    public delegate void EventCallback(UIEntity entity);
 
     /// <summary>
     /// A function used to generate tooltip entity.
     /// Used when the user points on an entity with a tooltip text and show present it.
     /// </summary>
     /// <param name="entity">The entity instance the tooltip came from.</param>
-    public delegate Entity GenerateTooltipFunc(Entity entity);
+    public delegate UIEntity GenerateTooltipFunc(UIEntity entity);
 
     /// <summary>
     /// Callback to generate default paragraph type for internal entities.
@@ -154,7 +155,7 @@ namespace GeonBit.UI
                 _cursorMode = value;
             }
         }
-
+        
         /// <summary>
         /// Create a default paragraph instance.
         /// GeonBit.UI entities use this method when need to create a paragraph, so you can override this to change which paragraph type the built-in
@@ -203,7 +204,7 @@ namespace GeonBit.UI
         public SamplerState SamplerState = SamplerState.PointClamp;
 
         // the entity currently being dragged
-        Entity _dragTarget;
+        UIEntity _dragTarget;
 
         // current global scale
         private float _scale = 1f;
@@ -228,10 +229,10 @@ namespace GeonBit.UI
         public DrawUtils DrawUtils = null;
 
         /// <summary>Current active entity, eg last entity user interacted with.</summary>
-        public Entity ActiveEntity = null;
+        public UIEntity ActiveEntity = null;
 
         /// <summary>The current target entity, eg what cursor points on. Can be null if cursor don't point on any entity.</summary>
-        public Entity TargetEntity { get; private set; }
+        public UIEntity TargetEntity { get; private set; }
 
         /// <summary>Callback to execute when mouse button is pressed over an entity (called once when button is pressed).</summary>
         public EventCallback OnMouseDown = null;
@@ -321,10 +322,10 @@ namespace GeonBit.UI
         private float _timeUntilTooltip = 0f;
 
         // the current tooltip entity.
-        Entity _tooltipEntity;
+        UIEntity _tooltipEntity;
 
         // current tooltip target entity (eg entity we point on with tooltip).
-        Entity _tooltipTargetEntity;
+        UIEntity _tooltipTargetEntity;
 
         /// <summary>
         /// How long to wait before showing tooltip texts.
@@ -400,7 +401,7 @@ namespace GeonBit.UI
         /// </summary>
         /// <param name="source">Source entity.</param>
         /// <returns>Entity to use for tooltip text.</returns>
-        static private Entity DefaultGenerateTooltipFunc(Entity source)
+        static private UIEntity DefaultGenerateTooltipFunc(UIEntity source)
         {
             // no tooltip text? return null
             if (source.ToolTipText == null) return null;
@@ -410,7 +411,7 @@ namespace GeonBit.UI
             tooltip.BackgroundColor = Color.Black;
 
             // add callback to update tooltip position
-            tooltip.BeforeDraw += (Entity ent) =>
+            tooltip.BeforeDraw += (UIEntity ent) =>
             {
                 // get dest rect and calculate tooltip position based on size and mouse position
                 var destRect = tooltip.GetActualDestRect();
@@ -528,7 +529,7 @@ namespace GeonBit.UI
         /// Add an entity to screen.
         /// </summary>
         /// <param name="entity">Entity to add.</param>
-        public Entity AddEntity(Entity entity)
+        public UIEntity AddEntity(UIEntity entity)
         {
             return Root.AddChild(entity);
         }
@@ -537,7 +538,7 @@ namespace GeonBit.UI
         /// Remove an entity from screen.
         /// </summary>
         /// <param name="entity">Entity to remove.</param>
-        public void RemoveEntity(Entity entity)
+        public void RemoveEntity(UIEntity entity)
         {
             Root.RemoveChild(entity);
         }
@@ -566,7 +567,7 @@ namespace GeonBit.UI
             }
 
             // update root panel
-            Entity target = null;
+            UIEntity target = null;
             bool wasEventHandled = false;
             Root.Update(ref target, ref _dragTarget, ref wasEventHandled, Point.Zero);
 
@@ -591,7 +592,7 @@ namespace GeonBit.UI
         /// </summary>
         /// <param name="gameTime">Current game time.</param>
         /// <param name="target">Current target entity.</param>
-        private void UpdateTooltipText(GameTime gameTime, Entity target)
+        private void UpdateTooltipText(GameTime gameTime, UIEntity target)
         {
             // fix tooltip target to be an actual entity
             while (target != null && target._hiddenInternalEntity)
@@ -761,7 +762,7 @@ namespace GeonBit.UI
         /// <returns>XML serializer instance.</returns>
         virtual protected XmlSerializer GetXmlSerializer()
         {
-            return new XmlSerializer(Root.GetType(), Entity._serializableTypes.ToArray());
+            return new XmlSerializer(Root.GetType(), UIEntity._serializableTypes.ToArray());
         }
 
         /// <summary>

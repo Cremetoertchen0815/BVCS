@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 
-namespace GeonBit.UI.Utils
+namespace Nez.GeonBit.UI.Utils
 {
     /// <summary>
     /// A helper class to generate simple file-menu (top navbar) using panels and dropdown entities.

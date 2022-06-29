@@ -9,7 +9,7 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-namespace GeonBit.UI.Entities.TextValidators
+namespace Nez.GeonBit.UI.Entities.TextValidators
 {
     /// <summary>
     /// GeonBit.UI.Entities.TextValidators contains different text validators and processors you can attach to TextInput entities.

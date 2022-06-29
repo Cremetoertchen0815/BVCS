@@ -10,9 +10,9 @@
 #endregion
 using System.Text;
 using System.Collections.Generic;
-using GeonBit.UI.DataTypes;
+using Nez.GeonBit.UI.DataTypes;
 
-namespace GeonBit.UI.Entities
+namespace Nez.GeonBit.UI.Entities
 {
     /// <summary>
     /// Set of style properties for different entity states.

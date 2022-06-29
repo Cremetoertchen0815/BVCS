@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GeonBit.UI
+namespace Nez.GeonBit.UI
 {
     /// <summary>
     /// Helper class with drawing-related functionality.

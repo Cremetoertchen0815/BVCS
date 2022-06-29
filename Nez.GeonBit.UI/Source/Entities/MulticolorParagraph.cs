@@ -10,10 +10,10 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GeonBit.UI.DataTypes;
+using Nez.GeonBit.UI.DataTypes;
 using System.Text;
 
-namespace GeonBit.UI.Entities
+namespace Nez.GeonBit.UI.Entities
 {
     /// <summary>Hold color instructions for MultiColor paragraphs.</summary>
     [System.Serializable]

@@ -10,9 +10,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using GeonBit.UI.Utils;
+using Nez.GeonBit.UI.Utils;
 
-namespace GeonBit.UI.Entities
+namespace Nez.GeonBit.UI.Entities
 {
     // data we attach to paragraphs that are part of this selection list
     struct ParagraphData

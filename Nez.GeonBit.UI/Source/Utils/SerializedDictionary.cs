@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace GeonBit.UI.Utils
+namespace Nez.GeonBit.UI.Utils
 {
     /// <summary>
     /// A plain dictionary that support XML serialization.

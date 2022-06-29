@@ -1,4 +1,4 @@
-﻿namespace GeonBit.UI.DataTypes
+﻿namespace Nez.GeonBit.UI.DataTypes
 {
     /// <summary>
     /// General data / settings about a UI theme.

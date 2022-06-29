@@ -22,11 +22,12 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 // using GeonBit UI elements
-using GeonBit.UI.Entities;
-using GeonBit.UI.Entities.TextValidators;
-using GeonBit.UI.DataTypes;
+using Nez.GeonBit.UI.Entities;
+using Nez.GeonBit.UI.Entities.TextValidators;
+using Nez.GeonBit.UI.DataTypes;
+using UIEntity = Nez.GeonBit.UI.Entities.Entity;
 
-namespace GeonBit.UI.Example
+namespace Nez.GeonBit.UI.Example
 {
     /// <summary>
     /// GeonBit.UI.Example is just an example code. Everything here is not a part of the GeonBit.UI framework, but merely an example of how to use it.
@@ -112,23 +113,23 @@ namespace GeonBit.UI.Example
 
             // add previous example button
             previousExampleButton = new Button("<- Back", ButtonSkin.Default, Anchor.Auto, new Vector2(300, topPanelHeight));
-            previousExampleButton.OnClick = (Entity btn) => { this.PreviousExample(); };
+            previousExampleButton.OnClick = btn => { this.PreviousExample(); };
             topPanel.AddChild(previousExampleButton);
 
             // add next example button
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, Anchor.TopRight, new Vector2(300, topPanelHeight));
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             nextExampleButton.Identifier = "next_btn";
             topPanel.AddChild(nextExampleButton);
 
             // add show-get button
             Button showGitButton = new Button("Git Repo", ButtonSkin.Fancy, Anchor.TopCenter, new Vector2(280, topPanelHeight));
-            showGitButton.OnClick = (Entity btn) => { System.Diagnostics.Process.Start("https://github.com/RonenNess/GeonBit.UI"); };
+            showGitButton.OnClick = btn => { System.Diagnostics.Process.Start("https://github.com/RonenNess/GeonBit.UI"); };
             topPanel.AddChild(showGitButton);
 
             // add exit button
             Button exitBtn = new Button("Exit", anchor: Anchor.BottomRight, size: new Vector2(200, -1));
-            exitBtn.OnClick = (Entity entity) => { Exit(); };
+            exitBtn.OnClick = entity => { Exit(); };
             UserInterface.Active.AddEntity(exitBtn);
 
             // events panel for debug
@@ -159,7 +160,7 @@ namespace GeonBit.UI.Example
             UserInterface.Active.AddEntity(eventsPanel);
 
             // whenever events log list size changes, make sure its not too long. if it is, trim it.
-            eventsLog.OnListChange = (Entity entity) =>
+            eventsLog.OnListChange = entity =>
             {
                 SelectList list = (SelectList)entity;
                 if (list.Count > 100)
@@ -169,32 +170,32 @@ namespace GeonBit.UI.Example
             };
 
             // listen to all global events - one timers
-            UserInterface.Active.OnClick = (Entity entity) => { eventsLog.AddItem("Click: " + entity.GetType().Name); eventsLog.scrollToEnd();};
-            UserInterface.Active.OnRightClick = (Entity entity) => { eventsLog.AddItem("RightClick: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnMouseDown = (Entity entity) => { eventsLog.AddItem("MouseDown: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnRightMouseDown = (Entity entity) => { eventsLog.AddItem("RightMouseDown: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnMouseEnter = (Entity entity) => { eventsLog.AddItem("MouseEnter: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnMouseLeave = (Entity entity) => { eventsLog.AddItem("MouseLeave: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnMouseReleased = (Entity entity) => { eventsLog.AddItem("MouseReleased: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnMouseWheelScroll = (Entity entity) => { eventsLog.AddItem("Scroll: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnStartDrag = (Entity entity) => { eventsLog.AddItem("StartDrag: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnStopDrag = (Entity entity) => { eventsLog.AddItem("StopDrag: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnFocusChange = (Entity entity) => { eventsLog.AddItem("FocusChange: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnValueChange = (Entity entity) => { if (entity.Parent == eventsLog) { return; } eventsLog.AddItem("ValueChanged: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnClick = entity => { eventsLog.AddItem("Click: " + entity.GetType().Name); eventsLog.scrollToEnd();};
+            UserInterface.Active.OnRightClick = entity => { eventsLog.AddItem("RightClick: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnMouseDown = entity => { eventsLog.AddItem("MouseDown: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnRightMouseDown = entity => { eventsLog.AddItem("RightMouseDown: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnMouseEnter = entity => { eventsLog.AddItem("MouseEnter: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnMouseLeave = entity => { eventsLog.AddItem("MouseLeave: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnMouseReleased = entity => { eventsLog.AddItem("MouseReleased: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnMouseWheelScroll = entity => { eventsLog.AddItem("Scroll: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnStartDrag = entity => { eventsLog.AddItem("StartDrag: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnStopDrag = entity => { eventsLog.AddItem("StopDrag: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnFocusChange = entity => { eventsLog.AddItem("FocusChange: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnValueChange = entity => { if (entity.Parent == eventsLog) { return; } eventsLog.AddItem("ValueChanged: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
 
             // clear the current events after every frame they were drawn
-            eventsNow.AfterDraw = (Entity entity) => { eventsNow.ClearItems(); };
+            eventsNow.AfterDraw = entity => { eventsNow.ClearItems(); };
 
             // listen to all global events - happening now
-            UserInterface.Active.WhileDragging = (Entity entity) => { eventsNow.AddItem("Dragging: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
-            UserInterface.Active.WhileMouseDown = (Entity entity) => { eventsNow.AddItem("MouseDown: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
-            UserInterface.Active.WhileMouseHover = (Entity entity) => { eventsNow.AddItem("MouseHover: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
+            UserInterface.Active.WhileDragging = entity => { eventsNow.AddItem("Dragging: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
+            UserInterface.Active.WhileMouseDown = entity => { eventsNow.AddItem("MouseDown: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
+            UserInterface.Active.WhileMouseHover = entity => { eventsNow.AddItem("MouseHover: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
             eventsNow.MaxItems = 4;
 
             // add extra info button
             Button infoBtn = new Button("  Events", anchor: Anchor.BottomLeft, size: new Vector2(280, -1), offset: new Vector2(140, 0));
             infoBtn.AddChild(new Icon(IconType.Scroll, Anchor.CenterLeft), true);
-            infoBtn.OnClick = (Entity entity) =>
+            infoBtn.OnClick = entity =>
             {
                 eventsPanel.Visible = !eventsPanel.Visible;
             };
@@ -204,7 +205,7 @@ namespace GeonBit.UI.Example
 
             // add button to apply transformations
             Button transBtn = new Button("Transform UI", anchor: Anchor.BottomLeft, size: new Vector2(320, -1), offset: new Vector2(140 + 280, 0));
-            transBtn.OnClick = (Entity entity) =>
+            transBtn.OnClick = entity =>
             {
                 if (UserInterface.Active.RenderTargetTransformMatrix == null)
                 {
@@ -223,7 +224,7 @@ namespace GeonBit.UI.Example
 
             // add button to enable debug mode
             Button debugBtn = new Button("Debug Mode", anchor: Anchor.BottomLeft, size: new Vector2(300, -1), offset: new Vector2(140 + 280 + 320, 0));
-            debugBtn.OnClick = (Entity entity) =>
+            debugBtn.OnClick = entity =>
             {
                 UserInterface.Active.DebugDraw = !UserInterface.Active.DebugDraw;
             };
@@ -242,7 +243,7 @@ namespace GeonBit.UI.Example
             Button zoomout = new Button(string.Empty, ButtonSkin.Default, Anchor.BottomLeft, new Vector2(70, 70));
             Icon zoomoutIcon = new Icon(IconType.ZoomOut, Anchor.Center, 0.75f);
             zoomout.AddChild(zoomoutIcon, true);
-            zoomout.OnClick = (Entity btn) => {
+            zoomout.OnClick = btn => {
                 if (UserInterface.Active.GlobalScale > 0.5f)
                     UserInterface.Active.GlobalScale -= zoominFactor;
                 scaleShow.Text = ((int)System.Math.Round(UserInterface.Active.GlobalScale * 100f)).ToString() + "%";
@@ -253,7 +254,7 @@ namespace GeonBit.UI.Example
             Button zoomin = new Button(string.Empty, ButtonSkin.Default, Anchor.BottomLeft, new Vector2(70, 70), new Vector2(70, 0));
             Icon zoominIcon = new Icon(IconType.ZoomIn, Anchor.Center, 0.75f);
             zoomin.AddChild(zoominIcon, true);
-            zoomin.OnClick = (Entity btn) => {
+            zoomin.OnClick = btn => {
                 if (UserInterface.Active.GlobalScale < 1.45f)
                     UserInterface.Active.GlobalScale += zoominFactor;
                 scaleShow.Text = ((int)System.Math.Round(UserInterface.Active.GlobalScale * 100f)).ToString() + "%";
@@ -716,7 +717,7 @@ Here's a button, to test clicking while scrolled:"));
                     hiddenText.HideInputWithChar = '*';
                     panel.AddChild(hiddenText);
                     var hideCheckbox = new CheckBox("Hide password", isChecked: true);
-                    hideCheckbox.OnValueChange += (Entity ent) =>
+                    hideCheckbox.OnValueChange += ent =>
                     {
                         if (hideCheckbox.Checked)
                             hiddenText.HideInputWithChar = '*';
@@ -861,13 +862,13 @@ Maybe something interesting in tab3?"));
                     panel.AddChild(new Paragraph("And you can also add extra entities to the message box:"));
                     {
                         var btn = new Button("Message With Extras", ButtonSkin.Default);
-                        btn.OnClick += (Entity entity) =>
+                        btn.OnClick += entity =>
                         {
                             var textInput = new TextInput(false);
                             textInput.PlaceholderText = "Enter your name";
                             Utils.MessageBox.ShowMsgBox("Message With Extra!", "In this message box we attached an extra entity from outside (a simple text input).\n\nPretty neat, huh?", new Utils.MessageBox.MsgBoxOption[] {
                                 new Utils.MessageBox.MsgBoxOption("Close", () => { return true; }),
-                                }, new Entity[] { textInput });
+                                }, new UIEntity[] { textInput });
                         };
                         panel.AddChild(btn);
                     }
@@ -988,32 +989,32 @@ Maybe something interesting in tab3?"));
                     // default cursor show
                     {
                         Button btn = new Button("Default", ButtonSkin.Default);
-                        btn.OnMouseEnter = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Default); };
-                        btn.OnMouseLeave = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Default); };
+                        btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
+                        btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                         panel.AddChild(btn);
                     }
 
                     // pointer cursor show
                     {
                         Button btn = new Button("Pointer", ButtonSkin.Default);
-                        btn.OnMouseEnter = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Pointer); };
-                        btn.OnMouseLeave = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Default); };
+                        btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(CursorType.Pointer); };
+                        btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                         panel.AddChild(btn);
                     }
 
                     // ibeam cursor show
                     {
                         Button btn = new Button("IBeam", ButtonSkin.Default);
-                        btn.OnMouseEnter = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.IBeam); };
-                        btn.OnMouseLeave = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Default); };
+                        btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(CursorType.IBeam); };
+                        btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                         panel.AddChild(btn);
                     }
 
                     panel.AddChild(new Paragraph("And as always, you can also set your own custom cursor:"));
                     {
                         Button btn = new Button("Custom", ButtonSkin.Default);
-                        btn.OnMouseEnter = (Entity entity) => { UserInterface.Active.SetCursor(Content.Load<Texture2D>("example/cursor"), 40); };
-                        btn.OnMouseLeave = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Default); };
+                        btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(Content.Load<Texture2D>("example/cursor"), 40); };
+                        btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                         panel.AddChild(btn);
                     }
 
@@ -1137,7 +1138,7 @@ Click on 'Next' to see the character creation demo."));
 
                     // add skin tone slider
                     Slider skin = new Slider(0, 10, new Vector2(0, -1), SliderSkin.Default, Anchor.Auto);
-                    skin.OnValueChange = (Entity entity) =>
+                    skin.OnValueChange = entity =>
                     {
                         Slider slider = (Slider)entity;
                         int alpha = (int)(slider.GetValueAsPercent() * 255);
@@ -1155,7 +1156,7 @@ Click on 'Next' to see the character creation demo."));
                     classTypes.AddItem("Monk");
                     classTypes.SelectedIndex = 0;
                     leftPanel.AddChild(classTypes);
-                    classTypes.OnValueChange = (Entity entity) =>
+                    classTypes.OnValueChange = entity =>
                     {
                         string texture = ((SelectList)(entity)).SelectedValue.ToLower();
                         previewImage.Texture = Content.Load<Texture2D>("example/" + texture);
@@ -1175,7 +1176,7 @@ Click on 'Next' to see the character creation demo."));
                             Color color = baseColor * (1.0f - (i * 2 / 16.0f)); color.A = 255;
                             ColoredRectangle currColorButton = new ColoredRectangle(color, Vector2.One * colorPickSize, Anchor.AutoInline);
                             currColorButton.Padding = currColorButton.SpaceAfter = currColorButton.SpaceBefore = Vector2.Zero;
-                            currColorButton.OnClick = (Entity entity) =>
+                            currColorButton.OnClick = entity =>
                             {
                                 previewImageColor.FillColor = entity.FillColor;
                             };

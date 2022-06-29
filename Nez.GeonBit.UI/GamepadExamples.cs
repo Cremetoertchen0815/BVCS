@@ -1,14 +1,16 @@
-﻿using GeonBit.UI;
-using GeonBit.UI.DataTypes;
-using GeonBit.UI.Entities;
-using GeonBit.UI.Entities.TextValidators;
+﻿using Nez.GeonBit.UI;
+using Nez.GeonBit.UI.DataTypes;
+using Nez.GeonBit.UI.Entities;
+using Nez.GeonBit.UI.Entities.TextValidators;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using UIEntity = Nez.GeonBit.UI.Entities.Entity;
 
-namespace GeonBit.UI.Example
+
+namespace Nez.GeonBit.UI.Example
 {
     /// <summary>
     /// GamePadExamples
@@ -173,7 +175,7 @@ namespace GeonBit.UI.Example
             // add next example button
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, Anchor.TopRight, new Vector2(300, topPanelHeight))
             {
-                OnClick = (Entity btn) => { this.NextExample(ref panels); },
+                OnClick = btn => { this.NextExample(ref panels); },
                 Identifier = "next_btn"
             };
             topPanel.AddChild(nextExampleButton);
@@ -181,14 +183,14 @@ namespace GeonBit.UI.Example
             // add show-get button
             Button showGitButton = new Button("Git Repo", ButtonSkin.Fancy, Anchor.TopCenter, new Vector2(280, topPanelHeight))
             {
-                OnClick = (Entity btn) => { System.Diagnostics.Process.Start("https://github.com/RonenNess/GeonBit.UI"); }
+                OnClick = btn => { System.Diagnostics.Process.Start("https://github.com/RonenNess/GeonBit.UI"); }
             };
             topPanel.AddChild(showGitButton);
 
             // add exit button
             Button exitBtn = new Button("Exit", anchor: Anchor.BottomRight, size: new Vector2(200, -1))
             {
-                OnClick = (Entity entity) => { Exit(); }
+                OnClick = entity => { Exit(); }
             };
             UserInterface.Active.AddEntity(exitBtn);
 
@@ -226,7 +228,7 @@ namespace GeonBit.UI.Example
             UserInterface.Active.AddEntity(eventsPanel);
 
             // whenever events log list size changes, make sure its not too long. if it is, trim it.
-            eventsLog.OnListChange = (Entity entity) =>
+            eventsLog.OnListChange = entity =>
             {
                 SelectList list = (SelectList)entity;
                 if (list.Count > 100)
@@ -236,32 +238,32 @@ namespace GeonBit.UI.Example
             };
 
             // listen to all global events - one timers
-            UserInterface.Active.OnClick = (Entity entity) => { eventsLog.AddItem("Click: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnRightClick = (Entity entity) => { eventsLog.AddItem("RightClick: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnMouseDown = (Entity entity) => { eventsLog.AddItem("MouseDown: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnRightMouseDown = (Entity entity) => { eventsLog.AddItem("RightMouseDown: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnMouseEnter = (Entity entity) => { eventsLog.AddItem("MouseEnter: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnMouseLeave = (Entity entity) => { eventsLog.AddItem("MouseLeave: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnMouseReleased = (Entity entity) => { eventsLog.AddItem("MouseReleased: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnMouseWheelScroll = (Entity entity) => { eventsLog.AddItem("Scroll: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnStartDrag = (Entity entity) => { eventsLog.AddItem("StartDrag: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnStopDrag = (Entity entity) => { eventsLog.AddItem("StopDrag: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnFocusChange = (Entity entity) => { eventsLog.AddItem("FocusChange: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
-            UserInterface.Active.OnValueChange = (Entity entity) => { if (entity.Parent == eventsLog) { return; } eventsLog.AddItem("ValueChanged: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnClick = entity => { eventsLog.AddItem("Click: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnRightClick = entity => { eventsLog.AddItem("RightClick: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnMouseDown = entity => { eventsLog.AddItem("MouseDown: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnRightMouseDown = entity => { eventsLog.AddItem("RightMouseDown: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnMouseEnter = entity => { eventsLog.AddItem("MouseEnter: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnMouseLeave = entity => { eventsLog.AddItem("MouseLeave: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnMouseReleased = entity => { eventsLog.AddItem("MouseReleased: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnMouseWheelScroll = entity => { eventsLog.AddItem("Scroll: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnStartDrag = entity => { eventsLog.AddItem("StartDrag: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnStopDrag = entity => { eventsLog.AddItem("StopDrag: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnFocusChange = entity => { eventsLog.AddItem("FocusChange: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
+            UserInterface.Active.OnValueChange = entity => { if (entity.Parent == eventsLog) { return; } eventsLog.AddItem("ValueChanged: " + entity.GetType().Name); eventsLog.scrollToEnd(); };
 
             // clear the current events after every frame they were drawn
-            eventsNow.AfterDraw = (Entity entity) => { eventsNow.ClearItems(); };
+            eventsNow.AfterDraw = entity => { eventsNow.ClearItems(); };
 
             // listen to all global events - happening now
-            UserInterface.Active.WhileDragging = (Entity entity) => { eventsNow.AddItem("Dragging: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
-            UserInterface.Active.WhileMouseDown = (Entity entity) => { eventsNow.AddItem("MouseDown: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
-            UserInterface.Active.WhileMouseHover = (Entity entity) => { eventsNow.AddItem("MouseHover: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
+            UserInterface.Active.WhileDragging = entity => { eventsNow.AddItem("Dragging: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
+            UserInterface.Active.WhileMouseDown = entity => { eventsNow.AddItem("MouseDown: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
+            UserInterface.Active.WhileMouseHover = entity => { eventsNow.AddItem("MouseHover: " + entity.GetType().Name); eventsNow.scrollToEnd(); };
             eventsNow.MaxItems = 4;
 
             // add extra info button
             Button infoBtn = new Button("  Events", anchor: Anchor.BottomLeft, size: new Vector2(280, -1), offset: new Vector2(140, 0));
             infoBtn.AddChild(new Icon(IconType.Scroll, Anchor.CenterLeft), true);
-            infoBtn.OnClick = (Entity entity) =>
+            infoBtn.OnClick = entity =>
             {
                 eventsPanel.Visible = !eventsPanel.Visible;
             };
@@ -271,7 +273,7 @@ namespace GeonBit.UI.Example
             // add button to apply transformations
             Button transBtn = new Button("Transform UI", anchor: Anchor.BottomLeft, size: new Vector2(320, -1), offset: new Vector2(140 + 280, 0))
             {
-                OnClick = (Entity entity) =>
+                OnClick = entity =>
                 {
                     if (UserInterface.Active.RenderTargetTransformMatrix == null)
                     {
@@ -299,7 +301,7 @@ namespace GeonBit.UI.Example
             Button zoomout = new Button(string.Empty, ButtonSkin.Default, Anchor.BottomLeft, new Vector2(70, 70));
             Icon zoomoutIcon = new Icon(IconType.ZoomOut, Anchor.Center, 0.75f);
             zoomout.AddChild(zoomoutIcon, true);
-            zoomout.OnClick = (Entity btn) =>
+            zoomout.OnClick = btn =>
             {
                 if (UserInterface.Active.GlobalScale > 0.5f)
                     UserInterface.Active.GlobalScale -= zoominFactor;
@@ -311,7 +313,7 @@ namespace GeonBit.UI.Example
             Button zoomin = new Button(string.Empty, ButtonSkin.Default, Anchor.BottomLeft, new Vector2(70, 70), new Vector2(70, 0));
             Icon zoominIcon = new Icon(IconType.ZoomIn, Anchor.Center, 0.75f);
             zoomin.AddChild(zoominIcon, true);
-            zoomin.OnClick = (Entity btn) =>
+            zoomin.OnClick = btn =>
             {
                 if (UserInterface.Active.GlobalScale < 1.45f)
                     UserInterface.Active.GlobalScale += zoominFactor;
@@ -322,7 +324,7 @@ namespace GeonBit.UI.Example
             topPanel.AddChild(new Paragraph("", Anchor.TopLeft, offset: new Vector2(10, 27))
             {
                 // Display the UserInterface.Active.GetGamePadMod state
-                AfterUpdate = (Entity entity) => { ((Paragraph)entity).Text = UserInterface.GetCursorMode.ToString(); }
+                AfterUpdate = entity => { ((Paragraph)entity).Text = UserInterface.GetCursorMode.ToString(); }
             });
 
             UserInterface.Active.AddEntity(zoomin);
@@ -349,7 +351,7 @@ To start the demo, please click the 'Next' button on the top navbar.");
             panel.AddChild(new Paragraph("V" + UserInterface.VERSION, Anchor.BottomRight)).FillColor = Color.Yellow;
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -384,7 +386,7 @@ To start the demo, please click the 'Next' button on the top navbar.");
 "));
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -405,7 +407,7 @@ To position elements inside panels or other widgets, you set an anchor and offse
 
 Another thing to keep in mind is size; Most widgets come with a default size, but for those you need to set size for remember that setting size 0 will take full width / height. For example, size of X = 0, Y = 100 means the widget will be 100 pixels height and the width of its parent (minus the parent padding)."));
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -433,7 +435,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new Paragraph("center-left", Anchor.CenterLeft, Color.Yellow, 0.8f));
             panel.AddChild(new Paragraph("center-right", Anchor.CenterRight, Color.Yellow, 0.8f));
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, Anchor.BottomRight, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -487,7 +489,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
 
             // add next example button
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity nxtButton) => { this.NextExample(); };
+            nextExampleButton.OnClick = nxtButton => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -517,7 +519,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new RadioButton("Option 2") { Selectable = true });
             panel.AddChild(new RadioButton("Option 3") { Selectable = true });
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -555,7 +557,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
                 panel.AddChild(intPanel);
             }
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -590,7 +592,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
                 Draggable = true
             };
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panelInt.AddChild(new Paragraph("This panel is draggable too, but limited to its parent boundaries.", Anchor.Center, Color.White, 0.85f));
             panel.AddChild(panelInt);
             panel.AddChild(nextExampleButton);
@@ -623,7 +625,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new ProgressBar(0, 10) { Selectable = true });
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -653,7 +655,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             list.AddItem("Ranger");
             panel.AddChild(list);
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -687,7 +689,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             list.AddItem(System.String.Format("{0,-8} {1,-8} {2,-10}", "Bob", "Bard", "1"));
             panel.AddChild(list);
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -717,7 +719,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             list.AddItem("Ranger");
             panel.AddChild(list);
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -755,7 +757,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             drop.AddItem("Ranger");
             panel.AddChild(drop);
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -792,7 +794,7 @@ Here's a button, to test clicking while scrolled:"));
             panel.Scrollbar.AdjustMaxAutomatically = true;
             panel.Identifier = "panel_with_scrollbar";
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -826,7 +828,7 @@ Here's a button, to test clicking while scrolled:"));
             }
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -867,7 +869,7 @@ Here's a button, to test clicking while scrolled:"));
             };
             panel.AddChild(hiddenText);
             var hideCheckbox = new CheckBox("Hide password", isChecked: true) { Selectable = true };
-            hideCheckbox.OnValueChange += (Entity ent) =>
+            hideCheckbox.OnValueChange += ent =>
             {
                 if (hideCheckbox.Checked)
                     hiddenText.HideInputWithChar = '*';
@@ -877,7 +879,7 @@ Here's a button, to test clicking while scrolled:"));
             panel.AddChild(hideCheckbox);
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -906,7 +908,7 @@ And yes, it can be multiline."
             panel.AddChild(tooltipButton);
             panel.AddChild(new Paragraph(@"Note that you can override the function that generates tooltip text entities if you want to create your own custom style."));
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -943,7 +945,7 @@ A common feature of clerics across many games is that they may not equip pointed
 Related to the cleric is the paladin, who is typically a Lawful Good[citation needed] warrior often aligned with a religious order, and who uses their martial skills to advance its holy cause.";
             panel.AddChild(textMulti);
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1058,7 +1060,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
                 // add next example button
                 nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80))
                 { Selectable = true, AttachedData = tab.button  /*entry point for gamepad tabbing*/ };
-                nextExampleButton.OnClick = (Entity btn2) => { this.NextExample(); };
+                nextExampleButton.OnClick = btn2 => { this.NextExample(); };
                 tab.panel.AddChild(nextExampleButton);
 
                 tab.button.Selectable = true;   // a tab should be selectable by the gamepad
@@ -1107,7 +1109,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             panel.AddChild(new Paragraph("And you can also add extra entities to the message box:"));
             {
                 var btn = new Button("Message With Extras", ButtonSkin.Default) { Selectable = true };
-                btn.OnClick += (Entity entity) =>
+                btn.OnClick += entity =>
                 {
                     var textInput = new TextInput(false)
                     {
@@ -1116,13 +1118,13 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
                     GeonBit.UI.Utils.MessageBox.ShowMsgBox("Message With Extra!", "In this message box we attached an extra entity from outside (a simple text input).\n\nPretty neat, huh?",
                         new GeonBit.UI.Utils.MessageBox.MsgBoxOption[] {
                                 new GeonBit.UI.Utils.MessageBox.MsgBoxOption("Close", () => { return true; }),
-                        }, new Entity[] { textInput });
+                        }, new UIEntity[] { textInput });
                 };
                 panel.AddChild(btn);
             }
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1160,7 +1162,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             panel.AddChild(fileMenu);
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1199,7 +1201,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             panel2.AddChild(new CheckBox("disabled..") { Enabled = false });
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel2.AddChild(nextExampleButton);
             panel2.MakeFirstSelection();
         }
@@ -1238,7 +1240,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             panel2.AddChild(new CheckBox("locked..") { Locked = true });
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel2.AddChild(nextExampleButton);
             panel2.MakeFirstSelection();
         }
@@ -1258,37 +1260,37 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             // default cursor show
             {
                 Button btn = new Button("Default", ButtonSkin.Default) { Selectable = true };
-                btn.OnMouseEnter = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Default); };
-                btn.OnMouseLeave = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Default); };
+                btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
+                btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                 panel.AddChild(btn);
             }
 
             // pointer cursor show
             {
                 Button btn = new Button("Pointer", ButtonSkin.Default) { Selectable = true };
-                btn.OnMouseEnter = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Pointer); };
-                btn.OnMouseLeave = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Default); };
+                btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(CursorType.Pointer); };
+                btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                 panel.AddChild(btn);
             }
 
             // ibeam cursor show
             {
                 Button btn = new Button("IBeam", ButtonSkin.Default) { Selectable = true };
-                btn.OnMouseEnter = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.IBeam); };
-                btn.OnMouseLeave = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Default); };
+                btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(CursorType.IBeam); };
+                btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                 panel.AddChild(btn);
             }
 
             panel.AddChild(new Paragraph("And as always, you can also set your own custom cursor:"));
             {
                 Button btn = new Button("Custom", ButtonSkin.Default) { Selectable = true };
-                btn.OnMouseEnter = (Entity entity) => { UserInterface.Active.SetCursor(Content.Load<Texture2D>("example/cursor"), 40); };
-                btn.OnMouseLeave = (Entity entity) => { UserInterface.Active.SetCursor(CursorType.Default); };
+                btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(Content.Load<Texture2D>("example/cursor"), 40); };
+                btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                 panel.AddChild(btn);
             }
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1352,7 +1354,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             panel.AddChild(icon);
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1395,7 +1397,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
 
             var leftButton = new Button("LeftButton", ButtonSkin.Default)
             {
-                OnClick = (Entity myBtn) =>
+                OnClick = myBtn =>
                 {
                     if (myBtn.Parent == leftPanel)
                     {
@@ -1415,7 +1417,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
 
             var rightButton = new Button("RightButton", ButtonSkin.Default)
             {
-                OnClick = (Entity myBtn) =>
+                OnClick = myBtn =>
                 {
                     if (myBtn.Parent == leftPanel)
                     {
@@ -1451,7 +1453,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
 Click on 'Next' to see the character creation demo."));
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1517,7 +1519,7 @@ Click on 'Next' to see the character creation demo."));
             // add skin tone slider
             Slider skin = new Slider(0, 10, new Vector2(0, -1), SliderSkin.Default, Anchor.Auto)
             {
-                OnValueChange = (Entity entity) =>
+                OnValueChange = entity =>
                 {
                     Slider slider = (Slider)entity;
                     int alpha = (int)(slider.GetValueAsPercent() * 255);
@@ -1536,7 +1538,7 @@ Click on 'Next' to see the character creation demo."));
             classTypes.AddItem("Monk");
             classTypes.SelectedIndex = 0;
             leftPanel.AddChild(classTypes);
-            classTypes.OnValueChange = (Entity entity) =>
+            classTypes.OnValueChange = entity =>
             {
                 string texture = ((SelectList)(entity)).SelectedValue.ToLower();
                 previewImage.Texture = Content.Load<Texture2D>("example/" + texture);
@@ -1556,7 +1558,7 @@ Click on 'Next' to see the character creation demo."));
                     Color color = baseColor * (1.0f - (i * 2 / 16.0f)); color.A = 255;
                     ColoredRectangle currColorButton = new ColoredRectangle(color, Vector2.One * colorPickSize, Anchor.AutoInline);
                     currColorButton.Padding = currColorButton.SpaceAfter = currColorButton.SpaceBefore = Vector2.Zero;
-                    currColorButton.OnClick = (Entity entity) =>
+                    currColorButton.OnClick = entity =>
                     {
                         previewImageColor.FillColor = entity.FillColor;
                     };
@@ -1612,7 +1614,7 @@ Click on 'Next' to see the character creation demo."));
             entitiesGroup.AddChild(age);
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = (Entity btn) => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { this.NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }

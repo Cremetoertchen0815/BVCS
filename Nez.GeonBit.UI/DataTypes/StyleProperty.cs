@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System;
 
-namespace GeonBit.UI.DataTypes
+namespace Nez.GeonBit.UI.DataTypes
 {
 
     /// <summary>
