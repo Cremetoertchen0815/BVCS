@@ -26,7 +26,8 @@ namespace Betreten_Verboten.Components.Base
         //ctor
         public CharPicker(int distance) => _distance = distance;
 
-        private static MaterialOverrides _materialAvailable = new MaterialOverrides() { DiffuseColor = Color.Red};
+        private static MaterialOverrides _materialSelectable = new MaterialOverrides() { DiffuseColor = Color.Red};
+        private static MaterialOverrides _materialNeutral = new MaterialOverrides();
 
         public override void OnAddedToEntity()
         {
@@ -37,11 +38,11 @@ namespace Betreten_Verboten.Components.Base
             _figures = _owner.GetFigures();
             
             //Set material overrides
-            foreach (var item in _figures) if (item.CanBeSelect) item.Renderer.MaterialOverride = _materialAvailable;
+            foreach (var item in _figures) if (item.CanBeSelected) item.Renderer.MaterialOverride = _materialSelectable;
         }
 
         //Clear material overrides for characters
-        public override void OnRemovedFromEntity() => Array.ForEach(_figures, x => x.Renderer.MaterialOverride = null);
+        public override void OnRemovedFromEntity() => Array.ForEach(_figures, x => x.Renderer.MaterialOverride = _materialNeutral);
         
         public void Update()
         {
@@ -51,9 +52,12 @@ namespace Betreten_Verboten.Components.Base
                 var result = _world.Raycast(ray.Position, ray.Position + ray.Direction * MAX_OBJ_DISTANCE);
                 if (result.HasHit)
                 {
+                    //Fetch clicked on character and check if valid
                     var character = result.Collision.CollisionBody.Entity.GetComponent<Character>();
-                    if (character == null || !character.CanBeSelect || character.Owner != _owner) return;
-                    character.SendPrivateObj("char_picker", _owner.TelegramSender, "character_selected");
+                    if (character == null || !character.CanBeSelected || character.Owner != _owner) return;
+                    //If yes, transmit traveling distance to selected character via telegram
+                    _distance.SendPrivateObj("char_picker", character.TelegramSender, "char_move");
+                    Entity.RemoveComponent(this); //Remove char picker as it fullfilled its purpose and is obsolete now
                 }
             }
         }

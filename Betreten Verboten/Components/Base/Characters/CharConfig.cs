@@ -14,6 +14,28 @@ namespace Betreten_Verboten.Components.Base.Characters
 		public Color Color { get; set; }
 		public Model Model { get; set; }
 
+		public void SetStdColorScheme(int i)
+        {
+			switch (i)
+			{
+				case 0:
+					Color = Color.Magenta;
+					break;
+				case 1:
+					Color = Color.Lime;
+					break;
+				case 2:
+					Color = Color.Cyan;
+					break;
+				case 3:
+					Color = Color.Yellow;
+					break;
+				default:
+					Color = Color.White;
+					break;
+			}
+		}
+
 		public MaterialAPI[] GetMaterials()
 		{
 			var ret = new MaterialAPI[1];

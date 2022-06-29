@@ -7,22 +7,20 @@ namespace Betreten_Verboten.Components.Base.Characters
 	public class Character : Component, ITelegramReceiver
 	{
 		//Properties
-		private int _position;
-		[Inspectable]
 		public int Position { get => _position; set => SetPosition(value); }
-		[Inspectable]
 		public GlobalPosition GlobalPosition { get; private set; }
 		public int Nr { get; private set; }
-		public bool CanBeSelect => true;
+		public bool CanBeSelected => true;
 		public Player Owner { get; private set; }
 		public ModelRenderer Renderer { get; private set; }
 		public RigidBody RigidBody { get; private set; }
-
         public string TelegramSender => "char" + Owner.Nr + "_" + Nr;
+
 
         //Fields
         public const float CHAR_HITBOX_HEIGHT = 4f;
 		public const float CHAR_HITBOX_WIDTH = 0.8f;
+		private int _position;
 		private int _travelDistLeft = 0;
 		private CharConfig _config;
 
@@ -37,24 +35,8 @@ namespace Betreten_Verboten.Components.Base.Characters
 		{
 			var ent = (GeonEntity)Entity;
 
-			//Set temp color
-            switch (Owner.Nr)
-            {
-				case 0:
-					_config.Color = Color.Magenta;
-					break;
-				case 1:
-					_config.Color = Color.Lime;
-					break;
-				case 2:
-					_config.Color = Color.Cyan;
-					break;
-				case 3:
-					_config.Color = Color.Yellow;
-					break;
-				default:
-                    break;
-            }
+			//Set color
+			_config.SetStdColorScheme(Owner.Nr);
 
             //Config renderer
             Renderer = ent.AddComponentAsChild(new ModelRenderer("mesh/piece_std"));
@@ -78,12 +60,12 @@ namespace Betreten_Verboten.Components.Base.Characters
         {
             switch (message.Head)
             {
-				case "move":
+				case "char_move":
 					var distance = (int)message.Body;
 					if ((_travelDistLeft = distance) < 1) break;
 					TakeStep(true);
 					break;
-				case "landed_on_field":
+				case "char_landed_on_field":
 					var source = (Character)message.Body;
 					if (source == this || source.GlobalPosition != GlobalPosition) break;
 					Kick(source);

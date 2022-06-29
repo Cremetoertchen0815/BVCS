@@ -1,11 +1,6 @@
 ﻿using Betreten_Verboten.Components.Base.Characters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Betreten_Verboten.Components
+namespace Betreten_Verboten.Components.Base
 {
     public struct GlobalPosition
     {
