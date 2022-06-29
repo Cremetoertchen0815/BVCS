@@ -42,6 +42,8 @@ namespace Betreten_Verboten.Components.Base
             this.SendPublicTele("player_registered", this);
         }
 
+        public override void OnRemovedFromEntity() => this.TeleDeregister();
+
         public abstract void MessageReceived(Telegram message);
 
         public Character[] GetFigures() => _figures;

@@ -61,6 +61,7 @@ namespace Betreten_Verboten.Scenes.Main
 
             this.TeleRegister();
         }
+        public override void Unload() => this.TeleDeregister();
 
         public void MessageReceived(Telegram message)
         {
