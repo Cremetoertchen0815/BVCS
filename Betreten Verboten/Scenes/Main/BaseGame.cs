@@ -24,7 +24,7 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected GeonDefaultRenderer _geonRenderer;
 
-        private int _activePlayer = 1;
+        private int _activePlayer = 0;
         private Player[] _players;
         private BVBoard _board;
         private List<int> _diceNumbers = new List<int>();
