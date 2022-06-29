@@ -18,7 +18,7 @@ namespace Betreten_Verboten.Components.Base.Characters
 		{
 			var ret = new MaterialAPI[1];
 			var bodyMaterial = ret[0] = new BasicMaterial();
-			bodyMaterial.DiffuseColor = Color.White;
+			bodyMaterial.DiffuseColor = Color;
 			return ret;
 		}
 	}

@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Betreten_Verboten.Components.Base
 {
@@ -17,7 +19,7 @@ namespace Betreten_Verboten.Components.Base
 
 
 		protected Character[] _figures;
-		protected BVBoard _board;
+		public BVBoard Board { get; private set; }
 
 		//ctor
 		public Player(int Nr) => this.Nr = Nr;
@@ -26,15 +28,14 @@ namespace Betreten_Verboten.Components.Base
 		{
 			//Fetch GeonScene & board
 			var geonScene = (GeonScene)Entity.Scene;
-			_board = geonScene.FindEntity("board").GetComponent<BVBoard>();
+			Board = geonScene.FindEntity("board").GetComponent<BVBoard>();
 
 			//Create figures
-			_figures = new Character[_board.FieldCount];
+			_figures = new Character[Board.FigureCount];
 			for (int i = 0; i < _figures.Length; i++)
 			{
-				var pos = _board.GetFieldPosition(Nr, i, FieldType.Regular, false) * 0.04f;
-				var ent = geonScene.CreateGeonEntity("figure" + Nr + "-" + i, new Vector3(pos.X, Character.CHAR_HITBOX_HEIGHT - 1f, pos.Y), NodeType.BoundingBoxCulling);
-				_figures[i] = ent.AddComponent(new Character(this, CharacterConfig, _board.CharScale));
+				var ent = geonScene.CreateGeonEntity("figure" + Nr + "-" + i, new Vector3(0, Character.CHAR_HITBOX_HEIGHT - 1f, 0), NodeType.BoundingBoxCulling);
+				_figures[i] = ent.AddComponent(new Character(this, i, CharacterConfig)).SetPosition(-1);
 			}
 
 			//Register in telegram service
@@ -46,6 +47,6 @@ namespace Betreten_Verboten.Components.Base
 
 		public Character[] GetFigures() => _figures;
 
-		public void DecideAfterDiceroll(List<int> nrs) => Entity.AddComponent<CharPicker>();
+		public void DecideAfterDiceroll(List<int> nrs) => Entity.AddComponent(new CharPicker(nrs.Sum()));
 	}
 }

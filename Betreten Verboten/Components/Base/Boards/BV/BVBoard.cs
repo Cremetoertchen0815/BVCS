@@ -65,10 +65,10 @@ namespace Betreten_Verboten.Components.Base
 		protected Vector2 _centerOffset = new Vector2(TEX_RES / 2);
 
 		//Abstract properties
-		public abstract int FieldDistance { get; }
-		public abstract int FieldHouseDiameter { get; }
-		public abstract int FieldHomeDiameter { get; }
-		public abstract int FieldPlayerDiameter { get; }
+		protected abstract int FieldDistance { get; }
+		protected abstract int FieldHouseDiameter { get; }
+		protected abstract int FieldHomeDiameter { get; }
+		protected abstract int FieldPlayerDiameter { get; }
 		public abstract int FieldCount { get; }
 		public abstract int FigureCount { get; }
 		public abstract int PlayerCount { get; }
@@ -163,6 +163,13 @@ namespace Betreten_Verboten.Components.Base
 			_connectingSegments[idxSeg++] = nuPos - conVec;
 
 		}
+
+		public Vector2 GetCharacterPosition(Characters.Character c)
+        {
+			if (c.Position < 0) return (_fieldsHome[c.Nr + FigureCount * c.Owner.Nr] - _centerOffset) * 0.04f;
+			if (c.Position >= FieldCount * PlayerCount) return (_fieldsHouse[c.Position - FieldCount * PlayerCount + FigureCount * c.Owner.Nr] - _centerOffset) * 0.04f;
+			return (_fieldsRegular[c.Position + FigureCount * c.Owner.Nr] - _centerOffset) * 0.04f;
+        }
 
 		public void MessageReceived(Telegram message)
 		{

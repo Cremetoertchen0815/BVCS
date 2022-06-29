@@ -24,8 +24,9 @@ namespace Betreten_Verboten.Scenes.Main
 
 		protected GeonDefaultRenderer _geonRenderer;
 
-		private Player _activePlayer;
+		private int _activePlayer = 0;
 		private Player[] _players;
+		private BVBoard _board;
 		private List<int> _diceNumbers = new List<int>();
 		private GameState _gameState = GameState.ActionSelect;
 
@@ -72,9 +73,12 @@ namespace Betreten_Verboten.Scenes.Main
 						_uiPlayerReroll.SetIsVisible(true);
 					else
 					{
-						_activePlayer.DecideAfterDiceroll(_diceNumbers);
+						_players[_activePlayer].DecideAfterDiceroll(_diceNumbers);
 						GameState = GameState.PieceSelect;
 					}
+					break;
+				case "advance_player":
+					AdvancePlayer();
 					break;
 			}
 		}
@@ -84,10 +88,9 @@ namespace Betreten_Verboten.Scenes.Main
 			CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
 
 			//Create playing field
-			var board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
-			_players = new Player[board.PlayerCount];
-			for (int i = 0; i < board.PlayerCount; i++) _players[i] = CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
-			_activePlayer = _players[0];
+			_board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
+			_players = new Player[_board.PlayerCount];
+			for (int i = 0; i < _board.PlayerCount; i++) _players[i] = CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
 		}
 
 		protected void InitUI()
@@ -172,6 +175,12 @@ namespace Betreten_Verboten.Scenes.Main
 		{
 			Dice.Throw(this);
 			_uiPlayerReroll.SetIsVisible(false);
+		}
+
+		public void AdvancePlayer()
+        {
+			_activePlayer = _activePlayer++ % _board.PlayerCount;
+			GameState = GameState.ActionSelect;
 		}
 	}
 }

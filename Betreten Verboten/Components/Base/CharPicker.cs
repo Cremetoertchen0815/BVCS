@@ -17,10 +17,14 @@ namespace Betreten_Verboten.Components.Base
         private const float MAX_OBJ_DISTANCE = 1000f;
 
         //Cached components
+        private int _distance;
         private Player _owner;
         private Character[] _figures;
         private Camera3D _camera;
         private PhysicsWorld _world;
+
+        //ctor
+        public CharPicker(int distance) => _distance = distance;
 
         private static MaterialOverrides _materialAvailable = new MaterialOverrides() { DiffuseColor = Color.Red};
 
