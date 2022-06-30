@@ -76,7 +76,7 @@ namespace Nez.GeonBit.UI.Example
         protected override void Initialize()
         {         
             // create and init the UI manager
-            UserInterface.Initialize(Content, BuiltinThemes.hd);
+            UserInterface.Initialize(Content, BuiltinThemes.editor);
             UserInterface.Active.UseRenderTarget = true;
 
             // draw cursor outside the render target
