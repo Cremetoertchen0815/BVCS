@@ -10,6 +10,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -287,7 +288,7 @@ namespace Nez.GeonBit.UI.Entities
             Texture2D markTexture = Resources.SliderMarkTextures[_skin];
 
             // get slider metadata
-            DataTypes.TextureData data = Resources.SliderData[(int)_skin];
+            TextureData data = Resources.SliderData[(int)_skin];
             float frameWidth = data.FrameWidth;
 
             // draw slider body

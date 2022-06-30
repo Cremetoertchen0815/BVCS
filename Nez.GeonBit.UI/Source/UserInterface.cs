@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Content;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using UIEntity = Nez.GeonBit.UI.Entities.Entity;
-
+using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI
 {
@@ -484,7 +484,7 @@ namespace Nez.GeonBit.UI
         /// <param name="type">What type of cursor to show.</param>
         public void SetCursor(CursorType type)
         {
-            DataTypes.CursorTextureData data = Resources.CursorsData[(int)type];
+            CursorTextureData data = Resources.CursorsData[(int)type];
             SetCursor(Resources.Cursors[type], data.DrawWidth, new Point(data.OffsetX, data.OffsetY));
         }
 

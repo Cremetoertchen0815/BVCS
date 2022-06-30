@@ -10,7 +10,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.GeonBit.UI.DataTypes;
+using Nez.ExtendedContent.DataTypes;
 using System.Text;
 
 namespace Nez.GeonBit.UI.Entities

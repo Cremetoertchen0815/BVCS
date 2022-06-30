@@ -1,5 +1,5 @@
 ﻿using Nez.GeonBit.UI;
-using Nez.GeonBit.UI.DataTypes;
+using Nez.ExtendedContent.DataTypes;
 using Nez.GeonBit.UI.Entities;
 using Nez.GeonBit.UI.Entities.TextValidators;
 using Microsoft.Xna.Framework;

@@ -46,11 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataTypes\CursorTextureData.cs" />
-    <Compile Include="DataTypes\DefaultStyles.cs" />
-    <Compile Include="DataTypes\StyleProperty.cs" />
-    <Compile Include="DataTypes\TextureData.cs" />
-    <Compile Include="DataTypes\ThemeSettings.cs" />
     <Compile Include="GamepadExamples.cs" />
     <Compile Include="GeonBitUI_Examples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -93,9 +88,9 @@
     <None Include="Source\Entities\Entity.cs.bak" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nez.GeonBit\Nez.GeonBit.csproj">
-      <Project>{475008d0-13ae-46d5-a8c3-4872f0a481af}</Project>
-      <Name>Nez.GeonBit</Name>
+    <ProjectReference Include="..\Nez.ExtendedContent\Nez.ExtendedContent.csproj">
+      <Project>{db752993-1e69-4a38-b431-f515126db8e1}</Project>
+      <Name>Nez.ExtendedContent</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nez.Portable\Nez.csproj">
       <Project>{2e7f8cf8-790f-4781-a73b-222fac71b3c7}</Project>

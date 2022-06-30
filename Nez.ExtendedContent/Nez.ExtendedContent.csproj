@@ -6,8 +6,8 @@
     <OutputType>Library</OutputType>
 	  <TargetFramework>net461</TargetFramework>
     <ApplicationIcon />
-    <RootNamespace>Beacon</RootNamespace>
-    <AssemblyName>Beacon</AssemblyName>
+    <RootNamespace>Nez.ExtendedContent</RootNamespace>
+    <AssemblyName>Nez.ExtendedContent</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -16,7 +16,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.GeonBit.UI.DataTypes;
+using Nez.ExtendedContent.DataTypes;
 using System.Linq;
 
 namespace Nez.GeonBit.UI.Entities

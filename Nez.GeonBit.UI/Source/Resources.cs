@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using System;
 using Nez.GeonBit.UI.Entities;
-using Nez.GeonBit.UI.DataTypes;
+using Nez.ExtendedContent.DataTypes;
 
 
 namespace Nez.GeonBit.UI

@@ -14,7 +14,7 @@ namespace Betreten_Verboten
         private static void Main()
         {
             // execute GeonBit with Game1 instance.
-            using (var g = new Nez.GeonBit.UI.Example.GeonBitUI_Examples())
+            using (var g = new Nez.GeonBit.UI.Example.GamePadExamples())
             {
                 g.Run();
             }

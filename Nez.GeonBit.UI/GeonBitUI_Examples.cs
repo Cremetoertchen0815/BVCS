@@ -24,7 +24,7 @@ using System.Collections.Generic;
 // using GeonBit UI elements
 using Nez.GeonBit.UI.Entities;
 using Nez.GeonBit.UI.Entities.TextValidators;
-using Nez.GeonBit.UI.DataTypes;
+using Nez.ExtendedContent.DataTypes;
 using UIEntity = Nez.GeonBit.UI.Entities.Entity;
 
 namespace Nez.GeonBit.UI.Example

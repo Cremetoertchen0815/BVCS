@@ -10,7 +10,7 @@
 #endregion
 using System.Text;
 using System.Collections.Generic;
-using Nez.GeonBit.UI.DataTypes;
+using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
