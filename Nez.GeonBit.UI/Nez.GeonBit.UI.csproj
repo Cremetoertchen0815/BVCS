@@ -92,10 +92,6 @@
       <Project>{db752993-1e69-4a38-b431-f515126db8e1}</Project>
       <Name>Nez.ExtendedContent</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nez.Portable\Nez.csproj">
-      <Project>{2e7f8cf8-790f-4781-a73b-222fac71b3c7}</Project>
-      <Name>Nez</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets" Condition="Exists('..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets')" />
