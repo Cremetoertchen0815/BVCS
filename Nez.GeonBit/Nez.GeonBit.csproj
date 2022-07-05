@@ -83,7 +83,6 @@
     <Compile Include="ECS\GeonEntity.cs" />
     <Compile Include="ECS\GeonScene.cs" />
     <Compile Include="ECS\Renderers\ShadowPlaneRenderer.cs" />
-    <Compile Include="ECS\Renderers\UIRenderer.cs" />
     <Compile Include="Graphics\Animation\Animations.cs" />
     <Compile Include="Graphics\Animation\Clip.cs" />
     <Compile Include="Graphics\Animation\CpuAnimatedVertexBuffer.cs" />
