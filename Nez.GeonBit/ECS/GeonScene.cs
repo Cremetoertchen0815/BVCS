@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Nez.GeonBit.UI;
 
 namespace Nez.GeonBit
 {
@@ -46,6 +47,7 @@ namespace Nez.GeonBit
 		/// </summary>
 		public static uint OctreeMaxDivisions = 5;
 
+		public UserInterface UI { get; set; } = null;
 
 		public GeonScene() : base(false)
 		{
@@ -53,9 +55,10 @@ namespace Nez.GeonBit
 			var cameraEntity = CreateGeonEntity("camera");
 			base.Camera = cameraEntity.AddComponent<Camera>();
 			Camera = cameraEntity.AddComponent(new Camera3D());
-
+			
 			Initialize();
 		}
+
 
 		public GeonEntity CreateGeonEntity(string name, Vector3 position, NodeType nodeType = NodeType.Simple)
 		{

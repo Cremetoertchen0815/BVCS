@@ -64,6 +64,7 @@
     <Compile Include="ECS\Components\Graphics\Renderers\SimpleModelRenderer.cs" />
     <Compile Include="ECS\Components\Graphics\Renderers\SkinnedModelRenderer.cs" />
     <Compile Include="ECS\Components\Graphics\Renderers\SpriteRenderer.cs" />
+    <Compile Include="ECS\FinalUIRender.cs" />
     <Compile Include="ECS\GeonComponent.cs" />
     <Compile Include="ECS\Components\Misc\TimeToLive.cs" />
     <Compile Include="ECS\Components\Particles\Animators\AnimatorUtils.cs" />
