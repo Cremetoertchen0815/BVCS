@@ -94,13 +94,10 @@ namespace Nez.GeonBit.UI
         // store current & previous mouse states so we can detect key release and diff
         MouseState _newMouseState;
         MouseState _oldMouseState;
-
         GamePadState _newGamePadState;
         GamePadState _oldGamePadState;
 
-        // store old and new mouse position so we can get diff
         Vector2 _newMousePos;
-        Vector2 _oldMousePos;
 
         // store current frame gametime
         GameTime _currTime;
@@ -175,10 +172,8 @@ namespace Nez.GeonBit.UI
             _newKeyboardState = _oldKeyboardState;
 
             // init mouse and gamepad states
-            _newMouseState = _oldMouseState;
             _newGamePadState = _oldGamePadState;
-
-            _newMousePos = new Vector2(_newMouseState.X, _newMouseState.Y);
+            _newMouseState = _oldMouseState;
 
             // call first update to get starting positions
             Update(new GameTime());
@@ -213,19 +208,15 @@ namespace Nez.GeonBit.UI
             _newKeyboardState = Keyboard.GetState();
             _newGamePadState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
 
-            // get mouse position
-            _oldMousePos = _newMousePos;
-
             // If the mouse was used, set to roaming cursor mode (as opposed to snapping mode for gamepad)
-            if ((_oldMouseState.Position.X != _newMouseState.Position.X)
-               && (_oldMouseState.Position.Y != _newMouseState.Position.Y))
+            if (Input.MousePositionDelta.X != 0 && Input.MousePositionDelta.Y != 0)
             {
                 UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
             }
 
             if (!_LockMousePosition)
             {
-                _newMousePos = new Vector2(_newMouseState.X, _newMouseState.Y);
+                _newMousePos = Input.MousePosition;
             }
 
             // get thumbstickleft state
@@ -248,13 +239,13 @@ namespace Nez.GeonBit.UI
             {
                 UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
                 UpdateCursorPosition(new Vector2(
-                _newMouseState.Position.X + (_newGamePadState.ThumbSticks.Left.X * 10),
-                _newMouseState.Position.Y + (-_newGamePadState.ThumbSticks.Left.Y * 10)));
+                Input.RawMousePosition.X + (_newGamePadState.ThumbSticks.Left.X * 10),
+                Input.RawMousePosition.Y + (-_newGamePadState.ThumbSticks.Left.Y * 10)));
             }
 
             // get mouse wheel state
             int prevMouseWheel = MouseWheel;
-            MouseWheel = _newMouseState.ScrollWheelValue;
+            MouseWheel = Input.MouseWheel;
             MouseWheelChange = System.Math.Sign(MouseWheel - prevMouseWheel);
 
             // update capslock state
@@ -295,7 +286,7 @@ namespace Nez.GeonBit.UI
         {
             // move mouse position back to center
             Mouse.SetPosition((int)pos.X, (int)pos.Y);
-            _newMousePos = _oldMousePos = pos;
+            _newMousePos = pos;
         }
 
         /// <summary>
@@ -602,10 +593,7 @@ namespace Nez.GeonBit.UI
         /// Get mouse position change since last frame.
         /// </summary>
         /// <return>Mouse position change as a 2d vector.</return>
-        public Vector2 MousePositionDiff
-        {
-            get { return _newMousePos - _oldMousePos; }
-        }
+        public Vector2 MousePositionDiff => Input.MousePositionDelta.ToVector2();
 
         /// <summary>
         /// Check if a given mouse button is down.

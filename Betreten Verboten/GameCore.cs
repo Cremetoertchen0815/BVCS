@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Nez;
+using Nez.GeonBit.ECS;
 
 namespace Betreten_Verboten
 {
@@ -11,6 +12,7 @@ namespace Betreten_Verboten
             DebugRenderEnabled = true;
             Window.AllowUserResizing = true;
             RegisterGlobalManager(new SceneManager(System.Reflection.Assembly.GetAssembly(GetType()), "Betreten_Verboten.Scenes"));
+            RegisterGlobalManager(new FinalUIRender());
 
             GraphicsDevice.PresentationParameters.MultiSampleCount = 16;
             Screen.EnableAA = true;

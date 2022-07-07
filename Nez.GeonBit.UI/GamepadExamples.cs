@@ -1712,7 +1712,7 @@ If you liked GeonBit.UI feel free to star the repo on GitHub. :)"));
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // finalize ui rendering
-            UserInterface.Active.DrawMainRenderTarget(spriteBatch);
+            UserInterface.Active.DrawMainRenderTarget(spriteBatch, new Rectangle(0, 0, 1920, 1080));
 
             // call base draw function
             base.Draw(gameTime);

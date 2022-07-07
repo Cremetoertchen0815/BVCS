@@ -514,7 +514,7 @@ namespace Nez.GeonBit.UI
             float cursorSize = CursorScale * GlobalScale * ((float)_cursorWidth / (float)_cursorTexture.Width);
 
             // get cursor position and draw it
-            Vector2 cursorPos = _input.MousePosition;
+            var cursorPos = Input.MousePosition;
             spriteBatch.Draw(_cursorTexture,
                 new Rectangle(
                     (int)(cursorPos.X + _cursorOffset.X * cursorSize), (int)(cursorPos.Y + _cursorOffset.Y * cursorSize),
@@ -716,14 +716,14 @@ namespace Nez.GeonBit.UI
         /// This function only works if we are in UseRenderTarget mode.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        public void DrawMainRenderTarget(SpriteBatch spriteBatch)
+        public void DrawMainRenderTarget(SpriteBatch spriteBatch, Rectangle screenSpace)
         {
             // draw the main render target
             if (RenderTarget != null && !RenderTarget.IsDisposed)
             {
                 // draw render target
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, transformMatrix: RenderTargetTransformMatrix);
-                spriteBatch.Draw(RenderTarget, new Rectangle(0, 0, ScreenWidth, ScreenHeight), Color.White);
+                spriteBatch.Draw(RenderTarget, screenSpace, Color.White);
                 spriteBatch.End();
             }
 
@@ -751,7 +751,7 @@ namespace Nez.GeonBit.UI
                 var matrix = Matrix.Invert(RenderTargetTransformMatrix.Value);
                 return _input.TransformCursorPos(matrix) + Vector2.Transform(addVector.Value, matrix);
             }
-
+            
             // return raw cursor pos
             return _input.MousePosition + addVector.Value;
         }

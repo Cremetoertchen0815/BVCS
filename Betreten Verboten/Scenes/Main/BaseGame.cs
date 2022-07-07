@@ -4,6 +4,7 @@ using Betreten_Verboten.Components.BV.Player;
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
+using Nez.GeonBit.ECS;
 using Nez.GeonBit.Physics;
 using Nez.UI;
 using System.Collections.Generic;
@@ -58,6 +59,8 @@ namespace Betreten_Verboten.Scenes.Main
             AddSceneComponent(new PhysicsWorld()).SetGravity(new Vector3(0, -100, 0));
             InitEnvironment();
             InitUI();
+
+            FinalRenderDelegate = Core.GetGlobalManager<FinalUIRender>();
 
             this.TeleRegister();
         }

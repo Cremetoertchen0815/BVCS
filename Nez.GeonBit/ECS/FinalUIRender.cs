@@ -12,11 +12,13 @@ namespace Nez.GeonBit.ECS
 	public class FinalUIRender : GlobalManager, IFinalRenderDelegate
 	{
 		private SpriteBatch _batch = new SpriteBatch(Core.GraphicsDevice);
-		private UserInterface _ui = UserInterface.Active;
+		private UserInterface _ui;
 		private GameTime _gt = new GameTime();
 
 		public FinalUIRender()
 		{
+			if (UserInterface.Active == null) UserInterface.Initialize(Core.Content);
+			_ui = UserInterface.Active;
 			_ui.UseRenderTarget = true;
 		}
 
@@ -28,7 +30,7 @@ namespace Nez.GeonBit.ECS
 			_batch.Draw(source, finalRenderDestinationRect, Color.White);
 			_batch.End();
 
-			_ui.DrawMainRenderTarget(_batch);
+			_ui.DrawMainRenderTarget(_batch, finalRenderDestinationRect);
 
 		}
 
