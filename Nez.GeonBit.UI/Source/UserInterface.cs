@@ -529,7 +529,7 @@ namespace Nez.GeonBit.UI
         /// Add an entity to screen.
         /// </summary>
         /// <param name="entity">Entity to add.</param>
-        public UIEntity AddEntity(UIEntity entity)
+        public T AddEntity<T>(T entity) where T : UIEntity
         {
             return Root.AddChild(entity);
         }

@@ -6,7 +6,8 @@ using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.ECS;
 using Nez.GeonBit.Physics;
-using Nez.UI;
+using Nez.GeonBit.UI;
+using Nez.GeonBit.UI.Entities;
 using System.Collections.Generic;
 using static Betreten_Verboten.GlobalFields;
 
@@ -32,7 +33,7 @@ namespace Betreten_Verboten.Scenes.Main
         private GameState _gameState = GameState.ActionSelect;
 
         //UI
-        private Container _uiPlayerControls;
+        private Panel _uiPlayerControls;
         private Button _uiPlayerReroll;
 
         public string TelegramSender => "base";
@@ -58,9 +59,12 @@ namespace Betreten_Verboten.Scenes.Main
             //Prepare physics
             AddSceneComponent(new PhysicsWorld()).SetGravity(new Vector3(0, -100, 0));
             InitEnvironment();
+
+            //Init UI
+            FinalRenderDelegate = Core.GetGlobalManager<FinalUIRender>();
+            UserInterface.Active.Clear();
             InitUI();
 
-            FinalRenderDelegate = Core.GetGlobalManager<FinalUIRender>();
 
             this.TeleRegister();
         }
@@ -75,7 +79,7 @@ namespace Betreten_Verboten.Scenes.Main
                     _diceNumbers.Add(nr);
                     if (Dice.ShouldReroll(_diceNumbers))
                     {
-                        _uiPlayerReroll.SetIsVisible(true);
+                        _uiPlayerReroll.Visible = true;
                     }
                     else
                     {
@@ -102,39 +106,13 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected void InitUI()
         {
-            var canvas = CreateEntity("UI").AddComponent(new UICanvas());
-            canvas.SetRenderLayer(RENDER_LAYER_HUD);
+            _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.ListBackground, Anchor.BottomRight, new Vector2(15)));
+            _uiPlayerControls.AddChild(new Button("Dice", ButtonSkin.Alternative, Anchor.TopCenter, new Vector2(200, 80)) { OnClick = x => GameState = GameState.DiceRoll });
+            _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
+            _uiPlayerControls.AddChild(new Button("Sacrifice", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
+            _uiPlayerControls.AddChild(new Button("AfK", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
 
-            //Generate action buttons
-            var actBtnStyle = ButtonStyle.Create(Color.Gray, Color.Lime, Color.Red);
-            var labelStyle = new LabelStyle();
-            _uiPlayerControls = canvas.Stage.AddElement(new Container());
-            var panelSize = new Vector2(ABUTTON_WIDTH + ABUTTON_MARGIN_RIGHT + ABUTTON_PADDING_X * 2, ABUTTON_MARGIN_BOTTOM + ABUTTON_HEIGHT * 4 + ABUTTON_SPACING * 3 + ABUTTON_PADDING_Y * 2);
-            _uiPlayerControls.SetBounds(1920 - panelSize.X, 1080 - panelSize.Y - ABUTTON_MARGIN_BOTTOM, panelSize.X, panelSize.Y);
-            string[] btnNames = { "Dice", "Anger", "Sacrifice", "AfK" };
-            for (int i = 0; i < 4; i++)
-            {
-                //Generate button base
-                var actBtnA = _uiPlayerControls.AddElement(new Button(actBtnStyle));
-                actBtnA.SetBounds(ABUTTON_SPACING, ABUTTON_SPACING + (ABUTTON_HEIGHT + ABUTTON_SPACING) * i, ABUTTON_WIDTH, ABUTTON_HEIGHT);
-                //Add label
-                var actBtnLabel = actBtnA.AddElement(new Label(btnNames[i]));
-
-                switch (i)
-                {
-                    case 0:
-                        actBtnA.OnClicked += x => GameState = GameState.DiceRoll;
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            //Generate reroll button
-            _uiPlayerReroll = canvas.Stage.AddElement(new Button(actBtnStyle));
-            _uiPlayerReroll.SetBounds(1920 - ABUTTON_WIDTH - ABUTTON_MARGIN_RIGHT * 2, 1080 - ABUTTON_HEIGHT - ABUTTON_MARGIN_BOTTOM, ABUTTON_WIDTH, ABUTTON_HEIGHT);
-            _uiPlayerReroll.SetIsVisible(false);
-            _uiPlayerReroll.OnClicked += x => RollDice();
+            _uiPlayerReroll = UserInterface.Active.AddEntity(new Button("Roll Dice", ButtonSkin.Alternative, Anchor.BottomRight, new Vector2(200, 80), new Vector2(15)) { Visible = false, OnClick = x => RollDice() });
         }
 
         public GameState GameState
@@ -158,21 +136,21 @@ namespace Betreten_Verboten.Scenes.Main
                         Camera.LookAt = new Vector3(-500, 2, -500);
                         Camera.OverridePosition = new Vector3(-480, 25, -480);
                         //Refresh UI elements
-                        _uiPlayerControls.SetIsVisible(false);
-                        _uiPlayerReroll.SetIsVisible(true);
+                        _uiPlayerControls.Visible = false;
+                        _uiPlayerReroll.Visible = true;
                         _diceNumbers.Clear(); //Clear dice queue
                         break;
                     case GameState.ActionSelect:
                         //Set camera position
                         Camera.OverridePosition = Camera.LookAt = null;
-                        _uiPlayerControls.SetIsVisible(true);
-                        _uiPlayerReroll.SetIsVisible(false);
+                        _uiPlayerControls.Visible = true;
+                        _uiPlayerReroll.Visible = false;
                         break;
                     default:
                         //Set camera position
                         Camera.OverridePosition = Camera.LookAt = null;
-                        _uiPlayerControls.SetIsVisible(false);
-                        _uiPlayerReroll.SetIsVisible(false);
+                        _uiPlayerControls.Visible = false;
+                        _uiPlayerReroll.Visible = false;
                         break;
                 }
             }
@@ -181,7 +159,7 @@ namespace Betreten_Verboten.Scenes.Main
         private void RollDice()
         {
             Dice.Throw(this);
-            _uiPlayerReroll.SetIsVisible(false);
+            _uiPlayerReroll.Visible = false;
         }
 
         public void AdvancePlayer()

@@ -1550,7 +1550,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="inheritParentState">If true, this entity will inherit the parent's state (set InheritParentState property).</param>
         /// <param name="index">If provided, will be the index in the children array to push the new entity.</param>
         /// <returns>The newly added entity.</returns>
-        public Entity AddChild(Entity child, bool inheritParentState = false, int index = -1)
+        public T AddChild<T>(T child, bool inheritParentState = false, int index = -1) where T : Entity
         {
             // make sure don't already have a parent
             if (child._parent != null)
