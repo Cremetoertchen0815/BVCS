@@ -1,5 +1,4 @@
-﻿-Port UI to GeonBit.UI & beautify
--Implement basic game logic
+﻿-Implement basic game logic
 -Implement character aniamtions
 -Implement game loop
 -Implement CPU players
