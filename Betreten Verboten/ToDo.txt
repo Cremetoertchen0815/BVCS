@@ -1,8 +1,7 @@
-﻿-Implement player data entities & components
--Port GeonBit.UI to GeonNez + gamepad fork(YouTube)
--Port GeonBit.UI demo and test
--Port UI to GeonBit.UI
+﻿-Port UI to GeonBit.UI & beautify
 -Implement basic game logic
--Implement rendering character on correct position
 -Implement character aniamtions
 -Implement game loop
+-Implement CPU players
+-Implement special features
+-Start working on networking infrastructure
