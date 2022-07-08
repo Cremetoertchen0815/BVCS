@@ -48,6 +48,42 @@ namespace Betreten_Verboten.Components.Base
 
         public Character[] GetFigures() => _figures;
 
-        public void DecideAfterDiceroll(List<int> nrs) => Entity.AddComponent(new CharPicker(nrs.Sum()));
+        public void DecideAfterDiceroll(List<int> nrs)
+        {
+            //Calculate conditions & helper variables
+            bool is6InDicelist = nrs.Contains(6); //Stores whether any 6es were rolled
+            int homebaseNr = _figures.Aggregate(-1, (a, b) => (b.Position < 0 && a < 0) ? b.Nr : a); //Stores the ID of a figure that is still in the homebase, -1 if none are
+            bool isBasefieldBlocked = IsFieldBlocked(0);
+            int distance = GetNormalDiceSum(nrs);
+
+            Entity.AddComponent(new CharPicker(nrs.Sum()));
+        }
+        public virtual bool CanRollThrice()
+        {
+            var coveredHouseFields = new List<int>();
+            for (int i = 0; i < Board.FigureCount; i++)
+            {
+                var pos = _figures[i].Position;
+                if (pos >= 0 && pos < Board.FieldCount) return false; //If figure is on the track, rolling thrice isn't allowed
+                if (pos >= Board.FieldCount) coveredHouseFields.Add(pos); //If figure is in house, remember covered field
+            }
+
+            //If the end of the house is not continuously covered, rolling thrice also isn't allowed
+            for (int i = -1; i >= -coveredHouseFields.Count; i--) if (!coveredHouseFields.Contains(Board.FieldCount + Board.FigureCount - i)) return false;
+            return true;
+        }
+
+        private bool IsFieldBlocked(int field) => _figures.Where(x => x.Position == field).Count() > 0;
+
+        private int GetNormalDiceSum(List<int> nrs)
+        {
+            var sum = 0;
+            for (int i = 0; i < nrs.Count; i++)
+            {
+                sum += nrs[i];
+                if (nrs[i] != 6) break;
+            }
+            return sum;
+        }
     }
 }

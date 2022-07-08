@@ -91,7 +91,7 @@ namespace Betreten_Verboten.Scenes.Main
                 case "dice_value_set":
                     int nr = (int)message.Body;
                     _diceNumbers.Add(nr);
-                    if (Dice.ShouldReroll(_diceNumbers))
+                    if (Dice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice()))
                     {
                         _uiPlayerReroll.Visible = true;
                     }
