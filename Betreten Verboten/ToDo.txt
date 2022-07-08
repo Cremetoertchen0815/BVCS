@@ -1,4 +1,5 @@
-﻿-Implement basic game logic
+﻿-Merge with newest Nez version
+-Implement basic game logic
 -Implement character aniamtions
 -Implement game loop
 -Implement CPU players
