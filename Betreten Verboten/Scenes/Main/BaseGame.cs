@@ -29,11 +29,11 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected GeonDefaultRenderer _geonRenderer;
 
-        private int _activePlayer = 0;
+        private int _activePlayer = -1;
         private Player[] _players;
         private BVBoard _board;
         private List<int> _diceNumbers = new List<int>();
-        private GameState _gameState = GameState.ActionSelect;
+        private GameState _gameState = GameState.OtherAction;
 
         //UI
         private int[] _playerIndices;
@@ -76,6 +76,9 @@ namespace Betreten_Verboten.Scenes.Main
             //Generate player indices
             _playerIndices = new int[_board.PlayerCount];
             for (int i = 0; i < _playerIndices.Length; i++) _playerIndices[_playerIndices.Length - i - 1] = i;
+
+            //Init
+            AdvancePlayer();
 
             this.TeleRegister();
         }
