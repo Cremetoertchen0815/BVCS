@@ -18,6 +18,7 @@ namespace Betreten_Verboten
             IsMouseVisible = false;
             Screen.EnableAA = true;
             Screen.ApplyChanges();
+            GamepadIcons.Instance.LoadXboxIcons();
             Scene.SetDefaultDesignResolution(1920, 1080, Scene.SceneResolutionPolicy.BestFit);
 
             Scene = new Scenes.Main.BaseGame();
