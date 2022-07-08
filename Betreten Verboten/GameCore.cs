@@ -15,6 +15,7 @@ namespace Betreten_Verboten
             RegisterGlobalManager(new FinalUIRender());
 
             GraphicsDevice.PresentationParameters.MultiSampleCount = 16;
+            IsMouseVisible = false;
             Screen.EnableAA = true;
             Screen.ApplyChanges();
             Scene.SetDefaultDesignResolution(1920, 1080, Scene.SceneResolutionPolicy.BestFit);

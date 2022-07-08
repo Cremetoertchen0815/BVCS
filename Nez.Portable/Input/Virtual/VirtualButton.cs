@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 
@@ -21,6 +22,8 @@ namespace Nez
         private float _repeatCounter;
         private bool _willRepeat;
 
+        public event Action ButtonPressed;
+        public event Action ButtonReleased;
 
         public VirtualButton(float bufferTime)
         {
@@ -100,6 +103,9 @@ namespace Nez
                     }
                 }
             }
+
+            if (IsPressed && ButtonPressed != null) ButtonPressed();
+            if (IsReleased && ButtonReleased != null) ButtonReleased();
         }
 
 

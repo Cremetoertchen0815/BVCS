@@ -23,6 +23,8 @@ namespace Nez
         /// </summary>
         public BitmapFont BitmapFont;
 
+        public Sprite DebugSprite;
+
         /// <summary>
         /// A sprite used to draw rectangles, lines, circles, etc. 
         /// Will be generated at startup, but you can replace this with a sprite from your atlas to reduce texture swaps.
@@ -44,6 +46,7 @@ namespace Nez
 
             PixelTexture = new Sprite(CreateSingleColorTexture(1, 1, Color.White), 0, 0, 1, 1);
 
+            DebugSprite = new Sprite(Texture2D.FromFile(Core.GraphicsDevice, Core.Content.RootDirectory + "/nez/textures/placeholder.png"));
             CircleTexture = new Sprite(Texture2D.FromFile(Core.GraphicsDevice, Core.Content.RootDirectory + "/nez/textures/circle.png"));
         }
 

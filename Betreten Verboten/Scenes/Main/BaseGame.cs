@@ -1,5 +1,6 @@
 ﻿using Betreten_Verboten.Components.Base;
 using Betreten_Verboten.Components.Base.Boards.BV;
+using Betreten_Verboten.Components.Base.HUD;
 using Betreten_Verboten.Components.BV.Player;
 using Microsoft.Xna.Framework;
 using Nez;
@@ -33,6 +34,8 @@ namespace Betreten_Verboten.Scenes.Main
         private GameState _gameState = GameState.ActionSelect;
 
         //UI
+        private bool _isScoreVisible = false;
+        private VirtualButton _scoreBtn;
         private Panel _uiPlayerControls;
         private Button _uiPlayerReroll;
 
@@ -61,6 +64,7 @@ namespace Betreten_Verboten.Scenes.Main
             InitEnvironment();
 
             //Init UI
+            _scoreBtn = new VirtualButton(new VirtualButton.KeyboardKey(Microsoft.Xna.Framework.Input.Keys.Tab));
             FinalRenderDelegate = Core.GetGlobalManager<FinalUIRender>();
             UserInterface.Active.Clear();
             InitUI();
@@ -106,6 +110,7 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected void InitUI()
         {
+            //Add controll panel
             _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.ListBackground, Anchor.BottomRight, new Vector2(15)));
             _uiPlayerControls.AddChild(new Button("Dice", ButtonSkin.Alternative, Anchor.TopCenter, new Vector2(200, 80)) { OnClick = x => GameState = GameState.DiceRoll });
             _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
@@ -113,6 +118,43 @@ namespace Betreten_Verboten.Scenes.Main
             _uiPlayerControls.AddChild(new Button("AfK", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
 
             _uiPlayerReroll = UserInterface.Active.AddEntity(new Button("Roll Dice", ButtonSkin.Alternative, Anchor.BottomRight, new Vector2(200, 80), new Vector2(15)) { Visible = false, OnClick = x => RollDice() });
+
+            //Add player hud
+            var pnls = new Panel[_board.PlayerCount];
+            var scores = new Label[_board.PlayerCount];
+            for (int i = 0; i < _board.PlayerCount; i++)
+            {
+                pnls[i] = UserInterface.Active.AddEntity(new Panel(new Vector2(200, 70), PanelSkin.Fancy, i == 0 ? Anchor.TopLeft : Anchor.Auto, new Vector2(5, i == 0 ? 15 : 5)));
+                pnls[i].AddChild(new Image(Graphics.Instance.DebugSprite.Texture2D, new Vector2(40), ImageDrawMode.Stretch, Anchor.CenterLeft));
+                pnls[i].AddChild(new Label("Player " + i, Anchor.TopLeft, null, new Vector2(50, 0)));
+                scores[i] = pnls[i].AddChild(new Label("1550", Anchor.TopRight));
+                scores[i].Visible = false;
+                
+            }
+            _scoreBtn.ButtonReleased += () =>
+            {
+                if (_isScoreVisible)
+                {
+                    for (int i = 0; i < _board.PlayerCount; i++)
+                    {
+                        scores[i].Visible = false;
+                        pnls[i].Tween("Size", new Vector2(200, 70), 0.1f).Start();
+                        _isScoreVisible = false;
+                    }
+                }
+            };
+            _scoreBtn.ButtonPressed += () =>
+            {
+                if (!_isScoreVisible)
+                {
+                    for (int i = 0; i < _board.PlayerCount; i++)
+                    {
+                        int ii = i;
+                        pnls[ii].Tween("Size", new Vector2(400, 70), 0.1f).SetCompletionHandler(x => scores[ii].Visible = true).Start();
+                        _isScoreVisible = true;
+                    }
+                }
+            };
         }
 
         public GameState GameState
