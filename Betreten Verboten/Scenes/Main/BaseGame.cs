@@ -3,6 +3,7 @@ using Betreten_Verboten.Components.Base.Boards.BV;
 using Betreten_Verboten.Components.Base.HUD;
 using Betreten_Verboten.Components.BV.Player;
 using Microsoft.Xna.Framework;
+using System.Linq;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.ECS;
@@ -11,6 +12,7 @@ using Nez.GeonBit.UI;
 using Nez.GeonBit.UI.Entities;
 using System.Collections.Generic;
 using static Betreten_Verboten.GlobalFields;
+using Betreten_Verboten.Components.Base.Characters;
 
 namespace Betreten_Verboten.Scenes.Main
 {
@@ -34,8 +36,10 @@ namespace Betreten_Verboten.Scenes.Main
         private GameState _gameState = GameState.ActionSelect;
 
         //UI
+        private int[] _playerIndices;
         private bool _isScoreVisible = false;
         private VirtualButton _scoreBtn;
+        private Panel[] _uiPlayerHUDs;
         private Panel _uiPlayerControls;
         private Button _uiPlayerReroll;
 
@@ -69,6 +73,9 @@ namespace Betreten_Verboten.Scenes.Main
             UserInterface.Active.Clear();
             InitUI();
 
+            //Generate player indices
+            _playerIndices = new int[_board.PlayerCount];
+            for (int i = 0; i < _playerIndices.Length; i++) _playerIndices[_playerIndices.Length - i - 1] = i;
 
             this.TeleRegister();
         }
@@ -95,6 +102,9 @@ namespace Betreten_Verboten.Scenes.Main
                 case "advance_player":
                     AdvancePlayer();
                     break;
+                case "resort_score":
+                    ReorderPlayerHUD();
+                    break;
             }
         }
 
@@ -111,23 +121,26 @@ namespace Betreten_Verboten.Scenes.Main
         protected void InitUI()
         {
             //Add controll panel
-            _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.ListBackground, Anchor.BottomRight, new Vector2(15)));
+            _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.Simple, Anchor.BottomRight, new Vector2(15)));
             _uiPlayerControls.AddChild(new Button("Dice", ButtonSkin.Alternative, Anchor.TopCenter, new Vector2(200, 80)) { OnClick = x => GameState = GameState.DiceRoll });
             _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
             _uiPlayerControls.AddChild(new Button("Sacrifice", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
             _uiPlayerControls.AddChild(new Button("AfK", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
-
             _uiPlayerReroll = UserInterface.Active.AddEntity(new Button("Roll Dice", ButtonSkin.Alternative, Anchor.BottomRight, new Vector2(200, 80), new Vector2(15)) { Visible = false, OnClick = x => RollDice() });
 
             //Add player hud
-            var pnls = new Panel[_board.PlayerCount];
-            var scores = new Label[_board.PlayerCount];
+            
+            _uiPlayerHUDs = new Panel[_board.PlayerCount];
+            var scores = new DynamicLabel[_board.PlayerCount];
+            var chrCfg = new Components.Base.Characters.CharConfig();
             for (int i = 0; i < _board.PlayerCount; i++)
             {
-                pnls[i] = UserInterface.Active.AddEntity(new Panel(new Vector2(200, 70), PanelSkin.Fancy, i == 0 ? Anchor.TopLeft : Anchor.Auto, new Vector2(5, i == 0 ? 15 : 5)));
-                pnls[i].AddChild(new Image(Graphics.Instance.DebugSprite.Texture2D, new Vector2(40), ImageDrawMode.Stretch, Anchor.CenterLeft));
-                pnls[i].AddChild(new Label("Player " + i, Anchor.TopLeft, null, new Vector2(50, 0)));
-                scores[i] = pnls[i].AddChild(new Label("1550", Anchor.TopRight));
+                int ii = i;
+                chrCfg.SetStdColorScheme(i);
+                _uiPlayerHUDs[i] = UserInterface.Active.AddEntity(new Panel(new Vector2(200, 70), PanelSkin.Default, Anchor.TopLeft, new Vector2(5, 15 + i * 75)) { FillColor = chrCfg.Color }); //
+                _uiPlayerHUDs[i].AddChild(new Image(Graphics.Instance.DebugSprite.Texture2D, new Vector2(40), ImageDrawMode.Stretch, Anchor.CenterLeft));
+                _uiPlayerHUDs[i].AddChild(new Label("Player " + i, Anchor.TopLeft, null, new Vector2(50, 0)));
+                scores[i] = _uiPlayerHUDs[i].AddChild(new DynamicLabel(() => _players[ii].Points.ToString(), Anchor.TopRight));
                 scores[i].Visible = false;
                 
             }
@@ -138,7 +151,7 @@ namespace Betreten_Verboten.Scenes.Main
                     for (int i = 0; i < _board.PlayerCount; i++)
                     {
                         scores[i].Visible = false;
-                        pnls[i].Tween("Size", new Vector2(200, 70), 0.1f).Start();
+                        _uiPlayerHUDs[i].Tween("Size", new Vector2(200, 70), 0.1f).Start();
                         _isScoreVisible = false;
                     }
                 }
@@ -150,11 +163,26 @@ namespace Betreten_Verboten.Scenes.Main
                     for (int i = 0; i < _board.PlayerCount; i++)
                     {
                         int ii = i;
-                        pnls[ii].Tween("Size", new Vector2(400, 70), 0.1f).SetCompletionHandler(x => scores[ii].Visible = true).Start();
+                        _uiPlayerHUDs[ii].Tween("Size", new Vector2(400, 70), 0.1f).SetCompletionHandler(x => scores[ii].Visible = true).Start();
                         _isScoreVisible = true;
                     }
                 }
             };
+        }
+
+        public void ReorderPlayerHUD()
+        {
+            //Resort
+            var ord = _playerIndices.OrderBy(x => _players[x].Points);
+            if (ord.SequenceEqual(_playerIndices)) return;
+            _playerIndices = ord.ToArray();
+
+            //Execute animations
+            for (int i = 0; i < _board.PlayerCount; i++)
+            {
+                int ii = i;
+                _uiPlayerHUDs[ _playerIndices[_playerIndices.Length - 1 - i]].Tween("Offset", new Vector2(5, 15 + ii * 75), 0.5f).SetEaseType(Nez.Tweens.EaseType.QuadInOut).Start();
+            }
         }
 
         public GameState GameState
@@ -207,6 +235,7 @@ namespace Betreten_Verboten.Scenes.Main
         public void AdvancePlayer()
         {
             _activePlayer = ++_activePlayer % _board.PlayerCount;
+            _uiPlayerControls.FillColor = CharConfig.GetStdColor(_activePlayer) * 0.95f;
             GameState = GameState.ActionSelect;
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace Betreten_Verboten.Components.BV.Player
+﻿using System.Linq;
+
+namespace Betreten_Verboten.Components.BV.Player
 {
     public abstract class BVPlayer : Base.Player
     {
@@ -8,6 +10,6 @@
 
         public virtual int AngerCount { get; set; }
         public int AdditionalPoints { get; set; }
-        public override int Points => AdditionalPoints;
+        public override int Points => AdditionalPoints + _figures.Sum(x => System.Math.Max(x.Position, 0)) * 10;
     }
 }

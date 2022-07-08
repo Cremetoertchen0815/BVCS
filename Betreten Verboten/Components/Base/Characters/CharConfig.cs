@@ -14,25 +14,21 @@ namespace Betreten_Verboten.Components.Base.Characters
         public Color Color { get; set; }
         public Model Model { get; set; }
 
-        public void SetStdColorScheme(int i)
+        public void SetStdColorScheme(int i) => Color = GetStdColor(i);
+        public static Color GetStdColor(int i)
         {
             switch (i)
             {
                 case 0:
-                    Color = Color.Magenta;
-                    break;
+                    return Color.Magenta;
                 case 1:
-                    Color = Color.Lime;
-                    break;
+                    return Color.Lime;
                 case 2:
-                    Color = Color.Cyan;
-                    break;
+                    return Color.Cyan;
                 case 3:
-                    Color = Color.Yellow;
-                    break;
+                    return Color.Yellow;
                 default:
-                    Color = Color.White;
-                    break;
+                    return Color.White;
             }
         }
 

@@ -54,6 +54,8 @@
     <Compile Include="Source\Entities\CheckBox.cs" />
     <Compile Include="Source\Entities\ColoredRectangle.cs" />
     <Compile Include="Source\Entities\DropDown.cs" />
+    <Compile Include="Source\Entities\DynamicLabel.cs" />
+    <Compile Include="Source\Entities\DynamicParagraph.cs" />
     <Compile Include="Source\Entities\Entity.cs" />
     <Compile Include="Source\Entities\Header.cs" />
     <Compile Include="Source\Entities\HorizontalLine.cs" />
