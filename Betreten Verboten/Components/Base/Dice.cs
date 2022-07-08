@@ -11,6 +11,7 @@ namespace Betreten_Verboten.Components.Base
     {
         private const float MEASURE_SPEED = 0.05f;
         public const int ENTITY_TAG = 15;
+        public const float ANGLE_REST_LIMIT = 0.98f;
 
 
         private RigidBody _rigidBody;
@@ -37,8 +38,13 @@ namespace Betreten_Verboten.Components.Base
 
         public void Update()
         {
+            if (_isDoneRolling) return;
+
+            var norm = Vector3.TransformNormal(Vector3.Up, Matrix.Invert(_rigidBody.Entity.Node.WorldTransformations)); norm.Normalize();
+            var maxDot = _sideNormals.Select(x => Vector3.Dot(norm, x)).Max(); //Determins if the dice lays flat(is still when over rest limit)
+
             //Check if the dice stopped rolling and if yes, calculate the number
-            if (_rigidBody.LinearVelocity.Length() < MEASURE_SPEED && !_isDoneRolling)
+            if (_rigidBody.LinearVelocity.Length() < MEASURE_SPEED && maxDot > ANGLE_REST_LIMIT)
             {
                 _isDoneRolling = true;
                 Core.Schedule(0.2f, x => GetDiceTopNumber().SendPrivateObj("dice", "base", "dice_value_set"));
