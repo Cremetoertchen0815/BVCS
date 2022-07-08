@@ -48,16 +48,25 @@ namespace Betreten_Verboten.Components.Base
 
         public Character[] GetFigures() => _figures;
 
+        /// <summary>
+        /// Decides on the next course of action after a successful roll.
+        /// </summary>
+        /// <param name="nrs">Values of the rolled dices.</param>
         public void DecideAfterDiceroll(List<int> nrs)
         {
             //Calculate conditions & helper variables
             bool is6InDicelist = nrs.Contains(6); //Stores whether any 6es were rolled
             int homebaseNr = _figures.Aggregate(-1, (a, b) => (b.Position < 0 && a < 0) ? b.Nr : a); //Stores the ID of a figure that is still in the homebase, -1 if none are
             bool isBasefieldBlocked = IsFieldBlocked(0);
-            int distance = GetNormalDiceSum(nrs);
+            int distance = nrs.Sum();
 
-            Entity.AddComponent(new CharPicker(nrs.Sum()));
+            Entity.AddComponent(new CharPicker(distance)); //Open the character picker to choose the traveling distance
         }
+
+        /// <summary>
+        /// Return true when the player is allowed to roll at least thrice to get a little help leaving his home.
+        /// </summary>
+        /// <returns></returns>
         public virtual bool CanRollThrice()
         {
             var coveredHouseFields = new List<int>();
@@ -73,17 +82,11 @@ namespace Betreten_Verboten.Components.Base
             return true;
         }
 
+        /// <summary>
+        /// Returns true when on of its own figures is standing of the specified field.
+        /// </summary>
+        /// <param name="field">The local field to be inspected.</param>
+        /// <returns></returns>
         private bool IsFieldBlocked(int field) => _figures.Where(x => x.Position == field).Count() > 0;
-
-        private int GetNormalDiceSum(List<int> nrs)
-        {
-            var sum = 0;
-            for (int i = 0; i < nrs.Count; i++)
-            {
-                sum += nrs[i];
-                if (nrs[i] != 6) break;
-            }
-            return sum;
-        }
     }
 }
