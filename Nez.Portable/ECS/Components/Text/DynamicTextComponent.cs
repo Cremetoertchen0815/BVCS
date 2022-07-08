@@ -144,7 +144,7 @@ namespace Nez
             Origin = new Vector2((int)oldOrigin.X, (int)oldOrigin.Y);
         }
 
-        protected override void Render(Batcher batcher, Camera camera) => batcher.DrawString(_font, _text(), Entity.Transform.Position + _localOffset, Color,
+        public override void Render(Batcher batcher, Camera camera) => batcher.DrawString(_font, _text(), Entity.Transform.Position + _localOffset, Color,
                 Entity.Transform.Rotation, Origin, Entity.Transform.Scale, SpriteEffects, LayerDepth);
     }
 }

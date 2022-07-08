@@ -57,7 +57,7 @@ namespace Nez3D
             return this;
         }
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             // flush the 2D batch so we render appropriately depth-wise
             batcher.FlushBatch();

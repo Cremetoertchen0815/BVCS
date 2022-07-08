@@ -41,7 +41,7 @@
             _textRun.Compile();
         }
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             if (_textRun != null)
                 _textRun.Render(batcher);

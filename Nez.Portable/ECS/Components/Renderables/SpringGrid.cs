@@ -300,7 +300,7 @@ namespace Nez
                 mass.Update();
         }
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             // TODO: make culling smarter and only render the lines that are actually on the screen rather than all or nothing
             int width = _points.GetLength(0);

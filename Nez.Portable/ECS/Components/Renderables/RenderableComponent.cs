@@ -127,7 +127,7 @@ namespace Nez
         /// </summary>
         /// <param name="batcher">Batcher.</param>
         /// <param name="camera">Camera.</param>
-        protected abstract void Render(Batcher batcher, Camera camera);
+        public abstract void Render(Batcher batcher, Camera camera);
 
         /// <summary>
         /// renders the bounds only if there is no collider. Always renders a square on the origin.

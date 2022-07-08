@@ -28,7 +28,7 @@ namespace Nez.Sprites
         protected BlendState Blend = BlendState.AlphaBlend;
         private static Batcher NeutralBatcher = new Batcher(Core.GraphicsDevice); //A batcher not influenced by the camera's transformation matrix
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             var renderSize = Entity.Scene.SceneRenderTargetSize.ToVector2();
             rectangleOriginal = new Rectangle(Position + ((camera.TransformPosition + Origin) * Parallax).ToPoint(), Size);

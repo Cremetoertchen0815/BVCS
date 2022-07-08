@@ -51,7 +51,7 @@ namespace Nez
         public virtual void Update() => Stage.Update();
 
 
-        protected override void Render(Batcher batcher, Camera camera) => Stage.Render(batcher, camera);
+        public override void Render(Batcher batcher, Camera camera) => Stage.Render(batcher, camera);
 
         public void RenderStuff(Batcher batcher, Camera camera) => Render(batcher, camera);
 

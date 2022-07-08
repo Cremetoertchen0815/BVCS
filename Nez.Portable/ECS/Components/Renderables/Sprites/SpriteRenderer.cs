@@ -116,7 +116,7 @@ namespace Nez.Sprites
             _sprite = sprite;
             if (Size == Vector2.Zero || sMode == SizingMode.Resize) Size = new Vector2(sprite.Texture2D.Width, sprite.Texture2D.Height);
             if (_sprite != null)
-                _origin = _sprite.Origin;
+                SetOrigin(_sprite.Origin);
             return this;
         }
 
@@ -188,7 +188,7 @@ namespace Nez.Sprites
             _layerDepth = originalLayerDepth;
         }
 
-        protected override void Render(Batcher batcher, Camera camera) => batcher.Draw(Sprite, new Rectangle((int)(Entity.Transform.Position.X + LocalOffset.X), (int)(Entity.Transform.Position.Y + LocalOffset.Y),
+        public override void Render(Batcher batcher, Camera camera) => batcher.Draw(Sprite, new Rectangle((int)(Entity.Transform.Position.X + LocalOffset.X), (int)(Entity.Transform.Position.Y + LocalOffset.Y),
                                                                        (int)(Entity.Transform.Scale.X * Size.X), (int)(Entity.Transform.Scale.Y * Size.Y)), Sprite.SourceRect, Color, Entity.Transform.Rotation, Origin,
                                                                        SpriteEffects, _layerDepth);
     }

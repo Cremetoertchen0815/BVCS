@@ -327,7 +327,7 @@ namespace Nez.Sprites
             _liveSpriteTrailInstances.Add(instance);
         }
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             for (int i = 0; i < _liveSpriteTrailInstances.Count; i++)
                 _liveSpriteTrailInstances[i].Render(batcher, camera);

@@ -363,7 +363,7 @@ namespace Nez
         {
         }
 
-        internal void Begin()
+        public virtual void Begin()
         {
             if (_renderers.Length == 0)
             {
@@ -384,7 +384,7 @@ namespace Nez
             OnStart();
         }
 
-        internal void End()
+        public virtual void End()
         {
             _didSceneBegin = false;
 

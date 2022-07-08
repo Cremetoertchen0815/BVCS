@@ -41,7 +41,7 @@ namespace Nez
 
         #region Component overrides
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             if (DebugOnly) return;
 

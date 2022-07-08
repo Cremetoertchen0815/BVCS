@@ -51,6 +51,6 @@ namespace Nez
             _sprite.OnEntityTransformChanged(comp);
         }
 
-        protected override void Render(Batcher batcher, Camera camera) => _sprite.DrawOutline(batcher, camera, OutlineColor * (OutlineColor.A / 255F) * (Color.A / 255F), _useStencil, OutlineWidth);
+        public override void Render(Batcher batcher, Camera camera) => _sprite.DrawOutline(batcher, camera, OutlineColor * (OutlineColor.A / 255F) * (Color.A / 255F), _useStencil, OutlineWidth);
     }
 }

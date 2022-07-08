@@ -112,7 +112,7 @@ namespace Nez
                 _lightEffect.Radius = _radius * MathHelper.Max(Entity.Transform.Scale.X, Entity.Transform.Scale.Y);
         }
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             if (Power > 0 && IsVisibleFromCamera(camera))
             {

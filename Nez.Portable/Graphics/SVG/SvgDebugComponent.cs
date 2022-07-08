@@ -42,7 +42,7 @@ namespace Nez.Svg
                 _pathBuilder = new SvgReflectionPathBuilder();
         }
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             // in some rare cases, there are SVG elements outside of a group so we'll render those cases first
             RenderRects(batcher, SvgDoc.Rectangles);

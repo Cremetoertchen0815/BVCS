@@ -8,7 +8,7 @@
         /// </summary>
         /// <param name="batcher">Batcher.</param>
         /// <param name="camera">Camera.</param>
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
         }
     }

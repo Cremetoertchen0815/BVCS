@@ -31,7 +31,7 @@ namespace Nez
         }
         public override void OnRemovedFromEntity() => gameThread.Abort();
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             lock (ConsoleInterface._renderlock)
             {

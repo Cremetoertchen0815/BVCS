@@ -201,7 +201,7 @@ namespace Nez.Particles
         }
 
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             // we still render when we are paused
             if (!_active && !_isPaused)

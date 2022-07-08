@@ -62,7 +62,7 @@ namespace Nez.Console
         /// Draws the values in given order, with specific color for each value
         /// </summary>
         /// <param name="values">Value/color pairs to draw, in order from left to right</param>
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             if (values.Count < 2)
                 return;

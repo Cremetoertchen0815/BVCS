@@ -81,7 +81,7 @@ namespace Betreten_Verboten.Components.Base
         public string TelegramSender => "board";
 
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
 
             for (int i = 0; i < PlayerCount; i++)

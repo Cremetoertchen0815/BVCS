@@ -65,7 +65,7 @@ namespace Nez
             new NinePatchSprite(texture, left, right, top, bottom))
         { }
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             if (_destRectsDirty)
             {

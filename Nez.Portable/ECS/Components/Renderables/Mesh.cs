@@ -235,7 +235,7 @@ namespace Nez
             _basicEffect = null;
         }
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             if (_verts == null)
                 return;

@@ -123,7 +123,7 @@ namespace Nez
         {
         }
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             if (_sprite == null)
                 return;

@@ -122,7 +122,7 @@ namespace Nez.Shadows
             _visibility = new VisibilityComputer();
         }
 
-        protected override void Render(Batcher batcher, Camera camera) => RenderImpl(batcher, camera, false);
+        public override void Render(Batcher batcher, Camera camera) => RenderImpl(batcher, camera, false);
 
         public override void DebugRender(Batcher batcher)
         {

@@ -22,7 +22,7 @@ namespace Nez
 
         private Dictionary<string, Color> _colors = new Dictionary<string, Color>();
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
 
             //Draw background

@@ -138,7 +138,7 @@ namespace Nez
 
         public override bool IsVisibleFromCamera(Camera camera) => true;
 
-        protected override void Render(Batcher batcher, Camera camera) =>
+        public override void Render(Batcher batcher, Camera camera) =>
             // we override render and use position instead of entityPosition. this keeps the text in place even if the entity moves
             batcher.DrawString(_font, _text, LocalOffset, Color, Entity.Transform.Rotation, Origin,
                 Entity.Transform.Scale, SpriteEffects, LayerDepth);

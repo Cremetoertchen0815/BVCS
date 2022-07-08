@@ -80,7 +80,7 @@ namespace Nez
 
         public override void OnAddedToEntity() => OriginNormalized = Vector2Ext.HalfVector();
 
-        protected override void Render(Batcher batcher, Camera camera)
+        public override void Render(Batcher batcher, Camera camera)
         {
             var pos = (Entity.Transform.Position + LocalOffset);
             var size = new Point((int)(Size.X * Entity.Transform.Scale.X), (int)(Size.Y * Entity.Transform.Scale.Y));
