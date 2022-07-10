@@ -10,7 +10,7 @@ namespace Betreten_Verboten.Components.Base.Characters
         public int Position { get => _position; set => SetPosition(value); }
         public GlobalPosition GlobalPosition { get; private set; }
         public int Nr { get; private set; }
-        public bool CanBeSelected => true;
+        public bool CanBeSelected { get; set; }
         public Player Owner { get; private set; }
         public ModelRenderer Renderer { get; private set; }
         public RigidBody RigidBody { get; private set; }
@@ -61,9 +61,7 @@ namespace Betreten_Verboten.Components.Base.Characters
             switch (message.Head)
             {
                 case "char_move":
-                    int distance = (int)message.Body;
-                    if ((_travelDistLeft = distance) < 1) break;
-                    TakeStep(true);
+                    AdvanceSteps((int)message.Body);
                     break;
                 case "char_landed_on_field":
                     var source = (Character)message.Body;
@@ -87,6 +85,11 @@ namespace Betreten_Verboten.Components.Base.Characters
             node.Position = new Vector3(pos2D.X, node.Position.Y, pos2D.Y);
             if (RigidBody != null) RigidBody.Position = node.Position;
             return this;
+        }
+
+        public void AdvanceSteps(int distance)
+        {
+            if ((_travelDistLeft = distance) > 0) TakeStep(true);
         }
 
         private void TakeStep(bool firstStep = false)

@@ -96,7 +96,7 @@ namespace Betreten_Verboten.Scenes.Main
                     }
                     else
                     {
-                        _players[_activePlayer].DecideAfterDiceroll(_diceNumbers);
+                        Core.Schedule(1f, x => _players[_activePlayer].DecideAfterDiceroll(_diceNumbers));
                         GameState = GameState.PieceSelect;
                     }
                     break;

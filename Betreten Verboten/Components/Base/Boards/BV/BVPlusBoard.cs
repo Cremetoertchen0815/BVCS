@@ -16,8 +16,8 @@ namespace Betreten_Verboten.Components.Base.Boards.BV
         protected override int FieldHomeDiameter => 20;
         protected override int FieldPlayerDiameter => 28;
         protected override int FieldDistance => 85;
-        public override int FieldCount => 10;
-        public override int FigureCount => 4;
+        public override int FieldCountPP => 10;
+        public override int FigureCountPP => 4;
         public override int PlayerCount => 4;
         public override float CharScale => 0.105f;
 

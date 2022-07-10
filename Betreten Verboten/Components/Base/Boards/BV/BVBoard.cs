@@ -69,8 +69,11 @@ namespace Betreten_Verboten.Components.Base
         protected abstract int FieldHouseDiameter { get; }
         protected abstract int FieldHomeDiameter { get; }
         protected abstract int FieldPlayerDiameter { get; }
-        public abstract int FieldCount { get; }
-        public abstract int FigureCount { get; }
+        public abstract int FieldCountPP { get; }
+        public abstract int FigureCountPP { get; }
+        public virtual int FieldCountTotal => FieldCountPP * PlayerCount; 
+        public virtual int FigureCountTotal => FigureCountPP * PlayerCount; 
+        public virtual int DistanceLimit => FieldCountTotal + FigureCountPP - 1;
         public abstract int PlayerCount { get; }
         public abstract float CharScale { get; }
         public abstract Vector2 GetFieldPosition(int player, int fieldNr, FieldType fieldType, bool centerOffset = true);
@@ -87,14 +90,14 @@ namespace Betreten_Verboten.Components.Base
             for (int i = 0; i < PlayerCount; i++)
             {
                 //Draw field
-                for (int j = 0; j < FieldCount; j++)
+                for (int j = 0; j < FieldCountPP; j++)
                 {
-                    batcher.DrawCircle(_fieldsRegular[i * FieldCount + j], FieldPlayerDiameter, Color.White, 3, CIRCLE_RES);
+                    batcher.DrawCircle(_fieldsRegular[i * FieldCountPP + j], FieldPlayerDiameter, Color.White, 3, CIRCLE_RES);
                 }
 
-                for (int j = 0; j < FigureCount; j++)
+                for (int j = 0; j < FigureCountPP; j++)
                 {
-                    int idx = i * FigureCount + j;
+                    int idx = i * FigureCountPP + j;
                     batcher.DrawCircle(_fieldsHome[idx], FieldHomeDiameter, Color.White, 2, CIRCLE_RES);
                     batcher.DrawCircle(_fieldsHouse[idx], FieldHouseDiameter, Color.White, 2, CIRCLE_RES);
                 }
@@ -112,10 +115,10 @@ namespace Betreten_Verboten.Components.Base
         protected void CalculateCachedFields()
         {
             //Init arrays
-            _connectingSegments = new Vector2[PlayerCount * FieldCount * 2];
-            _fieldsRegular = new Vector2[PlayerCount * FieldCount];
-            _fieldsHouse = new Vector2[PlayerCount * FigureCount];
-            _fieldsHome = new Vector2[PlayerCount * FigureCount];
+            _connectingSegments = new Vector2[FieldCountTotal * 2];
+            _fieldsRegular = new Vector2[FieldCountTotal];
+            _fieldsHouse = new Vector2[FigureCountTotal];
+            _fieldsHome = new Vector2[FigureCountTotal];
 
             //Define variables
             float invFieldDistance = (float)FieldPlayerDiameter / FieldDistance; //Multiplier for calculating the overlap between connection segments and their respective fields
@@ -127,7 +130,7 @@ namespace Betreten_Verboten.Components.Base
             for (int i = 0; i < PlayerCount; i++)
             {
                 //Draw field
-                for (int j = 0; j < FieldCount; j++)
+                for (int j = 0; j < FieldCountPP; j++)
                 {
                     //Fetch new field position and cache old one
                     lastPos = nuPos;
@@ -148,7 +151,7 @@ namespace Betreten_Verboten.Components.Base
                 }
 
                 //Calculate home and house field positions
-                for (int j = 0; j < FigureCount; j++)
+                for (int j = 0; j < FigureCountPP; j++)
                 {
                     _fieldsHouse[idxSpc] = GetFieldPosition(i, j, FieldType.House);
                     _fieldsHome[idxSpc++] = GetFieldPosition(i, j, FieldType.Home);
@@ -166,9 +169,9 @@ namespace Betreten_Verboten.Components.Base
 
         public Vector2 GetCharacterPosition(Characters.Character c)
         {
-            if (c.Position < 0) return (_fieldsHome[c.Nr + FigureCount * c.Owner.Nr] - _centerOffset) * 0.04f;
-            if (c.Position >= FieldCount * PlayerCount) return (_fieldsHouse[c.Position - FieldCount * PlayerCount + FigureCount * c.Owner.Nr] - _centerOffset) * 0.04f;
-            return (_fieldsRegular[(c.Position + FieldCount * c.Owner.Nr) % (PlayerCount * FieldCount)] - _centerOffset) * 0.04f;
+            if (c.Position < 0) return (_fieldsHome[c.Nr + FigureCountPP * c.Owner.Nr] - _centerOffset) * 0.04f;
+            if (c.Position >= FieldCountTotal) return (_fieldsHouse[c.Position - FieldCountTotal + FigureCountPP * c.Owner.Nr] - _centerOffset) * 0.04f;
+            return (_fieldsRegular[(c.Position + FieldCountPP * c.Owner.Nr) % (FieldCountTotal)] - _centerOffset) * 0.04f;
         }
 
         public void MessageReceived(Telegram message)
