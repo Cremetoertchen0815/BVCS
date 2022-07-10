@@ -168,7 +168,7 @@ namespace Betreten_Verboten.Components.Base
         {
             if (c.Position < 0) return (_fieldsHome[c.Nr + FigureCount * c.Owner.Nr] - _centerOffset) * 0.04f;
             if (c.Position >= FieldCount * PlayerCount) return (_fieldsHouse[c.Position - FieldCount * PlayerCount + FigureCount * c.Owner.Nr] - _centerOffset) * 0.04f;
-            return (_fieldsRegular[c.Position + FieldCount * c.Owner.Nr] - _centerOffset) * 0.04f;
+            return (_fieldsRegular[(c.Position + FieldCount * c.Owner.Nr) % (PlayerCount * FieldCount)] - _centerOffset) * 0.04f;
         }
 
         public void MessageReceived(Telegram message)
