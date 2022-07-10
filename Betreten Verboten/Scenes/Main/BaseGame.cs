@@ -52,20 +52,19 @@ namespace Betreten_Verboten.Scenes.Main
             ClearColor = Color.Black;
             Core.DebugRenderEnabled = false;
             AddRenderer(_geonRenderer = new GeonDefaultRenderer(0, this)); //Render render 3D space
-            AddRenderer(new ScreenSpaceRenderer(1, RENDER_LAYER_HUD) { WantsToRenderAfterPostProcessors = true }); //Afterwards render HUD on top
             AddPostProcessor(new QualityBloomPostProcessor(0) { BloomPreset = QualityBloomPostProcessor.BloomPresets.Focussed, BloomStrengthMultiplier = 0.6f, BloomThreshold = 0.5f });
 
             GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
-            GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
+            GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 38, Vector3.Down, Vector3.Forward);
 
             //Config camera5
             Camera.Node.Position = new Vector3(0, 25, 40);
             Camera.Node.RotationX = -0.5f;
 
             //Prepare physics
-            AddSceneComponent(new PhysicsWorld()).SetGravity(new Vector3(0, -100, 0));
+            AddSceneComponent(new PhysicsWorld()).SetGravity(new Vector3(0, -150, 0));
             InitEnvironment();
-
+            
             //Init UI
             _scoreBtn = new VirtualButton(new VirtualButton.KeyboardKey(Microsoft.Xna.Framework.Input.Keys.Tab));
             FinalRenderDelegate = Core.GetGlobalManager<FinalUIRender>();
