@@ -14,45 +14,45 @@
 //   limitations under the License.
 #endregion
 
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
+using System.Collections.Generic;
 
 namespace Nez.ExtendedContent.GeonBit.Graphics
 {
     public class DynamicModelMeshContent
-    {   
+    {
         protected internal ModelMeshContent Source { get; protected set; }
-        
+
         // Summary:
         //     Gets the mesh name.
-        public string Name { get { return Source.Name; } }
+        public string Name => Source.Name;
 
         // Summary:
         //     Gets the parent bone.
         [ContentSerializerIgnore]
-        public ModelBoneContent ParentBone { get { return Source.ParentBone; } }
+        public ModelBoneContent ParentBone => Source.ParentBone;
 
         // Summary:
         //     Gets the bounding sphere for this mesh.
-        public BoundingSphere BoundingSphere { get { return Source.BoundingSphere; } }
+        public BoundingSphere BoundingSphere => Source.BoundingSphere;
 
         // Summary:
         //     Gets the children mesh parts associated with this mesh.
         [ContentSerializerIgnore]
         public List<DynamicModelMeshPartContent> MeshParts { get; private set; }
-        
+
         // Summary:
         //     Gets a user defined tag object.
         [ContentSerializer(SharedResource = true)]
-        public object Tag { get { return Source.Tag; } set { Source.Tag = value; } }
+        public object Tag { get => Source.Tag; set => Source.Tag = value; }
 
 
         public DynamicModelMeshContent(ModelMeshContent source)
         {
-            this.Source = source;
-            
+            Source = source;
+
             //deep clone MeshParts
             MeshParts = new List<DynamicModelMeshPartContent>(source.MeshParts.Count);
             foreach (var mesh in source.MeshParts)

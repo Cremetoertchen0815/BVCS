@@ -17,15 +17,14 @@
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using Nez.ExtendedContent.GeonBit.Graphics;
-using System;
 
 namespace Nez.ExtendedContent.GeonBit.Serialization
 {
     [ContentTypeWriter]
     public class DynamicVertexBufferWriter : ContentTypeWriter<DynamicVertexBufferContent>
-    {    
+    {
         protected override void Write(ContentWriter output, DynamicVertexBufferContent buffer)
-        {            
+        {
             WriteVertexBuffer(output, buffer);
 
             output.Write(buffer.IsWriteOnly);
@@ -35,16 +34,13 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
 
         private void WriteVertexBuffer(ContentWriter output, DynamicVertexBufferContent buffer)
         {
-            var vertexCount = buffer.VertexData.Length / buffer.VertexDeclaration.VertexStride;
+            int? vertexCount = buffer.VertexData.Length / buffer.VertexDeclaration.VertexStride;
             output.WriteRawObject(buffer.VertexDeclaration);
-            output.Write((UInt32)vertexCount);
+            output.Write((uint)vertexCount);
             output.Write(buffer.VertexData);
         }
-                
-        public override string GetRuntimeReader(TargetPlatform targetPlatform)
-        {
-            return "GeonBit.Graphics.Content.DynamicVertexBufferReader, Aether.Graphics";
-        }
-        
+
+        public override string GetRuntimeReader(TargetPlatform targetPlatform) => "GeonBit.Graphics.Content.DynamicVertexBufferReader, Aether.Graphics";
+
     }
 }

@@ -12,12 +12,12 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Reflection;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.ExtendedContent.DataTypes;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -25,7 +25,7 @@ namespace Nez.GeonBit.UI.Entities
     /// GeonBit.UI.Entities contains all the UI elements you can create and use in your layouts.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGenerated]
-    class NamespaceDoc
+    internal class NamespaceDoc
     {
     }
 
@@ -141,10 +141,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static Entity()
-        {
-            Entity.MakeSerializable(typeof(Entity));
-        }
+        static Entity() => Entity.MakeSerializable(typeof(Entity));
 
         // list of child elements
         private List<Entity> _children = new List<Entity>();
@@ -154,10 +151,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public List<Entity> Children
         {
-            get
-            {
-                return _children;
-            }
+            get => _children;
             set
             {
                 ClearChildren();
@@ -175,10 +169,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Make an entity type serializable.
         /// </summary>
         /// <param name="type">Entity type to make serializable.</param>
-        public static void MakeSerializable(System.Type type)
-        {
-            _serializableTypes.Add(type);
-        }
+        public static void MakeSerializable(System.Type type) => _serializableTypes.Add(type);
 
         // do we need to update sorted children list?
         internal bool _needToSortChildren = true;
@@ -215,14 +206,14 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public bool Selectable
         {
-            get { return _isSelectable; }
-            set { _isSelectable = value; }
+            get => _isSelectable;
+            set => _isSelectable = value;
         }
 
         /// <summary>
         /// Is the A button held for a slider or progress bar drag?
         /// </summary>
-        bool IsGamepadAButtonHeldForDrag = false;
+        private bool IsGamepadAButtonHeldForDrag = false;
 
         /// <summary>
         /// Is this entity the first selected entity.
@@ -233,8 +224,8 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public bool IsFirstSelection
         {
-            get { return _isFirstSelection; }
-            set { _isFirstSelection = value; }
+            get => _isFirstSelection;
+            set => _isFirstSelection = value;
         }
 
         /// <summary>
@@ -246,8 +237,8 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         private bool DoFirstSelection
         {
-            get { return _doFirstSelection; }
-            set { _doFirstSelection = value; }
+            get => _doFirstSelection;
+            set => _doFirstSelection = value;
         }
         /// <summary>
         /// This entity will select the first visible and selectable entity.
@@ -316,14 +307,14 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public StyleSheet RawStyleSheet
         {
-            get { return _style; }
-            set { _style = value; }
+            get => _style;
+            set => _style = value;
         }
 
         /// <summary>
         /// Get overflow scrollbar value.
         /// </summary>
-        protected virtual Point OverflowScrollVal { get { return Point.Zero; } }
+        protected virtual Point OverflowScrollVal => Point.Zero;
 
         // optional min size.
         private Vector2? _minSize;
@@ -336,14 +327,14 @@ namespace Nez.GeonBit.UI.Entities
         /// This is especially useful for entities with size that depends on their parent entity size, for example
         /// if you define an entity to take 20% of its parent space but can't be less than 200 pixels width.
         /// </summary>
-        public Vector2? MinSize { get { return _minSize; } set { _minSize = value;  MarkAsDirty(); } }
+        public Vector2? MinSize { get => _minSize; set { _minSize = value; MarkAsDirty(); } }
 
         /// <summary>
         /// If defined, will limit the maximum size of this entity when calculating size.
         /// This is especially useful for entities with size that depends on their parent entity size, for example
         /// if you define an entity to take 20% of its parent space but can't be more than 200 pixels width.
         /// </summary>
-        public Vector2? MaxSize { get { return _maxSize; } set { _maxSize = value; MarkAsDirty(); } }
+        public Vector2? MaxSize { get => _maxSize; set { _maxSize = value; MarkAsDirty(); } }
 
         /// <summary>
         /// Every time we update destination rect and internal destination rect view the update function, we increase this counter.
@@ -379,8 +370,8 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public Vector2 Offset
         {
-            get { return _offset; }
-            set { SetOffset(value); }
+            get => _offset;
+            set => SetOffset(value);
         }
 
         /// <summary>Anchor to position this entity based on (see Anchor enum for more info).</summary>
@@ -391,8 +382,8 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public Anchor Anchor
         {
-            get { return _anchor; }
-            set { SetAnchor(value); }
+            get => _anchor;
+            set => SetAnchor(value);
         }
 
         /// <summary>Basic default style that all entities share. Note: loaded from UI theme xml file.</summary>
@@ -506,8 +497,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Obsolete("'Disabled' is deprecated, please use 'Enabled' instead.")]
         public bool Disabled
         {
-            get { return !Enabled; }
-            set { Enabled = !value; }
+            get => !Enabled;
+            set => Enabled = !value;
         }
 
         /// <summary>If true, this entity and its children will not respond to events (but will be drawn normally, unlike when disabled).</summary>
@@ -523,17 +514,14 @@ namespace Nez.GeonBit.UI.Entities
         protected EntityState _entityState = EntityState.Default;
 
         // is this entity currently focused?
-        bool _isFocused = false;
+        private bool _isFocused = false;
 
         /// <summary>Does this entity or one of its children currently focused?</summary>
         [System.Xml.Serialization.XmlIgnore]
         public bool IsFocused
         {
             // get if focused
-            get
-            {
-                return _isFocused;
-            }
+            get => _isFocused;
 
             // set if focused
             set
@@ -555,13 +543,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Get internal destination rect.
         /// </summary>
-        public Rectangle InternalDestRect
-        {
-            get
-            {
-                return _destRectInternal;
-            }
-        }
+        public Rectangle InternalDestRect => _destRectInternal;
 
         // is this entity draggable?
         private bool _draggable = false;
@@ -593,7 +575,7 @@ namespace Nez.GeonBit.UI.Entities
             MarkAsDirty();
 
             // store size, anchor and offset
-            Vector2 defaultSize = EntityDefaultSize;
+            var defaultSize = EntityDefaultSize;
             _size = size ?? defaultSize;
             _offset = offset ?? Vector2.Zero;
             _anchor = anchor;
@@ -614,14 +596,14 @@ namespace Nez.GeonBit.UI.Entities
             get
             {
                 // get current class type
-                System.Type type = GetType();
+                var type = GetType();
 
                 // try to get default size static property, and if not found, climb to parent class until DefaultSize is defined.
                 // note: eventually it will stop at Entity, since we have defined default size here.
                 while (true)
                 {
                     // try to get DefaultSize field and if found return it
-                    FieldInfo field = type.GetField("DefaultSize", BindingFlags.Public | BindingFlags.Static);
+                    var field = type.GetField("DefaultSize", BindingFlags.Public | BindingFlags.Static);
                     if (field != null)
                     {
                         return (Vector2)(field.GetValue(null));
@@ -638,34 +620,22 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="addVector">Optional vector to add to cursor position.</param>
         /// <returns>Mouse position.</returns>
-        protected Vector2 GetMousePos(Vector2? addVector = null)
-        {
-            return UserInterface.Active.GetTransformedCursorPos(addVector);
-        }
+        protected Vector2 GetMousePos(Vector2? addVector = null) => UserInterface.Active.GetTransformedCursorPos(addVector);
 
         /// <summary>
         /// Get input helper from active user interface.
         /// </summary>
-        protected InputHelper Input
-        {
-            get { return UserInterface._input; }
-        }
+        protected InputHelper Input => UserInterface._input;
 
         /// <summary>
         /// Get the active user interface global scale.
         /// </summary>
-        protected float GlobalScale
-        {
-            get { return UserInterface.Active.GlobalScale; }
-        }
+        protected float GlobalScale => UserInterface.Active.GlobalScale;
 
         /// <summary>
         /// If true, will add debug drawing to UI system to show offsets, margin, etc.
         /// </summary>
-        protected bool DebugDraw
-        {
-            get { return UserInterface.Active.DebugDraw; }
-        }
+        protected bool DebugDraw => UserInterface.Active.DebugDraw;
 
         /// <summary>
         /// Call this function when the first update occures.
@@ -697,10 +667,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="state">State to get property for (if undefined will fallback to default state).</param>
         /// <param name="fallbackToDefault">If true and property not found for given state, will fallback to default state.</param>
         /// <returns>Style property value for given state or default, or null if undefined.</returns>
-        public StyleProperty GetStyleProperty(string property, EntityState state = EntityState.Default, bool fallbackToDefault = true)
-        {
-            return _style.GetStyleProperty(property, state, fallbackToDefault);
-        }
+        public StyleProperty GetStyleProperty(string property, EntityState state = EntityState.Default, bool fallbackToDefault = true) => _style.GetStyleProperty(property, state, fallbackToDefault);
 
         /// <summary>
         /// Set a stylesheet property.
@@ -720,10 +687,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="property">Property identifier.</param>
         /// <returns>Stylesheet property value for current entity state, or default if not defined.</returns>
-        public StyleProperty GetActiveStyle(string property)
-        {
-            return GetStyleProperty(property, _entityState);
-        }
+        public StyleProperty GetActiveStyle(string property) => GetStyleProperty(property, _entityState);
 
         /// <summary>
         /// Update the entire stylesheet from a different stylesheet.
@@ -736,19 +700,19 @@ namespace Nez.GeonBit.UI.Entities
         }
 
         /// <summary>Get extra space after with current UI scale applied. </summary>
-        protected Vector2 _scaledSpaceAfter { get { return SpaceAfter * GlobalScale; } }
+        protected Vector2 _scaledSpaceAfter => SpaceAfter * GlobalScale;
 
         /// <summary>Get extra space before with current UI scale applied. </summary>
-        protected Vector2 _scaledSpaceBefore { get { return SpaceBefore * GlobalScale; } }
+        protected Vector2 _scaledSpaceBefore => SpaceBefore * GlobalScale;
 
         /// <summary>Get size with current UI scale applied. </summary>
-        protected Vector2 _scaledSize { get { return _size * GlobalScale; } }
+        protected Vector2 _scaledSize => _size * GlobalScale;
 
         /// <summary>Get offset with current UI scale applied. </summary>
-        protected Vector2 _scaledOffset { get { return _offset * GlobalScale; } }
+        protected Vector2 _scaledOffset => _offset * GlobalScale;
 
         /// <summary>Get offset with current UI scale applied. </summary>
-        protected Vector2 _scaledPadding { get { return Padding * GlobalScale; } }
+        protected Vector2 _scaledPadding => Padding * GlobalScale;
 
         /// <summary>
         /// Adds extra space outside the dest rect for collision detection.
@@ -762,32 +726,26 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public bool Visible
         {
-            get { return _visible; }
+            get => _visible;
             set { _visible = value; DoOnVisibilityChange(); }
         }
 
         /// <summary>
         /// Return entity priority in drawing order and event handling.
         /// </summary>
-        public virtual int Priority
-        {
-            get { return _indexInParent + PriorityBonus; }
-        }
+        public virtual int Priority => _indexInParent + PriorityBonus;
 
         /// <summary>
         /// Get if this entity needs to recalculate destination rect.
         /// </summary>
-        public bool IsDirty
-        {
-            get { return _isDirty; }
-        }
+        public bool IsDirty => _isDirty;
 
         /// <summary>
         /// Is the entity draggable (eg can a user grab it and drag it around).
         /// </summary>
         public bool Draggable
         {
-            get { return _draggable; }
+            get => _draggable;
             set { _needToSetDragOffset = _draggable != value; _draggable = value; MarkAsDirty(); }
         }
 
@@ -796,7 +754,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public Entity Background
         {
-            get { return _background; }
+            get => _background;
             set
             {
                 if (value != null && value._parent != null)
@@ -813,8 +771,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public EntityState State
         {
-            get { return _entityState; }
-            set { _entityState = value; }
+            get => _entityState;
+            set => _entityState = value;
         }
 
         /// <summary>
@@ -830,7 +788,7 @@ namespace Nez.GeonBit.UI.Entities
             bool anyType = typeof(T) == typeof(Entity);
 
             // iterate children
-            foreach (Entity child in _children)
+            foreach (var child in _children)
             {
                 // skip hidden entities
                 if (child._hiddenInternalEntity)
@@ -846,7 +804,7 @@ namespace Nez.GeonBit.UI.Entities
                 if (recursive)
                 {
                     // search in child
-                    T ret = child.Find<T>(identifier, recursive);
+                    var ret = child.Find<T>(identifier, recursive);
 
                     // if found return it
                     if (ret != null)
@@ -866,10 +824,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="identifier">Identifier to find.</param>
         /// <param name="recursive">If true, will search recursively in children of children. If false, will search only in direct children.</param>
         /// <returns>First found entity with given identifier, or null if nothing found.</returns>
-        public Entity Find(string identifier, bool recursive = false)
-        {
-            return Find<Entity>(identifier, recursive);
-        }
+        public Entity Find(string identifier, bool recursive = false) => Find<Entity>(identifier, recursive);
 
         /// <summary>
         /// Iterate over children and call 'callback' for every direct child of this entity.
@@ -877,7 +832,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="callback">Callback function to call with every child of this entity.</param>
         public void IterateChildren(EventCallback callback)
         {
-            foreach (Entity child in _children)
+            foreach (var child in _children)
             {
                 callback(child);
             }
@@ -888,7 +843,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public Vector2 Size
         {
-            get { return _size; }
+            get => _size;
             set { if (_size != value) { _size = value; MarkAsDirty(); } }
         }
 
@@ -898,8 +853,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public Vector2 SpaceAfter
         {
-            set { SetStyleProperty(StylePropertyIds.SpaceAfter, new StyleProperty(value)); }
-            get { return GetActiveStyle(StylePropertyIds.SpaceAfter).asVector; }
+            set => SetStyleProperty(StylePropertyIds.SpaceAfter, new StyleProperty(value));
+            get => GetActiveStyle(StylePropertyIds.SpaceAfter).asVector;
         }
 
         /// <summary>
@@ -908,8 +863,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public Vector2 SpaceBefore
         {
-            set { SetStyleProperty(StylePropertyIds.SpaceBefore, new StyleProperty(value)); }
-            get { return GetActiveStyle(StylePropertyIds.SpaceBefore).asVector; }
+            set => SetStyleProperty(StylePropertyIds.SpaceBefore, new StyleProperty(value));
+            get => GetActiveStyle(StylePropertyIds.SpaceBefore).asVector;
         }
 
         /// <summary>
@@ -918,8 +873,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public Color FillColor
         {
-            set { SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.FillColor).asColor; }
+            set => SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(value), markAsDirty: false);
+            get => GetActiveStyle(StylePropertyIds.FillColor).asColor;
         }
 
         /// <summary>
@@ -930,14 +885,11 @@ namespace Nez.GeonBit.UI.Entities
         {
             set
             {
-                Color col = FillColor;
+                var col = FillColor;
                 col.A = value;
                 SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(col), markAsDirty: false);
             }
-            get
-            {
-                return FillColor.A;
-            }
+            get => FillColor.A;
         }
 
         /// <summary>
@@ -948,14 +900,11 @@ namespace Nez.GeonBit.UI.Entities
         {
             set
             {
-                Color col = OutlineColor;
+                var col = OutlineColor;
                 col.A = value;
                 SetStyleProperty(StylePropertyIds.OutlineColor, new StyleProperty(col), markAsDirty: false);
             }
-            get
-            {
-                return OutlineColor.A;
-            }
+            get => OutlineColor.A;
         }
 
         /// <summary>
@@ -964,8 +913,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public Vector2 Padding
         {
-            set { SetStyleProperty(StylePropertyIds.Padding, new StyleProperty(value)); }
-            get { return GetActiveStyle(StylePropertyIds.Padding).asVector; }
+            set => SetStyleProperty(StylePropertyIds.Padding, new StyleProperty(value));
+            get => GetActiveStyle(StylePropertyIds.Padding).asVector;
         }
 
         /// <summary>
@@ -974,8 +923,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public Color ShadowColor
         {
-            set { SetStyleProperty(StylePropertyIds.ShadowColor, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.ShadowColor).asColor; }
+            set => SetStyleProperty(StylePropertyIds.ShadowColor, new StyleProperty(value), markAsDirty: false);
+            get => GetActiveStyle(StylePropertyIds.ShadowColor).asColor;
         }
 
         /// <summary>
@@ -984,8 +933,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public float ShadowScale
         {
-            set { SetStyleProperty(StylePropertyIds.ShadowScale, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.ShadowScale).asFloat; }
+            set => SetStyleProperty(StylePropertyIds.ShadowScale, new StyleProperty(value), markAsDirty: false);
+            get => GetActiveStyle(StylePropertyIds.ShadowScale).asFloat;
         }
 
         /// <summary>
@@ -994,8 +943,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public Vector2 ShadowOffset
         {
-            set { SetStyleProperty(StylePropertyIds.ShadowOffset, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.ShadowOffset).asVector; }
+            set => SetStyleProperty(StylePropertyIds.ShadowOffset, new StyleProperty(value), markAsDirty: false);
+            get => GetActiveStyle(StylePropertyIds.ShadowOffset).asVector;
         }
 
         /// <summary>
@@ -1003,8 +952,8 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public float Scale
         {
-            set { SetStyleProperty(StylePropertyIds.Scale, new StyleProperty(value)); }
-            get { return GetActiveStyle(StylePropertyIds.Scale).asFloat; }
+            set => SetStyleProperty(StylePropertyIds.Scale, new StyleProperty(value));
+            get => GetActiveStyle(StylePropertyIds.Scale).asFloat;
         }
 
         /// <summary>
@@ -1013,8 +962,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public Color OutlineColor
         {
-            set { SetStyleProperty(StylePropertyIds.OutlineColor, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.OutlineColor).asColor; }
+            set => SetStyleProperty(StylePropertyIds.OutlineColor, new StyleProperty(value), markAsDirty: false);
+            get => GetActiveStyle(StylePropertyIds.OutlineColor).asColor;
         }
 
         /// <summary>
@@ -1023,8 +972,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public int OutlineWidth
         {
-            set { SetStyleProperty(StylePropertyIds.OutlineWidth, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.OutlineWidth).asInt; }
+            set => SetStyleProperty(StylePropertyIds.OutlineWidth, new StyleProperty(value), markAsDirty: false);
+            get => GetActiveStyle(StylePropertyIds.OutlineWidth).asInt;
         }
 
         /// <summary>
@@ -1035,7 +984,7 @@ namespace Nez.GeonBit.UI.Entities
         {
             // iterate over parents until root, starting with self.
             // if any entity along the way is disabled we return true.
-            Entity parent = this;
+            var parent = this;
             while (parent != null)
             {
                 if (!parent.Enabled) { return true; }
@@ -1057,7 +1006,7 @@ namespace Nez.GeonBit.UI.Entities
         {
             // iterate over parents until root, starting with self.
             // if any entity along the way is child of 'other', we return true.
-            Entity parent = this;
+            var parent = this;
             while (parent != null)
             {
                 if (parent._parent == other) { return true; }
@@ -1076,7 +1025,7 @@ namespace Nez.GeonBit.UI.Entities
         {
             // iterate over parents until root, starting with self.
             // if any entity along the way is locked we return true.
-            Entity parent = this;
+            var parent = this;
             while (parent != null)
             {
                 if (parent.Locked)
@@ -1111,7 +1060,7 @@ namespace Nez.GeonBit.UI.Entities
         {
             // iterate over parents until root, starting with self.
             // if any entity along the way is not visible we return false.
-            Entity parent = this;
+            var parent = this;
             while (parent != null)
             {
                 if (!parent.Visible) { return false; }
@@ -1184,7 +1133,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Update dest rect and internal dest rect.
         /// This is called internally whenever a change is made to the entity or its parent.
         /// </summary>
-        virtual public void UpdateDestinationRects()
+        public virtual void UpdateDestinationRects()
         {
             // update dest and internal dest rects
             _destRect = CalcDestRect();
@@ -1201,7 +1150,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Update dest rect and internal dest rect, but only if needed (eg if something changed since last update).
         /// </summary>
-        virtual public void UpdateDestinationRectsIfDirty()
+        public virtual void UpdateDestinationRectsIfDirty()
         {
             // if dirty, update destination rectangles
             if (_parent != null && (_isDirty || (_parentLastDestRectVersion != _parent._destRectVersion)))
@@ -1214,7 +1163,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Draw this entity and its children.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to use for drawing.</param>
-        virtual public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             // if not visible skip
             if (!Visible)
@@ -1319,10 +1268,10 @@ namespace Nez.GeonBit.UI.Entities
             BeforeDrawChildren(spriteBatch);
 
             // get sorted children list
-            List<Entity> childrenSorted = GetSortedChildren();
+            var childrenSorted = GetSortedChildren();
 
             // draw all children
-            foreach (Entity child in childrenSorted)
+            foreach (var child in childrenSorted)
             {
                 child.Draw(spriteBatch);
             }
@@ -1334,7 +1283,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected virtual void InitAfterDeserialize()
+        protected internal virtual void InitAfterDeserialize()
         {
             // fix children parent
             var temp = _children;
@@ -1393,13 +1342,13 @@ namespace Nez.GeonBit.UI.Entities
         /// Draw entity shadow (if defined shadow).
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        virtual protected void DrawEntityShadow(SpriteBatch spriteBatch)
+        protected virtual void DrawEntityShadow(SpriteBatch spriteBatch)
         {
             // store current 'is-dirty' flag, because it changes internally while drawing shadow
             bool isDirty = _isDirty;
 
             // get current shadow color and if transparent skip
-            Color shadowColor = ShadowColor;
+            var shadowColor = ShadowColor;
             if (shadowColor.A == 0) { return; }
 
             // get shadow scale
@@ -1410,11 +1359,11 @@ namespace Nez.GeonBit.UI.Entities
             _destRect.Y += (int)ShadowOffset.Y;
 
             // store previous state and colors
-            Color oldFill = FillColor;
-            Color oldOutline = OutlineColor;
+            var oldFill = FillColor;
+            var oldOutline = OutlineColor;
             float oldScale = Scale;
             int oldOutlineWidth = OutlineWidth;
-            EntityState oldState = _entityState;
+            var oldState = _entityState;
 
             // set default colors and state for shadow pass
             FillColor = shadowColor;
@@ -1451,14 +1400,14 @@ namespace Nez.GeonBit.UI.Entities
         /// Draw entity outline.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        virtual protected void DrawEntityOutline(SpriteBatch spriteBatch)
+        protected virtual void DrawEntityOutline(SpriteBatch spriteBatch)
         {
             // get outline width and if 0 return
             int outlineWidth = OutlineWidth;
             if (OutlineWidth == 0) { return; }
 
             // get outline color
-            Color outlineColor = OutlineColor;
+            var outlineColor = OutlineColor;
 
             // if disabled, turn outline to grey
             if (_isCurrentlyDisabled)
@@ -1467,14 +1416,14 @@ namespace Nez.GeonBit.UI.Entities
             }
 
             // store previous fill color
-            Color oldFill = FillColor;
+            var oldFill = FillColor;
 
             // store original destination rect
-            Rectangle originalDest = _destRect;
-            Rectangle originalIntDest = _destRectInternal;
+            var originalDest = _destRect;
+            var originalIntDest = _destRectInternal;
 
             // store entity previous state
-            EntityState oldState = _entityState;
+            var oldState = _entityState;
 
             // set fill color
             SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(outlineColor), oldState, markAsDirty: false);
@@ -1505,7 +1454,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        virtual protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected virtual void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
         }
 
@@ -1513,7 +1462,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Called every frame after drawing is done.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw on.</param>
-        virtual protected void OnAfterDraw(SpriteBatch spriteBatch)
+        protected virtual void OnAfterDraw(SpriteBatch spriteBatch)
         {
             AfterDraw?.Invoke(this);
             UserInterface.Active.AfterDraw?.Invoke(this);
@@ -1529,7 +1478,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Called every frame before drawing is done.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw on.</param>
-        virtual protected void OnBeforeDraw(SpriteBatch spriteBatch)
+        protected virtual void OnBeforeDraw(SpriteBatch spriteBatch)
         {
             BeforeDraw?.Invoke(this);
             UserInterface.Active.BeforeDraw?.Invoke(this);
@@ -1538,10 +1487,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Get the direct parent of this entity.
         /// </summary>
-        public Entity Parent
-        {
-            get { return _parent; }
-        }
+        public Entity Parent => _parent;
 
         /// <summary>
         /// Add a child entity.
@@ -1598,7 +1544,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public void BringToFront()
         {
-            Entity parent = _parent;
+            var parent = _parent;
             parent.RemoveChild(this);
             parent.AddChild(this);
         }
@@ -1626,7 +1572,7 @@ namespace Nez.GeonBit.UI.Entities
 
             // reset index for all children
             int index = 0;
-            foreach (Entity itrChild in _children)
+            foreach (var itrChild in _children)
             {
                 itrChild._indexInParent = index++;
             }
@@ -1642,7 +1588,7 @@ namespace Nez.GeonBit.UI.Entities
         public void ClearChildren()
         {
             // remove all children
-            foreach (Entity child in _children)
+            foreach (var child in _children)
             {
                 child._parent = null;
                 child._indexInParent = -1;
@@ -1659,10 +1605,10 @@ namespace Nez.GeonBit.UI.Entities
         /// Calculate and return the internal destination rectangle (note: this relay on the dest rect having a valid value first).
         /// </summary>
         /// <returns>Internal destination rectangle.</returns>
-        virtual public Rectangle CalcInternalRect()
+        public virtual Rectangle CalcInternalRect()
         {
             // calculate the internal destination rect, eg after padding
-            Vector2 padding = _scaledPadding;
+            var padding = _scaledPadding;
             _destRectInternal = GetActualDestRect();
             _destRectInternal.X += (int)padding.X;
             _destRectInternal.Y += (int)padding.Y;
@@ -1686,7 +1632,7 @@ namespace Nez.GeonBit.UI.Entities
 
             // get parent internal destination rectangle
             _parent.UpdateDestinationRectsIfDirty();
-            Rectangle parentDest = _parent._destRectInternal;
+            var parentDest = _parent._destRectInternal;
 
             // calc and return size
             return new Point(
@@ -1698,10 +1644,10 @@ namespace Nez.GeonBit.UI.Entities
         /// Calculate and return the destination rectangle, eg the space this entity is rendered on.
         /// </summary>
         /// <returns>Destination rectangle.</returns>
-        virtual public Rectangle CalcDestRect()
+        public virtual Rectangle CalcDestRect()
         {
             // create new rectangle
-            Rectangle ret = new Rectangle();
+            var ret = new Rectangle();
 
             // no parent? stop here and return empty rect
             if (_parent == null)
@@ -1711,26 +1657,26 @@ namespace Nez.GeonBit.UI.Entities
 
             // get parent internal destination rectangle
             _parent.UpdateDestinationRectsIfDirty();
-            Rectangle parentDest = _parent._destRectInternal;
+            var parentDest = _parent._destRectInternal;
 
             // set size:
             // 0: takes whole parent size.
             // 0.0 - 1.0: takes percent of parent size.
             // > 1.0: size in pixels.
-            Vector2 size = _scaledSize;
-            Point sizeInPixels = CalcActualSizeInPixels(size);
+            var size = _scaledSize;
+            var sizeInPixels = CalcActualSizeInPixels(size);
 
             // apply min size
             if (MinSize != null)
             {
-                Point minInPixels = CalcActualSizeInPixels(MinSize.Value);
+                var minInPixels = CalcActualSizeInPixels(MinSize.Value);
                 sizeInPixels.X = System.Math.Max(minInPixels.X, sizeInPixels.X);
                 sizeInPixels.Y = System.Math.Max(minInPixels.Y, sizeInPixels.Y);
             }
             // apply max size
             if (MaxSize != null)
             {
-                Point maxInPixels = CalcActualSizeInPixels(MaxSize.Value);
+                var maxInPixels = CalcActualSizeInPixels(MaxSize.Value);
                 sizeInPixels.X = System.Math.Min(maxInPixels.X, sizeInPixels.X);
                 sizeInPixels.Y = System.Math.Min(maxInPixels.Y, sizeInPixels.Y);
             }
@@ -1752,8 +1698,8 @@ namespace Nez.GeonBit.UI.Entities
             int parent_center_y = parent_top + parentDest.Height / 2;
 
             // get anchor and offset
-            Anchor anchor = _anchor;
-            Vector2 offset = _scaledOffset;
+            var anchor = _anchor;
+            var offset = _scaledOffset;
 
             // if we are in dragging mode we do a little hack to use top-left anchor with the dragged offset
             // note: but only if drag offset was previously set.
@@ -1820,7 +1766,7 @@ namespace Nez.GeonBit.UI.Entities
             if ((anchor == Anchor.Auto || anchor == Anchor.AutoInline || anchor == Anchor.AutoCenter || anchor == Anchor.AutoInlineNoBreak) && _parent != null)
             {
                 // get previous entity before this
-                Entity prevEntity = GetPreviousEntity(true);
+                var prevEntity = GetPreviousEntity(true);
 
                 // if found entity before this one, align based on it
                 if (prevEntity != null)
@@ -1893,20 +1839,14 @@ namespace Nez.GeonBit.UI.Entities
         /// text content, font and word-wrap.
         /// </summary>
         /// <returns>The actual destination rectangle.</returns>
-        virtual public Rectangle GetActualDestRect()
-        {
-            return _destRect;
-        }
+        public virtual Rectangle GetActualDestRect() => _destRect;
 
         /// <summary>
         /// Return the actual dest rect for auto-anchoring purposes.
         /// This is useful for things like DropDown, that when opened they take a larger part of the screen, but we don't
         /// want it to push down other entities.
         /// </summary>
-        virtual protected Rectangle GetDestRectForAutoAnchors()
-        {
-            return GetActualDestRect();
-        }
+        protected virtual Rectangle GetDestRectForAutoAnchors() => GetActualDestRect();
 
         /// <summary>
         /// Remove this entity from its parent.
@@ -1957,8 +1897,8 @@ namespace Nez.GeonBit.UI.Entities
         /// <returns>Calculated offset from parent top-left corner.</returns>
         public Vector2 GetRelativeOffset()
         {
-            Rectangle dest = GetActualDestRect();
-            Rectangle parentDest = _parent.GetActualDestRect();
+            var dest = GetActualDestRect();
+            var parentDest = _parent.GetActualDestRect();
             return new Vector2(dest.X - parentDest.X, dest.Y - parentDest.Y);
         }
 
@@ -1973,9 +1913,9 @@ namespace Nez.GeonBit.UI.Entities
             if (_parent == null) { return null; }
 
             // get siblings and iterate them
-            List<Entity> siblings = _parent.Children;
+            var siblings = _parent.Children;
             Entity prev = null;
-            foreach (Entity sibling in siblings)
+            foreach (var sibling in siblings)
             {
                 // when getting to self, break the loop
                 if (sibling == this)
@@ -2006,7 +1946,7 @@ namespace Nez.GeonBit.UI.Entities
             bool firstSelectableEntityFound = false;
             var siblings = (searchInChildren ? entity._children : _children);
 
-            foreach (Entity sibling in siblings)
+            foreach (var sibling in siblings)
             {
                 // if sibling is visible and selectable, use it
                 if (sibling.Visible && sibling.Selectable && sibling.Enabled)
@@ -2087,14 +2027,14 @@ namespace Nez.GeonBit.UI.Entities
         private void SelectLastEntity(Entity entity, bool searchInChildren)
         {
             // Find the last selectable, visible and enabled entity
-            Entity entityLast = searchInChildren ?
+            var entityLast = searchInChildren ?
                 entity._children.FindLast(e => e.Selectable && e.Visible && !e.IsDisabled()) :
                 _children.FindLast(e => e.Selectable && e.Visible && !e.IsDisabled());
 
             if (entityLast != null)
             {
                 // removes the "IsFirstSelection" status of this entity
-                this.IsFirstSelection = false;
+                IsFirstSelection = false;
 
                 // gives the new entity the "IsFirstSelection" status
                 entityLast.IsFirstSelection = true;
@@ -2145,7 +2085,7 @@ namespace Nez.GeonBit.UI.Entities
                 return rootEntity;
             }
 
-            foreach (Entity child in rootEntity._children)
+            foreach (var child in rootEntity._children)
             {
                 var searchOutcome = RecursiveFindFirstSelection(child);
                 if (searchOutcome != null)
@@ -2165,7 +2105,7 @@ namespace Nez.GeonBit.UI.Entities
             if (Parent != null && Parent._children != null && Parent is RootPanel == false)
             {
                 // find the first selection
-                Entity currentEntity = parent._children.Find(x => x.IsFirstSelection);
+                var currentEntity = parent._children.Find(x => x.IsFirstSelection);
 
                 // Attempt to find selected entity in immediate children failed, so try all entities
                 if (currentEntity == null)
@@ -2240,7 +2180,7 @@ namespace Nez.GeonBit.UI.Entities
             if (parent != null && parent._children != null && parent is RootPanel == false)
             {
                 // find the first selection
-                Entity currentEntity = parent._children.Find(e => e.IsFirstSelection);
+                var currentEntity = parent._children.Find(e => e.IsFirstSelection);
 
                 // Attempt to find selected entity in immediate children failed, so try all entities
                 if (currentEntity == null)
@@ -2332,7 +2272,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle gamepad button press event.
         /// </summary>
-        virtual protected void DoOnGamePadButtonPressed()
+        protected virtual void DoOnGamePadButtonPressed()
         {
             OnGamePadPressed?.Invoke(this);
             UserInterface.Active.OnGamePadPressed?.Invoke(this);
@@ -2361,12 +2301,12 @@ namespace Nez.GeonBit.UI.Entities
             }
             else if (Input.GamePadButtonPressed(GamePadButton.DPadLeft))
             {
-                if (this.Parent.AttachedData is TabData)
+                if (Parent.AttachedData is TabData)
                 {
                     if (!IsGamepadAButtonHeldForDrag)
                     {
                         // select a tab
-                        SelectFirstEntity(GetPreviousPanelInTabs((Panel)this.Parent), true);
+                        SelectFirstEntity(GetPreviousPanelInTabs((Panel)Parent), true);
                     }
                 }
                 else
@@ -2376,14 +2316,14 @@ namespace Nez.GeonBit.UI.Entities
             }
             else if (Input.GamePadButtonPressed(GamePadButton.DPadRight))
             {
-                if (AttachedData != null && (this is Button == false || this.AttachedData is Button))
+                if (AttachedData != null && (this is Button == false || AttachedData is Button))
                 {
                     if (!IsGamepadAButtonHeldForDrag)
                     {
                         // select a tab
                         if (AttachedData is TabData)
                         {
-                            SelectFirstEntity(GetNextPanelInTabs((Panel)((TabData)this.AttachedData).panel), true);
+                            SelectFirstEntity(GetNextPanelInTabs(((TabData)AttachedData).panel), true);
                         }
                         else if (AttachedData is Entity && ((Entity)AttachedData).AttachedData is PanelTabs)
                         {
@@ -2391,7 +2331,7 @@ namespace Nez.GeonBit.UI.Entities
                         }
                         else if (AttachedData is Entity && ((Entity)AttachedData).AttachedData is TabData)
                         {
-                            SelectFirstEntity(GetNextPanelInTabs((Panel)((TabData)((Entity)this.AttachedData).AttachedData).panel), true);
+                            SelectFirstEntity(GetNextPanelInTabs(((TabData)((Entity)AttachedData).AttachedData).panel), true);
                         }
                     }
                 }
@@ -2404,13 +2344,13 @@ namespace Nez.GeonBit.UI.Entities
 
         private Panel GetNextPanelInTabs(Panel currentPanel)
         {
-            List<Panel> possiblePanels = currentPanel.Parent.Children.Select(x => (Panel)x).ToList();
+            var possiblePanels = currentPanel.Parent.Children.Select(x => (Panel)x).ToList();
             return currentPanel._indexInParent + 1 >= possiblePanels.Count ? currentPanel : possiblePanels[currentPanel._indexInParent + 1];
         }
 
         private Panel GetPreviousPanelInTabs(Panel currentPanel)
         {
-            List<Panel> possiblePanels = currentPanel.Parent.Children.Select(x => (Panel)x).ToList();
+            var possiblePanels = currentPanel.Parent.Children.Select(x => (Panel)x).ToList();
             return currentPanel._indexInParent - 1 < 0 ? currentPanel : possiblePanels[currentPanel._indexInParent - 1];
         }
 
@@ -2434,7 +2374,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle gamepad up event.
         /// </summary>        
-        virtual protected void DoOnGamePadReleased()
+        protected virtual void DoOnGamePadReleased()
         {
             OnGamePadReleased?.Invoke(this);
             UserInterface.Active.OnGamePadReleased?.Invoke(this);
@@ -2448,7 +2388,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle mouse down event.
         /// </summary>
-        virtual protected void DoOnMouseDown()
+        protected virtual void DoOnMouseDown()
         {
             OnMouseDown?.Invoke(this);
             UserInterface.Active.OnMouseDown?.Invoke(this);
@@ -2457,7 +2397,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle mouse up event.
         /// </summary>
-        virtual protected void DoOnMouseReleased()
+        protected virtual void DoOnMouseReleased()
         {
             OnMouseReleased?.Invoke(this);
             UserInterface.Active.OnMouseReleased?.Invoke(this);
@@ -2466,7 +2406,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle mouse click event.
         /// </summary>
-        virtual protected void DoOnClick()
+        protected virtual void DoOnClick()
         {
             OnClick?.Invoke(this);
             UserInterface.Active.OnClick?.Invoke(this);
@@ -2475,7 +2415,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle mouse down event, called every frame while down.
         /// </summary>
-        virtual protected void DoWhileMouseDown()
+        protected virtual void DoWhileMouseDown()
         {
             WhileMouseDown?.Invoke(this);
             UserInterface.Active.WhileMouseDown?.Invoke(this);
@@ -2490,7 +2430,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle mouse hover event, called every frame while hover.
         /// </summary>
-        virtual protected void DoWhileMouseHover()
+        protected virtual void DoWhileMouseHover()
         {
             WhileMouseHover?.Invoke(this);
             UserInterface.Active.WhileMouseHover?.Invoke(this);
@@ -2499,7 +2439,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle mouse hover or down event, called every frame while hover.
         /// </summary>
-        virtual protected void DoWhileMouseHoverOrDown()
+        protected virtual void DoWhileMouseHoverOrDown()
         {
             // invoke callback and global callback
             WhileMouseHoverOrDown?.Invoke(this);
@@ -2528,7 +2468,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle value change event (for entities with value).
         /// </summary>
-        virtual protected void DoOnValueChange()
+        protected virtual void DoOnValueChange()
         {
             OnValueChange?.Invoke(this);
             UserInterface.Active.OnValueChange?.Invoke(this);
@@ -2537,7 +2477,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle mouse enter event.
         /// </summary>
-        virtual protected void DoOnMouseEnter()
+        protected virtual void DoOnMouseEnter()
         {
             OnMouseEnter?.Invoke(this);
             UserInterface.Active.OnMouseEnter?.Invoke(this);
@@ -2546,7 +2486,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle mouse leave event.
         /// </summary>
-        virtual protected void DoOnMouseLeave()
+        protected virtual void DoOnMouseLeave()
         {
             OnMouseLeave?.Invoke(this);
             UserInterface.Active.OnMouseLeave?.Invoke(this);
@@ -2555,7 +2495,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle start dragging event.
         /// </summary>
-        virtual protected void DoOnStartDrag()
+        protected virtual void DoOnStartDrag()
         {
             OnStartDrag?.Invoke(this);
             UserInterface.Active.OnStartDrag?.Invoke(this);
@@ -2564,7 +2504,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle end dragging event.
         /// </summary>
-        virtual protected void DoOnStopDrag()
+        protected virtual void DoOnStopDrag()
         {
             OnStopDrag?.Invoke(this);
             UserInterface.Active.OnStopDrag?.Invoke(this);
@@ -2573,7 +2513,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle the while-dragging event.
         /// </summary>
-        virtual protected void DoWhileDragging()
+        protected virtual void DoWhileDragging()
         {
             WhileDragging?.Invoke(this);
             UserInterface.Active.WhileDragging?.Invoke(this);
@@ -2582,7 +2522,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Handle when mouse wheel scroll and this entity is the active entity.
         /// </summary>
-        virtual protected void DoOnMouseWheelScroll()
+        protected virtual void DoOnMouseWheelScroll()
         {
             OnMouseWheelScroll?.Invoke(this);
             UserInterface.Active.OnMouseWheelScroll?.Invoke(this);
@@ -2591,7 +2531,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Called every frame after update.
         /// </summary>
-        virtual protected void DoAfterUpdate()
+        protected virtual void DoAfterUpdate()
         {
             AfterUpdate?.Invoke(this);
             UserInterface.Active.AfterUpdate?.Invoke(this);
@@ -2600,7 +2540,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Called every time the visibility property of this entity changes.
         /// </summary>
-        virtual protected void DoOnVisibilityChange()
+        protected virtual void DoOnVisibilityChange()
         {
             // invoke callbacks
             OnVisiblityChange?.Invoke(this);
@@ -2610,7 +2550,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Called every frame before update.
         /// </summary>
-        virtual protected void DoBeforeUpdate()
+        protected virtual void DoBeforeUpdate()
         {
             BeforeUpdate?.Invoke(this);
             UserInterface.Active.BeforeUpdate?.Invoke(this);
@@ -2619,7 +2559,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Called every time this entity is focused / unfocused.
         /// </summary>
-        virtual protected void DoOnFocusChange()
+        protected virtual void DoOnFocusChange()
         {
             OnFocusChange?.Invoke(this);
             UserInterface.Active.OnFocusChange?.Invoke(this);
@@ -2631,13 +2571,13 @@ namespace Nez.GeonBit.UI.Entities
         /// <remarks>This function result is affected by the 'UseActualSizeForCollision' flag.</remarks>
         /// <param name="point">Point to test.</param>
         /// <returns>True if point is in entity's boundaries (destination rectangle)</returns>
-        virtual public bool IsInsideEntity(Vector2 point)
+        public virtual bool IsInsideEntity(Vector2 point)
         {
             // adjust scrolling
             point += _lastScrollVal.ToVector2();
 
             // get rectangle for the test
-            Rectangle rect = UseActualSizeForCollision ? GetActualDestRect() : _destRect;
+            var rect = UseActualSizeForCollision ? GetActualDestRect() : _destRect;
 
             // now test detection
             return (point.X >= rect.Left - ExtraMargin.X && point.X <= rect.Right + ExtraMargin.X &&
@@ -2650,28 +2590,22 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <remarks>This function should be overrided and implemented by different entities, and either return constant True or False.</remarks>
         /// <returns>True if entity is naturally interactable.</returns>
-        virtual public bool IsNaturallyInteractable()
-        {
-            return false;
-        }
+        public virtual bool IsNaturallyInteractable() => false;
 
         /// <summary>
         /// Return if the mouse is currently pressing on this entity (eg over it and left mouse button is down).
         /// </summary>
-        public bool IsMouseDown { get { return _entityState == EntityState.MouseDown; } }
+        public bool IsMouseDown => _entityState == EntityState.MouseDown;
 
         /// <summary>
         /// Return if the mouse is currently over this entity (regardless of whether or not mouse button is down).
         /// </summary>
-        public bool IsMouseOver { get { return _isMouseOver; } }
+        public bool IsMouseOver => _isMouseOver;
 
         /// <summary>
         /// Mark that this entity boundaries or style changed and it need to recalculate cached destination rect and other things.
         /// </summary>
-        public void MarkAsDirty()
-        {
-            _isDirty = true;
-        }
+        public void MarkAsDirty() => _isDirty = true;
 
         /// <summary>
         /// Remove the IsDirty flag.
@@ -2693,10 +2627,10 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="dragTargetEntity">The deepest child dragable entity with highest priority that we point on and can be drag if mouse down.</param>
         /// <param name="wasEventHandled">Set to true if current event was already handled by a deeper child.</param>
         /// <param name="scrollVal">Combined scrolling value (panels with scrollbar etc) of all parents.</param>
-        virtual protected void UpdateChildren(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
+        protected virtual void UpdateChildren(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
         {
             // update all children (note: we go in reverse order so that entities on front will receive events before entites on back.
-            List<Entity> childrenSorted = GetSortedChildren();
+            var childrenSorted = GetSortedChildren();
             for (int i = childrenSorted.Count - 1; i >= 0; i--)
             {
                 childrenSorted[i].Update(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
@@ -2710,7 +2644,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="dragTargetEntity">The deepest child dragable entity with highest priority that we point on and can be drag if mouse down.</param>
         /// <param name="wasEventHandled">Set to true if current event was already handled by a deeper child.</param>
         /// <param name="scrollVal">Combined scrolling value (panels with scrollbar etc) of all parents.</param>
-        virtual public void Update(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
+        public virtual void Update(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
         {
             // set last scroll var
             _lastScrollVal = scrollVal;
@@ -2733,7 +2667,7 @@ namespace Nez.GeonBit.UI.Entities
             }
 
             // get mouse position
-            Vector2 mousePos = GetMousePos();
+            var mousePos = GetMousePos();
 
             // add our own scroll value to the combined scroll val before updating children
             scrollVal += OverflowScrollVal;
@@ -2797,7 +2731,7 @@ namespace Nez.GeonBit.UI.Entities
             DoBeforeUpdate();
 
             // store previous state
-            EntityState prevState = _entityState;
+            var prevState = _entityState;
 
             // store previous mouse-over state
             bool prevMouseOver = _isMouseOver;
@@ -2989,7 +2923,7 @@ namespace Nez.GeonBit.UI.Entities
                 if (!_isBeingDragged && Input.MousePositionDiff.Length() != 0)
                 {
                     // remove self from parent and add again. this trick is to keep the dragged entity always on-top
-                    Entity parent = _parent;
+                    var parent = _parent;
                     RemoveFromParent();
                     parent.AddChild(this);
 

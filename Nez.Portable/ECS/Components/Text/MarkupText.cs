@@ -239,7 +239,9 @@ namespace Nez
                                         alignStack.Push(align);
                                     }
                                     else
+                                    {
                                         throw new InvalidOperationException("Invalid alignemnt: " + value);
+                                    }
                                 }
 
                                 break;

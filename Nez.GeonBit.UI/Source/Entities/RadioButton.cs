@@ -32,19 +32,16 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static RadioButton()
-        {
-            Entity.MakeSerializable(typeof(RadioButton));
-        }
+        static RadioButton() => Entity.MakeSerializable(typeof(RadioButton));
 
         /// <summary>Default radio buttons size in pixels.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 50f);
+        public static new Vector2 DefaultSize = new Vector2(0f, 50f);
 
         /// <summary>Default styling for the radio button itself. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>Default styling for radio button label. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultParagraphStyle = new StyleSheet();
+        public static new StyleSheet DefaultParagraphStyle = new StyleSheet();
 
         /// <summary>If set to true, clicking on an already checked radio button will uncheck if. If false (default), will do nothing.</summary>
         public bool CanUncheck = false;
@@ -78,10 +75,10 @@ namespace Nez.GeonBit.UI.Entities
         /// Helper function to get radio button texture based on state and current value.
         /// </summary>
         /// <returns>Which texture to use for the checkbox.</returns>
-        override protected Texture2D GetTexture()
+        protected override Texture2D GetTexture()
         {
-            EntityState state = _entityState;
-            if (state != EntityState.MouseDown && (bool)Checked) { state = EntityState.MouseDown; }
+            var state = _entityState;
+            if (state != EntityState.MouseDown && Checked) { state = EntityState.MouseDown; }
             return Resources.RadioTextures[state];
         }
 
@@ -89,7 +86,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Handle value change.
         /// RadioButton override this function to handle the task of unchecking siblings when selected.
         /// </summary>
-        override protected void DoOnValueChange()
+        protected override void DoOnValueChange()
         {
             // if not checked, do nothing
             if (!Checked)
@@ -100,7 +97,7 @@ namespace Nez.GeonBit.UI.Entities
             // disable all sibling radio buttons
             if (_parent != null)
             {
-                foreach (Entity entity in _parent.Children)
+                foreach (var entity in _parent.Children)
                 {
                     // skip self
                     if (entity == this)
@@ -111,7 +108,7 @@ namespace Nez.GeonBit.UI.Entities
                     // if entity is a radio button make sure its disabled
                     if (entity is RadioButton)
                     {
-                        RadioButton radio = (RadioButton)entity;
+                        var radio = (RadioButton)entity;
                         if (radio.Checked) { radio.Checked = false; }
                     }
                 }
@@ -125,7 +122,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Handle mouse click event. 
         /// Radio buttons entity override this function to handle value toggle.
         /// </summary>
-        override protected void DoOnClick()
+        protected override void DoOnClick()
         {
             // call base handler
             base.DoOnClick();

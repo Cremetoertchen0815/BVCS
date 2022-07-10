@@ -19,22 +19,16 @@ using System.Collections.ObjectModel;
 
 namespace Nez.ExtendedContent.GeonBit.Graphics
 {
-    public class DynamicIndexBufferContent: Collection<int>
+    public class DynamicIndexBufferContent : Collection<int>
     {
         protected internal Collection<int> Source { get; protected set; }
 
         public bool IsWriteOnly = false;
-                
-        new public int Count { get { return Source.Count; } }
-        
-        public DynamicIndexBufferContent(Collection<int> source)
-        {
-            Source = source;
-        }
 
-        public new IEnumerator<int> GetEnumerator()
-        {
-            return Source.GetEnumerator();
-        }       
+        public new int Count => Source.Count;
+
+        public DynamicIndexBufferContent(Collection<int> source) => Source = source;
+
+        public new IEnumerator<int> GetEnumerator() => Source.GetEnumerator();
     }
 }

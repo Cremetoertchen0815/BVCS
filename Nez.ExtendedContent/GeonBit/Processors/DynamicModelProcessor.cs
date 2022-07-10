@@ -28,32 +28,33 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
     [ContentProcessor(DisplayName = "DynamicModel - GeonBit")]
     public class DynamicModelProcessor : ModelProcessor, IContentProcessor
     {
-        DynamicModelContent.BufferType _vertexBufferType = DynamicModelContent.BufferType.Dynamic;
-        DynamicModelContent.BufferType _indexBufferType = DynamicModelContent.BufferType.Dynamic;
+        private DynamicModelContent.BufferType _vertexBufferType = DynamicModelContent.BufferType.Dynamic;
+        private DynamicModelContent.BufferType _indexBufferType = DynamicModelContent.BufferType.Dynamic;
 
         // used to avoid creating clones/duplicates of the same VertexBufferContent
-        Dictionary<VertexBufferContent, DynamicVertexBufferContent> _vertexBufferCache = new Dictionary<VertexBufferContent, DynamicVertexBufferContent>();
+        private Dictionary<VertexBufferContent, DynamicVertexBufferContent> _vertexBufferCache = new Dictionary<VertexBufferContent, DynamicVertexBufferContent>();
+
         // used to avoid creating clones/duplicates of the same Index Buffer
-        Dictionary<Collection<int>, DynamicIndexBufferContent> _indexBufferCache = new Dictionary<Collection<int>, DynamicIndexBufferContent>();
+        private Dictionary<Collection<int>, DynamicIndexBufferContent> _indexBufferCache = new Dictionary<Collection<int>, DynamicIndexBufferContent>();
 
 #if WINDOWS
         // override OutputType
         [Browsable(false)]
 #endif
-        Type IContentProcessor.OutputType { get { return typeof(DynamicModelContent); } }
-        
+        Type IContentProcessor.OutputType => typeof(DynamicModelContent);
+
         [DefaultValue(DynamicModelContent.BufferType.Dynamic)]
         public virtual DynamicModelContent.BufferType VertexBufferType
         {
-            get { return  _vertexBufferType; }
-            set { _vertexBufferType = value; }
+            get => _vertexBufferType;
+            set => _vertexBufferType = value;
         }
-        
+
         [DefaultValue(DynamicModelContent.BufferType.Dynamic)]
         public virtual DynamicModelContent.BufferType IndexBufferType
         {
-            get { return  _indexBufferType; }
-            set { _indexBufferType = value; }
+            get => _indexBufferType;
+            set => _indexBufferType = value;
         }
 
         public DynamicModelProcessor()
@@ -64,10 +65,10 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
         {
             var model = Process((NodeContent)input, context);
             var dynamicModel = new DynamicModelContent(model);
-            
-            foreach(var mesh in dynamicModel.Meshes)
+
+            foreach (var mesh in dynamicModel.Meshes)
             {
-                foreach(var part in mesh.MeshParts)
+                foreach (var part in mesh.MeshParts)
                 {
                     ProcessVertexBuffer(dynamicModel, context, part);
                     ProcessIndexBuffer(dynamicModel, context, part);
@@ -79,14 +80,15 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
 
         protected virtual void ProcessVertexBuffer(DynamicModelContent dynamicModel, ContentProcessorContext context, DynamicModelMeshPartContent part)
         {
-            if(VertexBufferType != DynamicModelContent.BufferType.Default)
+            if (VertexBufferType != DynamicModelContent.BufferType.Default)
             {
                 // Replace the default VertexBufferContent with CpuAnimatedVertexBufferContent.
-                DynamicVertexBufferContent vb;
-                if (!_vertexBufferCache.TryGetValue(part.VertexBuffer, out vb))
+                if (!_vertexBufferCache.TryGetValue(part.VertexBuffer, out var vb))
                 {
-                    vb = new DynamicVertexBufferContent(part.VertexBuffer);
-                    vb.IsWriteOnly = (VertexBufferType == DynamicModelContent.BufferType.DynamicWriteOnly);
+                    vb = new DynamicVertexBufferContent(part.VertexBuffer)
+                    {
+                        IsWriteOnly = (VertexBufferType == DynamicModelContent.BufferType.DynamicWriteOnly)
+                    };
                     _vertexBufferCache[part.VertexBuffer] = vb;
                 }
                 part.VertexBuffer = vb;
@@ -95,20 +97,21 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
 
         protected virtual void ProcessIndexBuffer(DynamicModelContent dynamicModel, ContentProcessorContext context, DynamicModelMeshPartContent part)
         {
-            if(IndexBufferType != DynamicModelContent.BufferType.Default)
+            if (IndexBufferType != DynamicModelContent.BufferType.Default)
             {
-                DynamicIndexBufferContent ib;
-                if (!_indexBufferCache.TryGetValue(part.IndexBuffer, out ib))
+                if (!_indexBufferCache.TryGetValue(part.IndexBuffer, out var ib))
                 {
-                    ib = new DynamicIndexBufferContent(part.IndexBuffer);
-                    ib.IsWriteOnly = (IndexBufferType == DynamicModelContent.BufferType.DynamicWriteOnly);
+                    ib = new DynamicIndexBufferContent(part.IndexBuffer)
+                    {
+                        IsWriteOnly = (IndexBufferType == DynamicModelContent.BufferType.DynamicWriteOnly)
+                    };
                     _indexBufferCache[part.IndexBuffer] = ib;
                 }
                 part.IndexBuffer = ib;
             }
         }
-        
-        
-        
+
+
+
     }
 }

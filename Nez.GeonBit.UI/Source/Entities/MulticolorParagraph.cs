@@ -7,11 +7,9 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.ExtendedContent.DataTypes;
-using System.Text;
+using System.Collections.Generic;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -53,10 +51,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="key">Color key to use this color.</param>
         /// <param name="color">Color to set.</param>
-        public static void AddCustomColor(string key, Color color)
-        {
-            _colors[key] = color;
-        }
+        public static void AddCustomColor(string key, Color color) => _colors[key] = color;
 
         /// <summary>Constructor to use when creating a color instruction.</summary>
         /// <param name="sColor">The string representation of the color to use for rendering.</param>
@@ -83,8 +78,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <returns>The actual color object or White as the fallback default.</returns>
         public Color StringToColor(string sColor)
         {
-            Color outColor;
-            if (!_colors.TryGetValue(sColor, out outColor))
+            if (!_colors.TryGetValue(sColor, out var outColor))
             {
                 if (UserInterface.Active.SilentSoftErrors) return Color.White;
                 throw new Exceptions.InvalidValueException("Unknown color code '" + sColor + "'.");
@@ -93,16 +87,10 @@ namespace Nez.GeonBit.UI.Entities
         }
 
         /// <summary>Flag represents whether or not to use the default FillColor for this instruction.</summary>
-        public bool UseFillColor
-        {
-            get { return _useFillColor; }
-        }
+        public bool UseFillColor => _useFillColor;
 
         /// <summary>If UseFillColor is false the color here is used for the instruction.</summary>
-        public Color Color
-        {
-            get { return _color; }
-        }
+        public Color Color => _color;
     }
 
     /// <summary>
@@ -114,16 +102,13 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static MulticolorParagraph()
-        {
-            Entity.MakeSerializable(typeof(MulticolorParagraph));
-        }
+        static MulticolorParagraph() => Entity.MakeSerializable(typeof(MulticolorParagraph));
 
         /// <summary>Default styling for paragraphs. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         // are color instructions currently enabled
-        bool _enableColorInstructions = true;
+        private bool _enableColorInstructions = true;
 
         /// <summary>
         /// If true, will enable color instructions (special codes that change fill color inside the text).
@@ -131,10 +116,7 @@ namespace Nez.GeonBit.UI.Entities
         public bool EnableColorInstructions
         {
             // get if color instructions are enabled
-            get
-            {
-                return _enableColorInstructions;
-            }
+            get => _enableColorInstructions;
 
             // set if color instructions are enabled and parse instructions if needed
             set
@@ -147,7 +129,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>Get / Set the paragraph text.</summary>
         public override string Text
         {
-            get { return _text; }
+            get => _text;
             set
             {
                 if (_text != value)
@@ -163,7 +145,7 @@ namespace Nez.GeonBit.UI.Entities
         private bool _needUpdateColors = true;
 
         // color-changing instructions in current paragraph. key is char index, value is color change command.
-        Dictionary<int, ColorInstruction> _colorInstructions = new Dictionary<int, ColorInstruction>();
+        private Dictionary<int, ColorInstruction> _colorInstructions = new Dictionary<int, ColorInstruction>();
 
         /// <summary>
         /// Create the paragraph.
@@ -202,14 +184,14 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected override void InitAfterDeserialize()
+        protected internal override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
             _needUpdateColors = true;
         }
 
         // regex to find color instructions
-        static System.Text.RegularExpressions.Regex colorInstructionsRegex = new System.Text.RegularExpressions.Regex("{{[^{}]*}}");
+        private static System.Text.RegularExpressions.Regex colorInstructionsRegex = new System.Text.RegularExpressions.Regex("{{[^{}]*}}");
 
         /// <summary>
         /// Parse special color-changing instructions inside the text.
@@ -227,7 +209,7 @@ namespace Nez.GeonBit.UI.Entities
             {
                 int iLastLength = 0;
 
-                System.Text.RegularExpressions.MatchCollection oMatches = colorInstructionsRegex.Matches(_text);
+                var oMatches = colorInstructionsRegex.Matches(_text);
                 foreach (System.Text.RegularExpressions.Match oMatch in oMatches)
                 {
                     string sColor = oMatch.Value.Substring(2, oMatch.Value.Length - 4);
@@ -247,7 +229,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Draw entity outline. Note: in paragraph its a special case and we implement it inside the DrawEntity function.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        override protected void DrawEntityOutline(SpriteBatch spriteBatch)
+        protected override void DrawEntityOutline(SpriteBatch spriteBatch)
         {
         }
 
@@ -256,7 +238,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // update processed text if needed
             if (_needUpdateColors)
@@ -272,7 +254,7 @@ namespace Nez.GeonBit.UI.Entities
             if (outlineWidth > 0)
             {
                 // get outline color
-                Color outlineColor = UserInterface.Active.DrawUtils.FixColorOpacity(OutlineColor);
+                var outlineColor = UserInterface.Active.DrawUtils.FixColorOpacity(OutlineColor);
 
                 // for not-too-thick outline we render just two corners
                 if (outlineWidth <= MaxOutlineWidthToOptimize)
@@ -300,13 +282,12 @@ namespace Nez.GeonBit.UI.Entities
             if (_colorInstructions.Count > 0)
             {
                 int iTextIndex = 0;
-                Color oColor = FillColor;
-                Vector2 oCharacterSize = GetCharacterActualSize();
-                Vector2 oCurrentPosition = new Vector2(_position.X - oCharacterSize.X, _position.Y);
+                var oColor = FillColor;
+                var oCharacterSize = GetCharacterActualSize();
+                var oCurrentPosition = new Vector2(_position.X - oCharacterSize.X, _position.Y);
                 foreach (char cCharacter in _processedText)
                 {
-                    ColorInstruction colorInstruction;
-                    if (_colorInstructions.TryGetValue(iTextIndex, out colorInstruction))
+                    if (_colorInstructions.TryGetValue(iTextIndex, out var colorInstruction))
                     {
                         if (colorInstruction.UseFillColor)
                         {
@@ -330,7 +311,7 @@ namespace Nez.GeonBit.UI.Entities
                     }
 
                     // fix color opacity and draw
-                    Color fillCol = UserInterface.Active.DrawUtils.FixColorOpacity(oColor);
+                    var fillCol = UserInterface.Active.DrawUtils.FixColorOpacity(oColor);
                     spriteBatch.DrawString(_currFont, cCharacter.ToString(), oCurrentPosition, fillCol, 0, _fontOrigin, _actualScale, SpriteEffects.None, 0.5f);
                 }
             }

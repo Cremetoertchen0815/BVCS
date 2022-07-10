@@ -31,7 +31,7 @@ using System.ComponentModel;
 namespace Nez.ExtendedContent.GeonBit.Processors
 {
     [ContentProcessor(DisplayName = "Animation - GeonBit")]
-    class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsContent>
+    internal class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsContent>
     {
         private int _maxBones = SkinnedEffect.MaxBones;
         private int _generateKeyframesFrequency = 0;
@@ -43,8 +43,8 @@ namespace Nez.ExtendedContent.GeonBit.Processors
         [DefaultValue(SkinnedEffect.MaxBones)]
         public virtual int MaxBones
         {
-            get { return _maxBones; }
-            set { _maxBones = value; }
+            get => _maxBones;
+            set => _maxBones = value;
         }
 
 #if !PORTABLE
@@ -53,8 +53,8 @@ namespace Nez.ExtendedContent.GeonBit.Processors
         [DefaultValue(0)] // (0=no, 30=30fps, 60=60fps)
         public virtual int GenerateKeyframesFrequency
         {
-            get { return _generateKeyframesFrequency; }
-            set { _generateKeyframesFrequency = value; }
+            get => _generateKeyframesFrequency;
+            set => _generateKeyframesFrequency = value;
         }
 
 #if !PORTABLE
@@ -63,19 +63,19 @@ namespace Nez.ExtendedContent.GeonBit.Processors
         [DefaultValue(false)]
         public virtual bool FixRealBoneRoot
         {
-            get { return _fixRealBoneRoot; }
-            set { _fixRealBoneRoot = value; }
+            get => _fixRealBoneRoot;
+            set => _fixRealBoneRoot = value;
         }
 
         public override AnimationsContent Process(NodeContent input, ContentProcessorContext context)
         {
-            if(_fixRealBoneRoot)
+            if (_fixRealBoneRoot)
                 MGFixRealBoneRoot(input, context);
 
             ValidateMesh(input, context, null);
 
             // Find the skeleton.
-            BoneContent skeleton = MeshHelper.FindSkeleton(input);
+            var skeleton = MeshHelper.FindSkeleton(input);
 
             if (skeleton == null)
                 throw new InvalidContentException("Input skeleton not found.");
@@ -85,19 +85,19 @@ namespace Nez.ExtendedContent.GeonBit.Processors
             FlattenTransforms(input, skeleton);
 
             // Read the bind pose and skeleton hierarchy data.
-            IList<BoneContent> bones = MeshHelper.FlattenSkeleton(skeleton);
+            var bones = MeshHelper.FlattenSkeleton(skeleton);
 
             if (bones.Count > MaxBones)
             {
                 throw new InvalidContentException(string.Format("Skeleton has {0} bones, but the maximum supported is {1}.", bones.Count, MaxBones));
             }
 
-            List<Matrix> bindPose = new List<Matrix>();
-            List<Matrix> invBindPose = new List<Matrix>();
-            List<int> skeletonHierarchy = new List<int>();
-            List<string> boneNames = new List<string>();
+            var bindPose = new List<Matrix>();
+            var invBindPose = new List<Matrix>();
+            var skeletonHierarchy = new List<int>();
+            var boneNames = new List<string>();
 
-            foreach(var bone in bones)
+            foreach (var bone in bones)
             {
                 bindPose.Add(bone.Transform);
                 invBindPose.Add(Matrix.Invert(bone.AbsoluteTransform));
@@ -111,7 +111,7 @@ namespace Nez.ExtendedContent.GeonBit.Processors
 
             return new AnimationsContent(bindPose, invBindPose, skeletonHierarchy, boneNames, clips);
         }
-        
+
         /// <summary>
         /// MonoGame converts some NodeContent into BoneContent.
         /// Here we revert that to get the original Skeleton and  
@@ -124,7 +124,7 @@ namespace Nez.ExtendedContent.GeonBit.Processors
                 var node = input.Children[i];
                 if (node is BoneContent &&
                     node.AbsoluteTransform == Matrix.Identity &&
-                    node.Children.Count ==1 &&
+                    node.Children.Count == 1 &&
                     node.Children[0] is BoneContent &&
                     node.Children[0].AbsoluteTransform == Matrix.Identity
                     )
@@ -140,7 +140,7 @@ namespace Nez.ExtendedContent.GeonBit.Processors
                     {
                         Name = node.Name,
                         Identity = node.Identity,
-                        Transform = node.Transform,                        
+                        Transform = node.Transform,
                     };
                     foreach (var animation in node.Animations)
                         input.Children[i].Animations.Add(animation.Key, animation.Value);
@@ -157,9 +157,9 @@ namespace Nez.ExtendedContent.GeonBit.Processors
         /// <summary>
         /// Makes sure this mesh contains the kind of data we know how to animate.
         /// </summary>
-        void ValidateMesh(NodeContent node, ContentProcessorContext context, string parentBoneName)
+        private void ValidateMesh(NodeContent node, ContentProcessorContext context, string parentBoneName)
         {
-            MeshContent mesh = node as MeshContent;
+            var mesh = node as MeshContent;
             if (mesh != null)
             {
                 // Validate the mesh.
@@ -189,32 +189,34 @@ namespace Nez.ExtendedContent.GeonBit.Processors
 
             // Recurse (iterating over a copy of the child collection,
             // because validating children may delete some of them).
-            foreach (NodeContent child in new List<NodeContent>(node.Children))
+            foreach (var child in new List<NodeContent>(node.Children))
                 ValidateMesh(child, context, parentBoneName);
         }
-        
+
         /// <summary>
         /// Checks whether a mesh contains skininng information.
         /// </summary>
-        bool MeshHasSkinning(MeshContent mesh)
+        private bool MeshHasSkinning(MeshContent mesh)
         {
-            foreach (GeometryContent geometry in mesh.Geometry)
+            foreach (var geometry in mesh.Geometry)
             {
                 if (!geometry.Vertices.Channels.Contains(VertexChannelNames.Weights()) &&
                     !geometry.Vertices.Channels.Contains("BlendWeight0"))
+                {
                     return false;
+                }
             }
 
             return true;
         }
-        
+
         /// <summary>
         /// Bakes unwanted transforms into the model geometry,
         /// so everything ends up in the same coordinate system.
         /// </summary>
-        void FlattenTransforms(NodeContent node, BoneContent skeleton)
+        private void FlattenTransforms(NodeContent node, BoneContent skeleton)
         {
-            foreach (NodeContent child in node.Children)
+            foreach (var child in node.Children)
             {
                 // Don't process the skeleton, because that is special.
                 if (child == skeleton)
@@ -231,15 +233,15 @@ namespace Nez.ExtendedContent.GeonBit.Processors
                 FlattenTransforms(child, skeleton);
             }
         }
-        
+
         /// <summary>
         /// Converts an intermediate format content pipeline AnimationContentDictionary
         /// object to our runtime AnimationClip format.
         /// </summary>
-        Dictionary<string, ClipContent> ProcessAnimations(NodeContent input, ContentProcessorContext context, AnimationContentDictionary animations, IList<BoneContent> bones, int generateKeyframesFrequency)
+        private Dictionary<string, ClipContent> ProcessAnimations(NodeContent input, ContentProcessorContext context, AnimationContentDictionary animations, IList<BoneContent> bones, int generateKeyframesFrequency)
         {
             // Build up a table mapping bone names to indices.
-            Dictionary<string, int> boneMap = new Dictionary<string, int>();
+            var boneMap = new Dictionary<string, int>();
 
             for (int i = 0; i < bones.Count; i++)
             {
@@ -253,9 +255,9 @@ namespace Nez.ExtendedContent.GeonBit.Processors
             Dictionary<string, ClipContent> animationClips;
             animationClips = new Dictionary<string, ClipContent>();
 
-            foreach (KeyValuePair<string, AnimationContent> animation in animations)
+            foreach (var animation in animations)
             {
-                ClipContent clip = ProcessAnimation(input, context, animation.Value, boneMap, generateKeyframesFrequency);
+                var clip = ProcessAnimation(input, context, animation.Value, boneMap, generateKeyframesFrequency);
 
                 animationClips.Add(animation.Key, clip);
             }
@@ -268,23 +270,22 @@ namespace Nez.ExtendedContent.GeonBit.Processors
 
             return animationClips;
         }
-        
+
         /// <summary>
         /// Converts an intermediate format content pipeline AnimationContent
         /// object to our runtime AnimationClip format.
         /// </summary>
-        ClipContent ProcessAnimation(NodeContent input, ContentProcessorContext context, AnimationContent animation, Dictionary<string, int> boneMap, int generateKeyframesFrequency)
+        private ClipContent ProcessAnimation(NodeContent input, ContentProcessorContext context, AnimationContent animation, Dictionary<string, int> boneMap, int generateKeyframesFrequency)
         {
-            List<KeyframeContent> keyframes = new List<KeyframeContent>();
+            var keyframes = new List<KeyframeContent>();
 
             // For each input animation channel.
-            foreach (KeyValuePair<string, AnimationChannel> channel in
+            foreach (var channel in
                 animation.Channels)
             {
                 // Look up what bone this channel is controlling.
-                int boneIndex;
 
-                if (!boneMap.TryGetValue(channel.Key, out boneIndex))
+                if (!boneMap.TryGetValue(channel.Key, out int boneIndex))
                 {
                     //throw new InvalidContentException(string.Format("Found animation for bone '{0}', which is not part of the skeleton.", channel.Key));
                     context.Logger.LogWarning(null, null, "Found animation for bone '{0}', which is not part of the skeleton.", channel.Key);
@@ -292,7 +293,7 @@ namespace Nez.ExtendedContent.GeonBit.Processors
                     continue;
                 }
 
-                foreach (AnimationKeyframe keyframe in channel.Value)
+                foreach (var keyframe in channel.Value)
                     keyframes.Add(new KeyframeContent(boneIndex, keyframe.Time, keyframe.Transform));
             }
 
@@ -312,7 +313,7 @@ namespace Nez.ExtendedContent.GeonBit.Processors
             return new ClipContent(animation.Duration, keyframes.ToArray());
         }
 
-        int CompareKeyframeTimes(KeyframeContent a, KeyframeContent b)
+        private int CompareKeyframeTimes(KeyframeContent a, KeyframeContent b)
         {
             int cmpTime = a.Time.CompareTo(b.Time);
             if (cmpTime == 0)
@@ -329,7 +330,7 @@ namespace Nez.ExtendedContent.GeonBit.Processors
             int keyframeCount = keyframes.Count;
 
             // find bones
-            HashSet<int> bonesSet = new HashSet<int>();
+            var bonesSet = new HashSet<int>();
             int maxBone = 0;
             for (int i = 0; i < keyframeCount; i++)
             {
@@ -340,7 +341,7 @@ namespace Nez.ExtendedContent.GeonBit.Processors
             int boneCount = bonesSet.Count;
 
             // split bones 
-            List<KeyframeContent>[] boneFrames = new List<KeyframeContent>[maxBone + 1];
+            var boneFrames = new List<KeyframeContent>[maxBone + 1];
             for (int i = 0; i < keyframeCount; i++)
             {
                 int bone = keyframes[i].Bone;
@@ -354,16 +355,16 @@ namespace Nez.ExtendedContent.GeonBit.Processors
 
             for (int b = 0; b < boneFrames.Length; b++)
             {
-                TimeSpan keySpan = TimeSpan.FromTicks((long)((1f / generateKeyframesFrequency) * TimeSpan.TicksPerSecond));
+                var keySpan = TimeSpan.FromTicks((long)((1f / generateKeyframesFrequency) * TimeSpan.TicksPerSecond));
                 boneFrames[b] = InterpolateFramesBone(b, boneFrames[b], keySpan);
             }
 
             int frames = keyframeCount / boneCount;
 
-            TimeSpan checkDuration = TimeSpan.FromSeconds((frames - 1) / generateKeyframesFrequency);
+            var checkDuration = TimeSpan.FromSeconds((frames - 1) / generateKeyframesFrequency);
             if (duration == checkDuration) return keyframes;
 
-            List<KeyframeContent> newKeyframes = new List<KeyframeContent>();
+            var newKeyframes = new List<KeyframeContent>();
             for (int b = 0; b < boneFrames.Length; b++)
             {
                 for (int k = 0; k < boneFrames[b].Count; ++k)
@@ -404,25 +405,21 @@ namespace Nez.ExtendedContent.GeonBit.Processors
             var diff = frames[b].Time - frames[a].Time;
             if (diff > keySpan)
             {
-                TimeSpan newTime = frames[a].Time + keySpan;
+                var newTime = frames[a].Time + keySpan;
                 float amount = (float)(keySpan.TotalSeconds / diff.TotalSeconds);
 
-                Vector3 pScale; Quaternion pRotation; Vector3 pTranslation;
-                frames[a].Transform.Decompose(out pScale, out pRotation, out pTranslation);
+                frames[a].Transform.Decompose(out var pScale, out var pRotation, out var pTranslation);
 
-                Vector3 iScale; Quaternion iRotation; Vector3 iTranslation;
-                frames[b].Transform.Decompose(out iScale, out iRotation, out iTranslation);
+                frames[b].Transform.Decompose(out var iScale, out var iRotation, out var iTranslation);
 
-                Vector3 Scale; Quaternion Rotation; Vector3 Translation;
                 //lerp
-                Vector3.Lerp(ref pScale, ref iScale, amount, out Scale);
-                Quaternion.Lerp(ref pRotation, ref iRotation, amount, out Rotation);
-                Vector3.Lerp(ref pTranslation, ref iTranslation, amount, out Translation);
+                Vector3.Lerp(ref pScale, ref iScale, amount, out var Scale);
+                Quaternion.Lerp(ref pRotation, ref iRotation, amount, out var Rotation);
+                Vector3.Lerp(ref pTranslation, ref iTranslation, amount, out var Translation);
 
-                Matrix rotation;
-                Matrix.CreateFromQuaternion(ref Rotation, out rotation);
+                Matrix.CreateFromQuaternion(ref Rotation, out var rotation);
 
-                Matrix newMatrix = new Matrix
+                var newMatrix = new Matrix
                 {
                     M11 = Scale.X * rotation.M11,
                     M12 = Scale.X * rotation.M12,
@@ -446,6 +443,6 @@ namespace Nez.ExtendedContent.GeonBit.Processors
             }
             return;
         }
-        
+
     }
 }

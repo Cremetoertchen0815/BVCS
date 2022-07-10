@@ -30,7 +30,7 @@ using System.Collections.Generic;
 namespace Nez.ExtendedContent.GeonBit.Serialization
 {
     [ContentTypeWriter]
-    class ClipWriter : ContentTypeWriter<ClipContent>
+    internal class ClipWriter : ContentTypeWriter<ClipContent>
     {
         protected override void Write(ContentWriter output, ClipContent value)
         {
@@ -38,19 +38,16 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
             WriteKeyframes(output, value.Keyframes);
         }
 
-        private void WriteDuration(ContentWriter output, TimeSpan duration)
-        {
-            output.Write(duration.Ticks);
-        }
+        private void WriteDuration(ContentWriter output, TimeSpan duration) => output.Write(duration.Ticks);
 
         private void WriteKeyframes(ContentWriter output, IList<KeyframeContent> keyframes)
         {
-            Int32 count = keyframes.Count;
-            output.Write((Int32)count);
+            int count = keyframes.Count;
+            output.Write(count);
 
             for (int i = 0; i < count; i++)
             {
-                KeyframeContent keyframe = keyframes[i];
+                var keyframe = keyframes[i];
                 output.Write(keyframe.Bone);
                 output.Write(keyframe.Time.Ticks);
                 output.Write(keyframe.Transform.M11);
@@ -70,17 +67,11 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
             return;
         }
 
-        public override string GetRuntimeType(TargetPlatform targetPlatform)
-        {
-            return "GeonBit.Extend.Animation.Clip, " +
+        public override string GetRuntimeType(TargetPlatform targetPlatform) => "GeonBit.Extend.Animation.Clip, " +
                 typeof(Clip).Assembly.FullName;
-        }
 
-        public override string GetRuntimeReader(TargetPlatform targetPlatform)
-        {
-            return "GeonBit.Extend.Animation.Content.ClipReader, " +
+        public override string GetRuntimeReader(TargetPlatform targetPlatform) => "GeonBit.Extend.Animation.Content.ClipReader, " +
                 typeof(ClipReader).Assembly.FullName;
-        }
     }
-    
+
 }

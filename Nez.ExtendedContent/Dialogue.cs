@@ -21,10 +21,10 @@ namespace Nez.ExtendedContent
     }
 
     [ContentImporter(".msgdb", CacheImportedData = false, DefaultProcessor = "MessageDBProcessor", DisplayName = "MessageDB Importer")]
-	public class MessageDBImporter : ContentImporter<List<(List<Message>, string)>>
-	{
-		public override List<(List<Message>, string)> Import(string filename, ContentImporterContext context)
-		{
+    public class MessageDBImporter : ContentImporter<List<(List<Message>, string)>>
+    {
+        public override List<(List<Message>, string)> Import(string filename, ContentImporterContext context)
+        {
             //Open file stream and binary reader
             var ret = new List<(List<Message>, string)>();
             using (var st = File.OpenRead(filename))
@@ -35,30 +35,32 @@ namespace Nez.ExtendedContent
                     if (br.ReadString() != "BeaconMsgDB") throw new Exception("Invalid database file!");
                     if (br.ReadString() != Message.cVersion) throw new Exception("Incorrect version! (Importer version:" + Message.cVersion + ")");
                     //List sets
-                    var cntA = br.ReadInt32();
+                    int cntA = br.ReadInt32();
                     for (int i = 0; i < cntA; i++)
                     {
                         //Load basic data/list actors
                         var elA = new List<Message>();
-                        var name = br.ReadString();
-                        var cntB = br.ReadInt32();
+                        string name = br.ReadString();
+                        int cntB = br.ReadInt32();
                         for (int j = 0; j < cntB; j++) br.ReadString(); //Read actor data, tho it's irrelevant to the game
 
                         //List messages
-                        var cntC = br.ReadInt32();
+                        int cntC = br.ReadInt32();
                         for (int j = 0; j < cntC; j++)
                         {
-                            var elC = new Message();
-                            elC.Text = br.ReadString(); //Read text
-                            elC.Speaker = br.ReadBoolean() ? (br.ReadString(), br.ReadString()) : ("missingno", "default"); //Read speaker
+                            var elC = new Message
+                            {
+                                Text = br.ReadString(), //Read text
+                                Speaker = br.ReadBoolean() ? (br.ReadString(), br.ReadString()) : ("missingno", "default") //Read speaker
+                            };
 
                             //Read sections formats
-                            var cntD = br.ReadInt32();
+                            int cntD = br.ReadInt32();
                             var elD = new List<(bool Bold, float Speed, Color Color)>();
                             for (int k = 0; k < cntD; k++) elD.Add((br.ReadBoolean(), br.ReadSingle(), new Color(br.ReadByte(), br.ReadByte(), br.ReadByte())));
                             elC.SectionFormatting = elD.ToArray();
                             //Read answers
-                            var cntE = br.ReadInt32();
+                            int cntE = br.ReadInt32();
                             var elE = new List<(string, string, string, string)>();
                             for (int k = 0; k < cntE; k++) elE.Add((br.ReadString(), br.ReadString(), br.ReadString(), br.ReadString()));
                             elC.Answers = elE.ToArray();

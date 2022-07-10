@@ -9,13 +9,13 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Nez.GeonBit.UI.Utils;
+using System.Collections.Generic;
 
 namespace Nez.GeonBit.UI.Entities
 {
     // data we attach to paragraphs that are part of this selection list
-    struct ParagraphData
+    internal struct ParagraphData
     {
         public SelectList list;
         public int relativeIndex;
@@ -35,26 +35,23 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static SelectList()
-        {
-            Entity.MakeSerializable(typeof(SelectList));
-        }
+        static SelectList() => Entity.MakeSerializable(typeof(SelectList));
 
         // current selected value and index
-        string _value = null;
-        int _index = -1;
+        private string _value = null;
+        private int _index = -1;
 
         // store list last known internal size, so we'll know if size changed and we need to re-create the list
-        Point _prevSize = Point.Zero;
+        private Point _prevSize = Point.Zero;
 
         // list of paragraphs used to show the values
-        List<Paragraph> _paragraphs = new List<Paragraph>();
+        private List<Paragraph> _paragraphs = new List<Paragraph>();
 
         // scrollbar to scroll through the list
-        VerticalScrollbar _scrollbar;
+        private VerticalScrollbar _scrollbar;
 
         // indicate that we had a resize event while not being visible
-        bool _hadResizeWhileNotVisible = false;
+        private bool _hadResizeWhileNotVisible = false;
 
         /// <summary>Extra space (in pixels) between items on Y axis.</summary>
         public int ExtraSpaceBetweenLines = 0;
@@ -86,7 +83,7 @@ namespace Nez.GeonBit.UI.Entities
         public static StyleSheet DefaultParagraphStyle = new StyleSheet();
 
         /// <summary>Default styling for the select list itself. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>
         /// Optional dictionary of list indexes you want to lock.
@@ -95,15 +92,15 @@ namespace Nez.GeonBit.UI.Entities
         public SerializableDictionary<int, bool> LockedItems = new SerializableDictionary<int, bool>();
 
         // list of values
-        List<string> _list = new List<string>();
+        private List<string> _list = new List<string>();
 
         /// <summary>
         /// Get / set all items.
         /// </summary>
         public string[] Items
         {
-            get { return _list.ToArray(); }
-            set { _list.Clear(); _list.AddRange(value);  OnListChanged(); }
+            get => _list.ToArray();
+            set { _list.Clear(); _list.AddRange(value); OnListChanged(); }
         }
 
         /// <summary>
@@ -118,7 +115,7 @@ namespace Nez.GeonBit.UI.Entities
         public int MaxItems = 0;
 
         /// <summary>Default select list size in pixels.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 220f);
+        public static new Vector2 DefaultSize = new Vector2(0f, 220f);
 
         /// <summary>
         /// Create the select list.
@@ -134,10 +131,12 @@ namespace Nez.GeonBit.UI.Entities
             UpdateStyle(DefaultStyle);
 
             // create the scrollbar
-            _scrollbar = new VerticalScrollbar(0, 10, Anchor.CenterRight, offset: new Vector2(-8, 0));
-            _scrollbar.Value = 0;
-            _scrollbar.Visible = false;
-            _scrollbar._hiddenInternalEntity = true;
+            _scrollbar = new VerticalScrollbar(0, 10, Anchor.CenterRight, offset: new Vector2(-8, 0))
+            {
+                Value = 0,
+                Visible = false,
+                _hiddenInternalEntity = true
+            };
             AddChild(_scrollbar, false);
         }
 
@@ -154,7 +153,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected override void InitAfterDeserialize()
+        protected internal override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
             _scrollbar._hiddenInternalEntity = true;
@@ -163,7 +162,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Create emprt select list with default params.
         /// </summary>
-        public SelectList() : this (Anchor.Auto)
+        public SelectList() : this(Anchor.Auto)
         {
         }
 
@@ -245,27 +244,18 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// How many items currently in the list.
         /// </summary>
-        public int Count
-        {
-            get { return _list.Count; }
-        }
+        public int Count => _list.Count;
 
         /// <summary>
         /// Is the list currently empty.
         /// </summary>
-        public bool Empty
-        {
-            get { return _list.Count == 0; }
-        }
+        public bool Empty => _list.Count == 0;
 
         /// <summary>
         /// Is the list a natrually-interactable entity.
         /// </summary>
         /// <returns>True.</returns>
-        override public bool IsNaturallyInteractable()
-        {
-            return true;
-        }
+        public override bool IsNaturallyInteractable() => true;
 
         /// <summary>
         /// Calculate the height of the select list to match the height of all the items in it.
@@ -274,7 +264,7 @@ namespace Nez.GeonBit.UI.Entities
         {
             if (_list.Count == 0) return;
             if (_paragraphs.Count == 0) OnResize();
-            var height = _list.Count * (_paragraphs[0].GetCharacterActualSize().Y / GlobalScale + _paragraphs[0].SpaceAfter.Y) + Padding.Y * 2;
+            float height = _list.Count * (_paragraphs[0].GetCharacterActualSize().Y / GlobalScale + _paragraphs[0].SpaceAfter.Y) + Padding.Y * 2;
             Size = new Vector2(Size.X, height);
         }
 
@@ -313,7 +303,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Called every frame before drawing is done.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw on.</param>
-        override protected void OnBeforeDraw(SpriteBatch spriteBatch)
+        protected override void OnBeforeDraw(SpriteBatch spriteBatch)
         {
             base.OnBeforeDraw(spriteBatch);
             if (_hadResizeWhileNotVisible)
@@ -351,7 +341,7 @@ namespace Nez.GeonBit.UI.Entities
             while (true)
             {
                 // create and add new paragraph
-                Paragraph paragraph = UserInterface.DefaultParagraph(".", Anchor.Auto);
+                var paragraph = UserInterface.DefaultParagraph(".", Anchor.Auto);
                 paragraph.PromiscuousClicksMode = true;
                 paragraph.WrapWords = false;
                 paragraph.UpdateStyle(DefaultParagraphStyle);
@@ -376,7 +366,7 @@ namespace Nez.GeonBit.UI.Entities
                 // add callback to selection
                 paragraph.OnClick += (Entity entity) =>
                 {
-                    ParagraphData data = (ParagraphData)entity.AttachedData;
+                    var data = (ParagraphData)entity.AttachedData;
                     if (!data.list.LockSelection)
                     {
                         data.list.Select(data.relativeIndex, true);
@@ -443,8 +433,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public string SelectedValue
         {
-            get { return _value; }
-            set { Select(value); }
+            get => _value;
+            set => Select(value);
         }
 
         /// <summary>
@@ -453,8 +443,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public int SelectedIndex
         {
-            get { return _index; }
-            set { Select(value); }
+            get => _index;
+            set => Select(value);
         }
 
         /// <summary>
@@ -463,25 +453,19 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public int ScrollPosition
         {
-            get { return _scrollbar.Value; }
-            set { _scrollbar.Value = value; }
+            get => _scrollbar.Value;
+            set => _scrollbar.Value = value;
         }
 
         /// <summary>
         /// Clear current selection.
         /// </summary>
-        public void Unselect()
-        {
-            Select(-1, false);
-        }
+        public void Unselect() => Select(-1, false);
 
         /// <summary>
         /// Return if currently have a selected value.
         /// </summary>
-        public bool HasSelectedValue
-        {
-            get { return SelectedIndex != -1; }
-        }
+        public bool HasSelectedValue => SelectedIndex != -1;
 
         /// <summary>
         /// Select list item by value.
@@ -553,7 +537,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // if size changed, update paragraphs list
             if ((_prevSize.Y != _destRectInternal.Size.Y) || _hadResizeWhileNotVisible)
@@ -571,7 +555,7 @@ namespace Nez.GeonBit.UI.Entities
             for (int i = 0; i < _paragraphs.Count; ++i)
             {
                 // get item index
-                int item_index = i + (int)_scrollbar.Value;
+                int item_index = i + _scrollbar.Value;
 
                 // get current paragraph
                 var par = _paragraphs[i];
@@ -588,12 +572,12 @@ namespace Nez.GeonBit.UI.Entities
                     if (ClipTextIfOverflow)
                     {
                         // get width we need to clip and if we need to clip at all
-                        var charWidth = par.GetCharacterActualSize().X;
-                        var toClip = (charWidth * par.Text.Length) - _destRectInternal.Width;
+                        float charWidth = par.GetCharacterActualSize().X;
+                        float toClip = (charWidth * par.Text.Length) - _destRectInternal.Width;
                         if (toClip > 0)
                         {
                             // calc how many chars we need to remove
-                            var charsToClip = (int)System.Math.Ceiling(toClip / charWidth) + AddWhenClipping.Length + 1;
+                            int charsToClip = (int)System.Math.Ceiling(toClip / charWidth) + AddWhenClipping.Length + 1;
 
                             // remove them from text
                             if (charsToClip < par.Text.Length)
@@ -608,8 +592,7 @@ namespace Nez.GeonBit.UI.Entities
                     }
 
                     // set locked state
-                    bool isLocked = false;
-                    LockedItems.TryGetValue(item_index, out isLocked);
+                    LockedItems.TryGetValue(item_index, out bool isLocked);
                     par.Locked = isLocked;
                 }
                 // if paragraph out of range (eg more paragraphs than list items), make this paragraph invisible.
@@ -628,8 +611,8 @@ namespace Nez.GeonBit.UI.Entities
                 if (i >= 0 && i < _paragraphs.Count)
                 {
                     // add background to selected paragraph
-                    Paragraph paragraph = _paragraphs[i];
-                    Rectangle destRect = paragraph.GetActualDestRect();
+                    var paragraph = _paragraphs[i];
+                    var destRect = paragraph.GetActualDestRect();
                     paragraph.State = EntityState.MouseDown;
                     paragraph.BackgroundColor = GetActiveStyle("SelectedHighlightColor").asColor;
                 }

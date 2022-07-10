@@ -7,9 +7,7 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -23,16 +21,13 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static Header()
-        {
-            Entity.MakeSerializable(typeof(Header));
-        }
+        static Header() => Entity.MakeSerializable(typeof(Header));
 
         /// <summary>
         /// Default styling for headers. Remember that header is a subclass of Paragraph and has its basic styline. 
         /// Note: loaded from UI theme xml file.
         /// </summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>
         /// Create the header.
@@ -41,10 +36,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="anchor">Position anchor.</param>
         /// <param name="offset">Offset from anchor position.</param>
         public Header(string text, Anchor anchor = Anchor.Auto, Vector2? offset = null) :
-            base(text, anchor, offset: offset)
-        {
-            UpdateStyle(DefaultStyle);
-        }
+            base(text, anchor, offset: offset) => UpdateStyle(DefaultStyle);
 
         /// <summary>
         /// Create default header without text.

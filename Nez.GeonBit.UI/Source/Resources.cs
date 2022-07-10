@@ -8,12 +8,12 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
-using System;
-using Nez.GeonBit.UI.Entities;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Nez.ExtendedContent.DataTypes;
+using Nez.GeonBit.UI.Entities;
+using System;
 
 
 namespace Nez.GeonBit.UI
@@ -25,7 +25,7 @@ namespace Nez.GeonBit.UI
     public class TexturesGetter<TEnum> where TEnum : IConvertible
     {
         // textures we already loaded
-        Texture2D[] _loadedTextures;
+        private Texture2D[] _loadedTextures;
 
         /// <summary>
         /// Get texture for enum state.
@@ -41,7 +41,7 @@ namespace Nez.GeonBit.UI
                 int indx = GetIndex(i);
                 if (_loadedTextures[indx] == null)
                 {
-                    var path = Resources._root + _basepath + EnumToString(i) + _suffix;
+                    string path = Resources._root + _basepath + EnumToString(i) + _suffix;
                     _loadedTextures[indx] = Resources._content.Load<Texture2D>(path);
                 }
                 return _loadedTextures[indx];
@@ -70,7 +70,7 @@ namespace Nez.GeonBit.UI
                 int indx = GetIndex(i, s);
                 if (_loadedTextures[indx] == null)
                 {
-                    var path = Resources._root + _basepath + EnumToString(i) + _suffix + StateEnumToString(s);
+                    string path = Resources._root + _basepath + EnumToString(i) + _suffix + StateEnumToString(s);
                     _loadedTextures[indx] = Resources._content.Load<Texture2D>(path);
                 }
                 return _loadedTextures[indx];
@@ -133,16 +133,16 @@ namespace Nez.GeonBit.UI
         }
 
         // base path of textures to load (index will be appended to them).
-        string _basepath;
+        private string _basepath;
 
         // suffix to add to the end of texture path
-        string _suffix;
+        private string _suffix;
 
         // do we use states like down / hover / default for these textures?
-        bool _usesStates;
+        private bool _usesStates;
 
         // textures types count
-        int _typesCount;
+        private int _typesCount;
 
         /// <summary>
         /// Create the texture getter with base path.
@@ -166,7 +166,7 @@ namespace Nez.GeonBit.UI
     public static class Resources
     {
         /// <summary>Just a plain white texture, used internally.</summary>
-        public static Texture2D WhiteTexture { get { return _content.Load<Texture2D>(_root + "textures/white_texture"); } }
+        public static Texture2D WhiteTexture => _content.Load<Texture2D>(_root + "textures/white_texture");
 
         /// <summary>Cursor textures.</summary>
         public static TexturesGetter<CursorType> Cursors = new TexturesGetter<CursorType>("textures/cursor_");
@@ -193,16 +193,16 @@ namespace Nez.GeonBit.UI
         public static TexturesGetter<EntityState> RadioTextures = new TexturesGetter<EntityState>("textures/radio");
 
         /// <summary>ProgressBar texture.</summary>
-        public static Texture2D ProgressBarTexture { get { return _content.Load<Texture2D>(_root + "textures/progressbar"); } }
+        public static Texture2D ProgressBarTexture => _content.Load<Texture2D>(_root + "textures/progressbar");
 
         /// <summary>Metadata about progressbar texture.</summary>
         public static TextureData ProgressBarData;
 
         /// <summary>ProgressBar fill texture.</summary>
-        public static Texture2D ProgressBarFillTexture { get { return _content.Load<Texture2D>(_root + "textures/progressbar_fill"); } }
+        public static Texture2D ProgressBarFillTexture => _content.Load<Texture2D>(_root + "textures/progressbar_fill");
 
         /// <summary>HorizontalLine texture.</summary>
-        public static Texture2D HorizontalLineTexture { get { return _content.Load<Texture2D>(_root + "textures/horizontal_line"); } }
+        public static Texture2D HorizontalLineTexture => _content.Load<Texture2D>(_root + "textures/horizontal_line");
 
         /// <summary>Sliders base textures.</summary>
         public static TexturesGetter<SliderSkin> SliderTextures = new TexturesGetter<SliderSkin>("textures/slider_");
@@ -217,22 +217,22 @@ namespace Nez.GeonBit.UI
         public static TexturesGetter<IconType> IconTextures = new TexturesGetter<IconType>("textures/icons/");
 
         /// <summary>Icons inventory background texture.</summary>
-        public static Texture2D IconBackgroundTexture { get { return _content.Load<Texture2D>(_root + "textures/icons/background"); } }
+        public static Texture2D IconBackgroundTexture => _content.Load<Texture2D>(_root + "textures/icons/background");
 
         /// <summary>Vertical scrollbar base texture.</summary>
-        public static Texture2D VerticalScrollbarTexture { get { return _content.Load<Texture2D>(_root + "textures/scrollbar"); } }
+        public static Texture2D VerticalScrollbarTexture => _content.Load<Texture2D>(_root + "textures/scrollbar");
 
         /// <summary>Vertical scrollbar mark texture.</summary>
-        public static Texture2D VerticalScrollbarMarkTexture { get { return _content.Load<Texture2D>(_root + "textures/scrollbar_mark"); } }
+        public static Texture2D VerticalScrollbarMarkTexture => _content.Load<Texture2D>(_root + "textures/scrollbar_mark");
 
         /// <summary>Metadata about scrollbar texture.</summary>
         public static TextureData VerticalScrollbarData;
 
         /// <summary>Arrow-down texture (used in dropdown).</summary>
-        public static Texture2D ArrowDown { get { return _content.Load<Texture2D>(_root + "textures/arrow_down"); } }
+        public static Texture2D ArrowDown => _content.Load<Texture2D>(_root + "textures/arrow_down");
 
         /// <summary>Arrow-up texture (used in dropdown).</summary>
-        public static Texture2D ArrowUp { get { return _content.Load<Texture2D>(_root + "textures/arrow_up"); } }
+        public static Texture2D ArrowUp => _content.Load<Texture2D>(_root + "textures/arrow_up");
 
         /// <summary>Default font types.</summary>
         public static SpriteFont[] Fonts;
@@ -254,7 +254,7 @@ namespace Nez.GeonBit.UI
         /// </summary>
         /// <param name="content">Content manager to use.</param>
         /// <param name="theme">Which theme to load resources from.</param>
-        static public void LoadContent(ContentManager content, string theme = "default")
+        public static void LoadContent(ContentManager content, string theme = "default")
         {
             // set resources root path and store content manager
             _root = "GeonBit.UI/themes/" + theme + "/";
@@ -363,7 +363,7 @@ namespace Nez.GeonBit.UI
 
             // load default styles
             FillDefaultStyles(ref sheet, EntityState.Default, content.Load<DefaultStyles>(stylesheetBase + "-Default"));
-            
+
             // load mouse-hover styles
             FillDefaultStyles(ref sheet, EntityState.MouseHover, content.Load<DefaultStyles>(stylesheetBase + "-MouseHover"));
 

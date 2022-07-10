@@ -21,57 +21,57 @@ using Microsoft.Xna.Framework;
 
 namespace Nez.GeonBit
 {
-	/// <summary>
-	/// Bounding-Sphere culling node will calculate the bounding sphere of the node and its children, and will cull out 
-	/// if it doesn't intersect with the camera frustum.
-	/// </summary>
-	public class BoundingSphereCullingNode : CullingNode
-	{
-		/// <summary>
-		/// Clone this scene node.
-		/// </summary>
-		/// <returns>GeonNode copy.</returns>
-		public override Node Clone()
-		{
-			var ret = new BoundingSphereCullingNode
-			{
-				Transformations = Transformations.Clone(),
-				LastBoundingSphere = LastBoundingSphere,
-				Visible = Visible
-			};
-			return ret;
-		}
+    /// <summary>
+    /// Bounding-Sphere culling node will calculate the bounding sphere of the node and its children, and will cull out 
+    /// if it doesn't intersect with the camera frustum.
+    /// </summary>
+    public class BoundingSphereCullingNode : CullingNode
+    {
+        /// <summary>
+        /// Clone this scene node.
+        /// </summary>
+        /// <returns>GeonNode copy.</returns>
+        public override Node Clone()
+        {
+            var ret = new BoundingSphereCullingNode
+            {
+                Transformations = Transformations.Clone(),
+                LastBoundingSphere = LastBoundingSphere,
+                Visible = Visible
+            };
+            return ret;
+        }
 
-		/// <summary>
-		/// Get if this node is currently visible in camera.
-		/// </summary>
-		public override bool IsInScreen
-		{
-			get
-			{
-				var bs = GetBoundingSphere();
-				return (bs.Radius > 0f && CameraFrustum.Contains(bs) != ContainmentType.Disjoint);
-			}
-		}
+        /// <summary>
+        /// Get if this node is currently visible in camera.
+        /// </summary>
+        public override bool IsInScreen
+        {
+            get
+            {
+                var bs = GetBoundingSphere();
+                return (bs.Radius > 0f && CameraFrustum.Contains(bs) != ContainmentType.Disjoint);
+            }
+        }
 
-		/// <summary>
-		/// Get if this node is partly inside screen (eg intersects with camera frustum).
-		/// </summary>
-		public override bool IsPartlyInScreen
-		{
-			get
-			{
-				var bs = GetBoundingSphere();
-				return (bs.Radius > 0f && CameraFrustum.Contains(bs) == ContainmentType.Intersects);
-			}
-		}
+        /// <summary>
+        /// Get if this node is partly inside screen (eg intersects with camera frustum).
+        /// </summary>
+        public override bool IsPartlyInScreen
+        {
+            get
+            {
+                var bs = GetBoundingSphere();
+                return (bs.Radius > 0f && CameraFrustum.Contains(bs) == ContainmentType.Intersects);
+            }
+        }
 
-		/// <summary>
-		/// Update culling test / cached data.
-		/// This is called whenever trying to draw this node after transformations update
-		/// </summary>
-		protected override void UpdateCullingData()
-		{
-		}
-	}
+        /// <summary>
+        /// Update culling test / cached data.
+        /// This is called whenever trying to draw this node after transformations update
+        /// </summary>
+        protected override void UpdateCullingData()
+        {
+        }
+    }
 }

@@ -23,7 +23,6 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using Nez.ExtendedContent.GeonBit.Animation;
 using Nez.ExtendedContent.GeonBit.Graphics;
-using System;
 
 namespace Nez.ExtendedContent.GeonBit.Serialization
 {
@@ -33,22 +32,19 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
         protected override void Write(ContentWriter output, CpuAnimatedVertexBufferContent buffer)
         {
             WriteVertexBuffer(output, buffer);
-            
+
             output.Write(buffer.IsWriteOnly);
         }
-                
+
         private void WriteVertexBuffer(ContentWriter output, DynamicVertexBufferContent buffer)
         {
-            var vertexCount = buffer.VertexData.Length / buffer.VertexDeclaration.VertexStride;
+            int? vertexCount = buffer.VertexData.Length / buffer.VertexDeclaration.VertexStride;
             output.WriteRawObject(buffer.VertexDeclaration);
-            output.Write((UInt32)vertexCount);
+            output.Write((uint)vertexCount);
             output.Write(buffer.VertexData);
         }
-        
-        public override string GetRuntimeReader(TargetPlatform targetPlatform)
-        {
-            return "GeonBit.Extend.Animation.Content.CpuAnimatedVertexBufferReader, " +
+
+        public override string GetRuntimeReader(TargetPlatform targetPlatform) => "GeonBit.Extend.Animation.Content.CpuAnimatedVertexBufferReader, " +
                 typeof(Nez.ExtendedContent.GeonBit.Content.CpuAnimatedVertexBufferReader).Assembly.FullName;
-        }
     }
 }

@@ -331,7 +331,7 @@ namespace Nez
         }
 
         protected void SetupResolutionPolicy()
-		{
+        {
             // setup our resolution policy. we'll commit it in begin
             _resolutionPolicy = _defaultSceneResolutionPolicy;
             _designResolutionSize = _defaultDesignResolutionSize;

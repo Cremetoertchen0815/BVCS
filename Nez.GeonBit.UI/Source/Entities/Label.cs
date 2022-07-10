@@ -8,9 +8,7 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -24,13 +22,10 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static Label()
-        {
-            Entity.MakeSerializable(typeof(Label));
-        }
+        static Label() => Entity.MakeSerializable(typeof(Label));
 
         /// <summary>Default styling for labels. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>
         /// Create the label.
@@ -40,10 +35,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="size">Optional label size.</param>
         /// <param name="offset">Offset from anchor position.</param>
         public Label(string text, Anchor anchor = Anchor.Auto, Vector2? size = null, Vector2? offset = null) :
-            base(text, anchor, size: size, offset: offset)
-        {
-            UpdateStyle(DefaultStyle);
-        }
+            base(text, anchor, size: size, offset: offset) => UpdateStyle(DefaultStyle);
 
         /// <summary>
         /// Create label with default params and empty text.

@@ -21,7 +21,7 @@ namespace Nez.GeonBit.UI
         private Stack<RenderTarget2D> _renderTargets = new Stack<RenderTarget2D>();
 
         // last used render target
-        RenderTarget2D _lastRenderTarget = null;
+        private RenderTarget2D _lastRenderTarget = null;
 
         /// <summary>
         /// Add a render target to the render targets stack.
@@ -42,10 +42,7 @@ namespace Nez.GeonBit.UI
         /// <summary>
         /// Pop a render target from the render targets stack.
         /// </summary>
-        public void PopRenderTarget()
-        {
-            _renderTargets.Pop();
-        }
+        public void PopRenderTarget() => _renderTargets.Pop();
 
         /// <summary>
         /// Scale a rectangle by given factor
@@ -62,15 +59,15 @@ namespace Nez.GeonBit.UI
             }
 
             // clone the rectangle to scale it
-            Rectangle ret = rect;
+            var ret = rect;
 
             // update width
-            Point prevSize = ret.Size;
+            var prevSize = ret.Size;
             ret.Width = (int)(ret.Width * scale);
             ret.Height = (int)(ret.Height * scale);
 
             // update position
-            Point move = (ret.Size - prevSize);
+            var move = (ret.Size - prevSize);
             move.X /= 2; move.Y /= 2;
             ret.Location -= move;
 
@@ -83,30 +80,21 @@ namespace Nez.GeonBit.UI
         /// </summary>
         /// <param name="vector">Vector to convert to point.</param>
         /// <returns>new rounded point instance.</returns>
-        protected Point VectorToRoundPoint(Vector2 vector)
-        {
-            return new Point((int)System.Math.Floor(vector.X), (int)System.Math.Floor(vector.Y));
-        }
+        protected Point VectorToRoundPoint(Vector2 vector) => new Point((int)System.Math.Floor(vector.X), (int)System.Math.Floor(vector.Y));
 
         /// <summary>
         /// Set default color to white and fix RGB based on Alpha channel.
         /// </summary>
         /// <param name="color">Color to process.</param>
         /// <returns>Color if provided or default color, with alpha applied.</returns>
-        public virtual Color FixColorOpacity(Color? color)
-        {
-            return FixColorOpacity(color ?? Color.White);
-        }
+        public virtual Color FixColorOpacity(Color? color) => FixColorOpacity(color ?? Color.White);
 
         /// <summary>
         /// Fix RGB based on Alpha channel.
         /// </summary>
         /// <param name="color">Color to process.</param>
         /// <returns>Color if provided or default color, with alpha applied.</returns>
-        public virtual Color FixColorOpacity(Color color)
-        {
-            return color * ((float)color.A / 255.0f);
-        }
+        public virtual Color FixColorOpacity(Color color) => color * (color.A / 255.0f);
 
         /// <summary>
         /// Draw a simple image with texture and destination rectangle.
@@ -124,7 +112,7 @@ namespace Nez.GeonBit.UI
             color = FixColorOpacity(color);
 
             // get source rectangle
-            Rectangle src = sourceRect ?? new Rectangle(0, 0, texture.Width, texture.Height);
+            var src = sourceRect ?? new Rectangle(0, 0, texture.Width, texture.Height);
 
             // scale
             destination = ScaleRect(destination, scale);
@@ -167,21 +155,21 @@ namespace Nez.GeonBit.UI
             destination = ScaleRect(destination, scale);
 
             // source rect and dest rect (reused throughout the function to reduce new allocations)
-            Rectangle srcRect = new Rectangle();
-            Rectangle destRect = new Rectangle();
+            var srcRect = new Rectangle();
+            var destRect = new Rectangle();
 
             // factor used to scale between source in texture file and dest on the screen
             float ScaleFactor = UserInterface.Active.GlobalScale * frameScale;
 
             // calc the surface frame size in texture file (Src) and for drawing destination (Dest)
-            Vector2 frameSizeSrcVec = new Vector2(texture.Width, texture.Height) * textureFrameWidth;
-            Point frameSizeSrc = VectorToRoundPoint(frameSizeSrcVec);
-            Point frameSizeDest = VectorToRoundPoint(frameSizeSrcVec * ScaleFactor);
+            var frameSizeSrcVec = new Vector2(texture.Width, texture.Height) * textureFrameWidth;
+            var frameSizeSrc = VectorToRoundPoint(frameSizeSrcVec);
+            var frameSizeDest = VectorToRoundPoint(frameSizeSrcVec * ScaleFactor);
 
             // calc the surface center part in texture file (Src) and for drawing destination (Dest)
-            Vector2 frameCenterSrcVec = new Vector2(texture.Width, texture.Height) - frameSizeSrcVec * 2;
-            Point centerSizeSrc = VectorToRoundPoint(frameCenterSrcVec);
-            Point centerSizeDest = VectorToRoundPoint(frameCenterSrcVec * ScaleFactor);
+            var frameCenterSrcVec = new Vector2(texture.Width, texture.Height) - frameSizeSrcVec * 2;
+            var centerSizeSrc = VectorToRoundPoint(frameCenterSrcVec);
+            var centerSizeDest = VectorToRoundPoint(frameCenterSrcVec * ScaleFactor);
 
             // start by rendering corners
             // top left corner
@@ -236,7 +224,7 @@ namespace Nez.GeonBit.UI
                     if (toCut > 0)
                     {
                         destRect.Width -= toCut;
-                        srcRect.Width -= (int)((float)toCut / ScaleFactor);
+                        srcRect.Width -= (int)(toCut / ScaleFactor);
                     }
 
                     // draw upper part
@@ -283,7 +271,7 @@ namespace Nez.GeonBit.UI
                     if (toCut > 0)
                     {
                         destRect.Height -= toCut;
-                        srcRect.Height -= (int)((float)toCut / ScaleFactor);
+                        srcRect.Height -= (int)(toCut / ScaleFactor);
                     }
 
                     // draw left part
@@ -299,7 +287,7 @@ namespace Nez.GeonBit.UI
                     // advance current y position
                     currY += centerSizeDest.Y;
 
-                // stop loop when reach bottom
+                    // stop loop when reach bottom
                 } while (currY < destination.Height - frameSizeDest.Y);
             }
 
@@ -335,7 +323,7 @@ namespace Nez.GeonBit.UI
                     if (toCutX > 0)
                     {
                         destRect.Width -= toCutX;
-                        srcRect.Width -= (int)((float)toCutX / ScaleFactor);
+                        srcRect.Width -= (int)(toCutX / ScaleFactor);
                     }
 
                     // iterate over center segments height
@@ -349,7 +337,7 @@ namespace Nez.GeonBit.UI
                         if (toCutY > 0)
                         {
                             destRect.Height -= toCutY;
-                            srcRect.Height -= (int)((float)toCutY / ScaleFactor);
+                            srcRect.Height -= (int)(toCutY / ScaleFactor);
                         }
 
                         // draw center segment
@@ -358,13 +346,13 @@ namespace Nez.GeonBit.UI
                         // advance current y position
                         currY += centerSizeDest.Y;
 
-                    // stop loop when reach the bottom
+                        // stop loop when reach the bottom
                     } while (currY < destination.Height - frameSizeDest.Y * 2);
 
                     // advance current x position
                     currX += centerSizeDest.X;
 
-                // stop loop when reach the right side
+                    // stop loop when reach the right side
                 } while (currX < destination.Width - frameSizeDest.X * 2);
             }
         }
@@ -384,19 +372,19 @@ namespace Nez.GeonBit.UI
             color = FixColorOpacity(color);
 
             // calc frame size in texture file (Src) and in destination render rect (Dest)
-            float ScaleXfac = (float)destination.Height / (float)texture.Height;
-            Vector2 frameSizeTextureVector = new Vector2(texture.Width * frameWidth, texture.Height);
-            Point frameSizeSrc = VectorToRoundPoint(frameSizeTextureVector);
-            Point frameSizeDest = VectorToRoundPoint(new Vector2(frameSizeTextureVector.X * ScaleXfac * frameScale, destination.Height));
+            float ScaleXfac = destination.Height / (float)texture.Height;
+            var frameSizeTextureVector = new Vector2(texture.Width * frameWidth, texture.Height);
+            var frameSizeSrc = VectorToRoundPoint(frameSizeTextureVector);
+            var frameSizeDest = VectorToRoundPoint(new Vector2(frameSizeTextureVector.X * ScaleXfac * frameScale, destination.Height));
 
             // calc the surface center in texture file (Src) and for drawing destination (Dest)
-            Vector2 frameCenterSrcVec = new Vector2(texture.Width - frameSizeSrc.X * 2, texture.Height);
-            Point centerSizeSrc = VectorToRoundPoint(frameCenterSrcVec);
-            Point centerSizeDest = VectorToRoundPoint(new Vector2(destination.Width - frameSizeDest.X * 2, destination.Height));
+            var frameCenterSrcVec = new Vector2(texture.Width - frameSizeSrc.X * 2, texture.Height);
+            var centerSizeSrc = VectorToRoundPoint(frameCenterSrcVec);
+            var centerSizeDest = VectorToRoundPoint(new Vector2(destination.Width - frameSizeDest.X * 2, destination.Height));
 
             // source rect and dest rect (reused throughout the function to reduce new allocations)
-            Rectangle srcRect = new Rectangle();
-            Rectangle destRect = new Rectangle();
+            var srcRect = new Rectangle();
+            var destRect = new Rectangle();
 
             // draw left side
             {
@@ -438,7 +426,7 @@ namespace Nez.GeonBit.UI
                     if (toCut > 0)
                     {
                         destRect.Width -= toCut;
-                        srcRect.Width -= (int)((float)toCut / ((float)srcRect.Width / (float)destRect.Width));
+                        srcRect.Width -= (int)(toCut / (srcRect.Width / (float)destRect.Width));
                     }
 
                     // draw center segment
@@ -467,19 +455,19 @@ namespace Nez.GeonBit.UI
             color = FixColorOpacity(color);
 
             // calc frame size in texture file (Src) and in destination render rect (Dest)
-            float ScaleYfac = (float)destination.Width / (float)texture.Width;
-            Vector2 frameSizeTextureVector = new Vector2(texture.Width, texture.Height * frameWidth);
-            Point frameSizeSrc = VectorToRoundPoint(frameSizeTextureVector);
-            Point frameSizeDest = VectorToRoundPoint(new Vector2(destination.Width, frameSizeTextureVector.Y * ScaleYfac * frameScale));
+            float ScaleYfac = destination.Width / (float)texture.Width;
+            var frameSizeTextureVector = new Vector2(texture.Width, texture.Height * frameWidth);
+            var frameSizeSrc = VectorToRoundPoint(frameSizeTextureVector);
+            var frameSizeDest = VectorToRoundPoint(new Vector2(destination.Width, frameSizeTextureVector.Y * ScaleYfac * frameScale));
 
             // calc the surface center in texture file (Src) and for drawing destination (Dest)
-            Vector2 frameCenterSrcVec = new Vector2(texture.Width, texture.Height - frameSizeSrc.Y * 2);
-            Point centerSizeSrc = VectorToRoundPoint(frameCenterSrcVec);
-            Point centerSizeDest = VectorToRoundPoint(new Vector2(destination.Width, destination.Height - frameSizeDest.Y * 2));
+            var frameCenterSrcVec = new Vector2(texture.Width, texture.Height - frameSizeSrc.Y * 2);
+            var centerSizeSrc = VectorToRoundPoint(frameCenterSrcVec);
+            var centerSizeDest = VectorToRoundPoint(new Vector2(destination.Width, destination.Height - frameSizeDest.Y * 2));
 
             // source rect and dest rect (reused throughout the function to reduce new allocations)
-            Rectangle srcRect = new Rectangle();
-            Rectangle destRect = new Rectangle();
+            var srcRect = new Rectangle();
+            var destRect = new Rectangle();
 
             // draw upper side
             {
@@ -521,7 +509,7 @@ namespace Nez.GeonBit.UI
                     if (toCut > 0)
                     {
                         destRect.Height -= toCut;
-                        srcRect.Height -= (int)((float)toCut / ((float)srcRect.Height / (float)destRect.Height));
+                        srcRect.Height -= (int)(toCut / (srcRect.Height / (float)destRect.Height));
                     }
 
                     // draw center segment
@@ -594,9 +582,6 @@ namespace Nez.GeonBit.UI
         /// Finish drawing on a given SpriteBatch
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw on.</param>
-        public virtual void EndDraw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.End();
-        }
+        public virtual void EndDraw(SpriteBatch spriteBatch) => spriteBatch.End();
     }
 }

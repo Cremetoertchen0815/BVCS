@@ -20,14 +20,11 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static VerticalScrollbar()
-        {
-            Entity.MakeSerializable(typeof(VerticalScrollbar));
-        }
+        static VerticalScrollbar() => Entity.MakeSerializable(typeof(VerticalScrollbar));
 
         // frame and mark actual height
-        float _frameActualHeight = 0f;
-        int _markHeight = 20;
+        private float _frameActualHeight = 0f;
+        private int _markHeight = 20;
 
         /// <summary>
         /// If true, will adjust max value automatically based on entities in parent.
@@ -35,10 +32,10 @@ namespace Nez.GeonBit.UI.Entities
         public bool AdjustMaxAutomatically = false;
 
         /// <summary>Default scrollbar size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(30f, 0f);
+        public static new Vector2 DefaultSize = new Vector2(30f, 0f);
 
         /// <summary>Default styling for vertical scrollbars. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>
         /// Create the scrollbar.
@@ -72,7 +69,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Handle mouse down event.
         /// The Scrollbar entity override this function to handle sliding mark up and down, instead of left-right.
         /// </summary>
-        override protected void DoOnMouseReleased()
+        protected override void DoOnMouseReleased()
         {
             // get mouse position and apply scroll value
             var mousePos = GetMousePos(_lastScrollVal.ToVector2());
@@ -96,13 +93,13 @@ namespace Nez.GeonBit.UI.Entities
         /// Handle while mouse is down event.
         /// The Scrollbar entity override this function to handle sliding mark up and down, instead of left-right.
         /// </summary>
-        override protected void DoWhileMouseDown()
+        protected override void DoWhileMouseDown()
         {
             // get mouse position and apply scroll value
             var mousePos = GetMousePos(_lastScrollVal.ToVector2());
 
             // if in the middle calculate value based on mouse position
-            if ((mousePos.Y >= _destRect.Y + _frameActualHeight * 0.5) && 
+            if ((mousePos.Y >= _destRect.Y + _frameActualHeight * 0.5) &&
                (mousePos.Y <= _destRect.Bottom - _frameActualHeight * 0.5))
             {
                 float relativePos = (mousePos.Y - _destRect.Y - _frameActualHeight * 0.5f - _markHeight * 0.5f);
@@ -120,7 +117,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // if needed, recalc max (but not if currently interacting with this object).
             if (UserInterface.Active.ActiveEntity != this)
@@ -129,28 +126,28 @@ namespace Nez.GeonBit.UI.Entities
             }
 
             // get textures based on type
-            Texture2D texture = Resources.VerticalScrollbarTexture;
-            Texture2D markTexture = Resources.VerticalScrollbarMarkTexture;
+            var texture = Resources.VerticalScrollbarTexture;
+            var markTexture = Resources.VerticalScrollbarMarkTexture;
             float FrameHeight = Resources.VerticalScrollbarData.FrameHeight;
 
             // draw scrollbar body
             UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, new Vector2(0f, FrameHeight), 1, FillColor);
 
             // calc frame actual height and scaling factor (this is needed to calc frame width in pixels)
-            Vector2 frameSizeTexture = new Vector2(texture.Width, texture.Height * FrameHeight);
-            Vector2 frameSizeRender = frameSizeTexture;
+            var frameSizeTexture = new Vector2(texture.Width, texture.Height * FrameHeight);
+            var frameSizeRender = frameSizeTexture;
             float ScaleYfac = _destRect.Width / frameSizeRender.X;
 
             // calc the size of the mark piece
             int markWidth = _destRect.Width;
-            _markHeight = (int)(((float)markTexture.Height / (float)markTexture.Width) * (float)markWidth);
+            _markHeight = (int)((markTexture.Height / (float)markTexture.Width) * markWidth);
 
             // calc frame width in pixels
             _frameActualHeight = FrameHeight * texture.Height * ScaleYfac;
 
             // now draw mark
             float markY = _destRect.Y + _frameActualHeight + _markHeight * 0.5f + (_destRect.Height - _frameActualHeight * 2 - _markHeight) * (GetValueAsPercent());
-            Rectangle markDest = new Rectangle(_destRect.X, (int)System.Math.Round(markY) - _markHeight / 2, markWidth, _markHeight);
+            var markDest = new Rectangle(_destRect.X, (int)System.Math.Round(markY) - _markHeight / 2, markWidth, _markHeight);
             UserInterface.Active.DrawUtils.DrawImage(spriteBatch, markTexture, markDest, FillColor);
         }
 
@@ -158,7 +155,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Called every frame after update.
         /// Scrollbar override this function to handle wheel scroll while pointing on parent entity - we still want to capture that.
         /// </summary>
-        override protected void DoAfterUpdate()
+        protected override void DoAfterUpdate()
         {
             // if the active entity is self or parent, listen to mousewheel
             if (_isInteractable &&
@@ -177,7 +174,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Calculate max value based on siblings (note: only if AdjustMaxAutomatically is true)
         /// </summary>
         private void CalcAutoMaxValue()
-        { 
+        {
             // if need to adjust max automatically
             if (AdjustMaxAutomatically)
             {
@@ -221,9 +218,6 @@ namespace Nez.GeonBit.UI.Entities
         /// Handle when mouse wheel scroll and this entity is the active entity.
         /// Note: Scrollbar entity override this function to change scrollbar value based on wheel scroll, which is inverted.
         /// </summary>
-        override protected void DoOnMouseWheelScroll()
-        {
-            Value = _value - Input.MouseWheelChange * GetStepSize();
-        }
+        protected override void DoOnMouseWheelScroll() => Value = _value - Input.MouseWheelChange * GetStepSize();
     }
 }

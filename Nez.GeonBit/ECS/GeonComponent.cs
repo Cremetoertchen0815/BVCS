@@ -1,18 +1,18 @@
 ﻿namespace Nez.GeonBit
 {
-	public class GeonComponent : Component
-	{
+    public class GeonComponent : Component
+    {
 
-		public new GeonEntity Entity;
+        public new GeonEntity Entity;
 
-		[Inspectable]
-		public Node Node;
+        [Inspectable]
+        public Node Node;
 
-		public virtual GeonComponent CopyBasics(GeonComponent c) => c;
+        public virtual GeonComponent CopyBasics(GeonComponent c) => c;
 
-		internal void Destroy() => Entity.RemoveComponent(this);
+        internal void Destroy() => Entity.RemoveComponent(this);
 
-		public virtual void OnParentChange(Node from, Node to) { }
-		public virtual void OnTransformationUpdate() { }
-	}
+        public virtual void OnParentChange(Node from, Node to) { }
+        public virtual void OnTransformationUpdate() { }
+    }
 }

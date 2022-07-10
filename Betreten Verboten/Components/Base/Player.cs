@@ -72,7 +72,7 @@ namespace Betreten_Verboten.Components.Base
             var coveredHouseFields = new List<int>();
             for (int i = 0; i < Board.FigureCount; i++)
             {
-                var pos = _figures[i].Position;
+                int pos = _figures[i].Position;
                 if (pos >= 0 && pos < Board.FieldCount) return false; //If figure is on the track, rolling thrice isn't allowed
                 if (pos >= Board.FieldCount) coveredHouseFields.Add(pos); //If figure is in house, remember covered field
             }

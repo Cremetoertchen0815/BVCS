@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using System;
 
 namespace Nez.ExtendedContent.DataTypes
 {
@@ -28,27 +26,27 @@ namespace Nez.ExtendedContent.DataTypes
         /// <summary>helper function to get / set color value.</summary>
         [ContentSerializerAttribute(Optional = true)]
         [System.Xml.Serialization.XmlIgnore]
-        public Color asColor { get { return _color != null ? (Color)_color : Color.White; } set { _color = value; } }
+        public Color asColor { get => _color != null ? (Color)_color : Color.White; set => _color = value; }
 
         /// <summary>helper function to get / set vector value.</summary>
         [ContentSerializerAttribute(Optional = true)]
         [System.Xml.Serialization.XmlIgnore]
-        public Vector2 asVector { get { return _vector != null ? (Vector2)_vector : Vector2.One; } set { _vector = value; } }
+        public Vector2 asVector { get => _vector != null ? (Vector2)_vector : Vector2.One; set => _vector = value; }
 
         /// <summary>helper function to get / set float value.</summary>
         [ContentSerializerAttribute(Optional = true)]
         [System.Xml.Serialization.XmlIgnore]
-        public float asFloat { get { return _float.Value; } set { _float = value; } }
+        public float asFloat { get => _float.Value; set => _float = value; }
 
         /// <summary>helper function to get / set int value.</summary>
         [ContentSerializerAttribute(Optional = true)]
         [System.Xml.Serialization.XmlIgnore]
-        public int asInt { get { return (int)_float.Value; } set { _float = value; } }
+        public int asInt { get => (int)_float.Value; set => _float = value; }
 
         /// <summary>helper function to get / set bool value.</summary>
         [ContentSerializerAttribute(Optional = true)]
         [System.Xml.Serialization.XmlIgnore]
-        public bool asBool { get { return _float.Value > 0f; } set { _float = value ? 1f : 0f; } }
+        public bool asBool { get => _float.Value > 0f; set => _float = value ? 1f : 0f; }
 
         /// <summary>
         /// Get/set currently-set value, for serialization.

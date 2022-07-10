@@ -8,8 +8,8 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Nez.GeonBit.UI.Entities.TextValidators;
+using System.Collections.Generic;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -23,16 +23,13 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static TextInput()
-        {
-            Entity.MakeSerializable(typeof(TextInput));
-        }
+        static TextInput() => Entity.MakeSerializable(typeof(TextInput));
 
         // current text value
-        string _value = string.Empty;
+        private string _value = string.Empty;
 
         // current caret position (-1 is last character).
-        int _caret = -1;
+        private int _caret = -1;
 
         /// <summary>The Paragraph object showing current text value.</summary>
         public Paragraph TextParagraph;
@@ -48,12 +45,12 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public bool Multiline
         {
-            get { return _multiLine; }
+            get => _multiLine;
             set { if (_multiLine != value) { _multiLine = value; UpdateMultilineState(); } }
         }
 
         // scrollbar to use if text height exceed the input box size
-        VerticalScrollbar _scrollbar;
+        private VerticalScrollbar _scrollbar;
 
         /// <summary>
         /// If provided, will automatically put this value whenever the user leave the input box and its empty.
@@ -61,10 +58,10 @@ namespace Nez.GeonBit.UI.Entities
         public string ValueWhenEmpty = null;
 
         // current caret animation step
-        float _caretAnim = 0f;
+        private float _caretAnim = 0f;
 
         /// <summary>Text to show when there's no input. Note that this text will be drawn with PlaceholderParagraph, and not TextParagraph.</summary>
-        string _placeholderText = string.Empty;
+        private string _placeholderText = string.Empty;
 
         /// <summary>Set to any number to limit input by characters count.
         /// Note: this will only take effect when user insert input, if you set value programmatically it will be ignored.</summary>
@@ -81,7 +78,7 @@ namespace Nez.GeonBit.UI.Entities
         public char? HideInputWithChar;
 
         /// <summary>Default styling for the text input itself. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>Default style for paragraph that show current value.</summary>
         public static StyleSheet DefaultParagraphStyle = new StyleSheet();
@@ -93,11 +90,11 @@ namespace Nez.GeonBit.UI.Entities
         public static float CaretBlinkingSpeed = 2f;
 
         /// <summary>Default text-input size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 65f);
+        public static new Vector2 DefaultSize = new Vector2(0f, 65f);
 
         /// <summary>The actual displayed text, after wordwrap and other processing. 
         /// note: only the text currently visible by scrollbar.</summary>
-        string _actualDisplayText = string.Empty;
+        private string _actualDisplayText = string.Empty;
 
         /// <summary>List of validators to apply on text input.</summary>
         public List<ITextValidator> Validators = new List<ITextValidator>();
@@ -149,7 +146,7 @@ namespace Nez.GeonBit.UI.Entities
                 UpdateMultilineState();
 
                 // if the default paragraph type is multicolor, disable it for input
-                MulticolorParagraph colorTextParagraph = TextParagraph as MulticolorParagraph;
+                var colorTextParagraph = TextParagraph as MulticolorParagraph;
                 if (colorTextParagraph != null)
                 {
                     colorTextParagraph.EnableColorInstructions = false;
@@ -165,11 +162,13 @@ namespace Nez.GeonBit.UI.Entities
             // we are now multiline
             if (_multiLine)
             {
-                _scrollbar = new VerticalScrollbar(0, 0, Anchor.CenterRight, offset: new Vector2(-8, 0));
-                _scrollbar.Value = 0;
-                _scrollbar.Visible = false;
-                _scrollbar._hiddenInternalEntity = true;
-                _scrollbar.Identifier = "__inputScrollbar";
+                _scrollbar = new VerticalScrollbar(0, 0, Anchor.CenterRight, offset: new Vector2(-8, 0))
+                {
+                    Value = 0,
+                    Visible = false,
+                    _hiddenInternalEntity = true,
+                    Identifier = "__inputScrollbar"
+                };
                 AddChild(_scrollbar, false);
             }
             // we are not multiline
@@ -191,7 +190,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected override void InitAfterDeserialize()
+        protected internal override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
 
@@ -234,18 +233,15 @@ namespace Nez.GeonBit.UI.Entities
         /// Is the text input a natrually-interactable entity.
         /// </summary>
         /// <returns>True.</returns>
-        override public bool IsNaturallyInteractable()
-        {
-            return true;
-        }
+        public override bool IsNaturallyInteractable() => true;
 
         /// <summary>
         /// Text to show when there's no input using the placeholder style.
         /// </summary>
         public string PlaceholderText
         {
-            get { return _placeholderText; }
-            set { _placeholderText = _multiLine ? value : value.Replace("\n", string.Empty); }
+            get => _placeholderText;
+            set => _placeholderText = _multiLine ? value : value.Replace("\n", string.Empty);
         }
 
         /// <summary>
@@ -253,7 +249,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public string Value
         {
-            get { return _value; }
+            get => _value;
             set { _value = _multiLine ? value : value.Replace("\n", string.Empty); FixCaretPosition(); }
         }
 
@@ -296,8 +292,8 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public int Caret
         {
-            get { return _caret; }
-            set { _caret = value; }
+            get => _caret;
+            set => _caret = value;
         }
 
         /// <summary>
@@ -306,7 +302,7 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public int ScrollPosition
         {
-            get { return _scrollbar != null ? _scrollbar.Value : 0; }
+            get => _scrollbar != null ? _scrollbar.Value : 0;
             set { if (_scrollbar != null) _scrollbar.Value = value; }
         }
 
@@ -337,7 +333,7 @@ namespace Nez.GeonBit.UI.Entities
             // set main text when hidden with password char
             if (HideInputWithChar != null)
             {
-                var hiddenVal = new string(HideInputWithChar.Value, _value.Length);
+                string hiddenVal = new string(HideInputWithChar.Value, _value.Length);
                 TextParagraph.Text = hiddenVal.Insert(_caret >= 0 ? _caret : hiddenVal.Length, caretShow);
             }
             // set main text for regular text input
@@ -350,7 +346,7 @@ namespace Nez.GeonBit.UI.Entities
             PlaceholderParagraph.Text = _placeholderText;
 
             // get current paragraph and prepare to draw
-            Paragraph currParagraph = usePlaceholder ? PlaceholderParagraph : TextParagraph;
+            var currParagraph = usePlaceholder ? PlaceholderParagraph : TextParagraph;
             TextParagraph.UpdateDestinationRectsIfDirty();
 
             // get text to display
@@ -361,7 +357,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Handle mouse click event.
         /// TextInput override this function to handle picking caret position.
         /// </summary>
-        override protected void DoOnClick()
+        protected override void DoOnClick()
         {
             // first call base DoOnClick
             base.DoOnClick();
@@ -370,11 +366,11 @@ namespace Nez.GeonBit.UI.Entities
             if (_value.Length > 0)
             {
                 // get relative position
-                Vector2 actualParagraphPos = new Vector2(_destRectInternal.Location.X, _destRectInternal.Location.Y);
-                Vector2 relativeOffset = GetMousePos(-actualParagraphPos);
+                var actualParagraphPos = new Vector2(_destRectInternal.Location.X, _destRectInternal.Location.Y);
+                var relativeOffset = GetMousePos(-actualParagraphPos);
 
                 // calc caret position
-                Vector2 charSize = TextParagraph.GetCharacterActualSize();
+                var charSize = TextParagraph.GetCharacterActualSize();
                 int x = (int)(relativeOffset.X / charSize.X);
                 _caret = x;
 
@@ -390,7 +386,7 @@ namespace Nez.GeonBit.UI.Entities
                     int y = (int)(relativeOffset.Y / charSize.Y) + _scrollbar.Value;
 
                     // break actual text into lines
-                    List<string> lines = new List<string>(processedValueText.Split('\n'));
+                    var lines = new List<string>(processedValueText.Split('\n'));
                     for (int i = 0; i < y && i < lines.Count; ++i)
                     {
                         _caret += lines[i].Length + 1;
@@ -415,14 +411,14 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // call base draw function to draw the panel part
             base.DrawEntity(spriteBatch, phase);
 
             // get which paragraph we currently show - real or placeholder
             bool showPlaceholder = !(IsFocused || _value.Length > 0);
-            Paragraph currParagraph = showPlaceholder ? PlaceholderParagraph : TextParagraph;
+            var currParagraph = showPlaceholder ? PlaceholderParagraph : TextParagraph;
 
             // get actual processed string
             _actualDisplayText = PrepareInputTextForDisplay(showPlaceholder, IsFocused);
@@ -453,7 +449,7 @@ namespace Nez.GeonBit.UI.Entities
                     _scrollbar.Visible = true;
 
                     // update text to fit scrollbar. first, rebuild the text with just the visible segment
-                    List<string> lines = new List<string>(_actualDisplayText.Split('\n'));
+                    var lines = new List<string>(_actualDisplayText.Split('\n'));
                     int from = System.Math.Min(_scrollbar.Value, lines.Count - 1);
                     int size = System.Math.Min(linesFit, lines.Count - from);
                     lines = lines.GetRange(from, size);
@@ -503,7 +499,7 @@ namespace Nez.GeonBit.UI.Entities
                 PrepareInputTextForDisplay(false, false);
 
                 // get main paragraph actual size
-                Rectangle textSize = TextParagraph.GetActualDestRect();
+                var textSize = TextParagraph.GetActualDestRect();
 
                 // if multiline, compare heights
                 if (_multiLine && textSize.Height >= _destRectInternal.Height)
@@ -546,7 +542,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Called every frame before update.
         /// TextInput implement this function to get keyboard input and also to animate caret timer.
         /// </summary>
-        override protected void DoBeforeUpdate()
+        protected override void DoBeforeUpdate()
         {
             // animate caret
             _caretAnim += (float)Input.CurrGameTime.ElapsedGameTime.TotalSeconds * CaretBlinkingSpeed;
@@ -597,11 +593,11 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Called every time this entity is focused / unfocused.
         /// </summary>
-        override protected void DoOnFocusChange()
+        protected override void DoOnFocusChange()
         {
             // call base on focus change
             base.DoOnFocusChange();
-            
+
             // check if need to set default value
             if (ValueWhenEmpty != null && Value.Length == 0)
             {

@@ -41,7 +41,7 @@ namespace Betreten_Verboten.Components.Base
             if (_isDoneRolling) return;
 
             var norm = Vector3.TransformNormal(Vector3.Up, Matrix.Invert(_rigidBody.Entity.Node.WorldTransformations)); norm.Normalize();
-            var maxDot = _sideNormals.Select(x => Vector3.Dot(norm, x)).Max(); //Determins if the dice lays flat(is still when over rest limit)
+            float maxDot = _sideNormals.Select(x => Vector3.Dot(norm, x)).Max(); //Determins if the dice lays flat(is still when over rest limit)
 
             //Check if the dice stopped rolling and if yes, calculate the number
             if (_rigidBody.LinearVelocity.Length() < MEASURE_SPEED && maxDot > ANGLE_REST_LIMIT)
@@ -67,7 +67,7 @@ namespace Betreten_Verboten.Components.Base
 
 
         public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500, 25, -500)).SetTag(ENTITY_TAG).AddComponent(new Dice());
-       
+
         /// <summary>
         /// Returns if another dice roll is necessary, depending on if the player can roll thrice.
         /// The dice should reroll if none of the following conditions is satisfied:
@@ -78,6 +78,6 @@ namespace Betreten_Verboten.Components.Base
         /// <param name="nrs"></param>
         /// <param name="RollThrice"></param>
         /// <returns></returns>
-        public static bool ShouldReroll(List<int> nrs, bool RollThrice) => !( !RollThrice && nrs[nrs.Count - 1] < 6 || RollThrice && nrs.Count > 1 && nrs[nrs.Count - 1] < 6 && nrs[nrs.Count - 2] >= 6 || RollThrice && nrs.Count >= 3 && nrs[nrs.Count - 1] < 6);
+        public static bool ShouldReroll(List<int> nrs, bool RollThrice) => !(!RollThrice && nrs[nrs.Count - 1] < 6 || RollThrice && nrs.Count > 1 && nrs[nrs.Count - 1] < 6 && nrs[nrs.Count - 2] >= 6 || RollThrice && nrs.Count >= 3 && nrs[nrs.Count - 1] < 6);
     }
 }

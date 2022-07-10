@@ -8,10 +8,8 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -25,15 +23,12 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static ColoredRectangle()
-        {
-            Entity.MakeSerializable(typeof(ColoredRectangle));
-        }
+        static ColoredRectangle() => Entity.MakeSerializable(typeof(ColoredRectangle));
 
         /// <summary>
         /// Default rectangle styling. Override this dictionary to change the way default rectangles appear.
         /// </summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>
         /// Create the rectangle with outline and fill color + outline width.
@@ -98,34 +93,31 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="anchor">Position anchor.</param>
         /// <param name="offset">Offset from position anchor.</param>
         public ColoredRectangle(Vector2 size, Anchor anchor = Anchor.Auto, Vector2? offset = null) :
-            base(size, anchor, offset)
-        {
-            UpdateStyle(DefaultStyle);
-        }
+            base(size, anchor, offset) => UpdateStyle(DefaultStyle);
 
         /// <summary>
         /// Draw the entity.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // get outline width
             int outlineWidth = OutlineWidth;
 
             // draw outline
             if (outlineWidth > 0)
-			{
-                Rectangle outlineDest = _destRect;
-				outlineDest.X -= outlineWidth;
-				outlineDest.Y -= outlineWidth;
-				outlineDest.Width += outlineWidth * 2;
-				outlineDest.Height += outlineWidth * 2;
-				spriteBatch.Draw(Resources.WhiteTexture, outlineDest, OutlineColor);
-			}
+            {
+                var outlineDest = _destRect;
+                outlineDest.X -= outlineWidth;
+                outlineDest.Y -= outlineWidth;
+                outlineDest.Width += outlineWidth * 2;
+                outlineDest.Height += outlineWidth * 2;
+                spriteBatch.Draw(Resources.WhiteTexture, outlineDest, OutlineColor);
+            }
 
             // get fill color
-            Color fill = FillColor;
+            var fill = FillColor;
 
             // draw the rectangle
             spriteBatch.Draw(Resources.WhiteTexture, _destRect, fill);

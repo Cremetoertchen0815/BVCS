@@ -22,7 +22,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Nez.ExtendedContent.GeonBit.Animation;
-using System;
 using System.Collections.Generic;
 
 namespace Nez.ExtendedContent.GeonBit.Content
@@ -31,15 +30,15 @@ namespace Nez.ExtendedContent.GeonBit.Content
     {
         protected override Animations Read(ContentReader input, Animations existingInstance)
         {
-            Animations animations = existingInstance;
+            var animations = existingInstance;
 
             if (existingInstance == null)
             {
-                Dictionary<string, Clip> clips = ReadAnimationClips(input, null);
-                List<Matrix> bindPose = ReadBindPose(input, null);
-                List<Matrix> invBindPose = ReadInvBindPose(input, null);
-                List<int> skeletonHierarchy = ReadSkeletonHierarchy(input, null);
-                Dictionary<string, int> boneMap = ReadBoneMap(input, null);
+                var clips = ReadAnimationClips(input, null);
+                var bindPose = ReadBindPose(input, null);
+                var invBindPose = ReadInvBindPose(input, null);
+                var skeletonHierarchy = ReadSkeletonHierarchy(input, null);
+                var boneMap = ReadBoneMap(input, null);
                 animations = new Animations(bindPose, invBindPose, skeletonHierarchy, boneMap, clips);
             }
             else
@@ -56,7 +55,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
         private Dictionary<string, Clip> ReadAnimationClips(ContentReader input, Dictionary<string, Clip> existingInstance)
         {
-            Dictionary<string, Clip> animationClips = existingInstance;
+            var animationClips = existingInstance;
 
             int count = input.ReadInt32();
             if (animationClips == null)
@@ -65,7 +64,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
             for (int i = 0; i < count; i++)
             {
                 string key = input.ReadString();
-                Clip val = input.ReadObject<Clip>();
+                var val = input.ReadObject<Clip>();
                 if (existingInstance == null)
                     animationClips.Add(key, val);
                 else
@@ -77,7 +76,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
         private List<Matrix> ReadBindPose(ContentReader input, List<Matrix> existingInstance)
         {
-            List<Matrix> bindPose = existingInstance;
+            var bindPose = existingInstance;
 
             int count = input.ReadInt32();
             if (bindPose == null)
@@ -85,7 +84,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
             for (int i = 0; i < count; i++)
             {
-                Matrix val = input.ReadMatrix();
+                var val = input.ReadMatrix();
                 if (existingInstance == null)
                     bindPose.Add(val);
                 else
@@ -97,7 +96,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
         private List<Matrix> ReadInvBindPose(ContentReader input, List<Matrix> existingInstance)
         {
-            List<Matrix> invBindPose = existingInstance;
+            var invBindPose = existingInstance;
 
             int count = input.ReadInt32();
             if (invBindPose == null)
@@ -105,7 +104,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
             for (int i = 0; i < count; i++)
             {
-                Matrix val = input.ReadMatrix();
+                var val = input.ReadMatrix();
                 if (existingInstance == null)
                     invBindPose.Add(val);
                 else
@@ -117,7 +116,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
         private List<int> ReadSkeletonHierarchy(ContentReader input, List<int> existingInstance)
         {
-            List<int> skeletonHierarchy = existingInstance;
+            var skeletonHierarchy = existingInstance;
 
             int count = input.ReadInt32();
             if (skeletonHierarchy == null)
@@ -125,7 +124,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
             for (int i = 0; i < count; i++)
             {
-                Int32 val = input.ReadInt32();
+                int val = input.ReadInt32();
                 if (existingInstance == null)
                     skeletonHierarchy.Add(val);
                 else
@@ -137,7 +136,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
         private Dictionary<string, int> ReadBoneMap(ContentReader input, Dictionary<string, int> existingInstance)
         {
-            Dictionary<string, int> boneMap = existingInstance;
+            var boneMap = existingInstance;
 
             int count = input.ReadInt32();
             if (boneMap == null)
@@ -154,7 +153,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
             return boneMap;
         }
-        
+
     }
-    
+
 }

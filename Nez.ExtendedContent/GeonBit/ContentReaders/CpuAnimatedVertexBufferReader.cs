@@ -31,12 +31,12 @@ namespace Nez.ExtendedContent.GeonBit.Content
     {
         protected override CpuAnimatedVertexBuffer Read(ContentReader input, CpuAnimatedVertexBuffer buffer)
         {
-            IGraphicsDeviceService graphicsDeviceService = (IGraphicsDeviceService)input.ContentManager.ServiceProvider.GetService(typeof(IGraphicsDeviceService));
+            var graphicsDeviceService = (IGraphicsDeviceService)input.ContentManager.ServiceProvider.GetService(typeof(IGraphicsDeviceService));
             var device = graphicsDeviceService.GraphicsDevice;
 
             // read standard VertexBuffer
             var declaration = input.ReadRawObject<VertexDeclaration>();
-            var vertexCount = (int)input.ReadUInt32();
+            int vertexCount = (int)input.ReadUInt32();
             // int dataSize = vertexCount * declaration.VertexStride;
             //byte[] data = new byte[dataSize];
             //input.Read(data, 0, dataSize);
@@ -80,10 +80,10 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
                         case VertexElementUsage.BlendIndices:
                             System.Diagnostics.Debug.Assert(channel.VertexElementFormat == VertexElementFormat.Byte4);
-                            var i0 = input.ReadByte();
-                            var i1 = input.ReadByte();
-                            var i2 = input.ReadByte();
-                            var i3 = input.ReadByte();
+                            byte i0 = input.ReadByte();
+                            byte i1 = input.ReadByte();
+                            byte i2 = input.ReadByte();
+                            byte i3 = input.ReadByte();
                             cpuVertices[i].BlendIndex0 = i0;
                             cpuVertices[i].BlendIndex1 = i1;
                             cpuVertices[i].BlendIndex2 = i2;
@@ -95,14 +95,14 @@ namespace Nez.ExtendedContent.GeonBit.Content
                     }
                 }
             }
-            
+
 
             // read extras
             bool IsWriteOnly = input.ReadBoolean();
 
             if (buffer == null)
             {
-                BufferUsage usage = (IsWriteOnly) ? BufferUsage.WriteOnly : BufferUsage.None;
+                var usage = (IsWriteOnly) ? BufferUsage.WriteOnly : BufferUsage.None;
                 buffer = new CpuAnimatedVertexBuffer(device, VertexPositionNormalTexture.VertexDeclaration, vertexCount, usage);
             }
 

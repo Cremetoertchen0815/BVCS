@@ -19,12 +19,12 @@
 //   limitations under the License.
 #endregion
 
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 
 namespace Nez.ExtendedContent.GeonBit.Animation
-{    
+{
     public class Animations
     {
         // TODO: convert those from List<T> to simple T[] arrays.
@@ -47,10 +47,7 @@ namespace Nez.ExtendedContent.GeonBit.Animation
         /// <summary>
         /// Get the currently playing clip name.
         /// </summary>
-        public string CurrentClipName
-        {
-            get { return _currClipName; }
-        }
+        public string CurrentClipName => _currClipName;
 
         /// <summary>
         /// Clips dictionary.
@@ -76,17 +73,17 @@ namespace Nez.ExtendedContent.GeonBit.Animation
         /// <summary>
         /// The current bone transform matrices, relative to their parent bones.
         /// </summary>
-        public Matrix[] BoneTransforms { get { return _boneTransforms; } }
+        public Matrix[] BoneTransforms => _boneTransforms;
 
         /// <summary>
         /// The current bone transform matrices, in absolute format.
         /// </summary>
-        public Matrix[] WorldTransforms { get { return _worldTransforms; } }
+        public Matrix[] WorldTransforms => _worldTransforms;
 
         /// <summary>
         /// The current bone transform matrices, relative to the animation bind pose.
         /// </summary>
-        public Matrix[] AnimationTransforms { get { return _animationTransforms; } }
+        public Matrix[] AnimationTransforms => _animationTransforms;
 
         /// <summary>
         /// Create the animations instance.
@@ -104,7 +101,7 @@ namespace Nez.ExtendedContent.GeonBit.Animation
             _skeletonHierarchy = skeletonHierarchy;
             _boneMap = boneMap;
             Clips = clips;
-            
+
             // initialize
             _boneTransforms = new Matrix[_bindPose.Count];
             _worldTransforms = new Matrix[_bindPose.Count];
@@ -120,10 +117,7 @@ namespace Nez.ExtendedContent.GeonBit.Animation
         /// Clone animations.
         /// </summary>
         /// <returns>Cloned animations instance.</returns>
-        public Animations Clone()
-        {
-            return new Animations(_bindPose, _invBindPose, _skeletonHierarchy, _boneMap, Clips);
-        }
+        public Animations Clone() => new Animations(_bindPose, _invBindPose, _skeletonHierarchy, _boneMap, Clips);
 
         /// <summary>
         /// Set currently playing clip.
@@ -161,7 +155,7 @@ namespace Nez.ExtendedContent.GeonBit.Animation
             _currClipName = null;
             CurrentClip = null;
         }
-        
+
         /// <summary>
         /// Get bone index from name.
         /// </summary>
@@ -169,8 +163,7 @@ namespace Nez.ExtendedContent.GeonBit.Animation
         /// <returns>Bone index.</returns>
         public int GetBoneIndex(string boneName)
         {
-            int boneIndex;
-            if (!_boneMap.TryGetValue(boneName, out boneIndex))
+            if (!_boneMap.TryGetValue(boneName, out int boneIndex))
             {
                 boneIndex = -1;
             }
@@ -241,7 +234,7 @@ namespace Nez.ExtendedContent.GeonBit.Animation
 
             while (_currentKeyframe < keyframes.Count)
             {
-                Keyframe keyframe = keyframes[_currentKeyframe];
+                var keyframe = keyframes[_currentKeyframe];
 
                 // Stop when we've read up to the current time position.
                 if (keyframe.Time.TotalSeconds > CurrentTime)
@@ -279,7 +272,7 @@ namespace Nez.ExtendedContent.GeonBit.Animation
         {
             for (int bone = 0; bone < _animationTransforms.Length; bone++)
             {
-                Matrix _tmpInvBindPose = _invBindPose[bone]; //can not pass it as 'ref'
+                var _tmpInvBindPose = _invBindPose[bone]; //can not pass it as 'ref'
                 Matrix.Multiply(ref _tmpInvBindPose, ref _worldTransforms[bone], out _animationTransforms[bone]);
             }
         }

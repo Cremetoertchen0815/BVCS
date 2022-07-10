@@ -19,9 +19,8 @@
 //   limitations under the License.
 #endregion
 
-using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+using System;
 
 namespace Nez.ExtendedContent.GeonBit.Animation
 {
@@ -30,30 +29,30 @@ namespace Nez.ExtendedContent.GeonBit.Animation
         internal int _bone;
         internal TimeSpan _time;
         internal Matrix _transform;
-        
-        public int Bone 
-        { 
-            get {return _bone;}
-            internal set { _bone = value; }
+
+        public int Bone
+        {
+            get => _bone;
+            internal set => _bone = value;
         }
 
         public TimeSpan Time
         {
-            get { return _time; }
-            internal set { _time = value; }
+            get => _time;
+            internal set => _time = value;
         }
 
         public Matrix Transform
         {
-            get { return _transform; }
-            internal set { _transform = value; }
+            get => _transform;
+            internal set => _transform = value;
         }
-        
+
         public Keyframe(int bone, TimeSpan time, Matrix transform)
         {
-            this._bone = bone;
-            this._time = time;
-            this._transform = transform;
-        }	
+            _bone = bone;
+            _time = time;
+            _transform = transform;
+        }
     }
 }

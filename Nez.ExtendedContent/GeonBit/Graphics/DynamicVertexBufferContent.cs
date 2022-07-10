@@ -18,25 +18,19 @@ using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 
 namespace Nez.ExtendedContent.GeonBit.Graphics
 {
-    public class DynamicVertexBufferContent: VertexBufferContent 
+    public class DynamicVertexBufferContent : VertexBufferContent
     {
         protected internal VertexBufferContent Source { get; protected set; }
 
         public bool IsWriteOnly = false;
-                
-        new public VertexDeclarationContent VertexDeclaration { get { return Source.VertexDeclaration; } }
 
-        new public byte[] VertexData { get { return Source.VertexData; } }
+        public new VertexDeclarationContent VertexDeclaration => Source.VertexDeclaration;
 
-        public DynamicVertexBufferContent(VertexBufferContent source):base()
-        {
-            Source = source;
-        }
+        public new byte[] VertexData => Source.VertexData;
 
-        public DynamicVertexBufferContent(VertexBufferContent source, int size):base(size)
-        {
-            Source = source;
-        }
+        public DynamicVertexBufferContent(VertexBufferContent source) : base() => Source = source;
+
+        public DynamicVertexBufferContent(VertexBufferContent source, int size) : base(size) => Source = source;
 
 
     }

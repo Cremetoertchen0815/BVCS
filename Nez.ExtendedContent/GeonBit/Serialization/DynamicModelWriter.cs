@@ -19,19 +19,18 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using Nez.ExtendedContent.GeonBit.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace Nez.ExtendedContent.GeonBit.Serialization
 {
     [ContentTypeWriter]
-    class DynamicModelWriter : ContentTypeWriter<DynamicModelContent>
+    internal class DynamicModelWriter : ContentTypeWriter<DynamicModelContent>
     {
         /// <summary>
         /// Write a Model xnb, compatible with the XNB Container Format.
         /// </summary>
         protected override void Write(ContentWriter output, DynamicModelContent model)
-        {   
+        {
             WriteBones(output, model.Bones);
             WriteMeshes(output, model, model.Meshes);
             WriteBoneReference(output, model.Bones.Count, model.Source.Root);
@@ -43,8 +42,8 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
 
         private void WriteBones(ContentWriter output, ModelBoneContentCollection bones)
         {
-            var bonesCount = bones.Count;
-            output.Write((UInt32)bonesCount);
+            int bonesCount = bones.Count;
+            output.Write((uint)bonesCount);
 
             foreach (var bone in bones)
             {
@@ -55,7 +54,7 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
             foreach (var bone in bones)
             {
                 WriteBoneReference(output, bonesCount, bone.Parent);
-                
+
                 output.Write((uint)bone.Children.Count);
                 foreach (var child in bone.Children)
                     WriteBoneReference(output, bonesCount, child);
@@ -74,21 +73,21 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
             else if (bonesCount < 255)
                 output.Write((byte)(bone.Index + 1));
             else
-                output.Write((UInt32)(bone.Index + 1));
+                output.Write((uint)(bone.Index + 1));
         }
 
         private void WriteMeshes(ContentWriter output, DynamicModelContent model, List<DynamicModelMeshContent> meshes)
         {
-            output.Write((UInt32)meshes.Count);
+            output.Write((uint)meshes.Count);
 
-            var bonesCount = model.Bones.Count;
+            int bonesCount = model.Bones.Count;
             foreach (var mesh in meshes)
             {
-                output.WriteObject(mesh.Name); 
+                output.WriteObject(mesh.Name);
                 WriteBoneReference(output, bonesCount, mesh.ParentBone);
                 WriteBoundingSphere(output, mesh.BoundingSphere);
                 output.WriteObject(mesh.Tag);
-                
+
                 WriteParts(output, model, mesh.MeshParts);
             }
 
@@ -103,14 +102,14 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
 
         private void WriteParts(ContentWriter output, DynamicModelContent model, List<DynamicModelMeshPartContent> parts)
         {
-            output.Write((UInt32)parts.Count);
+            output.Write((uint)parts.Count);
 
             foreach (var part in parts)
             {
-                output.Write((UInt32)part.VertexOffset);
-                output.Write((UInt32)part.NumVertices);
-                output.Write((UInt32)part.StartIndex);
-                output.Write((UInt32)part.PrimitiveCount);
+                output.Write((uint)part.VertexOffset);
+                output.Write((uint)part.NumVertices);
+                output.Write((uint)part.StartIndex);
+                output.Write((uint)part.PrimitiveCount);
                 output.WriteObject(part.Tag);
 
                 output.WriteSharedResource(part.VertexBuffer);
@@ -120,15 +119,9 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
 
             return;
         }
-        
-        public override string GetRuntimeType(TargetPlatform targetPlatform)
-        {
-            return "Microsoft.Xna.Framework.Graphics.Model";
-        }
 
-        public override string GetRuntimeReader(TargetPlatform targetPlatform)
-        {
-            return "Microsoft.Xna.Framework.Content.ModelReader, Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553";
-        }
+        public override string GetRuntimeType(TargetPlatform targetPlatform) => "Microsoft.Xna.Framework.Graphics.Model";
+
+        public override string GetRuntimeReader(TargetPlatform targetPlatform) => "Microsoft.Xna.Framework.Content.ModelReader, Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553";
     }
 }

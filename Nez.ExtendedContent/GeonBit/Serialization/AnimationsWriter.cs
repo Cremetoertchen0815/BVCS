@@ -22,13 +22,12 @@
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using Nez.ExtendedContent.GeonBit.Animation;
-using System;
 using System.Collections.Generic;
 
 namespace Nez.ExtendedContent.GeonBit.Serialization
 {
     [ContentTypeWriter]
-    class AnimationsDataWriter : ContentTypeWriter<AnimationsContent>
+    internal class AnimationsDataWriter : ContentTypeWriter<AnimationsContent>
     {
         protected override void Write(ContentWriter output, AnimationsContent value)
         {
@@ -41,22 +40,22 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
 
         private void WriteClips(ContentWriter output, Dictionary<string, ClipContent> clips)
         {
-            Int32 count = clips.Count;
-            output.Write((Int32)count);
+            int count = clips.Count;
+            output.Write(count);
 
             foreach (var clip in clips)
             {
                 output.Write(clip.Key);
                 output.WriteObject<ClipContent>(clip.Value);
-            }            
+            }
 
             return;
         }
 
         private void WriteBindPose(ContentWriter output, List<Microsoft.Xna.Framework.Matrix> bindPoses)
         {
-            Int32 count = bindPoses.Count;
-            output.Write((Int32)count);
+            int count = bindPoses.Count;
+            output.Write(count);
 
             for (int i = 0; i < count; i++)
                 output.Write(bindPoses[i]);
@@ -66,8 +65,8 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
 
         private void WriteInvBindPose(ContentWriter output, List<Microsoft.Xna.Framework.Matrix> invBindPoses)
         {
-            Int32 count = invBindPoses.Count;
-            output.Write((Int32)count);
+            int count = invBindPoses.Count;
+            output.Write(count);
 
             for (int i = 0; i < count; i++)
                 output.Write(invBindPoses[i]);
@@ -77,40 +76,34 @@ namespace Nez.ExtendedContent.GeonBit.Serialization
 
         private void WriteSkeletonHierarchy(ContentWriter output, List<int> skeletonHierarchy)
         {
-            Int32 count = skeletonHierarchy.Count;
-            output.Write((Int32)count);
+            int count = skeletonHierarchy.Count;
+            output.Write(count);
 
             for (int i = 0; i < count; i++)
-                output.Write((Int32)skeletonHierarchy[i]);
+                output.Write(skeletonHierarchy[i]);
 
             return;
         }
-    
+
         private void WriteBoneNames(ContentWriter output, List<string> boneNames)
         {
-            Int32 count = boneNames.Count;
-            output.Write((Int32)count);
-            
+            int count = boneNames.Count;
+            output.Write(count);
+
             for (int boneIndex = 0; boneIndex < count; boneIndex++)
             {
-                var boneName = boneNames[boneIndex];
+                string boneName = boneNames[boneIndex];
                 output.Write(boneName);
             }
 
             return;
         }
 
-        public override string GetRuntimeType(TargetPlatform targetPlatform)
-        {
-            return "GeonBit.Extend.Animation.Animations, " +
+        public override string GetRuntimeType(TargetPlatform targetPlatform) => "GeonBit.Extend.Animation.Animations, " +
                 typeof(Nez.ExtendedContent.GeonBit.Animation.Animations).Assembly.FullName;
-        }
 
-        public override string GetRuntimeReader(TargetPlatform targetPlatform)
-        {
-            return "GeonBit.Extend.Animation.Content.AnimationsReader, " +
+        public override string GetRuntimeReader(TargetPlatform targetPlatform) => "GeonBit.Extend.Animation.Content.AnimationsReader, " +
                 typeof(Nez.ExtendedContent.GeonBit.Content.AnimationsReader).Assembly.FullName;
-        }
     }
-        
+
 }

@@ -106,7 +106,7 @@ namespace Nez.Systems
             Model ret;
 
             // try to get from cache of processed models (means we already processed this one)
-            if (LoadedAssets.TryGetValue(path, out var a))
+            if (LoadedAssets.TryGetValue(path, out object a))
             {
                 return (Model)a;
             }
@@ -117,7 +117,7 @@ namespace Nez.Systems
             // create GeonBit material per effect and set it as the tag property
             foreach (var mesh in ret.Meshes)
             {
-                foreach (Effect effect in mesh.Effects)
+                foreach (var effect in mesh.Effects)
                 {
                     effect.Tag = tagProcessor(effect);
                 }
@@ -131,12 +131,12 @@ namespace Nez.Systems
             return ret;
         }
 
-    /// <summary>
-    /// loads a SoundEffect either from xnb or directly from a wav. Note that xnb files should not contain the .xnb file
-    /// extension or be preceded by "Content" in the path. wav files should have the file extension and have an absolute
-    /// path or a path starting with "Content".
-    /// </summary>
-    public SoundEffect LoadSoundEffect(string name)
+        /// <summary>
+        /// loads a SoundEffect either from xnb or directly from a wav. Note that xnb files should not contain the .xnb file
+        /// extension or be preceded by "Content" in the path. wav files should have the file extension and have an absolute
+        /// path or a path starting with "Content".
+        /// </summary>
+        public SoundEffect LoadSoundEffect(string name)
         {
             // no file extension. Assumed to be an xnb so let ContentManager load it
             if (string.IsNullOrEmpty(Path.GetExtension(name)))

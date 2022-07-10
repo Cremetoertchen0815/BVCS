@@ -31,19 +31,16 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static ProgressBar()
-        {
-            Entity.MakeSerializable(typeof(ProgressBar));
-        }
+        static ProgressBar() => Entity.MakeSerializable(typeof(ProgressBar));
 
         /// <summary>Default styling for progress bar. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>Default styling for the progress bar fill part. Note: loaded from UI theme xml file.</summary>
         public static StyleSheet DefaultFillStyle = new StyleSheet();
 
         /// <summary>Default progressbar size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 52f);
+        public static new Vector2 DefaultSize = new Vector2(0f, 52f);
 
         /// <summary>The fill part of the progress bar.</summary>
         public Image ProgressFill;
@@ -76,10 +73,12 @@ namespace Nez.GeonBit.UI.Entities
                 AddChild(ProgressFill, true);
 
                 // create caption on progressbar
-                Caption = new Label(string.Empty, Anchor.Center);
-                Caption.ClickThrough = true;
-                Caption._hiddenInternalEntity = true;
-                Caption.Identifier = "_progress_caption";
+                Caption = new Label(string.Empty, Anchor.Center)
+                {
+                    ClickThrough = true,
+                    _hiddenInternalEntity = true,
+                    Identifier = "_progress_caption"
+                };
                 AddChild(Caption);
             }
         }
@@ -105,7 +104,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected override void InitAfterDeserialize()
+        protected internal override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
             Caption = Find<Label>("_progress_caption", false);
@@ -119,18 +118,18 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // get progressbar frame width
             float progressbarFrameWidth = Resources.ProgressBarData.FrameWidth;
 
             // draw progress bar frame
-            Texture2D barTexture = Resources.ProgressBarTexture;
+            var barTexture = Resources.ProgressBarTexture;
             UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, barTexture, _destRect, new Vector2(progressbarFrameWidth, 0f), 1, FillColor);
 
             // calc frame actual height and scaling factor (this is needed to calc frame width in pixels)
-            Vector2 frameSizeTexture = new Vector2(barTexture.Width * progressbarFrameWidth, barTexture.Height);
-            Vector2 frameSizeRender = frameSizeTexture;
+            var frameSizeTexture = new Vector2(barTexture.Width * progressbarFrameWidth, barTexture.Height);
+            var frameSizeRender = frameSizeTexture;
             float ScaleXfac = _destRect.Height / frameSizeRender.Y;
 
             // calc frame width in pixels

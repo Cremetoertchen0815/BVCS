@@ -1,11 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.Textures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nez.GeonBit
 {
@@ -46,12 +41,12 @@ namespace Nez.GeonBit
 
             Materials.MaterialAPI.SetViewProjection(lightsManager.ShadowViewMatrix, _projection);
             RenderingQueues.DrawQueues(false);
-            
+
             Core.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 1f, 0);
-            
+
             _batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone);
             _batch.Draw(_filler, new Rectangle(0, 0, RenderTexture.RenderTarget.Width, RenderTexture.RenderTarget.Height), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 1f);
-            _batch.End();  
+            _batch.End();
         }
     }
 }

@@ -14,10 +14,8 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -44,13 +42,10 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static Button()
-        {
-            Entity.MakeSerializable(typeof(Button));
-        }
+        static Button() => Entity.MakeSerializable(typeof(Button));
 
         // button skin
-        ButtonSkin _skin;
+        private ButtonSkin _skin;
 
         /// <summary>Button label. Use this if you want to change the button text or font style.</summary>
         public Paragraph ButtonParagraph;
@@ -62,10 +57,10 @@ namespace Nez.GeonBit.UI.Entities
         private bool _checked = false;
 
         /// <summary>Default button size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 70f);
+        public static new Vector2 DefaultSize = new Vector2(0f, 70f);
 
         /// <summary>Default styling for the button itself. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>Default styling for buttons label. Note: loaded from UI theme xml file.</summary>
         public static StyleSheet DefaultParagraphStyle = new StyleSheet();
@@ -114,7 +109,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected override void InitAfterDeserialize()
+        protected internal override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
             ButtonParagraph = Find("_button_caption") as Paragraph;
@@ -143,7 +138,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public ButtonSkin Skin
         {
-            get { return _skin; }
+            get => _skin;
             set { _skin = value; _customSkin = null; }
         }
 
@@ -151,24 +146,21 @@ namespace Nez.GeonBit.UI.Entities
         /// Is the button a natrually-interactable entity.
         /// </summary>
         /// <returns>True.</returns>
-        override public bool IsNaturallyInteractable()
-        {
-            return true;
-        }
+        public override bool IsNaturallyInteractable() => true;
 
         /// <summary>
         /// When button is in Toggle mode, this is the current value (it button checked or not).
         /// </summary>
         public bool Checked
         {
-            get { return _checked == true; }
+            get => _checked == true;
             set { _checked = value; DoOnValueChange(); }
         }
 
         /// <summary>
         /// Handle click events. In button we override this so we can toggle button when in Toggle mode.
         /// </summary>
-        override protected void DoOnClick()
+        protected override void DoOnClick()
         {
             // toggle value
             if (ToggleMode)
@@ -185,18 +177,18 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // get mouse state for graphics
-            EntityState state = _entityState;
+            var state = _entityState;
             if (Checked) { state = EntityState.MouseDown; }
 
             // get texture based on skin and state
-            Texture2D texture = _customSkin == null ? Resources.ButtonTextures[_skin, state] : _customSkin[(int)state];
+            var texture = _customSkin == null ? Resources.ButtonTextures[_skin, state] : _customSkin[(int)state];
 
             // get frame width
-            TextureData data = Resources.ButtonData[(int)_skin];
-            Vector2 frameSize = _customSkin == null ? new Vector2(data.FrameWidth, data.FrameHeight) : _customFrame;
+            var data = Resources.ButtonData[(int)_skin];
+            var frameSize = _customSkin == null ? new Vector2(data.FrameWidth, data.FrameHeight) : _customFrame;
 
             // draw the button background with frame
             if (frameSize.Length() > 0)

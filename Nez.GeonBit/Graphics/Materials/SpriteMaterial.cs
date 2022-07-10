@@ -21,29 +21,29 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit.Materials
 {
-	/// <summary>
-	/// Material for sprites and billboards.
-	/// </summary>
-	public class SpriteMaterial : AlphaTestMaterial
-	{
-		/// <summary>
-		/// Create the default material from empty effect.
-		/// </summary>
-		public SpriteMaterial() : base()
-		{
-			SamplerState = SamplerState.PointClamp;
-			TextureEnabled = true;
-		}
+    /// <summary>
+    /// Material for sprites and billboards.
+    /// </summary>
+    public class SpriteMaterial : AlphaTestMaterial
+    {
+        /// <summary>
+        /// Create the default material from empty effect.
+        /// </summary>
+        public SpriteMaterial() : base()
+        {
+            SamplerState = SamplerState.PointClamp;
+            TextureEnabled = true;
+        }
 
-		/// <summary>
-		/// Create the default material.
-		/// </summary>
-		/// <param name="effect">Effect to use.</param>
-		/// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-		public SpriteMaterial(AlphaTestEffect effect, bool copyEffectProperties = true) : base(effect, copyEffectProperties)
-		{
-			SamplerState = SamplerState.PointClamp;
-			TextureEnabled = true;
-		}
-	}
+        /// <summary>
+        /// Create the default material.
+        /// </summary>
+        /// <param name="effect">Effect to use.</param>
+        /// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
+        public SpriteMaterial(AlphaTestEffect effect, bool copyEffectProperties = true) : base(effect, copyEffectProperties)
+        {
+            SamplerState = SamplerState.PointClamp;
+            TextureEnabled = true;
+        }
+    }
 }

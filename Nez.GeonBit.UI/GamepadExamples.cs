@@ -1,11 +1,9 @@
-﻿using Nez.GeonBit.UI;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Nez.ExtendedContent.DataTypes;
 using Nez.GeonBit.UI.Entities;
 using Nez.GeonBit.UI.Entities.TextValidators;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using UIEntity = Nez.GeonBit.UI.Entities.Entity;
 
@@ -18,20 +16,20 @@ namespace Nez.GeonBit.UI.Example
     public class GamePadExamples : Game
     {
         // graphics and spritebatch
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
 
         // all the example panels (screens)
-        List<Panel> panels = new List<Panel>();
+        private List<Panel> panels = new List<Panel>();
 
         // buttons to rotate examples
-        Button nextExampleButton;
+        private Button nextExampleButton;
 
         // paragraph that shows the currently active entity
-        Paragraph targetEntityShow;
+        private Paragraph targetEntityShow;
 
         // current example shown
-        int currExample = 0;
+        private int currExample = 0;
 
         /// <summary>
         /// Class Constructor
@@ -61,8 +59,8 @@ namespace Nez.GeonBit.UI.Example
             // make the window fullscreen (but still with border and top control bar)
             int _ScreenWidth = graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
             int _ScreenHeight = graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
-            graphics.PreferredBackBufferWidth = (int)_ScreenWidth;
-            graphics.PreferredBackBufferHeight = (int)_ScreenHeight;
+            graphics.PreferredBackBufferWidth = _ScreenWidth;
+            graphics.PreferredBackBufferHeight = _ScreenHeight;
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
@@ -96,7 +94,7 @@ namespace Nez.GeonBit.UI.Example
         protected void UpdateAfterExampleChange(ref List<Panel> panels)
         {
             // hide all panels and show current example panel
-            foreach (Panel panel in panels)
+            foreach (var panel in panels)
             {
                 panel.Visible = false;
             }
@@ -118,7 +116,7 @@ namespace Nez.GeonBit.UI.Example
             // will init examples only if true
             bool initExamples = true;
 
-            SelectList eventsLog = CreateHud();
+            var eventsLog = CreateHud();
 
             // init all examples
 
@@ -166,7 +164,7 @@ namespace Nez.GeonBit.UI.Example
         {
             // create top panel
             int topPanelHeight = 65;
-            Panel topPanel = new Panel(new Vector2(0, topPanelHeight + 2), PanelSkin.Simple, Anchor.TopCenter)
+            var topPanel = new Panel(new Vector2(0, topPanelHeight + 2), PanelSkin.Simple, Anchor.TopCenter)
             {
                 Padding = Vector2.Zero
             };
@@ -175,34 +173,34 @@ namespace Nez.GeonBit.UI.Example
             // add next example button
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, Anchor.TopRight, new Vector2(300, topPanelHeight))
             {
-                OnClick = btn => { this.NextExample(ref panels); },
+                OnClick = btn => { NextExample(ref panels); },
                 Identifier = "next_btn"
             };
             topPanel.AddChild(nextExampleButton);
 
             // add show-get button
-            Button showGitButton = new Button("Git Repo", ButtonSkin.Fancy, Anchor.TopCenter, new Vector2(280, topPanelHeight))
+            var showGitButton = new Button("Git Repo", ButtonSkin.Fancy, Anchor.TopCenter, new Vector2(280, topPanelHeight))
             {
                 OnClick = btn => { System.Diagnostics.Process.Start("https://github.com/RonenNess/GeonBit.UI"); }
             };
             topPanel.AddChild(showGitButton);
 
             // add exit button
-            Button exitBtn = new Button("Exit", anchor: Anchor.BottomRight, size: new Vector2(200, -1))
+            var exitBtn = new Button("Exit", anchor: Anchor.BottomRight, size: new Vector2(200, -1))
             {
                 OnClick = entity => { Exit(); }
             };
             UserInterface.Active.AddEntity(exitBtn);
 
             // events panel for debug
-            Panel eventsPanel = new Panel(new Vector2(400, 530), PanelSkin.Simple, Anchor.CenterLeft, new Vector2(-10, 0))
+            var eventsPanel = new Panel(new Vector2(400, 530), PanelSkin.Simple, Anchor.CenterLeft, new Vector2(-10, 0))
             {
                 Visible = false
             };
 
             // events log (single-time events)
             eventsPanel.AddChild(new Label("Events Log:"));
-            SelectList eventsLog = new SelectList(size: new Vector2(-1, 280))
+            var eventsLog = new SelectList(size: new Vector2(-1, 280))
             {
                 ExtraSpaceBetweenLines = -8,
                 ItemsScale = 0.5f,
@@ -212,7 +210,7 @@ namespace Nez.GeonBit.UI.Example
 
             // current events (events that happen while something is true)
             eventsPanel.AddChild(new Label("Current Events:"));
-            SelectList eventsNow = new SelectList(size: new Vector2(-1, 100))
+            var eventsNow = new SelectList(size: new Vector2(-1, 100))
             {
                 ExtraSpaceBetweenLines = -8,
                 ItemsScale = 0.5f,
@@ -230,7 +228,7 @@ namespace Nez.GeonBit.UI.Example
             // whenever events log list size changes, make sure its not too long. if it is, trim it.
             eventsLog.OnListChange = entity =>
             {
-                SelectList list = (SelectList)entity;
+                var list = (SelectList)entity;
                 if (list.Count > 100)
                 {
                     list.RemoveItem(0);
@@ -261,7 +259,7 @@ namespace Nez.GeonBit.UI.Example
             eventsNow.MaxItems = 4;
 
             // add extra info button
-            Button infoBtn = new Button("  Events", anchor: Anchor.BottomLeft, size: new Vector2(280, -1), offset: new Vector2(140, 0));
+            var infoBtn = new Button("  Events", anchor: Anchor.BottomLeft, size: new Vector2(280, -1), offset: new Vector2(140, 0));
             infoBtn.AddChild(new Icon(IconType.Scroll, Anchor.CenterLeft), true);
             infoBtn.OnClick = entity =>
             {
@@ -271,7 +269,7 @@ namespace Nez.GeonBit.UI.Example
             UserInterface.Active.AddEntity(infoBtn);
 
             // add button to apply transformations
-            Button transBtn = new Button("Transform UI", anchor: Anchor.BottomLeft, size: new Vector2(320, -1), offset: new Vector2(140 + 280, 0))
+            var transBtn = new Button("Transform UI", anchor: Anchor.BottomLeft, size: new Vector2(320, -1), offset: new Vector2(140 + 280, 0))
             {
                 OnClick = entity =>
                 {
@@ -294,12 +292,12 @@ namespace Nez.GeonBit.UI.Example
             float zoominFactor = 0.05f;
 
             // scale show
-            Paragraph scaleShow = new Paragraph("100%", Anchor.BottomLeft, offset: new Vector2(10, 70));
+            var scaleShow = new Paragraph("100%", Anchor.BottomLeft, offset: new Vector2(10, 70));
             UserInterface.Active.AddEntity(scaleShow);
 
             // init zoom-out button
-            Button zoomout = new Button(string.Empty, ButtonSkin.Default, Anchor.BottomLeft, new Vector2(70, 70));
-            Icon zoomoutIcon = new Icon(IconType.ZoomOut, Anchor.Center, 0.75f);
+            var zoomout = new Button(string.Empty, ButtonSkin.Default, Anchor.BottomLeft, new Vector2(70, 70));
+            var zoomoutIcon = new Icon(IconType.ZoomOut, Anchor.Center, 0.75f);
             zoomout.AddChild(zoomoutIcon, true);
             zoomout.OnClick = btn =>
             {
@@ -310,8 +308,8 @@ namespace Nez.GeonBit.UI.Example
             UserInterface.Active.AddEntity(zoomout);
 
             // init zoom-in button
-            Button zoomin = new Button(string.Empty, ButtonSkin.Default, Anchor.BottomLeft, new Vector2(70, 70), new Vector2(70, 0));
-            Icon zoominIcon = new Icon(IconType.ZoomIn, Anchor.Center, 0.75f);
+            var zoomin = new Button(string.Empty, ButtonSkin.Default, Anchor.BottomLeft, new Vector2(70, 70), new Vector2(70, 0));
+            var zoominIcon = new Icon(IconType.ZoomIn, Anchor.Center, 0.75f);
             zoomin.AddChild(zoominIcon, true);
             zoomin.OnClick = btn =>
             {
@@ -334,12 +332,12 @@ namespace Nez.GeonBit.UI.Example
         private void AddWelcomeMessage()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(500, 620));
+            var panel = new Panel(new Vector2(500, 620));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
             // add title and text
-            Image title = new Image(Content.Load<Texture2D>("example/GeonBitUI-sm"), new Vector2(400, 240), anchor: Anchor.TopCenter, offset: new Vector2(0, -20))
+            var title = new Image(Content.Load<Texture2D>("example/GeonBitUI-sm"), new Vector2(400, 240), anchor: Anchor.TopCenter, offset: new Vector2(0, -20))
             {
                 ShadowColor = new Color(0, 0, 0, 128),
                 ShadowOffset = Vector2.One * -6
@@ -351,7 +349,7 @@ To start the demo, please click the 'Next' button on the top navbar.");
             panel.AddChild(new Paragraph("V" + UserInterface.VERSION, Anchor.BottomRight)).FillColor = Color.Yellow;
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -359,7 +357,7 @@ To start the demo, please click the 'Next' button on the top navbar.");
         private void AddFeaturesList()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(500, 590));
+            var panel = new Panel(new Vector2(500, 590));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -386,7 +384,7 @@ To start the demo, please click the 'Next' button on the top navbar.");
 "));
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -394,7 +392,7 @@ To start the demo, please click the 'Next' button on the top navbar.");
         private void AddBasicConcepts()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(740, 540));
+            var panel = new Panel(new Vector2(740, 540));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -407,7 +405,7 @@ To position elements inside panels or other widgets, you set an anchor and offse
 
 Another thing to keep in mind is size; Most widgets come with a default size, but for those you need to set size for remember that setting size 0 will take full width / height. For example, size of X = 0, Y = 100 means the widget will be 100 pixels height and the width of its parent (minus the parent padding)."));
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -415,7 +413,7 @@ Another thing to keep in mind is size; Most widgets come with a default size, bu
         private void AddAnchors()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(800, 620));
+            var panel = new Panel(new Vector2(800, 620));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -435,7 +433,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new Paragraph("center-left", Anchor.CenterLeft, Color.Yellow, 0.8f));
             panel.AddChild(new Paragraph("center-right", Anchor.CenterRight, Color.Yellow, 0.8f));
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, Anchor.BottomRight, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -443,7 +441,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
         private void AddButtons()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 735));
+            var panel = new Panel(new Vector2(450, 735));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -454,22 +452,22 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
 @"Please press [DPAD-Down] or [DPAD-Up] to navigate between the Buttons."));
 
             // add default button            
-            Button custom0 = new Button("Default", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
+            var custom0 = new Button("Default", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
             custom0.Identifier = "First Button";
             panel.AddChild(custom0);
 
             // alternative button
-            Button custom1 = new Button("Alternative", ButtonSkin.Alternative, size: new Vector2(0, 80)) { Selectable = true };
+            var custom1 = new Button("Alternative", ButtonSkin.Alternative, size: new Vector2(0, 80)) { Selectable = true };
             custom1.Identifier = "Second Button";
             panel.AddChild(custom1);
 
             // fancy button
-            Button custom2 = new Button("Fancy", ButtonSkin.Fancy, size: new Vector2(0, 80)) { Selectable = true };
+            var custom2 = new Button("Fancy", ButtonSkin.Fancy, size: new Vector2(0, 80)) { Selectable = true };
             custom2.Identifier = "Third Button";
             panel.AddChild(custom2);
 
             // custom button
-            Button custom3 = new Button("Custom", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
+            var custom3 = new Button("Custom", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
             custom3.SetCustomSkin(
                 Content.Load<Texture2D>("example/btn_default"),
                 Content.Load<Texture2D>("example/btn_hover"),
@@ -482,14 +480,14 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new HorizontalLine());
             panel.AddChild(new LineSpace());
             panel.AddChild(new Paragraph("This text is not selectable! Press [A] Button to perform a click event."));
-            Button btn = new Button("Toggle Me!", ButtonSkin.Default) { Selectable = true };
+            var btn = new Button("Toggle Me!", ButtonSkin.Default) { Selectable = true };
             btn.ToggleMode = true;
             btn.Identifier = "Toggle Button";
             panel.AddChild(btn);
 
             // add next example button
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = nxtButton => { this.NextExample(); };
+            nextExampleButton.OnClick = nxtButton => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -497,7 +495,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
         private void AddCheckboxesAndRadioButtons()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 520));
+            var panel = new Panel(new Vector2(450, 520));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -519,7 +517,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new RadioButton("Option 2") { Selectable = true });
             panel.AddChild(new RadioButton("Option 3") { Selectable = true });
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -527,7 +525,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
         private void AddPanels()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 640));
+            var panel = new Panel(new Vector2(450, 640));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -537,27 +535,27 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new Paragraph("GeonBit.UI comes with 4 alternative panel skins:"));
             int panelHeight = 110;
             {
-                Panel intPanel = new Panel(new Vector2(0, panelHeight), PanelSkin.Fancy, Anchor.Auto) { Selectable = true };
+                var intPanel = new Panel(new Vector2(0, panelHeight), PanelSkin.Fancy, Anchor.Auto) { Selectable = true };
                 intPanel.AddChild(new Paragraph("Fancy Panel", Anchor.Center));
                 panel.AddChild(intPanel);
             }
             {
-                Panel intPanel = new Panel(new Vector2(0, panelHeight), PanelSkin.Golden, Anchor.Auto) { Selectable = true };
+                var intPanel = new Panel(new Vector2(0, panelHeight), PanelSkin.Golden, Anchor.Auto) { Selectable = true };
                 intPanel.AddChild(new Paragraph("Golden Panel", Anchor.Center));
                 panel.AddChild(intPanel);
             }
             {
-                Panel intPanel = new Panel(new Vector2(0, panelHeight), PanelSkin.Simple, Anchor.Auto) { Selectable = true };
+                var intPanel = new Panel(new Vector2(0, panelHeight), PanelSkin.Simple, Anchor.Auto) { Selectable = true };
                 intPanel.AddChild(new Paragraph("Simple Panel", Anchor.Center));
                 panel.AddChild(intPanel);
             }
             {
-                Panel intPanel = new Panel(new Vector2(0, panelHeight), PanelSkin.ListBackground, Anchor.Auto) { Selectable = true };
+                var intPanel = new Panel(new Vector2(0, panelHeight), PanelSkin.ListBackground, Anchor.Auto) { Selectable = true };
                 intPanel.AddChild(new Paragraph("List Background", Anchor.Center));
                 panel.AddChild(intPanel);
             }
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -565,7 +563,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
         private void AddDraggable()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 690))
+            var panel = new Panel(new Vector2(450, 690))
             {
                 Draggable = true
             };
@@ -579,7 +577,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new LineSpace());
             panel.AddChild(new HorizontalLine());
             panel.AddChild(new LineSpace());
-            Paragraph paragraph = new Paragraph("Any type of entity can be dragged. For example, try to drag this text!");
+            var paragraph = new Paragraph("Any type of entity can be dragged. For example, try to drag this text!");
             paragraph.SetStyleProperty("FillColor", new StyleProperty(Color.Yellow));
             paragraph.SetStyleProperty("FillColor", new StyleProperty(Color.Purple), EntityState.MouseHover);
             paragraph.Draggable = true;
@@ -587,12 +585,12 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(paragraph);
 
             // internal panel with internal draggable
-            Panel panelInt = new Panel(new Vector2(250, 250), PanelSkin.Golden, Anchor.AutoCenter)
+            var panelInt = new Panel(new Vector2(250, 250), PanelSkin.Golden, Anchor.AutoCenter)
             {
                 Draggable = true
             };
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panelInt.AddChild(new Paragraph("This panel is draggable too, but limited to its parent boundaries.", Anchor.Center, Color.White, 0.85f));
             panel.AddChild(panelInt);
             panel.AddChild(nextExampleButton);
@@ -602,7 +600,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
         private void AddSliders()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 540));
+            var panel = new Panel(new Vector2(450, 540));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -625,7 +623,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new ProgressBar(0, 10) { Selectable = true });
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -633,7 +631,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
         private void AddLists()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 460));
+            var panel = new Panel(new Vector2(450, 460));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -642,7 +640,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new HorizontalLine());
             panel.AddChild(new Paragraph("SelectLists let you pick a value from a list of items:"));
 
-            SelectList list = new SelectList(new Vector2(0, 280));
+            var list = new SelectList(new Vector2(0, 280));
             list.AddItem("Warrior");
             list.AddItem("Mage");
             list.AddItem("Ranger");
@@ -655,7 +653,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             list.AddItem("Ranger");
             panel.AddChild(list);
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -663,7 +661,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
         private void AddListAsTables()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(620, 460));
+            var panel = new Panel(new Vector2(620, 460));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -673,23 +671,23 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new Paragraph("With few simple tricks you can also create lists that behave like a table:"));
 
             // create the list
-            SelectList list = new SelectList(new Vector2(0, 280));
+            var list = new SelectList(new Vector2(0, 280));
 
             // lock and create title
             list.LockedItems[0] = true;
-            list.AddItem(System.String.Format("{0}{1,-8} {2,-8} {3, -10}", "{{RED}}", "Name", "Class", "Level"));
+            list.AddItem(string.Format("{0}{1,-8} {2,-8} {3, -10}", "{{RED}}", "Name", "Class", "Level"));
 
             // add items as formatted table
-            list.AddItem(System.String.Format("{0,-8} {1,-8} {2,-10}", "Joe", "Mage", "5"));
-            list.AddItem(System.String.Format("{0,-8} {1,-8} {2,-10}", "Ron", "Monk", "7"));
-            list.AddItem(System.String.Format("{0,-8} {1,-8} {2,-10}", "Alex", "Rogue", "3"));
-            list.AddItem(System.String.Format("{0,-8} {1,-8} {2,-10}", "Jim", "Paladin", "7"));
-            list.AddItem(System.String.Format("{0,-8} {1,-8} {2,-10}", "Abe", "Cleric", "8"));
-            list.AddItem(System.String.Format("{0,-8} {1,-8} {2,-10}", "James", "Warlock", "20"));
-            list.AddItem(System.String.Format("{0,-8} {1,-8} {2,-10}", "Bob", "Bard", "1"));
+            list.AddItem(string.Format("{0,-8} {1,-8} {2,-10}", "Joe", "Mage", "5"));
+            list.AddItem(string.Format("{0,-8} {1,-8} {2,-10}", "Ron", "Monk", "7"));
+            list.AddItem(string.Format("{0,-8} {1,-8} {2,-10}", "Alex", "Rogue", "3"));
+            list.AddItem(string.Format("{0,-8} {1,-8} {2,-10}", "Jim", "Paladin", "7"));
+            list.AddItem(string.Format("{0,-8} {1,-8} {2,-10}", "Abe", "Cleric", "8"));
+            list.AddItem(string.Format("{0,-8} {1,-8} {2,-10}", "James", "Warlock", "20"));
+            list.AddItem(string.Format("{0,-8} {1,-8} {2,-10}", "Bob", "Bard", "1"));
             panel.AddChild(list);
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -697,7 +695,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
         private void AddListsSkins()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 460));
+            var panel = new Panel(new Vector2(450, 460));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -706,7 +704,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new HorizontalLine());
             panel.AddChild(new Paragraph("Just like panels, SelectList can use alternative skins:"));
 
-            SelectList list = new SelectList(new Vector2(0, 280), skin: PanelSkin.Golden);
+            var list = new SelectList(new Vector2(0, 280), skin: PanelSkin.Golden);
             list.AddItem("Warrior");
             list.AddItem("Mage");
             list.AddItem("Ranger");
@@ -719,7 +717,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             list.AddItem("Ranger");
             panel.AddChild(list);
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -727,7 +725,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
         private void AddDropdown()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 430));
+            var panel = new Panel(new Vector2(450, 430));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -736,7 +734,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             panel.AddChild(new HorizontalLine());
 
             panel.AddChild(new Paragraph("DropDown is just like a list, but take less space since it hide the list when not used:"));
-            DropDown drop = new DropDown(new Vector2(0, 250));
+            var drop = new DropDown(new Vector2(0, 250));
             drop.AddItem("Warrior");
             drop.AddItem("Mage");
             drop.AddItem("Ranger");
@@ -757,7 +755,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
             drop.AddItem("Ranger");
             panel.AddChild(drop);
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -765,7 +763,7 @@ The most common anchors are 'Auto' and 'AutoInline', which will place entities o
         private void AddPanelsWithScrollbars()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 440)) { Selectable = true };
+            var panel = new Panel(new Vector2(450, 440)) { Selectable = true };
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -794,7 +792,7 @@ Here's a button, to test clicking while scrolled:"));
             panel.Scrollbar.AdjustMaxAutomatically = true;
             panel.Identifier = "panel_with_scrollbar";
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -802,7 +800,7 @@ Here's a button, to test clicking while scrolled:"));
         private void AddIcons()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(460, 640));
+            var panel = new Panel(new Vector2(460, 640));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -828,7 +826,7 @@ Here's a button, to test clicking while scrolled:"));
             }
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -836,7 +834,7 @@ Here's a button, to test clicking while scrolled:"));
         private void AddTextInput()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 700));
+            var panel = new Panel(new Vector2(450, 700));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -846,7 +844,7 @@ Here's a button, to test clicking while scrolled:"));
 
             // inliner
             panel.AddChild(new Paragraph("Text input let you get free text from the user:"));
-            TextInput text = new TextInput(false)
+            var text = new TextInput(false)
             {
                 PlaceholderText = "Insert text.."
             };
@@ -854,7 +852,7 @@ Here's a button, to test clicking while scrolled:"));
 
             // multiline
             panel.AddChild(new Paragraph("Text input can also be multiline, and use different panel skins:"));
-            TextInput textMulti = new TextInput(true, new Vector2(0, 220), skin: PanelSkin.Golden)
+            var textMulti = new TextInput(true, new Vector2(0, 220), skin: PanelSkin.Golden)
             {
                 PlaceholderText = @"Insert multiline text.."
             };
@@ -862,7 +860,7 @@ Here's a button, to test clicking while scrolled:"));
 
             // with hidden password chars
             panel.AddChild(new Paragraph("Hidden text input:"));
-            TextInput hiddenText = new TextInput(false)
+            var hiddenText = new TextInput(false)
             {
                 PlaceholderText = "Enter password..",
                 HideInputWithChar = '*'
@@ -879,7 +877,7 @@ Here's a button, to test clicking while scrolled:"));
             panel.AddChild(hideCheckbox);
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -887,7 +885,7 @@ Here's a button, to test clicking while scrolled:"));
         private void AddTooltipText()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 550));
+            var panel = new Panel(new Vector2(450, 550));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -908,7 +906,7 @@ And yes, it can be multiline."
             panel.AddChild(tooltipButton);
             panel.AddChild(new Paragraph(@"Note that you can override the function that generates tooltip text entities if you want to create your own custom style."));
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -916,7 +914,7 @@ And yes, it can be multiline."
         private void AddLockedTextInput()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(500, 570));
+            var panel = new Panel(new Vector2(500, 570));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -926,7 +924,7 @@ And yes, it can be multiline."
 
             // inliner
             panel.AddChild(new Paragraph("A locked multiline text is a cool trick to create long, scrollable text:"));
-            TextInput textMulti = new TextInput(true, new Vector2(0, 370))
+            var textMulti = new TextInput(true, new Vector2(0, 370))
             {
                 Locked = true
             };
@@ -945,7 +943,7 @@ A common feature of clerics across many games is that they may not equip pointed
 Related to the cleric is the paladin, who is typically a Lawful Good[citation needed] warrior often aligned with a religious order, and who uses their martial skills to advance its holy cause.";
             panel.AddChild(textMulti);
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -953,12 +951,12 @@ Related to the cleric is the paladin, who is typically a Lawful Good[citation ne
         private void AddPanelTabs()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(600, 520));
+            var panel = new Panel(new Vector2(600, 520));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
             // create panel tabs
-            PanelTabs tabs = new PanelTabs();
+            var tabs = new PanelTabs();
             panel.AddChild(tabs);
 
             // add first panel
@@ -1060,7 +1058,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
                 // add next example button
                 nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80))
                 { Selectable = true, AttachedData = tab.button  /*entry point for gamepad tabbing*/ };
-                nextExampleButton.OnClick = btn2 => { this.NextExample(); };
+                nextExampleButton.OnClick = btn2 => { NextExample(); };
                 tab.panel.AddChild(nextExampleButton);
 
                 tab.button.Selectable = true;   // a tab should be selectable by the gamepad
@@ -1072,7 +1070,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
         private void AddMessages()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 560)) { Identifier = "" };
+            var panel = new Panel(new Vector2(450, 560)) { Identifier = "" };
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -1124,7 +1122,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             }
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1132,7 +1130,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
         private void AddFileMenu()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(750, 660));
+            var panel = new Panel(new Vector2(750, 660));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -1162,7 +1160,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             panel.AddChild(fileMenu);
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1170,7 +1168,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
         private void AddDisabled()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(480, 580));
+            var panel = new Panel(new Vector2(480, 580));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -1180,7 +1178,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             panel.AddChild(new Paragraph("Entities can be disabled:"));
 
             // internal panel
-            Panel panel2 = new Panel(Vector2.Zero, PanelSkin.None, Anchor.Auto)
+            var panel2 = new Panel(Vector2.Zero, PanelSkin.None, Anchor.Auto)
             {
                 Padding = Vector2.Zero
             };
@@ -1194,14 +1192,14 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             }
             panel2.AddChild(new Paragraph("\nDisabled entities are drawn in black & white, and you cannot interact with them.."));
 
-            SelectList list = new SelectList(new Vector2(0, 130)) { Enabled = false };
+            var list = new SelectList(new Vector2(0, 130)) { Enabled = false };
             list.AddItem("Warrior");
             list.AddItem("Mage");
             panel2.AddChild(list);
             panel2.AddChild(new CheckBox("disabled..") { Enabled = false });
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel2.AddChild(nextExampleButton);
             panel2.MakeFirstSelection();
         }
@@ -1209,7 +1207,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
         private void AddLocked()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(520, 610));
+            var panel = new Panel(new Vector2(520, 610));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -1218,7 +1216,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             panel.AddChild(new HorizontalLine());
             panel.AddChild(new Paragraph("Entities can also be locked:", Anchor.Auto));
 
-            Panel panel2 = new Panel(Vector2.Zero, PanelSkin.None, Anchor.Auto)
+            var panel2 = new Panel(Vector2.Zero, PanelSkin.None, Anchor.Auto)
             {
                 Padding = Vector2.Zero
             };
@@ -1233,14 +1231,14 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             }
             panel2.AddChild(new Paragraph("\nLocked entities will not respond to input, but unlike disabled entities they are drawn normally, eg with colors:"));
 
-            SelectList list = new SelectList(new Vector2(0, 130)) { Locked = true };
+            var list = new SelectList(new Vector2(0, 130)) { Locked = true };
             list.AddItem("Warrior");
             list.AddItem("Mage");
             panel2.AddChild(list);
             panel2.AddChild(new CheckBox("locked..") { Locked = true });
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel2.AddChild(nextExampleButton);
             panel2.MakeFirstSelection();
         }
@@ -1248,7 +1246,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
         private void AddCursors()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(450, 540));
+            var panel = new Panel(new Vector2(450, 540));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -1259,7 +1257,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
 
             // default cursor show
             {
-                Button btn = new Button("Default", ButtonSkin.Default) { Selectable = true };
+                var btn = new Button("Default", ButtonSkin.Default) { Selectable = true };
                 btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                 btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                 panel.AddChild(btn);
@@ -1267,7 +1265,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
 
             // pointer cursor show
             {
-                Button btn = new Button("Pointer", ButtonSkin.Default) { Selectable = true };
+                var btn = new Button("Pointer", ButtonSkin.Default) { Selectable = true };
                 btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(CursorType.Pointer); };
                 btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                 panel.AddChild(btn);
@@ -1275,7 +1273,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
 
             // ibeam cursor show
             {
-                Button btn = new Button("IBeam", ButtonSkin.Default) { Selectable = true };
+                var btn = new Button("IBeam", ButtonSkin.Default) { Selectable = true };
                 btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(CursorType.IBeam); };
                 btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                 panel.AddChild(btn);
@@ -1283,14 +1281,14 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
 
             panel.AddChild(new Paragraph("And as always, you can also set your own custom cursor:"));
             {
-                Button btn = new Button("Custom", ButtonSkin.Default) { Selectable = true };
+                var btn = new Button("Custom", ButtonSkin.Default) { Selectable = true };
                 btn.OnMouseEnter = entity => { UserInterface.Active.SetCursor(Content.Load<Texture2D>("example/cursor"), 40); };
                 btn.OnMouseLeave = entity => { UserInterface.Active.SetCursor(CursorType.Default); };
                 panel.AddChild(btn);
             }
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1298,7 +1296,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
         private void AddMisc()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(530, 590));
+            var panel = new Panel(new Vector2(530, 590));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -1308,14 +1306,14 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             panel.AddChild(new Paragraph("Some cool tricks you can do:"));
 
             // button with icon
-            Button buttonWithIcon = new Button("Button With Icon");
+            var buttonWithIcon = new Button("Button With Icon");
             buttonWithIcon.ButtonParagraph.SetPosition(Anchor.CenterLeft, new Vector2(60, 0));
             buttonWithIcon.AddChild(new Icon(IconType.Book, Anchor.CenterLeft), true);
             panel.AddChild(buttonWithIcon);
 
             // change progressbar color
             panel.AddChild(new Paragraph("Different ProgressBar colors:"));
-            ProgressBar pb = new ProgressBar();
+            var pb = new ProgressBar();
             pb.ProgressFill.FillColor = Color.Red;
             pb.Caption.Text = "Optional caption...";
             panel.AddChild(pb);
@@ -1323,7 +1321,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             // paragraph style with mouse
             panel.AddChild(new LineSpace());
             panel.AddChild(new HorizontalLine());
-            Paragraph paragraph = new Paragraph("Hover / click styling..");
+            var paragraph = new Paragraph("Hover / click styling..");
             paragraph.SetStyleProperty("FillColor", new StyleProperty(Color.Purple), EntityState.MouseDown);
             paragraph.SetStyleProperty("FillColor", new StyleProperty(Color.Red), EntityState.MouseHover);
             panel.AddChild(paragraph);
@@ -1331,13 +1329,13 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
 
             // colored rectangle
             panel.AddChild(new Paragraph("Colored rectangle:"));
-            ColoredRectangle rect = new ColoredRectangle(Color.Blue, Color.Red, 4, new Vector2(0, 40));
+            var rect = new ColoredRectangle(Color.Blue, Color.Red, 4, new Vector2(0, 40));
             panel.AddChild(rect);
             panel.AddChild(new HorizontalLine());
 
             // custom icons
             panel.AddChild(new Paragraph("Custom icons / images:"));
-            Icon icon = new Icon(IconType.None, Anchor.AutoInline, 1, true, new Vector2(12, 10))
+            var icon = new Icon(IconType.None, Anchor.AutoInline, 1, true, new Vector2(12, 10))
             {
                 Texture = Content.Load<Texture2D>("example/warrior")
             };
@@ -1354,7 +1352,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             panel.AddChild(icon);
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1364,20 +1362,20 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             int panelWidth = 730;
 
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(panelWidth, 550));
+            var panel = new Panel(new Vector2(panelWidth, 550));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
             // create an internal panel to align components better - a row that covers the entire width split into 3 columns (left, center, right)
             // first the container panel
-            Panel entitiesGroup = new Panel(new Vector2(0, 240), PanelSkin.None, Anchor.AutoCenter)
+            var entitiesGroup = new Panel(new Vector2(0, 240), PanelSkin.None, Anchor.AutoCenter)
             {
                 Padding = Vector2.Zero
             };
             panel.AddChild(entitiesGroup);
 
             // left side
-            Panel leftPanel = new Panel(new Vector2(0.45f, 500), PanelSkin.None, Anchor.TopLeft)
+            var leftPanel = new Panel(new Vector2(0.45f, 500), PanelSkin.None, Anchor.TopLeft)
             {
                 Padding = Vector2.Zero,
                 PanelOverflowBehavior = PanelOverflowBehavior.VerticalScroll,
@@ -1388,7 +1386,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
             entitiesGroup.AddChild(leftPanel);
 
             // right side
-            Panel rightPanel = new Panel(new Vector2(0.45f, 0), PanelSkin.None, Anchor.TopRight)
+            var rightPanel = new Panel(new Vector2(0.45f, 0), PanelSkin.None, Anchor.TopRight)
             {
                 Padding = Vector2.Zero
             };
@@ -1441,7 +1439,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
         private void AddCharacterBuilderPageIntro()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(500, 300));
+            var panel = new Panel(new Vector2(500, 300));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -1453,7 +1451,7 @@ Press the [DPAD-Down] or [DPAD-Up] Button to select an entity in the panel!"));
 Click on 'Next' to see the character creation demo."));
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1463,7 +1461,7 @@ Click on 'Next' to see the character creation demo."));
             int panelWidth = 730;
 
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(panelWidth, 550));
+            var panel = new Panel(new Vector2(panelWidth, 550));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -1473,28 +1471,28 @@ Click on 'Next' to see the character creation demo."));
 
             // create an internal panel to align components better - a row that covers the entire width split into 3 columns (left, center, right)
             // first the container panel
-            Panel entitiesGroup = new Panel(new Vector2(0, 240), PanelSkin.None, Anchor.AutoCenter)
+            var entitiesGroup = new Panel(new Vector2(0, 240), PanelSkin.None, Anchor.AutoCenter)
             {
                 Padding = Vector2.Zero
             };
             panel.AddChild(entitiesGroup);
 
             // now left side
-            Panel leftPanel = new Panel(new Vector2(0.33f, 0), PanelSkin.None, Anchor.TopLeft)
+            var leftPanel = new Panel(new Vector2(0.33f, 0), PanelSkin.None, Anchor.TopLeft)
             {
                 Padding = Vector2.Zero
             };
             entitiesGroup.AddChild(leftPanel);
 
             // right side
-            Panel rightPanel = new Panel(new Vector2(0.33f, 0), PanelSkin.None, Anchor.TopRight)
+            var rightPanel = new Panel(new Vector2(0.33f, 0), PanelSkin.None, Anchor.TopRight)
             {
                 Padding = Vector2.Zero
             };
             entitiesGroup.AddChild(rightPanel);
 
             // center
-            Panel centerPanel = new Panel(new Vector2(0.33f, 0), PanelSkin.None, Anchor.TopCenter)
+            var centerPanel = new Panel(new Vector2(0.33f, 0), PanelSkin.None, Anchor.TopCenter)
             {
                 Padding = Vector2.Zero
             };
@@ -1502,26 +1500,26 @@ Click on 'Next' to see the character creation demo."));
 
             // create a character preview panel
             centerPanel.AddChild(new Label(@"Preview", Anchor.AutoCenter));
-            Panel charPreviewPanel = new Panel(new Vector2(180, 180), PanelSkin.Simple, Anchor.AutoCenter)
+            var charPreviewPanel = new Panel(new Vector2(180, 180), PanelSkin.Simple, Anchor.AutoCenter)
             {
                 Padding = Vector2.Zero
             };
             centerPanel.AddChild(charPreviewPanel);
 
             // create preview pics of character
-            Image previewImage = new Image(Content.Load<Texture2D>("example/warrior"), Vector2.Zero, anchor: Anchor.Center);
-            Image previewImageColor = new Image(Content.Load<Texture2D>("example/warrior_color"), Vector2.Zero, anchor: Anchor.Center);
-            Image previewImageSkin = new Image(Content.Load<Texture2D>("example/warrior_skin"), Vector2.Zero, anchor: Anchor.Center);
+            var previewImage = new Image(Content.Load<Texture2D>("example/warrior"), Vector2.Zero, anchor: Anchor.Center);
+            var previewImageColor = new Image(Content.Load<Texture2D>("example/warrior_color"), Vector2.Zero, anchor: Anchor.Center);
+            var previewImageSkin = new Image(Content.Load<Texture2D>("example/warrior_skin"), Vector2.Zero, anchor: Anchor.Center);
             charPreviewPanel.AddChild(previewImage);
             charPreviewPanel.AddChild(previewImageColor);
             charPreviewPanel.AddChild(previewImageSkin);
 
             // add skin tone slider
-            Slider skin = new Slider(0, 10, new Vector2(0, -1), SliderSkin.Default, Anchor.Auto)
+            var skin = new Slider(0, 10, new Vector2(0, -1), SliderSkin.Default, Anchor.Auto)
             {
                 OnValueChange = entity =>
                 {
-                    Slider slider = (Slider)entity;
+                    var slider = (Slider)entity;
                     int alpha = (int)(slider.GetValueAsPercent() * 255);
                     previewImageSkin.FillColor = new Color(60, 32, 25, alpha);
                 },
@@ -1531,7 +1529,7 @@ Click on 'Next' to see the character creation demo."));
 
             // create the class selection list
             leftPanel.AddChild(new Label(@"Class", Anchor.AutoCenter));
-            SelectList classTypes = new SelectList(new Vector2(0, 208), Anchor.Auto);
+            var classTypes = new SelectList(new Vector2(0, 208), Anchor.Auto);
             classTypes.AddItem("Warrior");
             classTypes.AddItem("Mage");
             classTypes.AddItem("Ranger");
@@ -1550,13 +1548,13 @@ Click on 'Next' to see the character creation demo."));
             rightPanel.AddChild(new Label(@"Color", Anchor.AutoCenter));
             Color[] colors = { Color.White, Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Purple, Color.Cyan, Color.Brown };
             int colorPickSize = 24;
-            foreach (Color baseColor in colors)
+            foreach (var baseColor in colors)
             {
                 rightPanel.AddChild(new LineSpace(0));
                 for (int i = 0; i < 8; ++i)
                 {
-                    Color color = baseColor * (1.0f - (i * 2 / 16.0f)); color.A = 255;
-                    ColoredRectangle currColorButton = new ColoredRectangle(color, Vector2.One * colorPickSize, Anchor.AutoInline);
+                    var color = baseColor * (1.0f - (i * 2 / 16.0f)); color.A = 255;
+                    var currColorButton = new ColoredRectangle(color, Vector2.One * colorPickSize, Anchor.AutoInline);
                     currColorButton.Padding = currColorButton.SpaceAfter = currColorButton.SpaceBefore = Vector2.Zero;
                     currColorButton.OnClick = entity =>
                     {
@@ -1572,7 +1570,7 @@ Click on 'Next' to see the character creation demo."));
             entitiesGroup.AddChild(new RadioButton("Female", Anchor.AutoInline, new Vector2(240, 60)));
 
             // hardcore mode
-            Button hardcore = new Button("Hardcore", ButtonSkin.Fancy, Anchor.AutoInline, new Vector2(220, 60));
+            var hardcore = new Button("Hardcore", ButtonSkin.Fancy, Anchor.AutoInline, new Vector2(220, 60));
             hardcore.ButtonParagraph.Scale = 0.8f;
             hardcore.ToggleMode = true;
             entitiesGroup.AddChild(hardcore);
@@ -1587,7 +1585,7 @@ Click on 'Next' to see the character creation demo."));
             // now add the text inputs
 
             // first name
-            TextInput firstName = new TextInput(false, new Vector2(0.4f, -1), anchor: Anchor.Auto)
+            var firstName = new TextInput(false, new Vector2(0.4f, -1), anchor: Anchor.Auto)
             {
                 PlaceholderText = "Name"
             };
@@ -1597,7 +1595,7 @@ Click on 'Next' to see the character creation demo."));
             entitiesGroup.AddChild(firstName);
 
             // last name
-            TextInput lastName = new TextInput(false, new Vector2(0.4f, -1), anchor: Anchor.AutoInline)
+            var lastName = new TextInput(false, new Vector2(0.4f, -1), anchor: Anchor.AutoInline)
             {
                 PlaceholderText = "Surname"
             };
@@ -1607,14 +1605,14 @@ Click on 'Next' to see the character creation demo."));
             entitiesGroup.AddChild(lastName);
 
             // age
-            TextInput age = new TextInput(false, new Vector2(0.2f, -1), anchor: Anchor.AutoInline);
+            var age = new TextInput(false, new Vector2(0.2f, -1), anchor: Anchor.AutoInline);
             age.Validators.Add(new TextValidatorNumbersOnly(false, 0, 80));
             age.Value = "20";
             age.ValueWhenEmpty = "20";
             entitiesGroup.AddChild(age);
 
             nextExampleButton = new Button("Next ->", ButtonSkin.Default, size: new Vector2(0, 80)) { Selectable = true };
-            nextExampleButton.OnClick = btn => { this.NextExample(); };
+            nextExampleButton.OnClick = btn => { NextExample(); };
             panel.AddChild(nextExampleButton);
             panel.MakeFirstSelection();
         }
@@ -1622,7 +1620,7 @@ Click on 'Next' to see the character creation demo."));
         private void AddEpilogue()
         {
             // create panel and add to list of panels and manager
-            Panel panel = new Panel(new Vector2(520, 400));
+            var panel = new Panel(new Vector2(520, 400));
             panels.Add(panel);
             UserInterface.Active.AddEntity(panel);
 
@@ -1662,7 +1660,7 @@ If you liked GeonBit.UI feel free to star the repo on GitHub. :)"));
         protected void UpdateAfterExampleChange()
         {
             // hide all panels and show current example panel
-            foreach (Panel panel in panels)
+            foreach (var panel in panels)
             {
                 panel.Visible = false;
             }

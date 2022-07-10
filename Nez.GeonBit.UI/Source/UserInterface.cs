@@ -9,13 +9,11 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.UI.Entities;
-using Microsoft.Xna.Framework.Content;
-using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using UIEntity = Nez.GeonBit.UI.Entities.Entity;
-using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI
 {
@@ -24,7 +22,7 @@ namespace Nez.GeonBit.UI
     /// This is the main GeonBit.UI namespace. It contains the UserInterface manager and other important helpers.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGenerated]
-    class NamespaceDoc
+    internal class NamespaceDoc
     {
     }
 
@@ -104,13 +102,13 @@ namespace Nez.GeonBit.UI
         public static UserInterface Active = null;
 
         // input manager
-        static internal InputHelper _input;
+        internal static InputHelper _input;
 
         // content manager
-        static ContentManager _content;
+        private static ContentManager _content;
 
         // the main render target we render everything on
-        RenderTarget2D _renderTarget = null;
+        private RenderTarget2D _renderTarget = null;
 
         // are we currently in use-render-target mode
         private bool _useRenderTarget = false;
@@ -149,20 +147,18 @@ namespace Nez.GeonBit.UI
         /// </summary>
         public static CursorMode GetCursorMode
         {
-            get { return _cursorMode; }
-            set
-            {
-                _cursorMode = value;
-            }
+            get => _cursorMode;
+            set => _cursorMode = value;
         }
-        
+
         /// <summary>
         /// Create a default paragraph instance.
         /// GeonBit.UI entities use this method when need to create a paragraph, so you can override this to change which paragraph type the built-in
         /// entities will use by-default (for example Buttons text, SelectList items, etc.).
         /// </summary>
-        static public DefaultParagraphGenerator DefaultParagraph =
-            (string text, Anchor anchor, Color? color, float? scale, Vector2? size, Vector2? offset) => {
+        public static DefaultParagraphGenerator DefaultParagraph =
+            (string text, Anchor anchor, Color? color, float? scale, Vector2? size, Vector2? offset) =>
+            {
                 if (color != null)
                 {
                     return new MulticolorParagraph(text, anchor, color.Value, scale, size, offset);
@@ -176,17 +172,14 @@ namespace Nez.GeonBit.UI
         /// </summary>
         public bool UseRenderTarget
         {
-            get { return _useRenderTarget; }
+            get => _useRenderTarget;
             set { _useRenderTarget = value; DisposeRenderTarget(); }
         }
 
         /// <summary>
         /// Get the main render target all the UI draws on.
         /// </summary>
-        public RenderTarget2D RenderTarget
-        {
-            get { return _renderTarget; }
-        }
+        public RenderTarget2D RenderTarget => _renderTarget;
 
         /// <summary>
         /// Get the root entity.
@@ -204,7 +197,7 @@ namespace Nez.GeonBit.UI
         public SamplerState SamplerState = SamplerState.PointClamp;
 
         // the entity currently being dragged
-        UIEntity _dragTarget;
+        private UIEntity _dragTarget;
 
         // current global scale
         private float _scale = 1f;
@@ -212,7 +205,7 @@ namespace Nez.GeonBit.UI
         /// <summary>Scale the entire UI and all the entities in it. This is useful for smaller device screens.</summary>
         public float GlobalScale
         {
-            get { return _scale; }
+            get => _scale;
             set { _scale = value; Root.MarkAsDirty(); }
         }
 
@@ -310,22 +303,22 @@ namespace Nez.GeonBit.UI
         public EventCallback OnFocusChange = null;
 
         // cursor texture.
-        Texture2D _cursorTexture = null;
+        private Texture2D _cursorTexture = null;
 
         // cursor width.
-        int _cursorWidth = 32;
+        private int _cursorWidth = 32;
 
         // cursor offset from mouse actual position.
-        Point _cursorOffset = Point.Zero;
+        private Point _cursorOffset = Point.Zero;
 
         // time until we show tooltip text.
         private float _timeUntilTooltip = 0f;
 
         // the current tooltip entity.
-        UIEntity _tooltipEntity;
+        private UIEntity _tooltipEntity;
 
         // current tooltip target entity (eg entity we point on with tooltip).
-        UIEntity _tooltipTargetEntity;
+        private UIEntity _tooltipTargetEntity;
 
         /// <summary>
         /// How long to wait before showing tooltip texts.
@@ -336,15 +329,15 @@ namespace Nez.GeonBit.UI
         public bool ShowCursor = true;
 
         /// <summary>Weather or not to lock the cursor position.</summary>
-        static private bool _LockCursorPosition = false;
+        private static bool _LockCursorPosition = false;
 
         /// <summary>
         /// Lock the mouse cursor position so it's only moveable with gamepad (need to set AFTER Initilization of UserInterface!).
         /// </summary>
-        static public bool LockCursorPosition
+        public static bool LockCursorPosition
         {
-            private get { return _LockCursorPosition; }
-            set { _input.LockMousePosition = _LockCursorPosition = value; }
+            private get => _LockCursorPosition;
+            set => _input.LockMousePosition = _LockCursorPosition = value;
         }
 
         /// <summary>
@@ -368,7 +361,7 @@ namespace Nez.GeonBit.UI
         /// </summary>
         /// <param name="contentManager">Content manager.</param>
         /// <param name="theme">Which UI theme to use (see options in Content/GeonBit.UI/themes/). This affect the appearance of all textures and effects.</param>
-        static public void Initialize(ContentManager contentManager, string theme = "hd")
+        public static void Initialize(ContentManager contentManager, string theme = "hd")
         {
             // store the content manager
             _content = contentManager;
@@ -383,10 +376,7 @@ namespace Nez.GeonBit.UI
         /// <summary>
         /// Dispose unmanaged resources of this user interface.
         /// </summary>
-        public void Dispose()
-        {
-            DisposeRenderTarget();
-        }
+        public void Dispose() => DisposeRenderTarget();
 
         /// <summary>
         /// UserInterface destructor.
@@ -401,14 +391,16 @@ namespace Nez.GeonBit.UI
         /// </summary>
         /// <param name="source">Source entity.</param>
         /// <returns>Entity to use for tooltip text.</returns>
-        static private UIEntity DefaultGenerateTooltipFunc(UIEntity source)
+        private static UIEntity DefaultGenerateTooltipFunc(UIEntity source)
         {
             // no tooltip text? return null
             if (source.ToolTipText == null) return null;
 
             // create tooltip paragraph
-            var tooltip = new Paragraph(source.ToolTipText, size: new Vector2(500, -1));
-            tooltip.BackgroundColor = Color.Black;
+            var tooltip = new Paragraph(source.ToolTipText, size: new Vector2(500, -1))
+            {
+                BackgroundColor = Color.Black
+            };
 
             // add callback to update tooltip position
             tooltip.BeforeDraw += (UIEntity ent) =>
@@ -439,10 +431,7 @@ namespace Nez.GeonBit.UI
         /// </summary>
         /// <param name="contentManager">Content manager.</param>
         /// <param name="theme">Which UI theme to use. This affect the appearance of all textures and effects.</param>
-        static public void Initialize(ContentManager contentManager, BuiltinThemes theme)
-        {
-            Initialize(contentManager, theme.ToString());
-        }
+        public static void Initialize(ContentManager contentManager, BuiltinThemes theme) => Initialize(contentManager, theme.ToString());
 
         /// <summary>
         /// Create the user interface instance.
@@ -473,10 +462,7 @@ namespace Nez.GeonBit.UI
         /// Set a new mouse cursor position based on gamepad entity selection
         /// </summary>
         /// <param name="position">The new position of the mouse cursor.</param>
-        static public void SetCursorPosition(Vector2 position)
-        {
-            _input.UpdateCursorPosition(position);
-        }
+        public static void SetCursorPosition(Vector2 position) => _input.UpdateCursorPosition(position);
 
         /// <summary>
         /// Set cursor style.
@@ -484,7 +470,7 @@ namespace Nez.GeonBit.UI
         /// <param name="type">What type of cursor to show.</param>
         public void SetCursor(CursorType type)
         {
-            CursorTextureData data = Resources.CursorsData[(int)type];
+            var data = Resources.CursorsData[(int)type];
             SetCursor(Resources.Cursors[type], data.DrawWidth, new Point(data.OffsetX, data.OffsetY));
         }
 
@@ -511,7 +497,7 @@ namespace Nez.GeonBit.UI
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState, SamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise);
 
             // calculate cursor size
-            float cursorSize = CursorScale * GlobalScale * ((float)_cursorWidth / (float)_cursorTexture.Width);
+            float cursorSize = CursorScale * GlobalScale * (_cursorWidth / (float)_cursorTexture.Width);
 
             // get cursor position and draw it
             var cursorPos = Input.MousePosition;
@@ -529,27 +515,18 @@ namespace Nez.GeonBit.UI
         /// Add an entity to screen.
         /// </summary>
         /// <param name="entity">Entity to add.</param>
-        public T AddEntity<T>(T entity) where T : UIEntity
-        {
-            return Root.AddChild(entity);
-        }
+        public T AddEntity<T>(T entity) where T : UIEntity => Root.AddChild(entity);
 
         /// <summary>
         /// Remove an entity from screen.
         /// </summary>
         /// <param name="entity">Entity to remove.</param>
-        public void RemoveEntity(UIEntity entity)
-        {
-            Root.RemoveChild(entity);
-        }
+        public void RemoveEntity(UIEntity entity) => Root.RemoveChild(entity);
 
         /// <summary>
         /// Remove all entities from screen.
         /// </summary>
-        public void Clear()
-        {
-            Root.ClearChildren();
-        }
+        public void Clear() => Root.ClearChildren();
 
         /// <summary>
         /// Update the UI manager. This function should be called from your Game 'Update()' function, as early as possible (eg before you update your game state).
@@ -751,7 +728,7 @@ namespace Nez.GeonBit.UI
                 var matrix = Matrix.Invert(RenderTargetTransformMatrix.Value);
                 return _input.TransformCursorPos(matrix) + Vector2.Transform(addVector.Value, matrix);
             }
-            
+
             // return raw cursor pos
             return _input.MousePosition + addVector.Value;
         }
@@ -760,10 +737,7 @@ namespace Nez.GeonBit.UI
         /// Get xml serializer.
         /// </summary>
         /// <returns>XML serializer instance.</returns>
-        virtual protected XmlSerializer GetXmlSerializer()
-        {
-            return new XmlSerializer(Root.GetType(), UIEntity._serializableTypes.ToArray());
-        }
+        protected virtual XmlSerializer GetXmlSerializer() => new XmlSerializer(Root.GetType(), UIEntity._serializableTypes.ToArray());
 
         /// <summary>
         /// Serialize the whole UI to stream.
@@ -814,7 +788,7 @@ namespace Nez.GeonBit.UI
         /// <param name="path">Filename to serialize into.</param>
         public void Serialize(string path)
         {
-            System.IO.FileStream file = System.IO.File.Create(path);
+            var file = System.IO.File.Create(path);
             Serialize(file);
             file.Close();
         }
@@ -827,7 +801,7 @@ namespace Nez.GeonBit.UI
         /// <param name="path">Filename to deserialize from.</param>
         public void Deserialize(string path)
         {
-            System.IO.FileStream file = System.IO.File.OpenRead(path);
+            var file = System.IO.File.OpenRead(path);
             Deserialize(file);
             file.Close();
         }

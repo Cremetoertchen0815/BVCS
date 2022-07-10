@@ -15,7 +15,7 @@ namespace Nez.GeonBit.UI.Utils
     /// GeonBit.UI.Utils contain different utilities and helper classes to use GeonBit.UI.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGenerated]
-    class NamespaceDoc
+    internal class NamespaceDoc
     {
     }
 
@@ -50,10 +50,7 @@ namespace Nez.GeonBit.UI.Utils
         /// <summary>
         /// Get if there's a message box currently opened.
         /// </summary>
-        public static bool IsMsgBoxOpened
-        {
-            get { return OpenedMsgBoxesCount > 0; }
-        }
+        public static bool IsMsgBoxOpened => OpenedMsgBoxesCount > 0;
 
         /// <summary>
         /// A button / option for a message box.
@@ -108,10 +105,12 @@ namespace Nez.GeonBit.UI.Utils
             Entities.ColoredRectangle fader = null;
             if (BackgroundFaderColor.A != 0)
             {
-                fader = new Entities.ColoredRectangle(Vector2.Zero, Entities.Anchor.Center);
-                fader.FillColor = new Color(0, 0, 0, 100);
-                fader.OutlineWidth = 0;
-                fader.ClickThrough = false;
+                fader = new Entities.ColoredRectangle(Vector2.Zero, Entities.Anchor.Center)
+                {
+                    FillColor = new Color(0, 0, 0, 100),
+                    OutlineWidth = 0,
+                    ClickThrough = false
+                };
                 UserInterface.Active.AddEntity(fader);
             }
 
@@ -125,8 +124,10 @@ namespace Nez.GeonBit.UI.Utils
             }
 
             // add bottom buttons panel
-            var buttonsPanel = new Entities.Panel(new Vector2(0, 70), Entities.PanelSkin.None, Entities.Anchor.BottomCenter);
-            buttonsPanel.Padding = Vector2.Zero;
+            var buttonsPanel = new Entities.Panel(new Vector2(0, 70), Entities.PanelSkin.None, Entities.Anchor.BottomCenter)
+            {
+                Padding = Vector2.Zero
+            };
             panel.AddChild(buttonsPanel);
 
             // add all option buttons

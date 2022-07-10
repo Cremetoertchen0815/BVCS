@@ -21,14 +21,14 @@
 
 namespace Nez.GeonBit
 {
-	/// <summary>
-	/// A base renderer with override material options.
-	/// </summary>
-	public abstract class BaseRendererWithOverrideMaterial : BaseRendererComponent
-	{
-		/// <summary>
-		/// Override material default settings for this specific renderer instance.
-		/// </summary>
-		public abstract MaterialOverrides MaterialOverride { get; set; }
-	}
+    /// <summary>
+    /// A base renderer with override material options.
+    /// </summary>
+    public abstract class BaseRendererWithOverrideMaterial : BaseRendererComponent
+    {
+        /// <summary>
+        /// Override material default settings for this specific renderer instance.
+        /// </summary>
+        public abstract MaterialOverrides MaterialOverride { get; set; }
+    }
 }

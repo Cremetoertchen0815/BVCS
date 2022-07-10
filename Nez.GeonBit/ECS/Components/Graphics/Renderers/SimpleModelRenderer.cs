@@ -21,44 +21,44 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit
 {
-	/// <summary>
-	/// This component renders a simple 3D model.
-	/// Unlike the ModelRenderer, this component is less customizeable, but renders slightly faster.
-	/// </summary>
-	public class SimpleModelRenderer : BaseRendererComponent
-	{
-		/// <summary>
-		/// The entity from the core layer used to draw the model.
-		/// </summary>
-		protected SimpleModelEntity _entity;
+    /// <summary>
+    /// This component renders a simple 3D model.
+    /// Unlike the ModelRenderer, this component is less customizeable, but renders slightly faster.
+    /// </summary>
+    public class SimpleModelRenderer : BaseRendererComponent
+    {
+        /// <summary>
+        /// The entity from the core layer used to draw the model.
+        /// </summary>
+        protected SimpleModelEntity _entity;
 
-		/// <summary>
-		/// Get the main entity instance of this renderer.
-		/// </summary>
-		protected override BaseRenderableEntity RenderableEntity => _entity;
+        /// <summary>
+        /// Get the main entity instance of this renderer.
+        /// </summary>
+        protected override BaseRenderableEntity RenderableEntity => _entity;
 
-		/// <summary>
-		/// Protected constructor without params to use without creating entity, for inheriting classes.
-		/// </summary>
-		protected SimpleModelRenderer()
-		{
-		}
+        /// <summary>
+        /// Protected constructor without params to use without creating entity, for inheriting classes.
+        /// </summary>
+        protected SimpleModelRenderer()
+        {
+        }
 
-		/// <summary>
-		/// Create the model renderer component.
-		/// </summary>
-		/// <param name="model">Model to draw.</param>
-		public SimpleModelRenderer(Model model) => _entity = new SimpleModelEntity(model);
+        /// <summary>
+        /// Create the model renderer component.
+        /// </summary>
+        /// <param name="model">Model to draw.</param>
+        public SimpleModelRenderer(Model model) => _entity = new SimpleModelEntity(model);
 
-		/// <summary>
-		/// Clone this component.
-		/// </summary>
-		/// <returns>Cloned copy of this component.</returns>
-		public override Component CopyBasics(Component copyTo)
-		{
-			var ret = new SimpleModelRenderer(_entity.Model);
-			base.CopyBasics(ret);
-			return ret;
-		}
-	}
+        /// <summary>
+        /// Clone this component.
+        /// </summary>
+        /// <returns>Cloned copy of this component.</returns>
+        public override Component CopyBasics(Component copyTo)
+        {
+            var ret = new SimpleModelRenderer(_entity.Model);
+            base.CopyBasics(ret);
+            return ret;
+        }
+    }
 }

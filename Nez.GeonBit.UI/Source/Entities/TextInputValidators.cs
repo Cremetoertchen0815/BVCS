@@ -15,7 +15,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
     /// GeonBit.UI.Entities.TextValidators contains different text validators and processors you can attach to TextInput entities.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGenerated]
-    class NamespaceDoc
+    internal class NamespaceDoc
     {
     }
 
@@ -33,7 +33,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// <param name="text">New text input value.</param>
         /// <param name="oldText">Previous text input value.</param>
         /// <returns>If TextInput value is legal.</returns>
-        public virtual bool ValidateText(ref string text, string oldText) { return true; }
+        public virtual bool ValidateText(ref string text, string oldText) => true;
     }
 
     /// <summary>
@@ -45,10 +45,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static TextValidatorNumbersOnly()
-        {
-            Entity.MakeSerializable(typeof(TextValidatorNumbersOnly));
-        }
+        static TextValidatorNumbersOnly() => Entity.MakeSerializable(typeof(TextValidatorNumbersOnly));
 
         /// <summary>
         /// Do we allow decimal point?
@@ -113,8 +110,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
             // try to parse as int
             else
             {
-                int temp;
-                if (!int.TryParse(text, out temp))
+                if (!int.TryParse(text, out int temp))
                 {
                     return false;
                 }
@@ -139,20 +135,17 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static TextValidatorEnglishCharsOnly()
-        {
-            Entity.MakeSerializable(typeof(TextValidatorEnglishCharsOnly));
-        }
+        static TextValidatorEnglishCharsOnly() => Entity.MakeSerializable(typeof(TextValidatorEnglishCharsOnly));
 
         // the regex to use
-        System.Text.RegularExpressions.Regex _regex;
+        private System.Text.RegularExpressions.Regex _regex;
 
         // regex for english only with spaces
-        static readonly System.Text.RegularExpressions.Regex _slugNoSpaces = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z|]+$");
+        private static readonly System.Text.RegularExpressions.Regex _slugNoSpaces = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z|]+$");
 
         // regex for english only without spaces
-        static readonly System.Text.RegularExpressions.Regex _slugWithSpaces = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z|\ ]+$");
-        
+        private static readonly System.Text.RegularExpressions.Regex _slugWithSpaces = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z|\ ]+$");
+
         // do we allow spaces in text?
         private bool _allowSpaces;
 
@@ -161,7 +154,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// </summary>
         public bool AllowSpaces
         {
-            get { return _allowSpaces; }
+            get => _allowSpaces;
             set { _allowSpaces = value; _regex = _allowSpaces ? _slugWithSpaces : _slugNoSpaces; }
         }
 
@@ -169,10 +162,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// Create the validator.
         /// </summary>
         /// <param name="allowSpaces">If true, will allow spaces.</param>
-        public TextValidatorEnglishCharsOnly(bool allowSpaces)
-        {
-            AllowSpaces = allowSpaces;
-        }
+        public TextValidatorEnglishCharsOnly(bool allowSpaces) => AllowSpaces = allowSpaces;
 
         /// <summary>
         /// Create the validator with default params.
@@ -187,10 +177,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// <param name="text">New text input value.</param>
         /// <param name="oldText">Previous text input value.</param>
         /// <returns>If TextInput value is legal.</returns>
-        public override bool ValidateText(ref string text, string oldText)
-        {
-            return (text.Length == 0 || _regex.IsMatch(text));
-        }
+        public override bool ValidateText(ref string text, string oldText) => (text.Length == 0 || _regex.IsMatch(text));
     }
 
     /// <summary>
@@ -202,19 +189,16 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static SlugValidator()
-        {
-            Entity.MakeSerializable(typeof(SlugValidator));
-        }
+        static SlugValidator() => Entity.MakeSerializable(typeof(SlugValidator));
 
         // the regex to use
-        System.Text.RegularExpressions.Regex _regex;
+        private System.Text.RegularExpressions.Regex _regex;
 
         // regex for slug with spaces
-        static readonly System.Text.RegularExpressions.Regex _slugNoSpaces = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z\-_0-9]+$");
+        private static readonly System.Text.RegularExpressions.Regex _slugNoSpaces = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z\-_0-9]+$");
 
         // regex for slug without spaces
-        static readonly System.Text.RegularExpressions.Regex _slugWithSpaces = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z\-_\ 0-9]+$");
+        private static readonly System.Text.RegularExpressions.Regex _slugWithSpaces = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z\-_\ 0-9]+$");
 
         // do we allow spaces in text?
         private bool _allowSpaces;
@@ -224,7 +208,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// </summary>
         public bool AllowSpaces
         {
-            get { return _allowSpaces; }
+            get => _allowSpaces;
             set { _allowSpaces = value; _regex = _allowSpaces ? _slugWithSpaces : _slugNoSpaces; }
         }
 
@@ -232,10 +216,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// Create the slug validator.
         /// </summary>
         /// <param name="allowSpaces">If true, will allow spaces.</param>
-        public SlugValidator(bool allowSpaces)
-        {
-            AllowSpaces = AllowSpaces;
-        }
+        public SlugValidator(bool allowSpaces) => AllowSpaces = AllowSpaces;
 
         /// <summary>
         /// Create the validator with default params.
@@ -250,10 +231,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// <param name="text">New text input value.</param>
         /// <param name="oldText">Previous text input value.</param>
         /// <returns>If TextInput value is legal.</returns>
-        public override bool ValidateText(ref string text, string oldText)
-        {
-            return (text.Length == 0 || _regex.IsMatch(text));
-        }
+        public override bool ValidateText(ref string text, string oldText) => (text.Length == 0 || _regex.IsMatch(text));
     }
 
 
@@ -266,10 +244,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static OnlySingleSpaces()
-        {
-            Entity.MakeSerializable(typeof(OnlySingleSpaces));
-        }
+        static OnlySingleSpaces() => Entity.MakeSerializable(typeof(OnlySingleSpaces));
 
         /// <summary>
         /// Return true if text input don't contain double spaces or tabs.
@@ -277,10 +252,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// <param name="text">New text input value.</param>
         /// <param name="oldText">Previous text input value.</param>
         /// <returns>If TextInput value is legal.</returns>
-        public override bool ValidateText(ref string text, string oldText)
-        {
-            return !text.Contains("  ") && !text.Contains("\t");
-        }
+        public override bool ValidateText(ref string text, string oldText) => !text.Contains("  ") && !text.Contains("\t");
     }
 
     /// <summary>
@@ -292,10 +264,7 @@ namespace Nez.GeonBit.UI.Entities.TextValidators
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static TextValidatorMakeTitle()
-        {
-            Entity.MakeSerializable(typeof(TextValidatorMakeTitle));
-        }
+        static TextValidatorMakeTitle() => Entity.MakeSerializable(typeof(TextValidatorMakeTitle));
 
         /// <summary>
         /// Always return true, and make first character uppercase while all following

@@ -7,10 +7,8 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -35,10 +33,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static Image()
-        {
-            Entity.MakeSerializable(typeof(Image));
-        }
+        static Image() => Entity.MakeSerializable(typeof(Image));
 
         /// <summary>How to draw the texture.</summary>
         public ImageDrawMode DrawMode;
@@ -55,12 +50,12 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public string TextureName
         {
-            get { return Texture.Name; }
-            set { Texture = Resources._content.Load<Texture2D>(value); }
+            get => Texture.Name;
+            set => Texture = Resources._content.Load<Texture2D>(value);
         }
 
         /// <summary>Default styling for images. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>If provided, will be used as a source rectangle when drawing images in Stretch mode.</summary>
         public Rectangle? SourceRectangle = null;
@@ -115,11 +110,11 @@ namespace Nez.GeonBit.UI.Entities
             var rect = GetActualDestRect();
 
             // calc uv
-            Vector2 relativePos = new Vector2(rect.Right - pos.X, rect.Bottom - pos.Y);
-            Vector2 uv = new Vector2(1f - relativePos.X / rect.Width, 1f - relativePos.Y / rect.Height);
+            var relativePos = new Vector2(rect.Right - pos.X, rect.Bottom - pos.Y);
+            var uv = new Vector2(1f - relativePos.X / rect.Width, 1f - relativePos.Y / rect.Height);
 
             // convert to final texture coords
-            Point textCoords = new Point((int)(uv.X * Texture.Width), (int)(uv.Y * Texture.Height));
+            var textCoords = new Point((int)(uv.X * Texture.Width), (int)(uv.Y * Texture.Height));
             return textCoords;
         }
 
@@ -130,8 +125,8 @@ namespace Nez.GeonBit.UI.Entities
         /// <returns>Color of texture at the given texture coords.</returns>
         public Color GetColorAt(Point textureCoords)
         {
-            Color[] data = new Color[Texture.Width * Texture.Height];
-            var index = textureCoords.X + (textureCoords.Y * Texture.Width);
+            var data = new Color[Texture.Width * Texture.Height];
+            int index = textureCoords.X + (textureCoords.Y * Texture.Width);
             Texture.GetData<Color>(data);
             return data[index];
         }
@@ -144,7 +139,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="color">New color to set.</param>
         public void SetTextureColorAt(Point textureCoords, Color color)
         {
-            Color[] data = new Color[] { color };
+            var data = new Color[] { color };
             Texture.SetData(0, new Rectangle(textureCoords.X, textureCoords.Y, 1, 1), data, 0, 1);
         }
 
@@ -156,7 +151,7 @@ namespace Nez.GeonBit.UI.Entities
         public void CalcAutoWidth()
         {
             UpdateDestinationRectsIfDirty();
-            var width = ((float)_destRect.Height / (float)Texture.Height) * Texture.Width;
+            float width = (_destRect.Height / (float)Texture.Height) * Texture.Width;
             Size = new Vector2(width, _size.Y);
         }
 
@@ -168,7 +163,7 @@ namespace Nez.GeonBit.UI.Entities
         public void CalcAutoHeight()
         {
             UpdateDestinationRectsIfDirty();
-            var height = ((float)_destRect.Width / (float)Texture.Width) * Texture.Height;
+            float height = (_destRect.Width / (float)Texture.Width) * Texture.Height;
             Size = new Vector2(_size.X, height);
         }
 
@@ -177,7 +172,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // draw image based on DrawMode
             switch (DrawMode)

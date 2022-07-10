@@ -21,10 +21,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static LineSpace()
-        {
-            Entity.MakeSerializable(typeof(LineSpace));
-        }
+        static LineSpace() => Entity.MakeSerializable(typeof(LineSpace));
 
         /// <summary>
         /// Single line space height.
@@ -32,7 +29,7 @@ namespace Nez.GeonBit.UI.Entities
         public static float SpaceSize = 8f;
 
         /// <summary>Default size this entity will have when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = Vector2.Zero;
+        public static new Vector2 DefaultSize = Vector2.Zero;
 
         /// <summary>
         /// Create a new Line Space entity.
@@ -48,7 +45,7 @@ namespace Nez.GeonBit.UI.Entities
 
             // set size based on space count
             _size.X = 0f;
-            _size.Y = spacesCount != 0 ? 
+            _size.Y = spacesCount != 0 ?
                 SpaceSize * GlobalScale * System.Math.Max(spacesCount, 0) : -1;
 
             // default padding and spacing zero
@@ -67,7 +64,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
         }
     }

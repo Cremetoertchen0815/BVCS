@@ -14,7 +14,6 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.ExtendedContent.DataTypes;
@@ -136,19 +135,16 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static Icon()
-        {
-            Entity.MakeSerializable(typeof(Icon));
-        }
+        static Icon() => Entity.MakeSerializable(typeof(Icon));
 
         /// <summary>If true, will draw inventory-like background to this icon.</summary>
         public bool DrawBackground = false;
 
         /// <summary>Default icon size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(50f, 50f);
+        public static new Vector2 DefaultSize = new Vector2(50f, 50f);
 
         /// <summary>Default styling for icons. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>
         /// Icon background size in pixels.
@@ -160,10 +156,11 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public IconType IconType
         {
-            get { return _icon; }
+            get => _icon;
             set { Texture = Resources.IconTextures[value]; _icon = value; }
         }
-        IconType _icon;
+
+        private IconType _icon;
 
         /// <summary>
         /// Create a new icon.
@@ -199,7 +196,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Create default icon.
         /// </summary>
-        public Icon() : this (IconType.Apple)
+        public Icon() : this(IconType.Apple)
         {
         }
 
@@ -208,13 +205,13 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // draw background
             if (DrawBackground)
             {
                 // get background color based on phase
-                Color backColor = Color.White;
+                var backColor = Color.White;
                 switch (phase)
                 {
                     case DrawPhase.Base:
@@ -231,7 +228,7 @@ namespace Nez.GeonBit.UI.Entities
                 }
 
                 // get background dest rect
-                Rectangle dest = _destRect;
+                var dest = _destRect;
                 dest.X -= BackgroundSize / 2; dest.Y -= BackgroundSize / 2; dest.Width += BackgroundSize; dest.Height += BackgroundSize;
 
                 // draw background

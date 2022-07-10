@@ -147,10 +147,10 @@ namespace Nez
 
         public RectangleF(Rectangle rectangle)
         {
-            X = (float)rectangle.X;
-            Y = (float)rectangle.Y;
-            Width = (float)rectangle.Width;
-            Height = (float)rectangle.Height;
+            X = rectangle.X;
+            Y = rectangle.Y;
+            Width = rectangle.Width;
+            Height = rectangle.Height;
         }
 
 

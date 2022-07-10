@@ -19,9 +19,9 @@
 //   limitations under the License.
 #endregion
 
-using System;
 using Microsoft.Xna.Framework.Content;
 using Nez.ExtendedContent.GeonBit.Animation;
+using System;
 
 namespace Nez.ExtendedContent.GeonBit.Content
 {
@@ -29,12 +29,12 @@ namespace Nez.ExtendedContent.GeonBit.Content
     {
         protected override Clip Read(ContentReader input, Clip existingInstance)
         {
-            Clip animationClip = existingInstance;
+            var animationClip = existingInstance;
 
             if (existingInstance == null)
             {
-                TimeSpan duration = ReadDuration(input);
-                Keyframe[] keyframes = ReadKeyframes(input, null);
+                var duration = ReadDuration(input);
+                var keyframes = ReadKeyframes(input, null);
                 animationClip = new Clip(duration, keyframes);
             }
             else
@@ -43,22 +43,19 @@ namespace Nez.ExtendedContent.GeonBit.Content
                 ReadKeyframes(input, animationClip.Keyframes);
             }
 
-            return animationClip;                       
+            return animationClip;
         }
-        
-        private TimeSpan ReadDuration(ContentReader input)
-        {
-            return new TimeSpan(input.ReadInt64());
-        }
+
+        private TimeSpan ReadDuration(ContentReader input) => new TimeSpan(input.ReadInt64());
 
         private Keyframe[] ReadKeyframes(ContentReader input, Keyframe[] existingInstance)
         {
-            Keyframe[] keyframes = existingInstance;
+            var keyframes = existingInstance;
 
             int count = input.ReadInt32();
             if (keyframes == null)
                 keyframes = new Keyframe[count];
-            
+
             for (int i = 0; i < count; i++)
             {
                 keyframes[i]._bone = input.ReadInt32();
@@ -83,7 +80,7 @@ namespace Nez.ExtendedContent.GeonBit.Content
 
             return keyframes;
         }
-        
+
     }
-    
+
 }

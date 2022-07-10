@@ -22,152 +22,152 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-	/// <summary>
-	/// Vertex type for normal mapping
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	public struct VertexPositionNormalTangentTexture : IVertexType
-	{
-		/// <summary>
-		/// Vertex position.
-		/// </summary>
-		public Vector3 Position;
+    /// <summary>
+    /// Vertex type for normal mapping
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct VertexPositionNormalTangentTexture : IVertexType
+    {
+        /// <summary>
+        /// Vertex position.
+        /// </summary>
+        public Vector3 Position;
 
-		/// <summary>
-		/// Vertex normal.
-		/// </summary>
-		public Vector3 Normal;
+        /// <summary>
+        /// Vertex normal.
+        /// </summary>
+        public Vector3 Normal;
 
-		/// <summary>
-		/// Texture coords.
-		/// </summary>
-		public Vector2 TextureCoordinate;
+        /// <summary>
+        /// Texture coords.
+        /// </summary>
+        public Vector2 TextureCoordinate;
 
-		/// <summary>
-		/// Tangent.
-		/// </summary>
-		public Vector3 Tangent;
+        /// <summary>
+        /// Tangent.
+        /// </summary>
+        public Vector3 Tangent;
 
-		/// <summary>
-		/// Binormal.
-		/// </summary>
-		public Vector3 Binormal;
+        /// <summary>
+        /// Binormal.
+        /// </summary>
+        public Vector3 Binormal;
 
-		/// <summary>
-		/// Vertex declaration object.
-		/// </summary>
-		public static readonly VertexDeclaration VertexDeclaration;
+        /// <summary>
+        /// Vertex declaration object.
+        /// </summary>
+        public static readonly VertexDeclaration VertexDeclaration;
 
-		/// <summary>
-		/// Vertex declaration.
-		/// </summary>
-		VertexDeclaration IVertexType.VertexDeclaration => VertexDeclaration;
+        /// <summary>
+        /// Vertex declaration.
+        /// </summary>
+        VertexDeclaration IVertexType.VertexDeclaration => VertexDeclaration;
 
-		/// <summary>
-		/// Static constructor to init vertex declaration.
-		/// </summary>
-		static VertexPositionNormalTangentTexture()
-		{
-			var elements = new VertexElement[] {
-				new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
-				new VertexElement(12, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0),
-				new VertexElement(24, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0),
-				new VertexElement(32, VertexElementFormat.Vector3, VertexElementUsage.Tangent, 0),
-				new VertexElement(44, VertexElementFormat.Vector3, VertexElementUsage.Binormal, 0)};
-			var declaration = new VertexDeclaration(elements);
-			VertexDeclaration = declaration;
-		}
+        /// <summary>
+        /// Static constructor to init vertex declaration.
+        /// </summary>
+        static VertexPositionNormalTangentTexture()
+        {
+            var elements = new VertexElement[] {
+                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+                new VertexElement(12, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0),
+                new VertexElement(24, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0),
+                new VertexElement(32, VertexElementFormat.Vector3, VertexElementUsage.Tangent, 0),
+                new VertexElement(44, VertexElementFormat.Vector3, VertexElementUsage.Binormal, 0)};
+            var declaration = new VertexDeclaration(elements);
+            VertexDeclaration = declaration;
+        }
 
 
-		/// <summary>
-		/// Create the vertex.
-		/// </summary>
-		/// <param name="position">Vertex position.</param>
-		/// <param name="normal">Vertex normal.</param>
-		/// <param name="textureCoordinate">Texture coordinates.</param>
-		/// <param name="tangent">Vertex tangent.</param>
-		/// <param name="binormal">Vertex binormal.</param>
-		public VertexPositionNormalTangentTexture(Vector3 position, Vector3 normal, Vector2 textureCoordinate, Vector3 tangent, Vector3 binormal)
-		{
-			Position = position;
-			Normal = normal;
-			TextureCoordinate = textureCoordinate;
-			Tangent = tangent;
-			Binormal = binormal;
-		}
+        /// <summary>
+        /// Create the vertex.
+        /// </summary>
+        /// <param name="position">Vertex position.</param>
+        /// <param name="normal">Vertex normal.</param>
+        /// <param name="textureCoordinate">Texture coordinates.</param>
+        /// <param name="tangent">Vertex tangent.</param>
+        /// <param name="binormal">Vertex binormal.</param>
+        public VertexPositionNormalTangentTexture(Vector3 position, Vector3 normal, Vector2 textureCoordinate, Vector3 tangent, Vector3 binormal)
+        {
+            Position = position;
+            Normal = normal;
+            TextureCoordinate = textureCoordinate;
+            Tangent = tangent;
+            Binormal = binormal;
+        }
 
-		/// <summary>
-		/// Calculate tangent and binormal values automatically.
-		/// </summary>
-		public void CalcTangentBinormal()
-		{
-			// calc c1 and c2
-			var c1 = Vector3.Cross(Normal, new Vector3(0.0f, 0.0f, 1.0f));
-			var c2 = Vector3.Cross(Normal, new Vector3(0.0f, 1.0f, 0.0f));
+        /// <summary>
+        /// Calculate tangent and binormal values automatically.
+        /// </summary>
+        public void CalcTangentBinormal()
+        {
+            // calc c1 and c2
+            var c1 = Vector3.Cross(Normal, new Vector3(0.0f, 0.0f, 1.0f));
+            var c2 = Vector3.Cross(Normal, new Vector3(0.0f, 1.0f, 0.0f));
 
-			// check which is more fitting to be tangent
-			Tangent = (c1.Length() > c2.Length()) ? c1 : c2;
-			Tangent.Normalize();
+            // check which is more fitting to be tangent
+            Tangent = (c1.Length() > c2.Length()) ? c1 : c2;
+            Tangent.Normalize();
 
-			// calc binormal
-			Binormal = Vector3.Normalize(Vector3.Cross(Normal, Tangent));
-		}
+            // calc binormal
+            Binormal = Vector3.Normalize(Vector3.Cross(Normal, Tangent));
+        }
 
-		/// <summary>
-		/// Get if equals another object.
-		/// </summary>
-		/// <param name="obj">Object to compare to.</param>
-		/// <returns>If objects are equal.</returns>
-		public override bool Equals(object obj)
-		{
-			if (obj == null)
-			{
-				return false;
-			}
-			if (obj.GetType() != base.GetType())
-			{
-				return false;
-			}
-			return (this == ((VertexPositionNormalTangentTexture)obj));
-		}
+        /// <summary>
+        /// Get if equals another object.
+        /// </summary>
+        /// <param name="obj">Object to compare to.</param>
+        /// <returns>If objects are equal.</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if (obj.GetType() != base.GetType())
+            {
+                return false;
+            }
+            return (this == ((VertexPositionNormalTangentTexture)obj));
+        }
 
-		/// <summary>
-		/// Get the hash code of this vertex.
-		/// </summary>
-		/// <returns></returns>
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hashCode = Position.GetHashCode();
-				hashCode = (hashCode * 397) ^ Normal.GetHashCode();
-				hashCode = (hashCode * 397) ^ TextureCoordinate.GetHashCode();
-				hashCode = (hashCode * 397) ^ Tangent.GetHashCode();
-				hashCode = (hashCode * 397) ^ Binormal.GetHashCode();
-				return hashCode;
-			}
-		}
+        /// <summary>
+        /// Get the hash code of this vertex.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = Position.GetHashCode();
+                hashCode = (hashCode * 397) ^ Normal.GetHashCode();
+                hashCode = (hashCode * 397) ^ TextureCoordinate.GetHashCode();
+                hashCode = (hashCode * 397) ^ Tangent.GetHashCode();
+                hashCode = (hashCode * 397) ^ Binormal.GetHashCode();
+                return hashCode;
+            }
+        }
 
-		/// <summary>
-		/// Return string representation of this vertex.
-		/// </summary>
-		/// <returns>String representation of the vertex.</returns>
-		public override string ToString() => "{{Position:" + Position + " Normal:" + Normal + " TextureCoordinate:" + TextureCoordinate + " Tangent " + Tangent + "}}";
+        /// <summary>
+        /// Return string representation of this vertex.
+        /// </summary>
+        /// <returns>String representation of the vertex.</returns>
+        public override string ToString() => "{{Position:" + Position + " Normal:" + Normal + " TextureCoordinate:" + TextureCoordinate + " Tangent " + Tangent + "}}";
 
-		/// <summary>
-		/// Return if two vertices are equal.
-		/// </summary>
-		/// <param name="left">Left side to compare.</param>
-		/// <param name="right">Right side to compare.</param>
-		/// <returns>If equal.</returns>
-		public static bool operator ==(VertexPositionNormalTangentTexture left, VertexPositionNormalTangentTexture right) => (((left.Position == right.Position) && (left.Normal == right.Normal)) && (left.TextureCoordinate == right.TextureCoordinate) && left.Binormal == right.Binormal && left.Tangent == right.Tangent);
+        /// <summary>
+        /// Return if two vertices are equal.
+        /// </summary>
+        /// <param name="left">Left side to compare.</param>
+        /// <param name="right">Right side to compare.</param>
+        /// <returns>If equal.</returns>
+        public static bool operator ==(VertexPositionNormalTangentTexture left, VertexPositionNormalTangentTexture right) => (((left.Position == right.Position) && (left.Normal == right.Normal)) && (left.TextureCoordinate == right.TextureCoordinate) && left.Binormal == right.Binormal && left.Tangent == right.Tangent);
 
-		/// <summary>
-		/// Return if two vertices are not equal.
-		/// </summary>
-		/// <param name="left">Left side to compare.</param>
-		/// <param name="right">Right side to compare.</param>
-		/// <returns>If not equal.</returns>
-		public static bool operator !=(VertexPositionNormalTangentTexture left, VertexPositionNormalTangentTexture right) => !(left == right);
-	}
+        /// <summary>
+        /// Return if two vertices are not equal.
+        /// </summary>
+        /// <param name="left">Left side to compare.</param>
+        /// <param name="right">Right side to compare.</param>
+        /// <returns>If not equal.</returns>
+        public static bool operator !=(VertexPositionNormalTangentTexture left, VertexPositionNormalTangentTexture right) => !(left == right);
+    }
 }

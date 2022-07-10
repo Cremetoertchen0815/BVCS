@@ -35,7 +35,7 @@ namespace Nez
             foreach (var item in receivers)
                 if (item.Value.Contains(reg)) IDs.Add(item.Key);
 
-            foreach (var ID in IDs)
+            foreach (string ID in IDs)
                 if (receivers[ID].Contains(reg)) receivers[ID].Remove(reg);
         }
 

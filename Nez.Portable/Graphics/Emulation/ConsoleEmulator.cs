@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Nez
 {
-	public class ConsoleEmulator : RenderableComponent, IUpdatable
+    public class ConsoleEmulator : RenderableComponent, IUpdatable
     {
 
         public Thread gameThread;

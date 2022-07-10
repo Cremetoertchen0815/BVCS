@@ -6,10 +6,8 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -47,13 +45,10 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static PanelBase()
-        {
-            Entity.MakeSerializable(typeof(PanelBase));
-        }
+        static PanelBase() => Entity.MakeSerializable(typeof(PanelBase));
 
         // panel style
-        PanelSkin _skin;
+        private PanelSkin _skin;
 
         /// <summary>
         /// Create the panel.
@@ -89,8 +84,8 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public PanelSkin Skin
         {
-            get { return _skin; }
-            set { _skin = value; }
+            get => _skin;
+            set => _skin = value;
         }
 
         /// <summary>
@@ -98,15 +93,15 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // draw panel itself, but only if got style
             if (_skin != PanelSkin.None)
             {
                 // get texture based on skin
-                Texture2D texture = Resources.PanelTextures[_skin];
-                TextureData data = Resources.PanelData[(int)_skin];
-                Vector2 frameSize = new Vector2(data.FrameWidth, data.FrameHeight);
+                var texture = Resources.PanelTextures[_skin];
+                var data = Resources.PanelData[(int)_skin];
+                var frameSize = new Vector2(data.FrameWidth, data.FrameHeight);
 
                 // draw panel
                 UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1f, FillColor, Scale);

@@ -21,49 +21,49 @@
 namespace Nez.GeonBit
 {
 
-	/// <summary>
-	/// This component renders a 3d skybox.
-	/// </summary>
-	public class SkyBox : ModelRenderer
-	{
-		/// <summary>
-		/// Skybox texture path.
-		/// </summary>
-		public string TexturePath { get; private set; }
+    /// <summary>
+    /// This component renders a 3d skybox.
+    /// </summary>
+    public class SkyBox : ModelRenderer
+    {
+        /// <summary>
+        /// Skybox texture path.
+        /// </summary>
+        public string TexturePath { get; private set; }
 
-		/// <summary>
-		/// Default skybox texture.
-		/// </summary>
-		public static string DefaultTexture = "GeonBit.Core/Textures/Skybox";
+        /// <summary>
+        /// Default skybox texture.
+        /// </summary>
+        public static string DefaultTexture = "GeonBit.Core/Textures/Skybox";
 
-		/// <summary>
-		/// Create the skybox renderer component.
-		/// </summary>
-		/// <param name="texture">Skybox texture path (leave null for default texture).</param>
-		public SkyBox(string texture = null) : base(ShapeRenderer.ShapeModelsRoot + "Skybox")
-		{
-			TexturePath = texture ?? DefaultTexture;
-			_entity.RenderingQueue = RenderingQueue.SolidBackNoCull;
-			_entity.SetMaterial(new Materials.SkyboxMaterial(TexturePath, true));
-		}
+        /// <summary>
+        /// Create the skybox renderer component.
+        /// </summary>
+        /// <param name="texture">Skybox texture path (leave null for default texture).</param>
+        public SkyBox(string texture = null) : base(ShapeRenderer.ShapeModelsRoot + "Skybox")
+        {
+            TexturePath = texture ?? DefaultTexture;
+            _entity.RenderingQueue = RenderingQueue.SolidBackNoCull;
+            _entity.SetMaterial(new Materials.SkyboxMaterial(TexturePath, true));
+        }
 
-		/// <summary>
-		/// Clone this component.
-		/// </summary>
-		/// <returns>Cloned copy of this component.</returns>
-		public override Component Clone()
-		{
-			var ret = CopyBasics(new SkyBox(TexturePath)) as SkyBox;
-			return ret;
-		}
+        /// <summary>
+        /// Clone this component.
+        /// </summary>
+        /// <returns>Cloned copy of this component.</returns>
+        public override Component Clone()
+        {
+            var ret = CopyBasics(new SkyBox(TexturePath)) as SkyBox;
+            return ret;
+        }
 
-		/// <summary>
-		/// Called when this component spawns.
-		/// </summary>
-		public override void OnAddedToEntity()
-		{
-			base.OnAddedToEntity();
-			Node.DisableCulling = true;
-		}
-	}
+        /// <summary>
+        /// Called when this component spawns.
+        /// </summary>
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+            Node.DisableCulling = true;
+        }
+    }
 }

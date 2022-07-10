@@ -19,8 +19,8 @@
 //   limitations under the License.
 #endregion
 
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Nez.ExtendedContent.GeonBit.Animation
 {

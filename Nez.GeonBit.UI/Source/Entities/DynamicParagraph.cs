@@ -12,12 +12,12 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.ExtendedContent.DataTypes;
-using System.Text;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -31,13 +31,10 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static DynamicParagraph()
-        {
-            Entity.MakeSerializable(typeof(DynamicParagraph));
-        }
+        static DynamicParagraph() => Entity.MakeSerializable(typeof(DynamicParagraph));
 
         /// <summary>Default styling for paragraphs. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>
         /// Optional background color for text.
@@ -65,10 +62,7 @@ namespace Nez.GeonBit.UI.Entities
         public bool BackgroundColorUseBoxSize = false;
 
         /// <summary>Get / Set the paragraph text.</summary>
-        public virtual string Text
-        {
-            get { return _textSrc(); }
-        }
+        public virtual string Text => _textSrc();
 
         private Func<string> _textSrc;
         private string _lastText;
@@ -82,12 +76,12 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public bool WrapWords
         {
-            get { return _wrapWords; }
+            get => _wrapWords;
             set { _wrapWords = value; MarkAsDirty(); }
         }
 
         // text actual destination rect
-        Rectangle _actualDestRect = new Rectangle();
+        private Rectangle _actualDestRect = new Rectangle();
 
         /// <summary>If the outline width is less than this value, the outline will be optimized but will appear slightly less sharp on corners.</summary>
         protected static int MaxOutlineWidthToOptimize = 1;
@@ -126,7 +120,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public bool BreakWordsIfMust
         {
-            get { return _breakWordsIfMust; }
+            get => _breakWordsIfMust;
             set { _breakWordsIfMust = value; MarkAsDirty(); }
         }
 
@@ -138,7 +132,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public bool AddHyphenWhenBreakWord
         {
-            get { return _addHyphenWhenBreakWord; }
+            get => _addHyphenWhenBreakWord;
             set { _addHyphenWhenBreakWord = value; MarkAsDirty(); }
         }
 
@@ -190,10 +184,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Get the actual destination rect that this paragraph takes (based on text content, font size, and word wrap).
         /// </summary>
         /// <returns>Actual paragraph destination rect.</returns>
-        override public Rectangle GetActualDestRect()
-        {
-            return _actualDestRect;
-        }
+        public override Rectangle GetActualDestRect() => _actualDestRect;
 
         /// <summary>
         /// Get the size, in pixels, of a single character in paragraph.
@@ -201,7 +192,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <returns>Actual size, in pixels, of a single character.</returns>
         public Vector2 GetCharacterActualSize()
         {
-            SpriteFont font = GetCurrFont();
+            var font = GetCurrFont();
             float scale = Scale * BaseSize * GlobalScale;
             return SingleCharacterSize * scale;
         }
@@ -221,7 +212,7 @@ namespace Nez.GeonBit.UI.Entities
             if (maxLineWidth <= 0) { return text; }
 
             // create string to return as result
-            StringBuilder ret = new StringBuilder(string.Empty);
+            var ret = new StringBuilder(string.Empty);
 
             // if text got line breaks, break into lines and process them seperately
             if (text.Contains("\n"))
@@ -242,7 +233,7 @@ namespace Nez.GeonBit.UI.Entities
 
             // if got here it means we are processing a single line. break it into words.
             // note: we use a list so we can push words in the middle while iterating (to handle words too long).
-            List<string> words = new List<string>(text.Split(' '));
+            var words = new List<string>(text.Split(' '));
 
             // iterate words
             int currWidth = 0;
@@ -323,10 +314,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Return the processed text that is actually displayed on screen, after word-wrap etc.
         /// </summary>
         /// <returns>Actual displayed text with word-wrap and other runtime processing.</returns>
-        public string GetProcessedText()
-        {
-            return _processedText;
-        }
+        public string GetProcessedText() => _processedText;
 
         /// <summary>
         /// Current font style - this is just a sugarcoat to access the default font style property.
@@ -334,8 +322,8 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public FontStyle TextStyle
         {
-            set { SetStyleProperty("FontStyle", new StyleProperty((int)value)); }
-            get { return (FontStyle)GetActiveStyle("FontStyle").asInt; }
+            set => SetStyleProperty("FontStyle", new StyleProperty((int)value));
+            get => (FontStyle)GetActiveStyle("FontStyle").asInt;
         }
 
         /// <summary>
@@ -344,24 +332,21 @@ namespace Nez.GeonBit.UI.Entities
         [System.Xml.Serialization.XmlIgnore]
         public bool AlignToCenter
         {
-            set { SetStyleProperty("ForceAlignCenter", new StyleProperty(value)); }
-            get { return GetActiveStyle("ForceAlignCenter").asBool; }
+            set => SetStyleProperty("ForceAlignCenter", new StyleProperty(value));
+            get => GetActiveStyle("ForceAlignCenter").asBool;
         }
 
         /// <summary>
         /// Get the currently active font for this paragraph.
         /// </summary>
         /// <returns>Current font.</returns>
-        protected SpriteFont GetCurrFont()
-        {
-            return FontOverride ?? Resources.Fonts[(int)TextStyle];
-        }
+        protected SpriteFont GetCurrFont() => FontOverride ?? Resources.Fonts[(int)TextStyle];
 
         /// <summary>
         /// Update dest rect and internal dest rect.
         /// This is called internally whenever a change is made to the entity or its parent.
         /// </summary>
-        override public void UpdateDestinationRects()
+        public override void UpdateDestinationRects()
         {
             // call base function
             base.UpdateDestinationRects();
@@ -375,7 +360,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         private void UpdateFontPropertiesIfNeeded()
         {
-            SpriteFont font = GetCurrFont();
+            var font = GetCurrFont();
             if (font != _currFont)
             {
                 // mark as dirty so we'll recalculate positions and line breaks
@@ -426,7 +411,7 @@ namespace Nez.GeonBit.UI.Entities
             // so we just update _size every frame and the text alignemtn (left, right, center..) fix itself by the destination rect.
             _fontOrigin = Vector2.Zero;
             _position = new Vector2(_destRect.X, _destRect.Y);
-            Vector2 size = _currFont.MeasureString(_processedText);
+            var size = _currFont.MeasureString(_processedText);
 
             // set position and origin based on anchor.
             // note: no top-left here because thats the default set above.
@@ -487,14 +472,14 @@ namespace Nez.GeonBit.UI.Entities
             // apply min size
             if (MinSize != null)
             {
-                Point minInPixels = CalcActualSizeInPixels(MinSize.Value);
+                var minInPixels = CalcActualSizeInPixels(MinSize.Value);
                 _actualDestRect.Width = System.Math.Max(minInPixels.X, _actualDestRect.Width);
                 _actualDestRect.Height = System.Math.Max(minInPixels.Y, _actualDestRect.Height);
             }
             // apply max size
             if (MaxSize != null)
             {
-                Point maxInPixels = CalcActualSizeInPixels(MaxSize.Value);
+                var maxInPixels = CalcActualSizeInPixels(MaxSize.Value);
                 _actualDestRect.Width = System.Math.Min(maxInPixels.X, _actualDestRect.Width);
                 _actualDestRect.Height = System.Math.Min(maxInPixels.Y, _actualDestRect.Height);
             }
@@ -504,7 +489,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Draw entity outline. Note: in paragraph its a special case and we implement it inside the DrawEntity function.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        override protected void DrawEntityOutline(SpriteBatch spriteBatch)
+        protected override void DrawEntityOutline(SpriteBatch spriteBatch)
         {
         }
 
@@ -513,7 +498,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             //Check if text has changed
             string nuText;
@@ -531,7 +516,7 @@ namespace Nez.GeonBit.UI.Entities
             if (BackgroundColor.A > 0)
             {
                 // get background color
-                Color backColor = UserInterface.Active.DrawUtils.FixColorOpacity(BackgroundColor);
+                var backColor = UserInterface.Active.DrawUtils.FixColorOpacity(BackgroundColor);
 
                 // get destination rect to draw it
                 var rect = BackgroundColorUseBoxSize ? _destRect : _actualDestRect;
@@ -558,7 +543,7 @@ namespace Nez.GeonBit.UI.Entities
             if (outlineWidth > 0)
             {
                 // get outline color
-                Color outlineColor = UserInterface.Active.DrawUtils.FixColorOpacity(OutlineColor);
+                var outlineColor = UserInterface.Active.DrawUtils.FixColorOpacity(OutlineColor);
 
                 // for not-too-thick outline we render just two corners
                 if (outlineWidth <= MaxOutlineWidthToOptimize)
@@ -583,7 +568,7 @@ namespace Nez.GeonBit.UI.Entities
             }
 
             // get fill color
-            Color fillCol = UserInterface.Active.DrawUtils.FixColorOpacity(FillColor);
+            var fillCol = UserInterface.Active.DrawUtils.FixColorOpacity(FillColor);
 
             // draw text itself
             spriteBatch.DrawString(_currFont, _processedText, _position, fillCol,

@@ -10,7 +10,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -35,13 +34,10 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static Slider()
-        {
-            Entity.MakeSerializable(typeof(Slider));
-        }
+        static Slider() => Entity.MakeSerializable(typeof(Slider));
 
         // slider style
-        SliderSkin _skin;
+        private SliderSkin _skin;
 
         /// <summary>Min slider value.</summary>
         protected uint _min;
@@ -59,13 +55,13 @@ namespace Nez.GeonBit.UI.Entities
         protected float _frameActualWidth = 0f;
 
         /// <summary>Default styling for the slider itself. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>Actual mark width in pixels (used internally).</summary>
         protected int _markWidth = 20;
 
         /// <summary>Default slider size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 30f);
+        public static new Vector2 DefaultSize = new Vector2(0f, 30f);
 
         /// <summary>
         /// The mark on the slider
@@ -77,8 +73,8 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public Rectangle MarkRec
         {
-            private set { _marRec = value; }
-            get { return _marRec; }
+            private set => _marRec = value;
+            get => _marRec;
         }
 
         /// <summary>
@@ -135,8 +131,8 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public SliderSkin SliderSkin
         {
-            get { return _skin; }
-            set { _skin = value; }
+            get => _skin;
+            set => _skin = value;
         }
 
         /// <summary>
@@ -169,7 +165,7 @@ namespace Nez.GeonBit.UI.Entities
             if (!UserInterface.Active._isDeserializing)
             {
                 // round to steps
-                float stepSize = (float)GetStepSize();
+                float stepSize = GetStepSize();
                 value = (int)(System.Math.Round(((double)value) / stepSize) * stepSize);
 
                 // camp between min and max
@@ -186,7 +182,7 @@ namespace Nez.GeonBit.UI.Entities
         public int Value
         {
             // get current value
-            get { return _value; }
+            get => _value;
 
             // set new value
             set
@@ -202,7 +198,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public uint Min
         {
-            get { return _min; }
+            get => _min;
             set { if (_min != value) { _min = value; if (Value < _min) Value = (int)_min; } }
         }
 
@@ -211,7 +207,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public uint Max
         {
-            get { return _max; }
+            get => _max;
             set { if (_max != value) { _max = value; if (Value > _max) Value = (int)_max; } }
         }
 
@@ -221,7 +217,7 @@ namespace Nez.GeonBit.UI.Entities
         public uint StepsCount
         {
             // get current steps count
-            get { return _stepsCount; }
+            get => _stepsCount;
 
             // set steps count and call Value = Value to normalize current value to new steps count.
             set { _stepsCount = value; Value = Value; }
@@ -231,16 +227,13 @@ namespace Nez.GeonBit.UI.Entities
         /// Is the slider a natrually-interactable entity.
         /// </summary>
         /// <returns>True.</returns>
-        override public bool IsNaturallyInteractable()
-        {
-            return true;
-        }
+        public override bool IsNaturallyInteractable() => true;
 
         /// <summary>
         /// Called every frame while mouse button is down over this entity.
         /// The slider entity override this function to handle slider value change (eg slider mark dragging).
         /// </summary>
-        override protected void DoWhileMouseDown()
+        protected override void DoWhileMouseDown()
         {
             // get mouse position and apply scroll value
             var mousePos = GetMousePos();
@@ -271,37 +264,34 @@ namespace Nez.GeonBit.UI.Entities
         /// Return current value as a percent between min and max.
         /// </summary>
         /// <returns>Current value as percent between min and max (0f-1f).</returns>
-        public float GetValueAsPercent()
-        {
-            return (float)(_value - Min) / (float)(Max - Min);
-        }
+        public float GetValueAsPercent() => (_value - Min) / (float)(Max - Min);
 
         /// <summary>
         /// Draw the entity.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // get textures based on skin
-            Texture2D texture = Resources.SliderTextures[_skin];
-            Texture2D markTexture = Resources.SliderMarkTextures[_skin];
+            var texture = Resources.SliderTextures[_skin];
+            var markTexture = Resources.SliderMarkTextures[_skin];
 
             // get slider metadata
-            TextureData data = Resources.SliderData[(int)_skin];
+            var data = Resources.SliderData[(int)_skin];
             float frameWidth = data.FrameWidth;
 
             // draw slider body
             UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, new Vector2(frameWidth, 0f), 1, FillColor);
 
             // calc frame actual height and scaling factor (this is needed to calc frame width in pixels)
-            Vector2 frameSizeTexture = new Vector2(texture.Width * frameWidth, texture.Height);
-            Vector2 frameSizeRender = frameSizeTexture;
+            var frameSizeTexture = new Vector2(texture.Width * frameWidth, texture.Height);
+            var frameSizeRender = frameSizeTexture;
             float ScaleXfac = _destRect.Height / frameSizeRender.Y;
 
             // calc the size of the mark piece
             int markHeight = _destRect.Height;
-            _markWidth = (int)(((float)markTexture.Width / (float)markTexture.Height) * (float)markHeight);
+            _markWidth = (int)((markTexture.Width / (float)markTexture.Height) * markHeight);
 
             // calc frame width in pixels
             _frameActualWidth = frameWidth * texture.Width * ScaleXfac;
@@ -320,10 +310,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Handle when mouse wheel scroll and this entity is the active entity.
         /// Note: Slider entity override this function to change slider value based on wheel scroll.
         /// </summary>
-        override protected void DoOnMouseWheelScroll()
-        {
-            Value = _value + Input.MouseWheelChange * GetStepSize();
-        }
+        protected override void DoOnMouseWheelScroll() => Value = _value + Input.MouseWheelChange * GetStepSize();
 
         /// <summary>
         /// Handle when gamepad "A" button is pressed and left thumbstick moves.

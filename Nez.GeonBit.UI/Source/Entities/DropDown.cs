@@ -27,23 +27,20 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static DropDown()
-        {
-            Entity.MakeSerializable(typeof(DropDown));
-        }
+        static DropDown() => Entity.MakeSerializable(typeof(DropDown));
 
         /// <summary>Default text to show when no value is selected from the list.</summary>
         public string DefaultText
         {
-            get { return _placeholderText; }
-            set { _placeholderText = value; }
+            get => _placeholderText;
+            set => _placeholderText = value;
         }
 
         // text used as placeholder when nothing is selected.
         private string _placeholderText = "Click to Select";
 
         /// <summary>Default style for the dropdown itself. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>Default styling for dropdown labels. Note: loaded from UI theme xml file.</summary>
         public static StyleSheet DefaultParagraphStyle = new StyleSheet();
@@ -52,7 +49,7 @@ namespace Nez.GeonBit.UI.Entities
         public static StyleSheet DefaultSelectedParagraphStyle = new StyleSheet();
 
         /// <summary>Default select list size in pixels.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 220f);
+        public static new Vector2 DefaultSize = new Vector2(0f, 220f);
 
         // dictionary of special events for specific items selection
         private Dictionary<string, System.Action> _perItemCallbacks = new Dictionary<string, System.Action>();
@@ -61,20 +58,17 @@ namespace Nez.GeonBit.UI.Entities
         private int _lastSelected = -1;
 
         // internal panel and paragraph to show selected value.
-        Panel _selectedTextPanel;
-        Paragraph _selectedTextParagraph;
-        Image _arrowDownImage;
+        private Panel _selectedTextPanel;
+        private Paragraph _selectedTextParagraph;
+        private Image _arrowDownImage;
 
         // an internal select list used when dropdown is opened.
-        SelectList _selectList;
+        private SelectList _selectList;
 
         /// <summary>
         /// Get the selected text panel (what's shown when DropDown is closed).
         /// </summary>
-        public Panel SelectedTextPanel
-        {
-            get { return _selectedTextPanel; }
-        }
+        public Panel SelectedTextPanel => _selectedTextPanel;
 
         /// <summary>
         /// If true and user clicks on the item currently selected item, it will still invoke value change event as if 
@@ -82,36 +76,24 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public bool AllowReselectValue
         {
-            get { return _selectList.AllowReselectValue; }
-            set { _selectList.AllowReselectValue = value; }
+            get => _selectList.AllowReselectValue;
+            set => _selectList.AllowReselectValue = value;
         }
 
         /// <summary>
         /// Get the drop-down list component.
         /// </summary>
-        public SelectList SelectList
-        {
-            get { return _selectList; }
-        }
+        public SelectList SelectList => _selectList;
 
         /// <summary>
         /// Get the selected text panel paragraph (the text that's shown when DropDown is closed).
         /// </summary>
-        public Paragraph SelectedTextPanelParagraph
-        {
-            get { return _selectedTextParagraph; }
-        }
+        public Paragraph SelectedTextPanelParagraph => _selectedTextParagraph;
 
         /// <summary>
         /// Get the image entity of the arrow on the side of the Selected Text Panel.
         /// </summary>
-        public Image ArrowDownImage
-        {
-            get
-            {
-                return _arrowDownImage;
-            }
-        }
+        public Image ArrowDownImage => _arrowDownImage;
 
         /// <summary>
         /// Default height, in pixels, of the selected text panel.
@@ -253,7 +235,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected override void InitAfterDeserialize()
+        protected internal override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
 
@@ -276,18 +258,12 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="itemValue">Item text to trigger event.</param>
         /// <param name="action">Event to trigger.</param>
-        public void OnSelectedSpecificItem(string itemValue, System.Action action)
-        {
-            _perItemCallbacks[itemValue] = action;
-        }
+        public void OnSelectedSpecificItem(string itemValue, System.Action action) => _perItemCallbacks[itemValue] = action;
 
         /// <summary>
         /// Clear all the per-item specific events.
         /// </summary>
-        public void ClearSpecificItemEvents()
-        {
-            _perItemCallbacks.Clear();
-        }
+        public void ClearSpecificItemEvents() => _perItemCallbacks.Clear();
 
         /// <summary>
         /// Is the DropDown list currentle opened (visible).
@@ -295,10 +271,7 @@ namespace Nez.GeonBit.UI.Entities
         public bool ListVisible
         {
             // get if the list is visible
-            get
-            {
-                return _selectList.Visible;
-            }
+            get => _selectList.Visible;
 
             // show / hide the list
             set
@@ -314,7 +287,7 @@ namespace Nez.GeonBit.UI.Entities
         /// This is useful for things like DropDown, that when opened they take a larger part of the screen, but we don't
         /// want it to push down other entities.
         /// </summary>
-        override protected Rectangle GetDestRectForAutoAnchors()
+        protected override Rectangle GetDestRectForAutoAnchors()
         {
             _selectedTextPanel.UpdateDestinationRectsIfDirty();
             return _selectedTextPanel.GetActualDestRect();
@@ -326,7 +299,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <remarks>This function result is affected by the 'UseActualSizeForCollision' flag.</remarks>
         /// <param name="point">Point to test.</param>
         /// <returns>True if point is in entity's boundaries (destination rectangle)</returns>
-        override public bool IsInsideEntity(Vector2 point)
+        public override bool IsInsideEntity(Vector2 point)
         {
             // adjust scrolling
             point += _lastScrollVal.ToVector2();
@@ -359,10 +332,7 @@ namespace Nez.GeonBit.UI.Entities
         /// DropDown entity override this function to give some bonus priority, since when list is opened it needs to override entities
         /// under it, which usually have bigger index in container.
         /// </summary>
-        override public int Priority
-        {
-            get { return 100 - _indexInParent + PriorityBonus; }
-        }
+        public override int Priority => 100 - _indexInParent + PriorityBonus;
 
         /// <summary>
         /// Called whenever the dropdown list is shown / hidden.
@@ -402,7 +372,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             if (SelectedIndex == -1 && _selectedTextParagraph.Text != _placeholderText)
             {
@@ -414,7 +384,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Called every frame after update.
         /// DropDown entity override this function to close the list if necessary and to remove the selected item panel from self.
         /// </summary>
-        override protected void DoAfterUpdate()
+        protected override void DoAfterUpdate()
         {
             // if list currently visible we want to check if we need to close it
             if (ListVisible)
@@ -436,8 +406,7 @@ namespace Nez.GeonBit.UI.Entities
                 // trigger per-item events, but only if value changed
                 if (SelectedIndex != _lastSelected)
                 {
-                    System.Action callback = null;
-                    if (_perItemCallbacks.TryGetValue(_selectList.SelectedValue, out callback))
+                    if (_perItemCallbacks.TryGetValue(_selectList.SelectedValue, out var callback))
                     {
                         callback.Invoke();
                     }
@@ -457,18 +426,15 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Return if currently have a selected value.
         /// </summary>
-        public bool HasSelectedValue
-        {
-            get { return SelectedIndex != -1; }
-        }
+        public bool HasSelectedValue => SelectedIndex != -1;
 
         /// <summary>
         /// Currently selected item value (or null if none is selected).
         /// </summary>
         public string SelectedValue
         {
-            get { return _selectList.SelectedValue; }
-            set { _selectList.SelectedValue = value; }
+            get => _selectList.SelectedValue;
+            set => _selectList.SelectedValue = value;
         }
 
         /// <summary>
@@ -476,8 +442,8 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public int SelectedIndex
         {
-            get { return _selectList.SelectedIndex; }
-            set { _selectList.SelectedIndex = value; }
+            get => _selectList.SelectedIndex;
+            set => _selectList.SelectedIndex = value;
         }
 
         /// <summary>
@@ -485,27 +451,21 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public int ScrollPosition
         {
-            get { return _selectList.ScrollPosition; }
-            set { _selectList.ScrollPosition = value; }
+            get => _selectList.ScrollPosition;
+            set => _selectList.ScrollPosition = value;
         }
 
         /// <summary>
         /// Clear current selection.
         /// </summary>
-        public void Unselect()
-        {
-            _selectList.Unselect();
-        }
+        public void Unselect() => _selectList.Unselect();
 
         /// <summary>
         /// Add value to list.
         /// </summary>
         /// <remarks>Values can be duplicated, however, this will cause annoying behavior when trying to delete or select by value (will always pick the first found).</remarks>
         /// <param name="value">Value to add.</param>
-        public void AddItem(string value)
-        {
-            _selectList.AddItem(value);
-        }
+        public void AddItem(string value) => _selectList.AddItem(value);
 
         /// <summary>
         /// Add value to list at a specific index.
@@ -513,76 +473,49 @@ namespace Nez.GeonBit.UI.Entities
         /// <remarks>Values can be duplicated, however, this will cause annoying behavior when trying to delete or select by value (will always pick the first found).</remarks>
         /// <param name="value">Value to add.</param>
         /// <param name="index">Index to insert the new item into.</param>
-        public void AddItem(string value, int index)
-        {
-            _selectList.AddItem(value, index);
-        }
+        public void AddItem(string value, int index) => _selectList.AddItem(value, index);
 
         /// <summary>
         /// Remove value from the list.
         /// </summary>
         /// <param name="value">Value to remove.</param>
-        public void RemoveItem(string value)
-        {
-            _selectList.RemoveItem(value);
-        }
+        public void RemoveItem(string value) => _selectList.RemoveItem(value);
 
         /// <summary>
         /// Remove item from the list, by index.
         /// </summary>
         /// <param name="index">Index of the item to remove.</param>
-        public void RemoveItem(int index)
-        {
-            _selectList.RemoveItem(index);
-        }
+        public void RemoveItem(int index) => _selectList.RemoveItem(index);
 
         /// <summary>
         /// Remove all items from the list.
         /// </summary>
-        public void ClearItems()
-        {
-            _selectList.ClearItems();
-        }
+        public void ClearItems() => _selectList.ClearItems();
 
         /// <summary>
         /// How many items currently in the list.
         /// </summary>
-        public int Count
-        {
-            get { return _selectList.Count; }
-        }
+        public int Count => _selectList.Count;
 
         /// <summary>
         /// Is the list currently empty.
         /// </summary>
-        public bool Empty
-        {
-            get { return _selectList.Empty; }
-        }
+        public bool Empty => _selectList.Empty;
 
         /// <summary>
         /// Is the list a natrually-interactable entity.
         /// </summary>
         /// <returns>True.</returns>
-        override public bool IsNaturallyInteractable()
-        {
-            return true;
-        }
+        public override bool IsNaturallyInteractable() => true;
 
         /// <summary>
         /// Move scrollbar to currently selected item.
         /// </summary>
-        public void ScrollToSelected()
-        {
-            _selectList.ScrollToSelected();
-        }
+        public void ScrollToSelected() => _selectList.ScrollToSelected();
 
         /// <summary>
         /// Move scrollbar to last item in list.
         /// </summary>
-        public void scrollToEnd()
-        {
-            _selectList.scrollToEnd();
-        }
+        public void scrollToEnd() => _selectList.scrollToEnd();
     }
 }

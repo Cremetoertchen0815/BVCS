@@ -56,7 +56,7 @@ namespace Nez.GeonBit.UI
     /// Some special characters input.
     /// Note: enum values are based on ascii table values for these special characters.
     /// </summary>
-    enum SpecialChars
+    internal enum SpecialChars
     {
         Null = 0,           // no character input
         Delete = 127,       // delete char
@@ -72,14 +72,14 @@ namespace Nez.GeonBit.UI
     public class InputHelper
     {
         // locks the mouse cursor position
-        bool _LockMousePosition = false;
+        private bool _LockMousePosition = false;
         /// <summary>
         /// LockMousePosition
         /// </summary>
         public bool LockMousePosition
         {
-            private get { return _LockMousePosition; }
-            set { _LockMousePosition = value; }
+            private get => _LockMousePosition;
+            set => _LockMousePosition = value;
         }
 
         /// <summary>
@@ -88,37 +88,36 @@ namespace Nez.GeonBit.UI
         public bool IsAButtonPressed = false;
 
         // store current & previous keyboard states so we can detect key release
-        KeyboardState _newKeyboardState;
-        KeyboardState _oldKeyboardState;
+        private KeyboardState _newKeyboardState;
+        private KeyboardState _oldKeyboardState;
 
         // store current & previous mouse states so we can detect key release and diff
-        MouseState _newMouseState;
-        MouseState _oldMouseState;
-        GamePadState _newGamePadState;
-        GamePadState _oldGamePadState;
-
-        Vector2 _newMousePos;
+        private MouseState _newMouseState;
+        private MouseState _oldMouseState;
+        private GamePadState _newGamePadState;
+        private GamePadState _oldGamePadState;
+        private Vector2 _newMousePos;
 
         // store current frame gametime
-        GameTime _currTime;
+        private GameTime _currTime;
 
         /// <summary>An artificial "lag" after a key is pressed when typing text input, to prevent mistake duplications.</summary>
         public float KeysTypeCooldown = 0.6f;
 
         // last character that was pressed down
-        char _currCharacterInput = (char)SpecialChars.Null;
+        private char _currCharacterInput = (char)SpecialChars.Null;
 
         // last key that provide character input and was pressed
-        Keys _currCharacterInputKey = Keys.Escape;
+        private Keys _currCharacterInputKey = Keys.Escape;
 
         // keyboard input cooldown for textual input
-        float _keyboardInputCooldown = 0f;
+        private float _keyboardInputCooldown = 0f;
 
         // true when a new keyboard key is pressed
-        bool _newKeyIsPressed = false;
+        private bool _newKeyIsPressed = false;
 
         // current capslock state
-        bool _capslock = false;
+        private bool _capslock = false;
 
         /// <summary>
         /// Current mouse wheel value.
@@ -143,8 +142,8 @@ namespace Nez.GeonBit.UI
         /// </summary>
         public bool ThumbStickLeftDragging
         {
-            get { return _ThumbStickLeftDragging; }
-            set { _ThumbStickLeftDragging = value; }
+            get => _ThumbStickLeftDragging;
+            set => _ThumbStickLeftDragging = value;
         }
 
         /// <summary>
@@ -156,8 +155,8 @@ namespace Nez.GeonBit.UI
         /// </summary>
         public bool ThumbStickLeftCanDrag
         {
-            get { return _ThumbStickLeftCanDrag; }
-            set { _ThumbStickLeftCanDrag = value; }
+            get => _ThumbStickLeftCanDrag;
+            set => _ThumbStickLeftCanDrag = value;
         }
 
         private float ThumbStickLeftCoolDown = 12f;
@@ -182,10 +181,7 @@ namespace Nez.GeonBit.UI
         /// <summary>
         /// Current frame game time.
         /// </summary>
-        public GameTime CurrGameTime
-        {
-            get { return _currTime; }
-        }
+        public GameTime CurrGameTime => _currTime;
 
         /// <summary>
         /// Update current states.
@@ -308,10 +304,7 @@ namespace Nez.GeonBit.UI
         /// Called every time a keyboard key is pressed (called once on the frame key was pressed).
         /// </summary>
         /// <param name="key">Key code that is being pressed on this frame.</param>
-        protected void OnKeyPressed(Keys key)
-        {
-            NewKeyTextInput(key);
-        }
+        protected void OnKeyPressed(Keys key) => NewKeyTextInput(key);
 
         /// <summary>
         /// This update the character the user currently type down, for text input.
@@ -329,7 +322,7 @@ namespace Nez.GeonBit.UI
             bool isShiftDown = _newKeyboardState.IsKeyDown(Keys.LeftShift) || _newKeyboardState.IsKeyDown(Keys.RightShift);
 
             // set curr input key, but also keep the previous key in case we need to revert
-            Keys prevKey = _currCharacterInputKey;
+            var prevKey = _currCharacterInputKey;
             _currCharacterInputKey = key;
 
             // handle special keys and characters
@@ -584,10 +577,7 @@ namespace Nez.GeonBit.UI
         /// <summary>
         /// Get current mouse poisition.
         /// </summary>
-        public Vector2 MousePosition
-        {
-            get { return _newMousePos; }
-        }
+        public Vector2 MousePosition => _newMousePos;
 
         /// <summary>
         /// Get mouse position change since last frame.
@@ -600,115 +590,81 @@ namespace Nez.GeonBit.UI
         /// </summary>
         /// <param name="button">Mouse button to check.</param>
         /// <return>True if given mouse button is down.</return>
-        public bool MouseButtonHeldDown(MouseButton button = MouseButton.Left)
-        {
-            return GetMouseButtonState(button) == ButtonState.Pressed;
-        }
+        public bool MouseButtonHeldDown(MouseButton button = MouseButton.Left) => GetMouseButtonState(button) == ButtonState.Pressed;
 
         /// <summary>
         /// Return if any of mouse buttons is down.
         /// </summary>
         /// <returns>True if any mouse button is currently down.</returns>
-        public bool AnyMouseButtonDown()
-        {
-            return MouseButtonHeldDown(MouseButton.Left) ||
+        public bool AnyMouseButtonDown() => MouseButtonHeldDown(MouseButton.Left) ||
                 MouseButtonHeldDown(MouseButton.Right) ||
                 MouseButtonHeldDown(MouseButton.Middle);
-        }
 
         /// <summary>
         /// Check if a given mouse button was released in current frame.
         /// </summary>
         /// <param name="button">Mouse button to check.</param>
         /// <return>True if given mouse button was released in this frame.</return>
-        public bool MouseButtonReleased(MouseButton button = MouseButton.Left)
-        {
-            return GetMouseButtonState(button) == ButtonState.Released && GetMousePreviousButtonState(button) == ButtonState.Pressed;
-        }
+        public bool MouseButtonReleased(MouseButton button = MouseButton.Left) => GetMouseButtonState(button) == ButtonState.Released && GetMousePreviousButtonState(button) == ButtonState.Pressed;
 
         /// <summary>
         /// Check if a given mouse button is held down.
         /// </summary>
         /// <param name="button">Bouse button to check.</param>
         /// <return>True if given button is down.</return>
-        public bool GamePadButtonHeldDown(GamePadButton button)
-        {
-            return GetGamePadButtonState(button) == ButtonState.Pressed;
-        }
+        public bool GamePadButtonHeldDown(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Pressed;
 
         /// <summary>
         /// Check if a given gamepad button was released in current frame.
         /// </summary>
         /// <param name="button">GamePad button to check.</param>
         /// <return>True if given gamepad button was released in this frame.</return>
-        public bool GamePadButtonReleased(GamePadButton button)
-        {
-            return GetGamePadButtonState(button) == ButtonState.Released && GetGamePadPreviousButtonState(button) == ButtonState.Pressed;
-        }
+        public bool GamePadButtonReleased(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Released && GetGamePadPreviousButtonState(button) == ButtonState.Pressed;
 
         /// <summary>
         /// Check if a given gamepad button was pressed in current frame.
         /// </summary>
         /// <param name="button"></param>
         /// <returns></returns>
-        public bool GamePadButtonPressed(GamePadButton button)
-        {
-            return GetGamePadButtonState(button) == ButtonState.Pressed && GetGamePadPreviousButtonState(button) == ButtonState.Released;
-        }
+        public bool GamePadButtonPressed(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Pressed && GetGamePadPreviousButtonState(button) == ButtonState.Released;
 
         /// <summary>
         /// Return if any mouse button was released this frame.
         /// </summary>
         /// <returns>True if any mouse button was released.</returns>
-        public bool AnyMouseButtonReleased()
-        {
-            return MouseButtonReleased(MouseButton.Left) ||
+        public bool AnyMouseButtonReleased() => MouseButtonReleased(MouseButton.Left) ||
                 MouseButtonReleased(MouseButton.Right) ||
                 MouseButtonReleased(MouseButton.Middle);
-        }
 
         /// <summary>
         /// Check if a given mouse button was pressed in current frame.
         /// </summary>
         /// <param name="button">Mouse button to check.</param>
         /// <return>True if given mouse button was pressed in this frame.</return>
-        public bool MouseButtonPressed(MouseButton button = MouseButton.Left)
-        {
-            return GetMouseButtonState(button) == ButtonState.Pressed && GetMousePreviousButtonState(button) == ButtonState.Released;
-        }
+        public bool MouseButtonPressed(MouseButton button = MouseButton.Left) => GetMouseButtonState(button) == ButtonState.Pressed && GetMousePreviousButtonState(button) == ButtonState.Released;
 
         /// <summary>
         /// Return if any mouse button was pressed in current frame.
         /// </summary>
         /// <returns>True if any mouse button was pressed in current frame..</returns>
-        public bool AnyMouseButtonPressed()
-        {
-            return MouseButtonPressed(MouseButton.Left) ||
+        public bool AnyMouseButtonPressed() => MouseButtonPressed(MouseButton.Left) ||
                 MouseButtonPressed(MouseButton.Right) ||
                 MouseButtonPressed(MouseButton.Middle);
-        }
 
         /// <summary>
         /// Check if a given mouse button was just clicked (eg released after being pressed down)
         /// </summary>
         /// <param name="button">Mouse button to check.</param>
         /// <return>True if given mouse button is clicked.</return>
-        public bool MouseButtonClick(MouseButton button = MouseButton.Left)
-        {
-            return GetMouseButtonState(button) == ButtonState.Released && GetMousePreviousButtonState(button) == ButtonState.Pressed;
-        }
+        public bool MouseButtonClick(MouseButton button = MouseButton.Left) => GetMouseButtonState(button) == ButtonState.Released && GetMousePreviousButtonState(button) == ButtonState.Pressed;
 
         /// <summary>
         /// Return if any of mouse buttons was clicked this frame.
         /// </summary>
         /// <returns>True if any mouse button was clicked.</returns>
-        public bool AnyMouseButtonClicked()
-        {
-            return
-                MouseButtonClick(MouseButton.Left) ||
+        public bool AnyMouseButtonClicked() => MouseButtonClick(MouseButton.Left) ||
                 MouseButtonClick(MouseButton.Right) ||
                 MouseButtonClick(MouseButton.Middle);
-        }
 
         /// <summary>
         /// Return the state of a mouse button (up / down).
@@ -799,20 +755,14 @@ namespace Nez.GeonBit.UI
         /// </summary>
         /// <param name="key">Key button to check.</param>
         /// <return>True if given key button is down.</return>
-        public bool IsKeyDown(Keys key)
-        {
-            return _newKeyboardState.IsKeyDown(key);
-        }
+        public bool IsKeyDown(Keys key) => _newKeyboardState.IsKeyDown(key);
 
         /// <summary>
         /// Check if a given keyboard key was previously pressed down and now released in this frame.
         /// </summary>
         /// <param name="key">Key button to check.</param>
         /// <return>True if given key button was just released.</return>
-        public bool IsKeyReleased(Keys key)
-        {
-            return _oldKeyboardState.IsKeyDown(key) &&
+        public bool IsKeyReleased(Keys key) => _oldKeyboardState.IsKeyDown(key) &&
                    _newKeyboardState.IsKeyUp(key);
-        }
     }
 }

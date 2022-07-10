@@ -17,9 +17,9 @@ namespace Nez
         public string Namespace;
         public Assembly BaseAssembly;
 
-		public string TelegramSender => "sceneman";
+        public string TelegramSender => "sceneman";
 
-		public SceneManager(Assembly baseAssembly, string rootNamespace)
+        public SceneManager(Assembly baseAssembly, string rootNamespace)
         {
             Rescan(baseAssembly, rootNamespace); //First scan
 

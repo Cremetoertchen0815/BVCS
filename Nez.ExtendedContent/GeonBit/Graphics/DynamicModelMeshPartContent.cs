@@ -14,10 +14,10 @@
 //   limitations under the License.
 #endregion
 
-using System.Collections.ObjectModel;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
+using System.Collections.ObjectModel;
 
 namespace Nez.ExtendedContent.GeonBit.Graphics
 {
@@ -28,15 +28,15 @@ namespace Nez.ExtendedContent.GeonBit.Graphics
         // Summary:
         //     Gets the offset, in bytes, from the first index of the of vertex buffer for this mesh part.
         public int VertexOffset { get; set; }
-        
+
         // Summary:
         //     Gets the number of vertices used in this mesh part.
         public int NumVertices { get; set; }
-        
+
         // Summary:
         //     Gets the location in the index buffer at which to start reading vertices.
         public int StartIndex { get; set; }
-        
+
         // Summary:
         //     Gets the number of primitives to render for this mesh part.
         public int PrimitiveCount { get; set; }
@@ -65,15 +65,15 @@ namespace Nez.ExtendedContent.GeonBit.Graphics
 
         public DynamicModelMeshPartContent(ModelMeshPartContent source)
         {
-            this.Source = source;
-            this.VertexOffset = source.VertexOffset;
-            this.NumVertices = source.NumVertices;
-            this.StartIndex = source.StartIndex;
-            this.PrimitiveCount = source.PrimitiveCount;
-            this.VertexBuffer = source.VertexBuffer;
-            this.IndexBuffer = source.IndexBuffer;
-            this.Material = source.Material;
-            this.Tag = Tag;
+            Source = source;
+            VertexOffset = source.VertexOffset;
+            NumVertices = source.NumVertices;
+            StartIndex = source.StartIndex;
+            PrimitiveCount = source.PrimitiveCount;
+            VertexBuffer = source.VertexBuffer;
+            IndexBuffer = source.IndexBuffer;
+            Material = source.Material;
+            Tag = Tag;
         }
     }
 }

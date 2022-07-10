@@ -8,9 +8,9 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Text;
-using System.Collections.Generic;
 using Nez.ExtendedContent.DataTypes;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -24,10 +24,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static StyleSheet()
-        {
-            Entity.MakeSerializable(typeof(StyleSheet));
-        }
+        static StyleSheet() => Entity.MakeSerializable(typeof(StyleSheet));
 
         // caching of states as strings, to eliminate state.ToString() calls
         private static readonly string[] StateAsString =
@@ -51,7 +48,7 @@ namespace Nez.GeonBit.UI.Entities
                 return _identifiersCache[pair];
 
             // build and return new identifier
-            StringBuilder fullPropertyIdentifier = new StringBuilder(StateAsString[(int)state]);
+            var fullPropertyIdentifier = new StringBuilder(StateAsString[(int)state]);
             fullPropertyIdentifier.Append('.');
             fullPropertyIdentifier.Append(property);
             return _identifiersCache[pair] = fullPropertyIdentifier.ToString();
@@ -67,8 +64,7 @@ namespace Nez.GeonBit.UI.Entities
         public StyleProperty GetStyleProperty(string property, EntityState state = EntityState.Default, bool fallbackToDefault = true)
         {
             // try to get for current state
-            StyleProperty ret;
-            bool gotVal = TryGetValue(GetPropertyFullId(property, state), out ret);
+            bool gotVal = TryGetValue(GetPropertyFullId(property, state), out var ret);
 
             // if not found, try default
             if (!gotVal && (state != EntityState.Default) && fallbackToDefault)
@@ -86,10 +82,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="property">Property identifier.</param>
         /// <param name="value">Property value.</param>
         /// <param name="state">State to set property for.</param>
-        public void SetStyleProperty(string property, StyleProperty value, EntityState state = EntityState.Default)
-        {
-            this[GetPropertyFullId(property, state)] = value;
-        }
+        public void SetStyleProperty(string property, StyleProperty value, EntityState state = EntityState.Default) => this[GetPropertyFullId(property, state)] = value;
 
         /// <summary>
         /// Update the entire stylesheet from a different stylesheet.

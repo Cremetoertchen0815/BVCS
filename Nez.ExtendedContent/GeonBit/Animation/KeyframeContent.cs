@@ -19,8 +19,8 @@
 //   limitations under the License.
 #endregion
 
-using System;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace Nez.ExtendedContent.GeonBit.Animation
 {
@@ -32,9 +32,9 @@ namespace Nez.ExtendedContent.GeonBit.Animation
 
         public KeyframeContent(int bone, TimeSpan time, Matrix transform)
         {
-            this.Bone = bone;
-            this.Time = time;
-            this.Transform = transform;
-        }	
+            Bone = bone;
+            Time = time;
+            Transform = transform;
+        }
     }
 }

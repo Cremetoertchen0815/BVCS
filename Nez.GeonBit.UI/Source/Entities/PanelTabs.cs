@@ -8,10 +8,9 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.ExtendedContent.DataTypes;
+using System.Collections.Generic;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -25,7 +24,7 @@ namespace Nez.GeonBit.UI.Entities
         public Button button;
 
         /// <summary>Tab identifier / name.</summary>
-        readonly public string name;
+        public readonly string name;
 
         /// <summary>
         /// Create the new tab type.
@@ -52,10 +51,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static PanelTabs()
-        {
-            Entity.MakeSerializable(typeof(PanelTabs));
-        }
+        static PanelTabs() => Entity.MakeSerializable(typeof(PanelTabs));
 
         /// <summary>Default styling for panel buttons. Note: loaded from UI theme xml file.</summary>
         public static StyleSheet DefaultButtonStyle = new StyleSheet();
@@ -85,7 +81,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public PanelSkin BackgroundSkin
         {
-            get { return _panelsPanel.Skin; }
+            get => _panelsPanel.Skin;
             set { if (_panelsPanel != null) _panelsPanel.Skin = value; }
         }
 
@@ -131,7 +127,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected override void InitAfterDeserialize()
+        protected internal override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
 
@@ -170,7 +166,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // negate parent's padding
             _internalRoot.Padding = -Parent.Padding;
@@ -182,7 +178,7 @@ namespace Nez.GeonBit.UI.Entities
             // adjust buttons size to fix global scaling
             _buttonsPanel.CalcDestRect();
             var buttons = _buttonsPanel.Children;
-            var sizeX = (int)System.Math.Round((int)System.Math.Round((float)_buttonsPanel.GetActualDestRect().Width / buttons.Count) / GlobalScale);
+            int sizeX = (int)System.Math.Round((int)System.Math.Round((float)_buttonsPanel.GetActualDestRect().Width / buttons.Count) / GlobalScale);
             foreach (var button in buttons)
             {
                 button.Size = new Vector2(sizeX, button.Size.Y);
@@ -196,10 +192,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Get the currently active tab.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public TabData ActiveTab
-        {
-            get { return _activeTab; }
-        }
+        public TabData ActiveTab => _activeTab;
 
         /// <summary>
         /// Select tab to be the currently active tab.
@@ -208,7 +201,7 @@ namespace Nez.GeonBit.UI.Entities
         public void SelectTab(string name)
         {
             // find the right tab and select it
-            foreach (TabData tab in _tabs)
+            foreach (var tab in _tabs)
             {
                 if (tab.name == name)
                 {
@@ -230,8 +223,8 @@ namespace Nez.GeonBit.UI.Entities
         /// <returns>The new tab we created - contains the panel and the button to switch it.</returns>
         public TabData AddTab(string name, PanelSkin panelSkin = PanelSkin.None)
         {
-            Panel newPanel = new Panel(Vector2.Zero, panelSkin, Anchor.TopCenter);
-            Button newButton = new Button(name, ButtonSkin.Default, Anchor.AutoInlineNoBreak, new Vector2(-1, -1));
+            var newPanel = new Panel(Vector2.Zero, panelSkin, Anchor.TopCenter);
+            var newButton = new Button(name, ButtonSkin.Default, Anchor.AutoInlineNoBreak, new Vector2(-1, -1));
             newPanel.Identifier = name;
             return AddTab(newPanel, newButton);
         }
@@ -245,8 +238,8 @@ namespace Nez.GeonBit.UI.Entities
         private TabData AddTab(Panel newPanel, Button newButton)
         {
             // get name from panel and create tab data
-            var name = newPanel.Identifier;
-            TabData newTab = new TabData(name, newPanel, newButton);
+            string name = newPanel.Identifier;
+            var newTab = new TabData(name, newPanel, newButton);
 
             // link tab data to panel
             newTab.panel.AttachedData = newTab;
@@ -259,9 +252,9 @@ namespace Nez.GeonBit.UI.Entities
             _tabs.Add(newTab);
 
             // update all button sizes
-            float width = 1f / (float)_tabs.Count;
+            float width = 1f / _tabs.Count;
             if (width == 1) { width = 0; }
-            foreach (TabData data in _tabs)
+            foreach (var data in _tabs)
             {
                 data.button.Size = new Vector2(width, data.button.Size.Y);
             }
@@ -278,22 +271,22 @@ namespace Nez.GeonBit.UI.Entities
             newTab.panel.Visible = false;
 
             // attach callback to newly created button
-            newTab.button.OnValueChange = (Entity entity) => 
+            newTab.button.OnValueChange = (Entity entity) =>
             {
                 // get self as a button
-                Button self = (Button)(entity);
+                var self = (Button)(entity);
 
                 // clear the currently active panel
-                Panel prevActive = _activeTab != null ? _activeTab.panel : null;
+                var prevActive = _activeTab != null ? _activeTab.panel : null;
                 _activeTab = null;
 
                 // if we were checked, uncheck all the other buttons
                 if (self.Checked)
                 {
                     // un-toggle all the other buttons
-                    foreach (TabData data in _tabs)
+                    foreach (var data in _tabs)
                     {
-                        Button iterButton = data.button;
+                        var iterButton = data.button;
                         if (iterButton != self && iterButton.Checked)
                         {
                             iterButton.Checked = false;
@@ -302,7 +295,7 @@ namespace Nez.GeonBit.UI.Entities
                 }
 
                 // get the panel associated with this tab button.
-                Panel selfPanel = _panelsPanel.Find<Panel>("tab-panel-" + name);
+                var selfPanel = _panelsPanel.Find<Panel>("tab-panel-" + name);
 
                 // show / hide the panel
                 selfPanel.Visible = self.Checked;
@@ -312,7 +305,7 @@ namespace Nez.GeonBit.UI.Entities
                 {
                     _activeTab = (TabData)selfPanel.AttachedData;
                 }
-                
+
                 // if at this phase there's no active panel, revert by checking self again
                 // it could happen if user click the same tab button twice or via code.
                 if (_activeTab == null && prevActive == selfPanel)

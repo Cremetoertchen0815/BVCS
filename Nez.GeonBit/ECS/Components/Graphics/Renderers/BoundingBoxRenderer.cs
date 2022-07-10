@@ -20,40 +20,40 @@
 
 namespace Nez.GeonBit
 {
-	/// <summary>
-	/// This component renders a bounding-box around this GameObject.
-	/// </summary>
-	public class BoundingBoxRenderer : BaseRendererComponent, IUpdatable
-	{
-		// the entity used to draw the model
-		private readonly BoundingBoxEntity _entity;
+    /// <summary>
+    /// This component renders a bounding-box around this GameObject.
+    /// </summary>
+    public class BoundingBoxRenderer : BaseRendererComponent, IUpdatable
+    {
+        // the entity used to draw the model
+        private readonly BoundingBoxEntity _entity;
 
-		/// <summary>
-		/// Get the main entity instance of this renderer.
-		/// </summary>
-		protected override BaseRenderableEntity RenderableEntity => _entity;
+        /// <summary>
+        /// Get the main entity instance of this renderer.
+        /// </summary>
+        protected override BaseRenderableEntity RenderableEntity => _entity;
 
-		/// <summary>
-		/// Create the bounding-box renderer component.
-		/// </summary>
-		public BoundingBoxRenderer() => _entity = new BoundingBoxEntity();
+        /// <summary>
+        /// Create the bounding-box renderer component.
+        /// </summary>
+        public BoundingBoxRenderer() => _entity = new BoundingBoxEntity();
 
-		/// <summary>
-		/// Clone this component.
-		/// </summary>
-		/// <returns>Cloned copy of this component.</returns>
-		public override Component CopyBasics(Component copyTo) => CopyBasics(new BoundingBoxRenderer());
+        /// <summary>
+        /// Clone this component.
+        /// </summary>
+        /// <returns>Cloned copy of this component.</returns>
+        public override Component CopyBasics(Component copyTo) => CopyBasics(new BoundingBoxRenderer());
 
-		/// <summary>
-		/// Called every frame to do the component events.
-		/// </summary>
-		public void Update()
-		{
-			// update bounding box
-			if (Node != null)
-			{
-				_entity.Box = Node.GetBoundingBox();
-			}
-		}
-	}
+        /// <summary>
+        /// Called every frame to do the component events.
+        /// </summary>
+        public void Update()
+        {
+            // update bounding box
+            if (Node != null)
+            {
+                _entity.Box = Node.GetBoundingBox();
+            }
+        }
+    }
 }

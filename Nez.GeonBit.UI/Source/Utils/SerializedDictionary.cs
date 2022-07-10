@@ -7,9 +7,7 @@
 // Since: 2018.
 //-----------------------------------------------------------------------------
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace Nez.GeonBit.UI.Utils
@@ -29,10 +27,7 @@ namespace Nez.GeonBit.UI.Utils
         /// Get schema.
         /// </summary>
         /// <returns>Always null.</returns>
-        public System.Xml.Schema.XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public System.Xml.Schema.XmlSchema GetSchema() => null;
 
         /// <summary>
         /// Read XML.
@@ -40,8 +35,8 @@ namespace Nez.GeonBit.UI.Utils
         /// <param name="reader">XML reader.</param>
         public void ReadXml(System.Xml.XmlReader reader)
         {
-            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+            var keySerializer = new XmlSerializer(typeof(TKey));
+            var valueSerializer = new XmlSerializer(typeof(TValue));
 
             bool wasEmpty = reader.IsEmptyElement;
             reader.Read();
@@ -53,12 +48,12 @@ namespace Nez.GeonBit.UI.Utils
             {
                 reader.ReadStartElement("item");
                 reader.ReadStartElement("key");
-                TKey key = (TKey)keySerializer.Deserialize(reader);
+                var key = (TKey)keySerializer.Deserialize(reader);
                 reader.ReadEndElement();
                 reader.ReadStartElement("value");
-                TValue value = (TValue)valueSerializer.Deserialize(reader);
+                var value = (TValue)valueSerializer.Deserialize(reader);
                 reader.ReadEndElement();
-                this.Add(key, value);
+                Add(key, value);
                 reader.ReadEndElement();
                 reader.MoveToContent();
             }
@@ -72,17 +67,17 @@ namespace Nez.GeonBit.UI.Utils
         /// <param name="writer">XML writer.</param>
         public void WriteXml(System.Xml.XmlWriter writer)
         {
-            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+            var keySerializer = new XmlSerializer(typeof(TKey));
+            var valueSerializer = new XmlSerializer(typeof(TValue));
 
-            foreach (TKey key in this.Keys)
+            foreach (var key in Keys)
             {
                 writer.WriteStartElement("item");
                 writer.WriteStartElement("key");
                 keySerializer.Serialize(writer, key);
                 writer.WriteEndElement();
                 writer.WriteStartElement("value");
-                TValue value = this[key];
+                var value = this[key];
                 valueSerializer.Serialize(writer, value);
                 writer.WriteEndElement();
                 writer.WriteEndElement();

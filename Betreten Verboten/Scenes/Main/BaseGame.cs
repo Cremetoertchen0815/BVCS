@@ -1,9 +1,8 @@
 ﻿using Betreten_Verboten.Components.Base;
 using Betreten_Verboten.Components.Base.Boards.BV;
-using Betreten_Verboten.Components.Base.HUD;
+using Betreten_Verboten.Components.Base.Characters;
 using Betreten_Verboten.Components.BV.Player;
 using Microsoft.Xna.Framework;
-using System.Linq;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.ECS;
@@ -11,8 +10,8 @@ using Nez.GeonBit.Physics;
 using Nez.GeonBit.UI;
 using Nez.GeonBit.UI.Entities;
 using System.Collections.Generic;
+using System.Linq;
 using static Betreten_Verboten.GlobalFields;
-using Betreten_Verboten.Components.Base.Characters;
 
 namespace Betreten_Verboten.Scenes.Main
 {
@@ -151,7 +150,7 @@ namespace Betreten_Verboten.Scenes.Main
                 _uiPlayerHUDs[i].AddChild(new Label("Player " + i, Anchor.TopLeft, null, new Vector2(50, 0)));
                 scores[i] = _uiPlayerHUDs[i].AddChild(new DynamicLabel(() => _players[ii].Points.ToString(), Anchor.TopRight));
                 scores[i].Visible = false;
-                
+
             }
             UserInterface.Active.AddEntity(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.LT), new Vector2(50, 51), ImageDrawMode.Stretch, Anchor.Auto, new Vector2(80, 0)));
 
@@ -193,7 +192,7 @@ namespace Betreten_Verboten.Scenes.Main
             for (int i = 0; i < _board.PlayerCount; i++)
             {
                 int ii = i;
-                _uiPlayerHUDs[ _playerIndices[_playerIndices.Length - 1 - i]].Tween("Offset", new Vector2(5, 15 + ii * 75), 0.5f).SetEaseType(Nez.Tweens.EaseType.QuadInOut).Start();
+                _uiPlayerHUDs[_playerIndices[_playerIndices.Length - 1 - i]].Tween("Offset", new Vector2(5, 15 + ii * 75), 0.5f).SetEaseType(Nez.Tweens.EaseType.QuadInOut).Start();
             }
         }
 

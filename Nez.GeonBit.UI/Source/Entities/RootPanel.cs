@@ -11,7 +11,6 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -25,10 +24,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static RootPanel()
-        {
-            Entity.MakeSerializable(typeof(RootPanel));
-        }
+        static RootPanel() => Entity.MakeSerializable(typeof(RootPanel));
 
         /// <summary>
         /// Create the root panel.
@@ -46,7 +42,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Override the function to calculate the destination rectangle, so the root panel will always cover the entire screen.
         /// </summary>
         /// <returns>Rectangle in the size of the whole screen.</returns>
-        override public Rectangle CalcDestRect()
+        public override Rectangle CalcDestRect()
         {
             int width = UserInterface.Active.ScreenWidth;
             int height = UserInterface.Active.ScreenHeight;
@@ -56,7 +52,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Update dest rect and internal dest rect, but only if needed (eg if something changed since last update).
         /// </summary>
-        override public void UpdateDestinationRectsIfDirty()
+        public override void UpdateDestinationRectsIfDirty()
         {
             // if dirty, update destination rectangles
             if (IsDirty)
@@ -69,7 +65,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Draw this entity and its children.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to use for drawing.</param>
-        override public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             // if not visible skip
             if (!Visible)
@@ -84,10 +80,10 @@ namespace Nez.GeonBit.UI.Entities
             UpdateDestinationRectsIfDirty();
 
             // get sorted children list
-            List<Entity> childrenSorted = GetSortedChildren();
+            var childrenSorted = GetSortedChildren();
 
             // draw all children
-            foreach (Entity child in childrenSorted)
+            foreach (var child in childrenSorted)
             {
                 child.Draw(spriteBatch);
             }

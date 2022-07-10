@@ -14,10 +14,8 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -54,13 +52,10 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static Panel()
-        {
-            Entity.MakeSerializable(typeof(Panel));
-        }
+        static Panel() => Entity.MakeSerializable(typeof(Panel));
 
         /// <summary>Default styling for panels. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         // how the panel draw entities that exceed boundaries.
         private PanelOverflowBehavior _overflowMode = PanelOverflowBehavior.Overflow;
@@ -73,10 +68,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Get the scrollbar of this panel.
         /// </summary>
-        public VerticalScrollbar Scrollbar
-        {
-            get { return _scrollbar; }
-        }
+        public VerticalScrollbar Scrollbar => _scrollbar;
 
         /// <summary>
         /// Set / get panel overflow behavior.
@@ -84,7 +76,7 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         public virtual PanelOverflowBehavior PanelOverflowBehavior
         {
-            get { return _overflowMode; }
+            get => _overflowMode;
             set { _overflowMode = value; UpdateOverflowMode(); }
         }
 
@@ -94,7 +86,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Get overflow scrollbar value.
         /// </summary>
-        protected override Point OverflowScrollVal { get { return _scrollbar == null ? Point.Zero : new Point(0, _scrollbar.Value); } }
+        protected override Point OverflowScrollVal => _scrollbar == null ? Point.Zero : new Point(0, _scrollbar.Value);
 
         /// <summary>
         /// Store the original destination rectangle if changing due to render target.
@@ -109,15 +101,12 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="anchor">Position anchor.</param>
         /// <param name="offset">Offset from anchor position.</param>
         public Panel(Vector2 size, PanelSkin skin = PanelSkin.Default, Anchor anchor = Anchor.Center, Vector2? offset = null) :
-            base(size, skin, anchor, offset)
-        {
-            UpdateStyle(DefaultStyle);
-        }
+            base(size, skin, anchor, offset) => UpdateStyle(DefaultStyle);
 
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected override void InitAfterDeserialize()
+        protected internal override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
             var scrollbar = Find<VerticalScrollbar>("__scrollbar");
@@ -144,10 +133,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Dispose unmanaged resources related to this panel (render target).
         /// </summary>
-        public void Dispose()
-        {
-            DisposeRenderTarget();
-        }
+        public void Dispose() => DisposeRenderTarget();
 
         /// <summary>
         /// Get the rectangle used for target texture for this panel.
@@ -155,7 +141,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <returns>Destination rect for target texture.</returns>
         private Rectangle GetRenderTargetRect()
         {
-            Rectangle ret = _destRectInternal;
+            var ret = _destRectInternal;
             ret.Width += GetScrollbarWidth() * 2;
             return ret;
         }
@@ -174,9 +160,9 @@ namespace Nez.GeonBit.UI.Entities
             }
 
             // create the render target for this panel
-            Rectangle targetRect = GetRenderTargetRect();
-            if (_renderTarget == null || 
-                _renderTarget.Width != targetRect.Width || 
+            var targetRect = GetRenderTargetRect();
+            if (_renderTarget == null ||
+                _renderTarget.Width != targetRect.Width ||
                 _renderTarget.Height != targetRect.Height)
             {
                 // recreate render target
@@ -218,7 +204,7 @@ namespace Nez.GeonBit.UI.Entities
                 else
                 {
                     AddChild(_scrollbar);
-                }           
+                }
             }
 
             // to make sure the dest rect will not be recalculated while drawing children
@@ -229,7 +215,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Calculate and return the internal destination rectangle (note: this relay on the dest rect having a valid value first).
         /// </summary>
         /// <returns>Internal destination rectangle.</returns>
-        override public Rectangle CalcInternalRect()
+        public override Rectangle CalcInternalRect()
         {
             base.CalcInternalRect();
             _destRectInternal.Width -= GetScrollbarWidth();
@@ -240,10 +226,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Get scrollbar width in pixels.
         /// </summary>
         /// <returns>Scrollbar width, or 0 if have no scrollbar.</returns>
-        private int GetScrollbarWidth()
-        {
-            return _scrollbar != null ? _scrollbar.GetActualDestRect().Width : 0;
-        }
+        private int GetScrollbarWidth() => _scrollbar != null ? _scrollbar.GetActualDestRect().Width : 0;
 
         /// <summary>
         /// Called after drawing child entities of this entity.
@@ -266,7 +249,7 @@ namespace Nez.GeonBit.UI.Entities
             {
                 // unbind the render target
                 UserInterface.Active.DrawUtils.PopRenderTarget();
-                
+
                 // draw the render target itself
                 UserInterface.Active.DrawUtils.StartDraw(spriteBatch, IsDisabled());
                 spriteBatch.Draw(_renderTarget, GetRenderTargetRect(), Color.White);
@@ -317,7 +300,7 @@ namespace Nez.GeonBit.UI.Entities
                     _scrollbar.RemoveFromParent();
                 }
             }
-        }   
+        }
 
         /// <summary>
         /// Dispose the render target (only if use) and set it to null.
@@ -338,13 +321,13 @@ namespace Nez.GeonBit.UI.Entities
         /// <param name="dragTargetEntity">The deepest child dragable entity with highest priority that we point on and can be drag if mouse down.</param>
         /// <param name="wasEventHandled">Set to true if current event was already handled by a deeper child.</param>
         /// <param name="scrollVal">Combined scrolling value (panels with scrollbar etc) of all parents.</param>
-        override protected void UpdateChildren(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
+        protected override void UpdateChildren(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
         {
             // if not in overflow mode and mouse not on this panel boundaries, skip calling children
             bool skipChildren = false;
             if (_overflowMode != PanelOverflowBehavior.Overflow)
             {
-                Vector2 mousePos = GetMousePos();
+                var mousePos = GetMousePos();
                 if (mousePos.X < _destRectInternal.Left || mousePos.X > _destRectInternal.Right ||
                     mousePos.Y < _destRectInternal.Top || mousePos.Y > _destRectInternal.Bottom)
                 {

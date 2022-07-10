@@ -10,10 +10,8 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.ExtendedContent.DataTypes;
 
 namespace Nez.GeonBit.UI.Entities
 {
@@ -28,10 +26,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static CheckBox()
-        {
-            Entity.MakeSerializable(typeof(CheckBox));
-        }
+        static CheckBox() => Entity.MakeSerializable(typeof(CheckBox));
 
         /// <summary>CheckBox label. Use this if you want to change the checkbox text or font style.</summary>
         public Paragraph TextParagraph;
@@ -40,13 +35,13 @@ namespace Nez.GeonBit.UI.Entities
         protected bool _value = false;
 
         // checkbox widget size (the graphic box part)
-        static Vector2 CHECKBOX_SIZE = new Vector2(35, 35);
+        private static Vector2 CHECKBOX_SIZE = new Vector2(35, 35);
 
         /// <summary>Default checkbox size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 40f);
+        public static new Vector2 DefaultSize = new Vector2(0f, 40f);
 
         /// <summary>Default styling for the checkbox itself. Note: loaded from UI theme xml file.</summary>
-        new public static StyleSheet DefaultStyle = new StyleSheet();
+        public static new StyleSheet DefaultStyle = new StyleSheet();
 
         /// <summary>Default styling for checkbox label. Note: loaded from UI theme xml file.</summary>
         public static StyleSheet DefaultParagraphStyle = new StyleSheet();
@@ -93,7 +88,7 @@ namespace Nez.GeonBit.UI.Entities
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected override void InitAfterDeserialize()
+        protected internal override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
             TextParagraph = Find("_checkbox_text") as Paragraph;
@@ -104,17 +99,14 @@ namespace Nez.GeonBit.UI.Entities
         /// Is the checkbox a natrually-interactable entity.
         /// </summary>
         /// <returns>True.</returns>
-        override public bool IsNaturallyInteractable()
-        {
-            return true;
-        }
+        public override bool IsNaturallyInteractable() => true;
 
         /// <summary>
         /// CheckBox current value, eg if its checked or unchecked.
         /// </summary>
         public bool Checked
         {
-            get { return _value == true; }
+            get => _value == true;
             set { _value = value; DoOnValueChange(); }
         }
 
@@ -122,9 +114,9 @@ namespace Nez.GeonBit.UI.Entities
         /// Helper function to get checkbox texture based on state and current value.
         /// </summary>
         /// <returns>Which texture to use for the checkbox.</returns>
-        virtual protected Texture2D GetTexture()
+        protected virtual Texture2D GetTexture()
         {
-            EntityState state = _entityState;
+            var state = _entityState;
             if (state != EntityState.MouseDown && Checked) { state = EntityState.MouseDown; }
             return Resources.CheckBoxTextures[state];
         }
@@ -134,24 +126,24 @@ namespace Nez.GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
 
             // get texture based on checkbox / mouse state
-            Texture2D texture = GetTexture();
+            var texture = GetTexture();
 
             // calculate actual size
-            Vector2 actualSize = CHECKBOX_SIZE * GlobalScale;
+            var actualSize = CHECKBOX_SIZE * GlobalScale;
 
             // dest rect
-            Rectangle dest = new Rectangle(_destRect.X,
+            var dest = new Rectangle(_destRect.X,
                                 (int)(_destRect.Y + _destRect.Height / 2 - actualSize.Y / 2),
                                 (int)(actualSize.X),
                                 (int)(actualSize.Y));
             dest = UserInterface.Active.DrawUtils.ScaleRect(dest, Scale);
 
             // source rect
-            Rectangle src = new Rectangle(0, 0, texture.Width, texture.Height);
+            var src = new Rectangle(0, 0, texture.Width, texture.Height);
 
             // draw checkbox
             spriteBatch.Draw(texture, dest, src, FillColor);
@@ -164,7 +156,7 @@ namespace Nez.GeonBit.UI.Entities
         /// Handle mouse click event. 
         /// CheckBox entity override this function to handle value toggle.
         /// </summary>
-        override protected void DoOnClick()
+        protected override void DoOnClick()
         {
             // toggle value
             Checked = !_value;
