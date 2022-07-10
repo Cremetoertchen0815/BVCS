@@ -1,7 +1,7 @@
-﻿-Merge with newest Nez version
--Implement basic game logic
--Implement character aniamtions
--Implement game loop
+﻿-Implement kicking
+-Implement character animations
+-Implement special functions(anger, sacrifice, UFO, suicide, etc.)
+-Extend renderer to support full board rendering
+-Implement scoring & winning
 -Implement CPU players
--Implement special features
 -Start working on networking infrastructure
