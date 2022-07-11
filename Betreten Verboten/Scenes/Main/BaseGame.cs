@@ -77,6 +77,9 @@ namespace Betreten_Verboten.Scenes.Main
 
             //Init
             AdvancePlayer();
+#if DEBUG
+            Camera.Entity.AddComponent(new Components.Debug.DebugCamMover());
+#endif
 
             this.TeleRegister();
         }
@@ -112,7 +115,7 @@ namespace Betreten_Verboten.Scenes.Main
         protected void InitEnvironment()
         {
             CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
-
+            
             //Create playing field
             _board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
             _players = new Player[_board.PlayerCount];

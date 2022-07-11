@@ -71,7 +71,7 @@ namespace Betreten_Verboten.Components.Base
         }
 
 
-        public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500 + Random.MinusOneToOne() * 4, Random.Range(25, 40), -500 + Random.MinusOneToOne() * 4)).SetTag(ENTITY_TAG).AddComponent(new Dice());
+        public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500 + Random.MinusOneToOne() * 4, Random.Range(25, 40), -500 + Random.MinusOneToOne() * 4), NodeType.BoundingBoxCulling).SetTag(ENTITY_TAG).AddComponent(new Dice());
 
         /// <summary>
         /// Returns if another dice roll is necessary, depending on if the player can roll thrice.

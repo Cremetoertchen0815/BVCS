@@ -51,6 +51,8 @@ namespace Betreten_Verboten.Components.Base
             _kinematicBody.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Terrain;
             _kinematicBody.Restitution = 1f;
 
+            //Add dice limiting box
+            var diceLimiter = ((GeonScene)Entity.Scene).CreateGeonEntity("DiceLimiter", new Vector3(-500, 0, -500), NodeType.BoundingBoxCulling).AddComponent(new StaticBody(new BoxInfo(new Vector3(50))));
 
             _players = new Player[PlayerCount]; //Create player array
             SetRenderLayer(RENDER_LAYER_BOARD); //Config renderable 
