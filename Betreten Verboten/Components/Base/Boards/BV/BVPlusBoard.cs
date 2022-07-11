@@ -20,6 +20,7 @@ namespace Betreten_Verboten.Components.Base.Boards.BV
         public override int FigureCountPP => 4;
         public override int PlayerCount => 4;
         public override float CharScale => 0.105f;
+        public override float FigureJumpHeight => 6f;
 
         public override Vector2 GetFieldPosition(int player, int fieldNr, FieldType fieldType, bool centerOffset = true)
         {

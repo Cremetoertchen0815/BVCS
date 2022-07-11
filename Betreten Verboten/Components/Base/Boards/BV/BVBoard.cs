@@ -79,6 +79,7 @@ namespace Betreten_Verboten.Components.Base
         public virtual int FieldCountTotal => FieldCountPP * PlayerCount; 
         public virtual int FigureCountTotal => FigureCountPP * PlayerCount; 
         public virtual int DistanceLimit => FieldCountTotal + FigureCountPP - 1;
+        public abstract float FigureJumpHeight { get; }
         public abstract int PlayerCount { get; }
         public abstract float CharScale { get; }
         public abstract Vector2 GetFieldPosition(int player, int fieldNr, FieldType fieldType, bool centerOffset = true);

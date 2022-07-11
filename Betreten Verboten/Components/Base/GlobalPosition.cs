@@ -7,7 +7,7 @@ namespace Betreten_Verboten.Components.Base
         public int Position;
         public bool Valid;
 
-        public static bool operator ==(GlobalPosition a, GlobalPosition b) => a.Position == b.Position;
+        public static bool operator ==(GlobalPosition a, GlobalPosition b) => a.Position == b.Position && a.Valid && b.Valid;
         public static bool operator !=(GlobalPosition a, GlobalPosition b) => !(a == b);
         public override bool Equals(object o) => o is GlobalPosition b && this == b;
         public override int GetHashCode() => Position.GetHashCode();
