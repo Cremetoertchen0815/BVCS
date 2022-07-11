@@ -88,11 +88,15 @@ namespace Betreten_Verboten.Components.Base.Characters
         {
             _position = pos;
             GlobalPosition = GlobalPosition.FromChar(this);
-            var node = (Entity as GeonEntity).Node;
+            var node = (Entity as GeonEntity)?.Node;
             if (node == null) return this;
             var pos2D = Owner.Board.GetCharacterPosition(this);
             node.Position = new Vector3(pos2D.X, node.Position.Y, pos2D.Y);
-            if (RigidBody != null) RigidBody.Position = node.Position;
+            if (RigidBody != null)
+            {
+                RigidBody.Position = node.Position;
+                RigidBody.CopyNodeWorldMatrix();
+            }
             return this;
         }
 
@@ -123,6 +127,14 @@ namespace Betreten_Verboten.Components.Base.Characters
             
         }
 
-        private void AdvAnimationStep(ITween<Vector2> y) { if (_travelDistLeft < 1) this.SendPrivateTele("base", "char_move_done", null); else TakeStep(); }
+        private void AdvAnimationStep(ITween<Vector2> y) 
+        {
+            if (_travelDistLeft < 1)
+            {
+                RigidBody.CopyNodeWorldMatrix();
+                this.SendPrivateTele("base", "char_move_done", null);
+            }
+            else TakeStep();
+        }
     }
 }
