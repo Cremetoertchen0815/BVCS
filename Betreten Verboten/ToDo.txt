@@ -1,5 +1,4 @@
-﻿-Implement dice movement limit
--Implement character animations
+﻿-Implement character animations
 -Implement special functions(anger, sacrifice, UFO, suicide, etc.)
 -Extend renderer to support full board rendering
 -Implement scoring & winning
