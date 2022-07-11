@@ -11,11 +11,11 @@ namespace Betreten_Verboten.Components.Base.Boards.BV
         private readonly float[] rotato0 = { 0, MathHelper.PiOver2, MathHelper.Pi, MathHelper.PiOver2 * 3 };
 
 
-
         protected override int FieldHouseDiameter => 20;
         protected override int FieldHomeDiameter => 20;
         protected override int FieldPlayerDiameter => 28;
         protected override int FieldDistance => 85;
+        protected override int FieldPlayerArrowDiameter => 35;
         public override int FieldCountPP => 10;
         public override int FigureCountPP => 4;
         public override int PlayerCount => 4;

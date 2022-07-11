@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.Materials;
@@ -12,7 +13,7 @@ namespace Betreten_Verboten.Components.Base
 
         private const int TEX_RES = 1000;
         private const int CIRCLE_RES = 5;
-        private const float CLEAR_COLOR = 0.05f;
+        private const float CLEAR_COLOR = 0.04f;
 
         //Cached field positions
         private Vector2[] _connectingSegments;
@@ -26,6 +27,9 @@ namespace Betreten_Verboten.Components.Base
         protected ShapeRenderer _shapeRenderer;
         protected RenderTexture _shadowProjection;
         protected StaticBody _kinematicBody;
+
+
+        private Texture2D _texArrow;
 
         public override void OnAddedToEntity()
         {
@@ -51,6 +55,8 @@ namespace Betreten_Verboten.Components.Base
             _kinematicBody.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Terrain;
             _kinematicBody.Restitution = 0f;
 
+            _texArrow = Entity.Scene.Content.LoadTexture("texture/arrow_right");
+
             //Add dice limiting box
             ((GeonScene)Entity.Scene).CreateGeonEntity("DiceLimiterA", new Vector3(-550, 50, -500), NodeType.BoundingBoxCulling).AddComponent(new StaticBody(new BoxInfo(new Vector3(50, 100, 50)))).Restitution = 1f;
             ((GeonScene)Entity.Scene).CreateGeonEntity("DiceLimiterB", new Vector3(-500, 50, -550), NodeType.BoundingBoxCulling).AddComponent(new StaticBody(new BoxInfo(new Vector3(50, 100, 50)))).Restitution = 1f;
@@ -74,6 +80,7 @@ namespace Betreten_Verboten.Components.Base
         protected abstract int FieldHouseDiameter { get; }
         protected abstract int FieldHomeDiameter { get; }
         protected abstract int FieldPlayerDiameter { get; }
+        protected abstract int FieldPlayerArrowDiameter { get; }
         public abstract int FieldCountPP { get; }
         public abstract int FigureCountPP { get; }
         public virtual int FieldCountTotal => FieldCountPP * PlayerCount; 
@@ -102,6 +109,10 @@ namespace Betreten_Verboten.Components.Base
                 for (int j = 0; j < FieldCountPP; j++)
                 {
                     batcher.DrawCircle(_fieldsRegular[i * FieldCountPP + j], FieldPlayerDiameter, j == 0 ? plColor : Color.White, 3, CIRCLE_RES);
+                    if (j == 0)
+                    {
+                        batcher.Draw(_texArrow, new Rectangle(_fieldsRegular[i * FieldCountPP].ToPoint(), new Point(FieldPlayerArrowDiameter)), null, plColor, MathHelper.PiOver2 * (4f * i / PlayerCount + 3f), Vector2.One * 17.5f, SpriteEffects.None, 0f );
+                    }
                 }
 
                 for (int j = 0; j < FigureCountPP; j++)
