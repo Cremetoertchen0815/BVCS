@@ -12,7 +12,7 @@ namespace Betreten_Verboten.Components.Base
 
         private const int TEX_RES = 1000;
         private const int CIRCLE_RES = 5;
-        private const float CLEAR_COLOR = 0.10f;
+        private const float CLEAR_COLOR = 0.05f;
 
         //Cached field positions
         private Vector2[] _connectingSegments;
@@ -92,20 +92,23 @@ namespace Betreten_Verboten.Components.Base
 
         public override void Render(Batcher batcher, Camera camera)
         {
+            batcher.DrawHollowRect(new RectangleF(0, 0, TEX_RES, TEX_RES), Color.White, 4);
 
             for (int i = 0; i < PlayerCount; i++)
             {
+                var plColor = Characters.CharConfig.GetStdColor(i);
+
                 //Draw field
                 for (int j = 0; j < FieldCountPP; j++)
                 {
-                    batcher.DrawCircle(_fieldsRegular[i * FieldCountPP + j], FieldPlayerDiameter, Color.White, 3, CIRCLE_RES);
+                    batcher.DrawCircle(_fieldsRegular[i * FieldCountPP + j], FieldPlayerDiameter, j == 0 ? plColor : Color.White, 3, CIRCLE_RES);
                 }
 
                 for (int j = 0; j < FigureCountPP; j++)
                 {
                     int idx = i * FigureCountPP + j;
-                    batcher.DrawCircle(_fieldsHome[idx], FieldHomeDiameter, Color.White, 2, CIRCLE_RES);
-                    batcher.DrawCircle(_fieldsHouse[idx], FieldHouseDiameter, Color.White, 2, CIRCLE_RES);
+                    batcher.DrawCircle(_fieldsHome[idx], FieldHomeDiameter, plColor, 2, CIRCLE_RES);
+                    batcher.DrawCircle(_fieldsHouse[idx], FieldHouseDiameter, plColor, 2, CIRCLE_RES);
                 }
             }
 

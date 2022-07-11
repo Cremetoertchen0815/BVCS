@@ -56,7 +56,7 @@ namespace Betreten_Verboten.Scenes.Main
             ClearColor = Color.Black;
             Core.DebugRenderEnabled = false;
             AddRenderer(_geonRenderer = new GeonDefaultRenderer(0, this)); //Render render 3D space
-            AddPostProcessor(new QualityBloomPostProcessor(0) { BloomPreset = QualityBloomPostProcessor.BloomPresets.Focussed, BloomStrengthMultiplier = 0.6f, BloomThreshold = 0.5f });
+            AddPostProcessor(new QualityBloomPostProcessor(0) { BloomPreset = QualityBloomPostProcessor.BloomPresets.SuperWide, BloomStrengthMultiplier = 0.6f, BloomThreshold = 0.5f });
 
             GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
             GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
@@ -131,7 +131,7 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected void InitEnvironment()
         {
-            CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
+            //CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
             
             //Create playing field
             _board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
@@ -143,7 +143,6 @@ namespace Betreten_Verboten.Scenes.Main
         {
             //Add controll panel
             _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.Simple, Anchor.TopRight, new Vector2(15)));
-            _uiPlayerTutorial = UserInterface.Active.AddEntity(new Label(string.Empty, Anchor.BottomLeft, null, new Vector2(100, 50)));
             var btnA = _uiPlayerControls.AddChild(new Button("Dice", ButtonSkin.Alternative, Anchor.TopCenter, new Vector2(200, 80)) { OnClick = x => GameState = GameState.DiceRoll });
             _uiPlayerAnger = _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)) { OnClick = x => OpenAnger()});
             var btnC = _uiPlayerControls.AddChild(new Button("Sacrifice", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
@@ -173,6 +172,7 @@ namespace Betreten_Verboten.Scenes.Main
 
             }
             UserInterface.Active.AddEntity(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.LT), new Vector2(50, 51), ImageDrawMode.Stretch, Anchor.Auto, new Vector2(80, 0)));
+            _uiPlayerTutorial = UserInterface.Active.AddEntity(new Label(string.Empty, Anchor.BottomLeft, null, new Vector2(100, 50)));
 
             //Implement score toggle
             _scoreBtn.ButtonReleased += () =>
@@ -269,8 +269,8 @@ namespace Betreten_Verboten.Scenes.Main
                 {
                     case GameState.DiceRoll:
                         //Set camera position
-                        Camera.LookAt = new Vector3(-490, 5, -490);
-                        Camera.OverridePosition = new Vector3(-470, 30, -470);
+                        Camera.LookAt = new Vector3(-495, 3, -495);
+                        Camera.OverridePosition = new Vector3(-470, 50, -470);
                         //Refresh UI elements
                         _uiPlayerControls.Visible = false;
                         _uiPlayerReroll.Visible = true;

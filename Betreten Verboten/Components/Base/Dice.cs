@@ -24,7 +24,7 @@ namespace Betreten_Verboten.Components.Base
         public override void OnAddedToEntity()
         {
             var renderer = Entity.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Cube));
-            renderer.SetMaterial(new BasicMaterial() { Texture = Entity.Scene.Content.LoadTexture("mesh/dice_cubemap"), TextureEnabled = true });
+            renderer.SetMaterial(new BasicMaterial() { Texture = Entity.Scene.Content.LoadTexture("mesh/dice_cubemap"), DiffuseColor = Color.DarkGray, TextureEnabled = true });
             renderer.Node.Scale = new Vector3(30f);
             Entity.Node.Rotation = new Vector3(Random.NextAngle(), Random.NextAngle(), Random.NextAngle());
             _rigidBody = Entity.AddComponent(new RigidBody(new BoxInfo(new Vector3(60f)), 8f, 0.1f));
