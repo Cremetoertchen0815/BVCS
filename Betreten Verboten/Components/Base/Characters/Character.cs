@@ -50,6 +50,7 @@ namespace Betreten_Verboten.Components.Base.Characters
             RigidBody.Position = ent.Node.Position;
             RigidBody.AngularDamping = RigidBody.LinearDamping = 0.80f;
             RigidBody.Enabled = false;
+            RigidBody.EnableSimulation = false;
 
             this.TeleRegister("char");
         }
@@ -64,9 +65,11 @@ namespace Betreten_Verboten.Components.Base.Characters
                     AdvanceSteps((int)message.Body);
                     break;
                 case "landed_on_field":
-                    var source = (Character)message.Body;
-                    if (source == this || source.GlobalPosition != GlobalPosition) break;
-                    Kick(source);
+                    var source = ((Character kicker, bool finalField))message.Body;
+                    //Check for kicking condition. That being that either landing the character on its final landing field or the character standing on its homebase.
+                    //Of course we ignore our own characters.
+                    if (source.kicker == this) break;
+                    if (source.finalField && source.kicker.GlobalPosition == GlobalPosition || source.kicker.GlobalPosition == GlobalPosition && source.kicker.Position == 0) Kick(source.kicker);
                     break;
                 default:
                     break;
@@ -96,7 +99,7 @@ namespace Betreten_Verboten.Components.Base.Characters
         {
             _travelDistLeft--;
             SetPosition(Position + 1);
-            this.SendPrivateTele("char", "landed_on_field", this);
+            this.SendPrivateTele("char", "landed_on_field", (this, _travelDistLeft < 1));
             this.SendPrivateTele("base", "resort_score", null);
             if (_travelDistLeft < 1) this.SendPrivateTele("base", "char_move_done", null); else Core.Schedule(0.5f, x => TakeStep());
         }

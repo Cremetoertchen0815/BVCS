@@ -49,10 +49,13 @@ namespace Betreten_Verboten.Components.Base
             //Configure physics
             _kinematicBody = geonEntity.AddComponent(new StaticBody(new EndlessPlaneInfo(Vector3.Up)));
             _kinematicBody.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Terrain;
-            _kinematicBody.Restitution = 1f;
+            _kinematicBody.Restitution = 0f;
 
             //Add dice limiting box
-            var diceLimiter = ((GeonScene)Entity.Scene).CreateGeonEntity("DiceLimiter", new Vector3(-500, 0, -500), NodeType.BoundingBoxCulling).AddComponent(new StaticBody(new BoxInfo(new Vector3(50))));
+            ((GeonScene)Entity.Scene).CreateGeonEntity("DiceLimiterA", new Vector3(-550, 50, -500), NodeType.BoundingBoxCulling).AddComponent(new StaticBody(new BoxInfo(new Vector3(50, 100, 50)))).Restitution = 1f;
+            ((GeonScene)Entity.Scene).CreateGeonEntity("DiceLimiterB", new Vector3(-500, 50, -550), NodeType.BoundingBoxCulling).AddComponent(new StaticBody(new BoxInfo(new Vector3(50, 100, 50)))).Restitution = 1f;
+            ((GeonScene)Entity.Scene).CreateGeonEntity("DiceLimiterC", new Vector3(-450, 50, -500), NodeType.BoundingBoxCulling).AddComponent(new StaticBody(new BoxInfo(new Vector3(50, 100, 50)))).Restitution = 1f;
+            ((GeonScene)Entity.Scene).CreateGeonEntity("DiceLimiterD", new Vector3(-500, 50, -450), NodeType.BoundingBoxCulling).AddComponent(new StaticBody(new BoxInfo(new Vector3(50, 100, 50)))).Restitution = 1f;
 
             _players = new Player[PlayerCount]; //Create player array
             SetRenderLayer(RENDER_LAYER_BOARD); //Config renderable 

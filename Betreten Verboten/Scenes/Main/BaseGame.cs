@@ -33,6 +33,7 @@ namespace Betreten_Verboten.Scenes.Main
         private BVBoard _board;
         private List<int> _diceNumbers = new List<int>();
         private GameState _gameState = GameState.OtherAction;
+        private ThriceRollState _thriceRoll = ThriceRollState.UNABLE;
 
         //UI
         private int[] _playerIndices;
@@ -70,15 +71,17 @@ namespace Betreten_Verboten.Scenes.Main
             FinalRenderDelegate = Core.GetGlobalManager<FinalUIRender>();
             UserInterface.Active.Clear();
             InitUI();
+            GameState = GameState.Intro;
 
             //Generate player indices
             _playerIndices = new int[_board.PlayerCount];
             for (int i = 0; i < _playerIndices.Length; i++) _playerIndices[_playerIndices.Length - i - 1] = i;
 
             //Init
-            AdvancePlayer();
+            Core.Schedule(1f, x => AdvancePlayer());
 #if DEBUG
             Camera.Entity.AddComponent(new Components.Debug.DebugCamMover());
+            Core.DebugRenderEnabled = true;
 #endif
 
             this.TeleRegister();
@@ -92,6 +95,17 @@ namespace Betreten_Verboten.Scenes.Main
                 case "dice_value_set":
                     int nr = (int)message.Body;
                     _diceNumbers.Add(nr);
+
+                    if (_thriceRoll == ThriceRollState.ABLE_TO)
+                    {
+                        if (_diceNumbers.Count > 2)
+                        {
+                            _diceNumbers.Sort();
+                            _thriceRoll = ThriceRollState.ALREADY_PERFORMED;
+                        }
+                        else return;
+                    }
+
                     if (Dice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice()))
                     {
                         _uiPlayerReroll.Visible = true;
@@ -216,8 +230,8 @@ namespace Betreten_Verboten.Scenes.Main
                 {
                     case GameState.DiceRoll:
                         //Set camera position
-                        Camera.LookAt = new Vector3(-500, 2, -500);
-                        Camera.OverridePosition = new Vector3(-480, 25, -480);
+                        Camera.LookAt = new Vector3(-490, 5, -490);
+                        Camera.OverridePosition = new Vector3(-470, 30, -470);
                         //Refresh UI elements
                         _uiPlayerControls.Visible = false;
                         _uiPlayerReroll.Visible = true;
@@ -241,13 +255,14 @@ namespace Betreten_Verboten.Scenes.Main
 
         private void RollDice()
         {
-            Dice.Throw(this);
+            for (int i = 0; i < (_thriceRoll == ThriceRollState.ABLE_TO ? 3 : 1); i++) Dice.Throw(this);
             _uiPlayerReroll.Visible = false;
         }
 
         public void AdvancePlayer()
         {
             _activePlayer = ++_activePlayer % _board.PlayerCount;
+            _thriceRoll = _players[_activePlayer].CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
             _uiPlayerControls.FillColor = CharConfig.GetStdColor(_activePlayer) * 0.95f;
             GameState = GameState.ActionSelect;
         }

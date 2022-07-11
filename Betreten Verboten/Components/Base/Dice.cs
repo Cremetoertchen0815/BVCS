@@ -9,9 +9,9 @@ namespace Betreten_Verboten.Components.Base
 {
     internal class Dice : GeonComponent, IUpdatable
     {
-        private const float MEASURE_SPEED = 0.08f;
+        private const float MEASURE_SPEED = 0.5f;
         public const int ENTITY_TAG = 15;
-        public const float ANGLE_REST_LIMIT = 0.97f;
+        public const float ANGLE_REST_LIMIT = 0.95f;
 
 
         private RigidBody _rigidBody;
@@ -20,24 +20,22 @@ namespace Betreten_Verboten.Components.Base
         private bool _isDoneRolling = false;
 
 
+
         public override void OnAddedToEntity()
         {
             var renderer = Entity.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Cube));
             renderer.SetMaterial(new BasicMaterial() { Texture = Entity.Scene.Content.LoadTexture("mesh/dice_cubemap"), TextureEnabled = true });
             renderer.Node.Scale = new Vector3(30f);
-            _rigidBody = Entity.AddComponent(new RigidBody(new BoxInfo(new Vector3(60f)), 10f, 0.1f));
-            _rigidBody.SetDamping(0.8f, 0.8f);
-            _rigidBody.Restitution = 0f;
+            Entity.Node.Rotation = new Vector3(Random.NextAngle(), Random.NextAngle(), Random.NextAngle());
+            _rigidBody = Entity.AddComponent(new RigidBody(new BoxInfo(new Vector3(60f)), 8f, 0.1f));
+            _rigidBody.CopyNodeWorldMatrix(true);
+            _rigidBody.SetDamping(0.7f, 0.65f);
+            _rigidBody.Restitution = 0.2f;
             _rigidBody.Scale = new Vector3(0.07f);
             _rigidBody.Position = Entity.Node.Position;
             _rigidBody.Enabled = true;
-            _rigidBody.AngularVelocity = new Vector3(Random.MinusOneToOne(), Random.MinusOneToOne(), Random.MinusOneToOne()) * Random.Range(30f, 60f);
-            _rigidBody.Gravity = Vector3.Zero;
-            Core.Schedule(0.5f, x =>
-            {
-                _rigidBody.LinearVelocity = new Vector3(Random.MinusOneToOne(), 0, Random.MinusOneToOne()) * Random.Range(20f, 30f);
-                _rigidBody.Gravity = null;
-            });
+            _rigidBody.AngularVelocity = new Vector3(Random.MinusOneToOne(), Random.MinusOneToOne(), Random.MinusOneToOne()) * Random.Range(50f, 80f);
+            _rigidBody.LinearVelocity = new Vector3(Random.MinusOneToOne(), 0, Random.MinusOneToOne()) * Random.Range(20f, 50f);
 
         }
 
@@ -49,7 +47,7 @@ namespace Betreten_Verboten.Components.Base
             float maxDot = _sideNormals.Select(x => Vector3.Dot(norm, x)).Max(); //Determins if the dice lays flat(is still when over rest limit)
 
             //Check if the dice stopped rolling and if yes, calculate the number
-            if (_rigidBody.LinearVelocity.Length() < MEASURE_SPEED && maxDot > ANGLE_REST_LIMIT && _rigidBody.Gravity == null)
+            if (_rigidBody.LinearVelocity.Length() < MEASURE_SPEED && maxDot > ANGLE_REST_LIMIT)
             {
                 _isDoneRolling = true;
                 Core.Schedule(0.2f, x => GetDiceTopNumber().SendPrivateObj("dice", "base", "dice_value_set"));
@@ -71,7 +69,7 @@ namespace Betreten_Verboten.Components.Base
         }
 
 
-        public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500 + Random.MinusOneToOne() * 4, Random.Range(25, 40), -500 + Random.MinusOneToOne() * 4), NodeType.BoundingBoxCulling).SetTag(ENTITY_TAG).AddComponent(new Dice());
+        public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500 + Random.MinusOneToOne() * 5, Random.Range(25, 40), -500 + Random.MinusOneToOne() * 5), NodeType.BoundingBoxCulling).SetTag(ENTITY_TAG).AddComponent(new Dice());
 
         /// <summary>
         /// Returns if another dice roll is necessary, depending on if the player can roll thrice.
