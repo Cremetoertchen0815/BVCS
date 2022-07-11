@@ -9,6 +9,7 @@ using Nez.GeonBit.ECS;
 using Nez.GeonBit.Physics;
 using Nez.GeonBit.UI;
 using Nez.GeonBit.UI.Entities;
+using Nez.GeonBit.UI.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using static Betreten_Verboten.GlobalFields;
@@ -29,7 +30,7 @@ namespace Betreten_Verboten.Scenes.Main
         protected GeonDefaultRenderer _geonRenderer;
 
         private int _activePlayer = -1;
-        private Player[] _players;
+        private BVPlayer[] _players;
         private BVBoard _board;
         private List<int> _diceNumbers = new List<int>();
         private GameState _gameState = GameState.OtherAction;
@@ -40,8 +41,10 @@ namespace Betreten_Verboten.Scenes.Main
         private bool _isScoreVisible = false;
         private VirtualButton _scoreBtn;
         private Panel[] _uiPlayerHUDs;
+        private Label _uiPlayerTutorial;
         private Panel _uiPlayerControls;
         private Button _uiPlayerReroll;
+        private Button _uiPlayerAnger;
 
         public string TelegramSender => "base";
 
@@ -106,15 +109,15 @@ namespace Betreten_Verboten.Scenes.Main
                         else return;
                     }
 
-                    if (Dice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice()))
-                    {
-                        _uiPlayerReroll.Visible = true;
-                    }
+                    if (Dice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice())) _uiPlayerReroll.Visible = true;
                     else
                     {
                         Core.Schedule(0.3f, x => _players[_activePlayer].DecideAfterDiceroll(_diceNumbers));
                         GameState = GameState.PieceSelect;
                     }
+                    break;
+                case "show_tutorial":
+                    _uiPlayerTutorial.Text = (string)message.Body ?? string.Empty;
                     break;
                 case "char_move_done":
                 case "advance_player":
@@ -132,7 +135,7 @@ namespace Betreten_Verboten.Scenes.Main
             
             //Create playing field
             _board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
-            _players = new Player[_board.PlayerCount];
+            _players = new BVPlayer[_board.PlayerCount];
             for (int i = 0; i < _board.PlayerCount; i++) _players[i] = CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
         }
 
@@ -140,15 +143,16 @@ namespace Betreten_Verboten.Scenes.Main
         {
             //Add controll panel
             _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.Simple, Anchor.TopRight, new Vector2(15)));
+            _uiPlayerTutorial = UserInterface.Active.AddEntity(new Label(string.Empty, Anchor.BottomLeft, null, new Vector2(100, 50)));
             var btnA = _uiPlayerControls.AddChild(new Button("Dice", ButtonSkin.Alternative, Anchor.TopCenter, new Vector2(200, 80)) { OnClick = x => GameState = GameState.DiceRoll });
-            var btnB = _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
+            _uiPlayerAnger = _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)) { OnClick = x => OpenAnger()});
             var btnC = _uiPlayerControls.AddChild(new Button("Sacrifice", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
             var btnD = _uiPlayerControls.AddChild(new Button("AfK", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
             _uiPlayerReroll = UserInterface.Active.AddEntity(new Button("Roll Dice", ButtonSkin.Alternative, Anchor.TopRight, new Vector2(200, 80), new Vector2(15)) { Visible = false, OnClick = x => RollDice() });
 
             //Add controll panel hints
             btnA.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.A), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
-            btnB.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.B), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
+            _uiPlayerAnger.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.B), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
             btnC.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.X), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
             btnD.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.Y), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
             _uiPlayerReroll.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.A), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
@@ -212,6 +216,41 @@ namespace Betreten_Verboten.Scenes.Main
             }
         }
 
+        public void OpenAnger()
+        {
+            //Check for presence of anger buttons
+            if (_players[_activePlayer].AngerCount < 1) return;
+
+            //Display message cascade
+            MessageBox.ShowMsgBox("[TRIGGERED]", "You get angry, because you suck at this game.", new MessageBox.MsgBoxOption("OK, I get it", () =>
+            {
+                MessageBox.ShowMsgBox("Anger Button", "You are granted a single Joker. Do you want to utilize it now?", new MessageBox.MsgBoxOption("Nah, I'm good", () => true), new MessageBox.MsgBoxOption("Yes, please!", () =>
+                {
+                    MessageBox.ShowInputBox("Anger Button", "How far do you want to move? (12 fields are the maximum and 1 field the minimum)", new MessageBox.InputBoxOption("Stop", x =>
+                    {
+                        MessageBox.ShowMsgBox("Looser", "Alright, then don't.", new MessageBox.MsgBoxOption("Bitch!", () => true));
+                        return true;
+                    }), new MessageBox.InputBoxOption("Let's go", x =>
+                    {
+                        //Check if value is valid
+                        if (!int.TryParse(x, out var cnt) || cnt < 0 || cnt > 12)
+                        {
+                            MessageBox.ShowMsgBox("W  A  T  .", "Nah mate, no chance. Enter a proper value.", new MessageBox.MsgBoxOption("Darn", () => true));
+                            return false;
+                        }
+                        //If it is, split up number and return back to the system
+                        var lst = new List<int>() { System.Math.Min(cnt, 6) };
+                        if (cnt > 6) lst.Add(cnt - 6);
+                        _players[_activePlayer].DecideAfterDiceroll(lst);
+                        _players[_activePlayer].AngerCount--;
+                        return true;
+                    }));
+                    return true;
+                }));
+                return true;
+            }));
+        }
+
         public GameState GameState
         {
             get => _gameState;
@@ -265,6 +304,7 @@ namespace Betreten_Verboten.Scenes.Main
             _activePlayer = ++_activePlayer % _board.PlayerCount;
             _thriceRoll = _players[_activePlayer].CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
             _uiPlayerControls.FillColor = CharConfig.GetStdColor(_activePlayer) * 0.95f;
+            _uiPlayerAnger.Enabled = _players[_activePlayer].AngerCount > 0;
             GameState = GameState.ActionSelect;
         }
     }
