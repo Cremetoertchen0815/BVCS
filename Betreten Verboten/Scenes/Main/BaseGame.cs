@@ -56,10 +56,10 @@ namespace Betreten_Verboten.Scenes.Main
             AddPostProcessor(new QualityBloomPostProcessor(0) { BloomPreset = QualityBloomPostProcessor.BloomPresets.Focussed, BloomStrengthMultiplier = 0.6f, BloomThreshold = 0.5f });
 
             GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
-            GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 38, Vector3.Down, Vector3.Forward);
+            GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
 
             //Config camera5
-            Camera.Node.Position = new Vector3(0, 25, 40);
+            Camera.Node.Position = new Vector3(0, 23, 38);
             Camera.Node.RotationX = -0.5f;
 
             //Prepare physics
@@ -78,7 +78,7 @@ namespace Betreten_Verboten.Scenes.Main
             for (int i = 0; i < _playerIndices.Length; i++) _playerIndices[_playerIndices.Length - i - 1] = i;
 
             //Init
-            Core.Schedule(1f, x => AdvancePlayer());
+            Core.Schedule(0.3f, x => AdvancePlayer());
 #if DEBUG
             Camera.Entity.AddComponent(new Components.Debug.DebugCamMover());
             Core.DebugRenderEnabled = true;
@@ -112,7 +112,7 @@ namespace Betreten_Verboten.Scenes.Main
                     }
                     else
                     {
-                        Core.Schedule(1f, x => _players[_activePlayer].DecideAfterDiceroll(_diceNumbers));
+                        Core.Schedule(0.3f, x => _players[_activePlayer].DecideAfterDiceroll(_diceNumbers));
                         GameState = GameState.PieceSelect;
                     }
                     break;
@@ -139,12 +139,12 @@ namespace Betreten_Verboten.Scenes.Main
         protected void InitUI()
         {
             //Add controll panel
-            _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.Simple, Anchor.BottomRight, new Vector2(15)));
+            _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.Simple, Anchor.TopRight, new Vector2(15)));
             var btnA = _uiPlayerControls.AddChild(new Button("Dice", ButtonSkin.Alternative, Anchor.TopCenter, new Vector2(200, 80)) { OnClick = x => GameState = GameState.DiceRoll });
             var btnB = _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
             var btnC = _uiPlayerControls.AddChild(new Button("Sacrifice", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
             var btnD = _uiPlayerControls.AddChild(new Button("AfK", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
-            _uiPlayerReroll = UserInterface.Active.AddEntity(new Button("Roll Dice", ButtonSkin.Alternative, Anchor.BottomRight, new Vector2(200, 80), new Vector2(15)) { Visible = false, OnClick = x => RollDice() });
+            _uiPlayerReroll = UserInterface.Active.AddEntity(new Button("Roll Dice", ButtonSkin.Alternative, Anchor.TopRight, new Vector2(200, 80), new Vector2(15)) { Visible = false, OnClick = x => RollDice() });
 
             //Add controll panel hints
             btnA.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.A), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
@@ -236,6 +236,7 @@ namespace Betreten_Verboten.Scenes.Main
                         _uiPlayerControls.Visible = false;
                         _uiPlayerReroll.Visible = true;
                         _diceNumbers.Clear(); //Clear dice queue
+                        RollDice();
                         break;
                     case GameState.ActionSelect:
                         //Set camera position

@@ -101,7 +101,7 @@ namespace Betreten_Verboten.Components.Base.Characters
             SetPosition(Position + 1);
             this.SendPrivateTele("char", "landed_on_field", (this, _travelDistLeft < 1));
             this.SendPrivateTele("base", "resort_score", null);
-            if (_travelDistLeft < 1) this.SendPrivateTele("base", "char_move_done", null); else Core.Schedule(0.5f, x => TakeStep());
+            if (_travelDistLeft < 1) this.SendPrivateTele("base", "char_move_done", null); else Core.Schedule(0.3f, x => TakeStep());
         }
     }
 }
