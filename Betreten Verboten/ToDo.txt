@@ -1,5 +1,5 @@
-﻿-Implement special functions(anger, sacrifice, UFO, suicide, etc.)
--Extend renderer to support full board rendering
+﻿-Implement special functions(sacrifice, UFO, suicide, etc.)
 -Implement scoring & winning
+-Implement background rendering
 -Implement CPU players
 -Start working on networking infrastructure
