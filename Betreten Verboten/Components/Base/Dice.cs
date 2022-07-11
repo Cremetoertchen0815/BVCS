@@ -31,7 +31,7 @@ namespace Betreten_Verboten.Components.Base
             _rigidBody.Scale = new Vector3(0.07f);
             _rigidBody.Position = Entity.Node.Position;
             _rigidBody.Enabled = true;
-            _rigidBody.AngularVelocity = new Vector3(Random.MinusOneToOne(), Random.MinusOneToOne(), Random.MinusOneToOne()) * Random.Range(20f, 50f);
+            _rigidBody.AngularVelocity = new Vector3(Random.MinusOneToOne(), Random.MinusOneToOne(), Random.MinusOneToOne()) * Random.Range(30f, 60f);
             _rigidBody.Gravity = Vector3.Zero;
             Core.Schedule(0.5f, x =>
             {
@@ -71,7 +71,7 @@ namespace Betreten_Verboten.Components.Base
         }
 
 
-        public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500 + Random.MinusOneToOne() * 4, Random.Range(22, 35), -500 + Random.MinusOneToOne() * 4)).SetTag(ENTITY_TAG).AddComponent(new Dice());
+        public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500 + Random.MinusOneToOne() * 4, Random.Range(25, 40), -500 + Random.MinusOneToOne() * 4)).SetTag(ENTITY_TAG).AddComponent(new Dice());
 
         /// <summary>
         /// Returns if another dice roll is necessary, depending on if the player can roll thrice.

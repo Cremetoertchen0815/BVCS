@@ -63,7 +63,7 @@ namespace Betreten_Verboten.Components.Base.Characters
                 case "char_move":
                     AdvanceSteps((int)message.Body);
                     break;
-                case "char_landed_on_field":
+                case "landed_on_field":
                     var source = (Character)message.Body;
                     if (source == this || source.GlobalPosition != GlobalPosition) break;
                     Kick(source);
@@ -96,7 +96,7 @@ namespace Betreten_Verboten.Components.Base.Characters
         {
             _travelDistLeft--;
             SetPosition(Position + 1);
-            if (!firstStep) this.SendPrivateTele("char", "landed_on_field", this);
+            this.SendPrivateTele("char", "landed_on_field", this);
             this.SendPrivateTele("base", "resort_score", null);
             if (_travelDistLeft < 1) this.SendPrivateTele("base", "char_move_done", null); else Core.Schedule(0.5f, x => TakeStep());
         }
