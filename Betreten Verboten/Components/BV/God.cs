@@ -44,7 +44,7 @@ namespace Betreten_Verboten.Components.BV
                 try
                 {
                     //Pick action type
-                    switch (Random.Range(0, 5))
+                    switch (Random.Range(0, 4))
                     {
                         case 0: //Boost ally
                             var fig = GetRandomAllyFigure(c);
@@ -83,11 +83,51 @@ namespace Betreten_Verboten.Components.BV
         }
         private static void SacrificeNeutral(Character c)
         {
-            var RNG = Random.NextFloat();
+            c.SendPrivateTele("base", "show_action_result", "You got spared.");
+            c.SendPrivateTele("base", "char_move_done", null);
         }
         private static void SacrificeNegative(Character c)
         {
-            var RNG = Random.NextFloat();
+            bool loopActive = true;
+            while (loopActive)
+            {
+                try
+                {
+                    //Pick action type
+                    switch (Random.Range(0, 4))
+                    {
+                        case 0: //Kick ally
+                            var fig = GetRandomAllyFigure(c);
+                            var boost = Random.Range(0, System.Math.Max(fig.Owner.Board.FieldCountTotal - fig.Position, 0));
+                            if (fig == null || c.Owner.IsFieldBlocked(fig.Position + boost, out var _)) break;
+                            fig.Kick(null);
+                            c.SendPrivateTele("base", "show_action_result", "You're lucky! Your figure is being boosted!");
+                            loopActive = false;
+                            break;
+                        case 1: //Skip turn
+                            //TODO: Add da stuff
+                            c.SendPrivateTele("base", "show_action_result", "You're lucky! A random enemy figure got kicked!");
+                            c.SendPrivateTele("base", "char_move_done", null);
+                            loopActive = false;
+                            break;
+                        case 2: //Remove anger button
+                            ((BVPlayer)c.Owner).AngerCount++;
+                            c.SendPrivateTele("base", "show_action_result", "Oh ooh! You've lost an anger button!");
+                            c.SendPrivateTele("base", "char_move_done", null);
+                            loopActive = false;
+                            break;
+                        case 3: //Subtract points
+                            ((BVPlayer)c.Owner).AdditionalPoints -= 75;
+                            c.SendPrivateTele("base", "show_action_result", "Oh ooh! You lost 75 points!");
+                            c.SendPrivateTele("base", "char_move_done", null);
+                            loopActive = false;
+                            break;
+                    }
+
+                }
+                catch (System.Exception)
+                { }
+            }
         }
 
         //Helper methods
