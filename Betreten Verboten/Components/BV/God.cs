@@ -20,6 +20,7 @@ namespace Betreten_Verboten.Components.BV
             character.Kick(null);
 
             //TODO: Display message like "xxx offered one of his pieces to the gods..."
+            character.SendPrivateTele("base", "show_action_result", p.CharacterConfig.Name + " offered one of his pieces to the gods...");
 
             float progress = character.Position / p.Board.FieldCountTotal; //Captures the total progress from home to house of a figure in a normalized space.
             float pogfactor = progress * 0.55f + 0.15f; //Result gets positive when the random normalizes float lies under this limit.
