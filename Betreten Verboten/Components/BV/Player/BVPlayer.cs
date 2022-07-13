@@ -22,7 +22,7 @@ namespace Betreten_Verboten.Components.BV.Player
         public override int Points => AdditionalPoints + AngerCount * SCORE_PER_ANGER_BTN + _figures.Sum(x => System.Math.Max(x.Position, 0)) * SCORE_PER_STEP;
 
 
-        public IEnumerable<Character> GetSacrificableFigures() => _figures.Where(x => x.Position > -1 && x.Position < Board.DistanceLimit);
+        public IEnumerable<Character> GetSacrificableFigures() => _figures.Where(x => x.Position > -1 && x.Position < Board.FieldCountTotal);
     
     }
 }

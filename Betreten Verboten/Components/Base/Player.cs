@@ -96,7 +96,7 @@ namespace Betreten_Verboten.Components.Base
         /// Returns the traveling distance from the dice array, ignoring the magic launching number 6 and any number that predates it.
         /// </summary>
         /// <param name="nrs">The dice array.</param>
-        public int GetTrueLaunchDistance(List<int> nrs)
+        private int GetTrueLaunchDistance(List<int> nrs)
         {
             int sum = 0;
             bool was6AlreadyPresent = false;
@@ -168,7 +168,7 @@ namespace Betreten_Verboten.Components.Base
         /// </summary>
         /// <param name="field">The local field to be inspected.</param>
         /// <returns></returns>
-        private bool IsFieldBlocked(int field, out int who, int ignoredFigure = -1)
+        public bool IsFieldBlocked(int field, out int who, int ignoredFigure = -1)
         {
             var res = _figures.Where(x => x.Position == field && x.Nr != ignoredFigure);
             var any = res.Any();

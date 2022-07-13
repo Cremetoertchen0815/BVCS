@@ -119,6 +119,7 @@ namespace Betreten_Verboten.Scenes.Main
                         GameState = GameState.PieceSelect;
                     }
                     break;
+                case "show_action_result":
                 case "show_tutorial":
                     _uiPlayerTutorial.Text = (string)message.Body ?? string.Empty;
                     break;
