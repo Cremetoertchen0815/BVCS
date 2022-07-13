@@ -12,14 +12,19 @@ namespace Betreten_Verboten.Components.Base
         private const float MAX_OBJ_DISTANCE = 1000f;
 
         //Cached components
-        private int _distance;
         private Player _owner;
         private Character[] _figures;
         private Camera3D _camera;
         private PhysicsWorld _world;
 
+        //Fields
+        private CharSelectionDelegate _selectionDelegate;
+
         //ctor
-        public CharPicker(int distance) => _distance = distance;
+        public CharPicker(CharSelectionDelegate selectionDelegate) => _selectionDelegate = selectionDelegate;
+
+        //Delegates
+        public delegate void CharSelectionDelegate(Character character);
 
         private static MaterialOverrides _materialSelectable = new MaterialOverrides() { DiffuseColor = Color.Red };
         private static MaterialOverrides _materialNeutral = new MaterialOverrides();
@@ -51,7 +56,7 @@ namespace Betreten_Verboten.Components.Base
                     var character = result.Collision.CollisionBody.Entity.GetComponent<Character>();
                     if (character == null || !character.CanBeSelected || character.Owner != _owner) return;
                     //If yes, transmit traveling distance to selected character via telegram
-                    _distance.SendPrivateObj("char_picker", character.TelegramSender, "char_move");
+                    _selectionDelegate(character);
                     Entity.RemoveComponent(this); //Remove char picker as it fullfilled its purpose and is obsolete now
                 }
             }

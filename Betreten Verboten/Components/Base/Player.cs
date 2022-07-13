@@ -87,7 +87,7 @@ namespace Betreten_Verboten.Components.Base
             else //If arrived here, no special action is necessairy and figure to be moved can be selected.
             {
                 foreach (var item in _figures) item.CanBeSelected = movableChars.Contains(item); //Make the right figures selectable
-                Entity.AddComponent(new CharPicker(distance)); //Open the character picker to choose the traveling distance
+                Entity.AddComponent(new CharPicker(x => distance.SendPrivateObj("char_picker", x.TelegramSender, "char_move"))); //Open the character picker to choose the traveling distance
             }
 
         }

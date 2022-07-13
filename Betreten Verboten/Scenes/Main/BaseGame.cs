@@ -1,6 +1,7 @@
 ﻿using Betreten_Verboten.Components.Base;
 using Betreten_Verboten.Components.Base.Boards.BV;
 using Betreten_Verboten.Components.Base.Characters;
+using Betreten_Verboten.Components.BV;
 using Betreten_Verboten.Components.BV.Player;
 using Microsoft.Xna.Framework;
 using Nez;
@@ -45,6 +46,8 @@ namespace Betreten_Verboten.Scenes.Main
         private Panel _uiPlayerControls;
         private Button _uiPlayerReroll;
         private Button _uiPlayerAnger;
+        private Button _uiPlayerSacrifice;
+        private Button _uiPlayerAfK;
 
         public string TelegramSender => "base";
 
@@ -145,15 +148,15 @@ namespace Betreten_Verboten.Scenes.Main
             _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.Simple, Anchor.TopRight, new Vector2(15)));
             var btnA = _uiPlayerControls.AddChild(new Button("Dice", ButtonSkin.Alternative, Anchor.TopCenter, new Vector2(200, 80)) { OnClick = x => GameState = GameState.DiceRoll });
             _uiPlayerAnger = _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)) { OnClick = x => OpenAnger()});
-            var btnC = _uiPlayerControls.AddChild(new Button("Sacrifice", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
-            var btnD = _uiPlayerControls.AddChild(new Button("AfK", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
+            _uiPlayerSacrifice = _uiPlayerControls.AddChild(new Button("Sacrifice", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)) { OnClick = x => OpenSacrifice() });
+            _uiPlayerAfK = _uiPlayerControls.AddChild(new Button("AfK", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
             _uiPlayerReroll = UserInterface.Active.AddEntity(new Button("Roll Dice", ButtonSkin.Alternative, Anchor.TopRight, new Vector2(200, 80), new Vector2(15)) { Visible = false, OnClick = x => RollDice() });
 
             //Add controll panel hints
             btnA.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.A), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
             _uiPlayerAnger.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.B), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
-            btnC.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.X), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
-            btnD.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.Y), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
+            _uiPlayerSacrifice.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.X), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
+            _uiPlayerAfK.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.Y), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
             _uiPlayerReroll.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.A), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
 
             //Add player hud
@@ -218,9 +221,6 @@ namespace Betreten_Verboten.Scenes.Main
 
         public void OpenAnger()
         {
-            //Check for presence of anger buttons
-            if (_players[_activePlayer].AngerCount < 1) return;
-
             //Display message cascade
             MessageBox.ShowMsgBox("[TRIGGERED]", "You get angry, because you suck at this game.", new MessageBox.MsgBoxOption("OK, I get it", () =>
             {
@@ -245,6 +245,34 @@ namespace Betreten_Verboten.Scenes.Main
                         _players[_activePlayer].AngerCount--;
                         return true;
                     }));
+                    return true;
+                }));
+                return true;
+            }));
+        }
+
+        public void OpenSacrifice()
+        {
+            //Display message cascade
+            MessageBox.ShowMsgBox("Send that bastard to hell", "You can sacrifice one of your players to the holy BV gods. The further your player is, the higher is the chance to recieve a positive effect.", new MessageBox.MsgBoxOption("OK, I get it", () =>
+            {
+                MessageBox.ShowMsgBox("Anger Button", "You really want to sacrifice one of your precious players?", new MessageBox.MsgBoxOption("Nah, I'm good", () =>
+                {
+                    MessageBox.ShowMsgBox("Looser", "Alright, then don't.", new MessageBox.MsgBoxOption("Bitch!", () => true));
+                    return true;
+                }), new MessageBox.MsgBoxOption("Yes, please!", () =>
+                {
+                    var pl = _players[_activePlayer];
+                    var possibleChars = pl.GetSacrificableFigures();
+                    if (possibleChars.Any())
+                    {
+                        GameState = GameState.PieceSelect;
+                        foreach (var item in pl.GetFigures()) item.CanBeSelected = possibleChars.Contains(item);
+                        pl.AddComponent(new CharPicker(x => God.Sacrifice(x))); //Open the character picker to choose the traveling distance
+                    } else
+                    {
+                        MessageBox.ShowMsgBox("Pls plae gaem goodly!", "Nah, sorry mate. There's actually no sacrificable figure out right now!", new MessageBox.MsgBoxOption("Darn >:/", () => true));
+                    }
                     return true;
                 }));
                 return true;
@@ -302,9 +330,12 @@ namespace Betreten_Verboten.Scenes.Main
         public void AdvancePlayer()
         {
             _activePlayer = ++_activePlayer % _board.PlayerCount;
-            _thriceRoll = _players[_activePlayer].CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
+            var pl = _players[_activePlayer];
+            _thriceRoll = pl.CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
             _uiPlayerControls.FillColor = CharConfig.GetStdColor(_activePlayer) * 0.95f;
-            _uiPlayerAnger.Enabled = _players[_activePlayer].AngerCount > 0;
+            _uiPlayerAnger.Enabled = pl.AngerCount > 0;
+            _uiPlayerSacrifice.Enabled = pl.Sacrificable;
+            pl.Sacrificable = true;
             GameState = GameState.ActionSelect;
         }
     }
