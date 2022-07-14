@@ -361,17 +361,18 @@ namespace Nez.Tweens
         /// </summary>
         private void HandleLooping(float elapsedTimeExcess)
         {
+            if (_loopType == LoopType.RestartFromBeginning || _loops % 2 == 0)
+            {
+                if (_loopCompleteHandler != null)
+                    _loopCompleteHandler(this);
+            }
+
             _loops--;
             if (_loopType == LoopType.PingPong)
             {
                 ReverseTween();
             }
 
-            if (_loopType == LoopType.RestartFromBeginning || _loops % 2 == 0)
-            {
-                if (_loopCompleteHandler != null)
-                    _loopCompleteHandler(this);
-            }
 
             // if we have loops left to process reset our state back to Running so we can continue processing them
             if (_loops != 0)

@@ -69,10 +69,11 @@ namespace Betreten_Verboten.Components.Base.Characters
                     break;
                 case "landed_on_field":
                     var source = ((Character kicker, bool finalField))message.Body;
+                    var oldPos = source.kicker.Position;
                     if (source.kicker == this || source.kicker.GlobalPosition != GlobalPosition) break;
                     //Check for kicking condition. That being that either landing the character on its final landing field or the character standing on its homebase.
                     //Of course we ignore our own characters.
-                    System.Action<ITween<float>> ac = x => { if (source.finalField || source.kicker.Position == 0) SetPosition(-1); };
+                    System.Action<ITween<float>> ac = x => { if (source.finalField || oldPos == 0) SetPosition(-1); };
                     //Play ducking animation
                     this.Tween("ScaleHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).Start();
                     this.Tween("PosHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetFrom(3f).SetEaseType(EaseType.Linear).SetLoopCompletionHandler(ac).SetLoops(LoopType.PingPong).Start();
@@ -85,7 +86,7 @@ namespace Betreten_Verboten.Components.Base.Characters
         public void Kick(Character killer)
         {
 
-            this.Tween("ScaleHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetEaseType(EaseType.Linear).SetLoops(LoopType.RestartFromBeginning).SetLoopCompletionHandler(x => SetPosition(-1)).Start();
+            this.Tween("ScaleHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetFrom(1f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).SetLoopCompletionHandler(x => SetPosition(-1)).Start();
             this.Tween("PosHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetFrom(3f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).Start();
         }
 

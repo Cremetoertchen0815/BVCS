@@ -264,15 +264,14 @@ namespace Betreten_Verboten.Scenes.Main
                 }), new MessageBox.MsgBoxOption("Yes, please!", () =>
                 {
                     var pl = _players[_activePlayer];
-                    var possibleChars = pl.GetSacrificableFigures();
-                    if (possibleChars.Any())
+                    var possibleChars = pl.GetSacrificableFigures().ToList();
+                    if (possibleChars.Count == 0) MessageBox.ShowMsgBox("Pls plae gaem goodly!", "Nah, sorry mate. There's actually no sacrificable figure out right now!", new MessageBox.MsgBoxOption("Darn >:/", () => true));
+                    else if(possibleChars.Count == 1)  God.Sacrifice(possibleChars[0]);
+                    else
                     {
                         GameState = GameState.PieceSelect;
                         foreach (var item in pl.GetFigures()) item.CanBeSelected = possibleChars.Contains(item);
                         pl.AddComponent(new CharPicker(x => God.Sacrifice(x))); //Open the character picker to choose the traveling distance
-                    } else
-                    {
-                        MessageBox.ShowMsgBox("Pls plae gaem goodly!", "Nah, sorry mate. There's actually no sacrificable figure out right now!", new MessageBox.MsgBoxOption("Darn >:/", () => true));
                     }
                     return true;
                 }));
