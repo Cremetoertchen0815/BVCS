@@ -85,7 +85,6 @@ namespace Betreten_Verboten.Components.Base.Characters
 
         public void Kick(Character killer)
         {
-
             this.Tween("ScaleHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetFrom(1f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).SetLoopCompletionHandler(x => SetPosition(-1)).Start();
             this.Tween("PosHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetFrom(3f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).Start();
         }

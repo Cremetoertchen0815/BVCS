@@ -1,5 +1,7 @@
-﻿-Implement special functions(sacrifice, UFO, suicide, etc.)
+﻿-Extend UI to support current Player
 -Implement scoring & winning
+-Implement UFO
+-Implement suicide
 -Implement background rendering
 -Implement CPU players
 -Start working on networking infrastructure
