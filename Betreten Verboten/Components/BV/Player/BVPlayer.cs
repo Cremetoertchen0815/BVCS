@@ -7,7 +7,7 @@ namespace Betreten_Verboten.Components.BV.Player
     public abstract class BVPlayer : Base.Player
     {
         //ctor
-        public BVPlayer(int Nr) : base(Nr) { }
+        public BVPlayer(int Nr) : base(Nr) => CharacterConfig = new CharConfig() { Name = "Player " + (Nr + 1) };
 
         //Const
         public const int SCORE_PER_STEP = 10;

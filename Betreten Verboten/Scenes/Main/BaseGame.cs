@@ -4,6 +4,7 @@ using Betreten_Verboten.Components.Base.Characters;
 using Betreten_Verboten.Components.BV;
 using Betreten_Verboten.Components.BV.Player;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.ECS;
@@ -11,6 +12,7 @@ using Nez.GeonBit.Physics;
 using Nez.GeonBit.UI;
 using Nez.GeonBit.UI.Entities;
 using Nez.GeonBit.UI.Utils;
+using Nez.Tweens;
 using System.Collections.Generic;
 using System.Linq;
 using static Betreten_Verboten.GlobalFields;
@@ -42,6 +44,7 @@ namespace Betreten_Verboten.Scenes.Main
         private bool _isScoreVisible = false;
         private VirtualButton _scoreBtn;
         private Panel[] _uiPlayerHUDs;
+        private Label _uiPlayerName;
         private Label _uiPlayerTutorial;
         private Panel _uiPlayerControls;
         private Button _uiPlayerReroll;
@@ -176,7 +179,9 @@ namespace Betreten_Verboten.Scenes.Main
 
             }
             UserInterface.Active.AddEntity(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.LT), new Vector2(50, 51), ImageDrawMode.Stretch, Anchor.Auto, new Vector2(80, 0)));
-            _uiPlayerTutorial = UserInterface.Active.AddEntity(new Label(string.Empty, Anchor.BottomLeft, null, new Vector2(100, 50)));
+            _uiPlayerName = UserInterface.Active.AddEntity(new Label(string.Empty, Anchor.TopCenter, null, new Vector2(0, 30)) { FontOverride = Content.Load<SpriteFont>("fonts/player_label"), Text = "" });
+            _uiPlayerTutorial = UserInterface.Active.AddEntity(new Label(string.Empty, Anchor.BottomLeft, null, new Vector2(80, 30)) { FontOverride = Content.Load<SpriteFont>("fonts/tutorial_label") });
+            _uiPlayerTutorial.Tween("FillColor", Color.Lerp(Color.BlanchedAlmond, Color.Black, 0.7f), 0.7f).SetLoops(LoopType.PingPong, -1).SetEaseType(EaseType.QuadInOut).Start();
 
             //Implement score toggle
             _scoreBtn.ButtonReleased += () =>
@@ -300,6 +305,7 @@ namespace Betreten_Verboten.Scenes.Main
                         Camera.LookAt = new Vector3(-495, 3, -495);
                         Camera.OverridePosition = new Vector3(-470, 50, -470);
                         //Refresh UI elements
+                        _uiPlayerTutorial.Text = "Roll the dice!";
                         _uiPlayerControls.Visible = false;
                         _uiPlayerReroll.Visible = true;
                         _diceNumbers.Clear(); //Clear dice queue
@@ -339,12 +345,16 @@ namespace Betreten_Verboten.Scenes.Main
             {
                 pl.SkipRound = false;
                 GameState = GameState.OtherAction;
-                Core.Schedule(0.5f, x => AdvancePlayer());
+                _uiPlayerTutorial.Text = "You gotta skip a round!";
+                Core.Schedule(1f, x => AdvancePlayer());
                 return;
             }
 
             _uiPlayerAnger.Enabled = pl.AngerCount > 0;
             _uiPlayerSacrifice.Enabled = pl.Sacrificable;
+            _uiPlayerName.Text = pl.CharacterConfig.Name;
+            _uiPlayerName.Tween("FillColor", _uiPlayerControls.FillColor, 0.5f).Start();
+            _uiPlayerTutorial.Text = "Choose an action!";
             pl.Sacrificable = true;
             _thriceRoll = pl.CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
             GameState = GameState.ActionSelect;

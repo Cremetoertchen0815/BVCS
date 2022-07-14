@@ -21,6 +21,20 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/action_btn.spritefont
 
+#begin fonts/player_label.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/player_label.spritefont
+
+#begin fonts/tutorial_label.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/tutorial_label.spritefont
+
 #begin GeonBit.Core/BasicMeshes/Cone.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
