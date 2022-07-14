@@ -18,6 +18,8 @@
 //-----------------------------------------------------------------------------
 #endregion
 
+using Microsoft.Xna.Framework.Graphics;
+
 namespace Nez.GeonBit
 {
 
@@ -45,6 +47,16 @@ namespace Nez.GeonBit
             TexturePath = texture ?? DefaultTexture;
             _entity.RenderingQueue = RenderingQueue.SolidBackNoCull;
             _entity.SetMaterial(new Materials.SkyboxMaterial(TexturePath, true));
+        }
+
+        /// <summary>
+        /// Create the skybox renderer component.
+        /// </summary>
+        /// <param name="texture">Skybox texture path (leave null for default texture).</param>
+        public SkyBox(Texture2D texture) : base(ShapeRenderer.ShapeModelsRoot + "Skybox")
+        {
+            _entity.RenderingQueue = RenderingQueue.SolidBackNoCull;
+            _entity.SetMaterial(new Materials.SkyboxMaterial(texture, true));
         }
 
         /// <summary>

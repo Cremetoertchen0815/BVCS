@@ -60,6 +60,23 @@ namespace Nez.GeonBit.Materials
         }
 
         /// <summary>
+        /// Create the default material.
+        /// </summary>
+        /// <param name="texture">Skybox texture.</param>
+        /// <param name="flipYZ">If true, will flip between Y and Z axis.</param>
+        public SkyboxMaterial(Texture2D texture, bool flipYZ = false)
+        {
+            // store effect and set default properties
+            FlipYZ = flipYZ;
+            _effect = new BasicEffect(Core.GraphicsDevice)
+            {
+                TextureEnabled = true,
+                Texture = texture,
+                LightingEnabled = false
+            };
+        }
+
+        /// <summary>
         /// Create the material from another material instance.
         /// </summary>
         /// <param name="other">Other material to clone.</param>

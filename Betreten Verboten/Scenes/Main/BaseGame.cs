@@ -2,6 +2,7 @@
 using Betreten_Verboten.Components.Base.Boards.BV;
 using Betreten_Verboten.Components.Base.Characters;
 using Betreten_Verboten.Components.BV;
+using Betreten_Verboten.Components.BV.Backgrounds;
 using Betreten_Verboten.Components.BV.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -61,7 +62,7 @@ namespace Betreten_Verboten.Scenes.Main
             //Register rendering system(Renderers drawing on RenderTextures have negative renderOrders)
             ClearColor = Color.Black;
             Core.DebugRenderEnabled = false;
-            AddRenderer(_geonRenderer = new GeonDefaultRenderer(0, this)); //Render render 3D space
+            AddRenderer(_geonRenderer = new GeonDefaultRenderer(1, this)); //Render render 3D space
             AddPostProcessor(new QualityBloomPostProcessor(0) { BloomPreset = QualityBloomPostProcessor.BloomPresets.SuperWide, BloomStrengthMultiplier = 0.6f, BloomThreshold = 0.5f });
 
             GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
@@ -138,7 +139,9 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected void InitEnvironment()
         {
-            //CreateGeonEntity("skybox").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
+            var bg = new Nez.Textures.RenderTexture();
+            AddRenderer(new PsygroundRenderer(0));
+            //CreateGeonEntity("skybox").AddComponent(new SkyBox(bg) { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
             
             //Create playing field
             _board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
