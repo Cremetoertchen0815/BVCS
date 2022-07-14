@@ -105,13 +105,14 @@ namespace Betreten_Verboten.Components.BV
                             loopActive = false;
                             break;
                         case 1: //Skip turn
-                            //TODO: Add da stuff
+                            ((BVPlayer)c.Owner).SkipRound = true;
                             c.SendPrivateTele("base", "show_action_result", "You're lucky! A random enemy figure got kicked!");
                             c.SendPrivateTele("base", "char_move_done", null);
                             loopActive = false;
                             break;
                         case 2: //Remove anger button
-                            ((BVPlayer)c.Owner).AngerCount++;
+                            var owner = (BVPlayer)c.Owner;
+                            owner.AngerCount = System.Math.Max(0, ++owner.AngerCount);
                             c.SendPrivateTele("base", "show_action_result", "Oh ooh! You've lost an anger button!");
                             c.SendPrivateTele("base", "char_move_done", null);
                             loopActive = false;

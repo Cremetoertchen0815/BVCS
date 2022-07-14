@@ -70,19 +70,24 @@ namespace Betreten_Verboten.Components.Base.Characters
                 case "landed_on_field":
                     var source = ((Character kicker, bool finalField))message.Body;
                     if (source.kicker == this || source.kicker.GlobalPosition != GlobalPosition) break;
-                    //Play ducking animation
-                    this.Tween("ScaleHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).Start();
-                    this.Tween("PosHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetFrom(3f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).Start();
                     //Check for kicking condition. That being that either landing the character on its final landing field or the character standing on its homebase.
                     //Of course we ignore our own characters.
-                    if (source.finalField || source.kicker.Position == 0) Kick(source.kicker);
+                    System.Action<ITween<float>> ac = x => { if (source.finalField || source.kicker.Position == 0) SetPosition(-1); };
+                    //Play ducking animation
+                    this.Tween("ScaleHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).Start();
+                    this.Tween("PosHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetFrom(3f).SetEaseType(EaseType.Linear).SetLoopCompletionHandler(ac).SetLoops(LoopType.PingPong).Start();
                     break;
                 default:
                     break;
             }
         }
 
-        public void Kick(Character killer) => SetPosition(-1);
+        public void Kick(Character killer)
+        {
+
+            this.Tween("ScaleHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetEaseType(EaseType.Linear).SetLoops(LoopType.RestartFromBeginning).SetLoopCompletionHandler(x => SetPosition(-1)).Start();
+            this.Tween("PosHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetFrom(3f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).Start();
+        }
 
         public Character SetPosition(int pos)
         {

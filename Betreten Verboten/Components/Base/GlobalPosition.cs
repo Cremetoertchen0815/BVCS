@@ -16,7 +16,7 @@ namespace Betreten_Verboten.Components.Base
         {
             var ret = new GlobalPosition();
             var board = c.Owner.Board;
-            ret.Valid = c.Position >= 0 && c.Position <= board.FieldCountPP;
+            ret.Valid = c.Position >= 0 && c.Position <= board.FieldCountTotal;
             ret.Position = ret.Valid ? (c.Position + board.FieldCountPP * c.Owner.Nr) % c.Owner.Board.FieldCountTotal : -1;
             return ret;
         }

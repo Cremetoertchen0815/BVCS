@@ -16,9 +16,10 @@ namespace Betreten_Verboten.Components.BV.Player
 
         private int _sacrificeCount = 0;
 
-        public virtual int AngerCount { get; set; } = 1;
+        public virtual int AngerCount { get; set; } = 5;
         public int AdditionalPoints { get; set; } = 0;
         public bool Sacrificable { get => _sacrificeCount < 1; set { if (value) _sacrificeCount--; else _sacrificeCount = SACRIFICE_COOLDOWN; } }
+        public bool SkipRound { get; set; } = false;
         public override int Points => AdditionalPoints + AngerCount * SCORE_PER_ANGER_BTN + _figures.Sum(x => System.Math.Max(x.Position, 0)) * SCORE_PER_STEP;
 
 

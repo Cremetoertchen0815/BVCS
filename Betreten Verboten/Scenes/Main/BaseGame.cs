@@ -330,14 +330,26 @@ namespace Betreten_Verboten.Scenes.Main
 
         public void AdvancePlayer()
         {
+            //Switch to next player & adapt UI
             _activePlayer = ++_activePlayer % _board.PlayerCount;
             var pl = _players[_activePlayer];
-            _thriceRoll = pl.CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
             _uiPlayerControls.FillColor = CharConfig.GetStdColor(_activePlayer) * 0.95f;
+
+            //Implement skipping
+            if (pl.SkipRound)
+            {
+                pl.SkipRound = false;
+                GameState = GameState.OtherAction;
+                Core.Schedule(0.5f, x => AdvancePlayer());
+                return;
+            }
+
             _uiPlayerAnger.Enabled = pl.AngerCount > 0;
             _uiPlayerSacrifice.Enabled = pl.Sacrificable;
             pl.Sacrificable = true;
+            _thriceRoll = pl.CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
             GameState = GameState.ActionSelect;
+            ReorderPlayerHUD();
         }
     }
 }
