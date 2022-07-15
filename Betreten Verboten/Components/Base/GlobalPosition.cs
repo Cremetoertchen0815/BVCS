@@ -12,12 +12,14 @@ namespace Betreten_Verboten.Components.Base
         public override bool Equals(object o) => o is GlobalPosition b && this == b;
         public override int GetHashCode() => Position.GetHashCode();
 
-        public static GlobalPosition FromChar(Character c)
+        public static GlobalPosition FromChar(Character c) => FromLocalPosition(c.Owner, c.Position);
+
+        public static GlobalPosition FromLocalPosition(Player p, int position)
         {
             var ret = new GlobalPosition();
-            var board = c.Owner.Board;
-            ret.Valid = c.Position >= 0 && c.Position <= board.FieldCountTotal;
-            ret.Position = ret.Valid ? (c.Position + board.FieldCountPP * c.Owner.Nr) % c.Owner.Board.FieldCountTotal : -1;
+            var board = p.Board;
+            ret.Valid = position >= 0 && position <= board.FieldCountTotal;
+            ret.Position = ret.Valid ? (position + board.FieldCountPP * p.Nr) % p.Board.FieldCountTotal : -1;
             return ret;
         }
 
