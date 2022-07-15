@@ -92,7 +92,7 @@ namespace Betreten_Verboten.Components.Base
         public abstract int FigureCountPP { get; }
         public virtual int FieldCountTotal => FieldCountPP * PlayerCount;
         public virtual int FigureCountTotal => FigureCountPP * PlayerCount;
-        public virtual int DistanceLimit => FieldCountTotal + FigureCountPP - 1;
+        public virtual int DistanceLimit => FieldCountTotal + FigureCountPP;
         public abstract float FigureJumpHeight { get; }
         public abstract int PlayerCount { get; }
         public abstract float CharScale { get; }

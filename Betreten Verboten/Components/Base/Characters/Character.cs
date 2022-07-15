@@ -136,8 +136,9 @@ namespace Betreten_Verboten.Components.Base.Characters
         {
             if (_travelDistLeft < 1)
             {
-                RigidBody.CopyNodeWorldMatrix();
-                this.SendPrivateTele("base", "char_move_done", null);
+                Owner.DecideAfterCharacterLand();
+                RigidBody.CopyNodeWorldMatrix(); //Update rigid body
+                this.SendPrivateTele("base", "char_move_done", null); //Report landing
             }
             else
             {

@@ -54,13 +54,15 @@ namespace Betreten_Verboten.Components.BV.Player
         /// </summary>
         public override int Points => AdditionalPoints + AngerCount * SCORE_PER_ANGER_BTN + _figures.Sum(x => System.Math.Max(x.Position, 0)) * SCORE_PER_STEP;
 
+        public override void CharacterSwitched() => CheckForSuicideField();
+
         /// <summary>
         /// Checks if a suicide field needs to be created & does so if necessary
         /// </summary>
         public void CheckForSuicideField()
         {
-            IEnumerable<Character> houseFigs;
-            if (SuicideField > -1 || (houseFigs = GetHouseFigures()).Count() < Board.FigureCountPP - 1) return;
+            List<Character> houseFigs;
+            if (SuicideField > -1 || (houseFigs = GetHouseFigures().ToList()).Count < Board.FigureCountPP - 1) return;
             while (true)
             {
                 SuicideField = Nez.Random.Range(0, Board.FieldCountTotal);
@@ -69,6 +71,12 @@ namespace Betreten_Verboten.Components.BV.Player
                 _suicideFields.Add(glob);
                 break;
             }
+        }
+
+        public override void DecideAfterCharacterLand()
+        {
+            //Check for suicide
+            if (SuicideField > -1) foreach (var item in _figures) if (item.Position == SuicideField) item.Kick(item);
         }
 
         /// <summary>

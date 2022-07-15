@@ -366,6 +366,7 @@ namespace Betreten_Verboten.Scenes.Main
             _uiPlayerName.Tween("FillColor", _uiPlayerControls.FillColor, 0.5f).Start();
             _uiPlayerTutorial.Text = "Choose an action!";
             pl.Sacrificable = true;
+            pl.CharacterSwitched();
             _thriceRoll = pl.CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
             GameState = GameState.ActionSelect;
             ReorderPlayerHUD();

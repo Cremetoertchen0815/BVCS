@@ -131,6 +131,10 @@ namespace Betreten_Verboten.Components.Base
             return true;
         }
 
+        public virtual void DecideAfterCharacterLand() { }
+
+        public virtual void CharacterSwitched() { }
+
         /// <summary>
         /// Returns true if the potential figure would be allowed to move.
         /// </summary>
