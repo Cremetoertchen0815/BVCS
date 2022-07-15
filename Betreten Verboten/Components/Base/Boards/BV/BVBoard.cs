@@ -1,16 +1,18 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Betreten_Verboten.Components.BV.Player;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.Materials;
 using Nez.Textures;
+using System.Collections.Generic;
 using static Betreten_Verboten.GlobalFields;
 
 namespace Betreten_Verboten.Components.Base
 {
     public abstract class BVBoard : RenderableComponent, ITelegramReceiver
     {
-
+        //Const
         private const int TEX_RES = 1000;
         private const int CIRCLE_RES = 5;
         private const float CLEAR_COLOR = 0.04f;
@@ -20,16 +22,19 @@ namespace Betreten_Verboten.Components.Base
         private Vector2[] _fieldsRegular;
         private Vector2[] _fieldsHome;
         private Vector2[] _fieldsHouse;
+        private Vector2[] _suicideOffsets;
 
-        private Player[] _players;
+        //Fields
+        private List<int> _ufoFields;
+        private BVPlayer[] _players;
 
+        //Assets & renderers
         private RenderTexture _boardTexture;
         protected ShapeRenderer _shapeRenderer;
         protected RenderTexture _shadowProjection;
         protected StaticBody _kinematicBody;
-
-
         private Texture2D _texArrow;
+
 
         public override void OnAddedToEntity()
         {
@@ -55,6 +60,8 @@ namespace Betreten_Verboten.Components.Base
             _kinematicBody.CollisionGroup = Nez.GeonBit.Physics.CollisionGroups.Terrain;
             _kinematicBody.Restitution = 0f;
 
+            //Load assets & prepare fields
+            _ufoFields = new List<int>();
             _texArrow = Entity.Scene.Content.LoadTexture("texture/arrow_right");
 
             //Add dice limiting box
@@ -63,7 +70,7 @@ namespace Betreten_Verboten.Components.Base
             ((GeonScene)Entity.Scene).CreateGeonEntity("DiceLimiterC", new Vector3(-450, 50, -500), NodeType.BoundingBoxCulling).AddComponent(new StaticBody(new BoxInfo(new Vector3(50, 100, 50)))).Restitution = 1f;
             ((GeonScene)Entity.Scene).CreateGeonEntity("DiceLimiterD", new Vector3(-500, 50, -450), NodeType.BoundingBoxCulling).AddComponent(new StaticBody(new BoxInfo(new Vector3(50, 100, 50)))).Restitution = 1f;
 
-            _players = new Player[PlayerCount]; //Create player array
+            _players = new BVPlayer[PlayerCount]; //Create player array
             SetRenderLayer(RENDER_LAYER_BOARD); //Config renderable 
             CalculateCachedFields(); //Calculate and cache rendering coords and segments
             this.TeleRegister(); //Register in telegram service
@@ -101,32 +108,40 @@ namespace Betreten_Verboten.Components.Base
         {
             batcher.DrawHollowRect(new RectangleF(0, 0, TEX_RES, TEX_RES), Color.White, 4);
 
+            //Draw connecting lines
+            for (int i = 0; i < _connectingSegments.Length; i += 2) batcher.DrawLine(_connectingSegments[i], _connectingSegments[i + 1], Color.White, 2);
+
             for (int i = 0; i < PlayerCount; i++)
             {
+                var pl = _players[i];
                 var plColor = Characters.CharConfig.GetStdColor(i);
 
-                //Draw field
+                //Draw regular fields
                 for (int j = 0; j < FieldCountPP; j++)
                 {
                     batcher.DrawCircle(_fieldsRegular[i * FieldCountPP + j], FieldPlayerDiameter, j == 0 ? plColor : Color.White, 3, CIRCLE_RES);
-                    if (j == 0)
-                    {
-                        batcher.Draw(_texArrow, new Rectangle(_fieldsRegular[i * FieldCountPP].ToPoint(), new Point(FieldPlayerArrowDiameter)), null, plColor, MathHelper.PiOver2 * (4f * i / PlayerCount + 3f), Vector2.One * 17.5f, SpriteEffects.None, 0f );
-                    }
+                    if (j == 0) batcher.Draw(_texArrow, new Rectangle(_fieldsRegular[i * FieldCountPP].ToPoint(), new Point(FieldPlayerArrowDiameter)), null, plColor, MathHelper.PiOver2 * (4f * i / PlayerCount + 3f), Vector2.One * 17.5f, SpriteEffects.None, 0f );
+
                 }
 
+                //Draw home & house fields
                 for (int j = 0; j < FigureCountPP; j++)
                 {
                     int idx = i * FigureCountPP + j;
                     batcher.DrawCircle(_fieldsHome[idx], FieldHomeDiameter, plColor, 2, CIRCLE_RES);
                     batcher.DrawCircle(_fieldsHouse[idx], FieldHouseDiameter, plColor, 2, CIRCLE_RES);
                 }
+
+                //Draw suicide cross
+                if (pl.SuicideField >= 0)
+                {
+                    var pos = _fieldsRegular[GlobalPosition.FromLocalPosition(pl, pl.SuicideField).Position];
+                    batcher.DrawLine(pos + _suicideOffsets[0], pos + _suicideOffsets[1], plColor, 3);
+                    batcher.DrawLine(pos + _suicideOffsets[2], pos + _suicideOffsets[3], plColor, 3);
+                }
+
             }
 
-            for (int i = 0; i < _connectingSegments.Length; i += 2)
-            {
-                batcher.DrawLine(_connectingSegments[i], _connectingSegments[i + 1], Color.White, 2);
-            }
         }
 
         /// <summary>
@@ -185,6 +200,14 @@ namespace Betreten_Verboten.Components.Base
             _connectingSegments[idxSeg++] = lastPos + conVec;
             _connectingSegments[idxSeg++] = nuPos - conVec;
 
+            //Generate suicide cross offsets
+            _suicideOffsets = new Vector2[]
+            {
+                Vector2.UnitX.Rotate(1f / 8 * MathHelper.TwoPi) * FieldPlayerDiameter,
+                Vector2.UnitX.Rotate(5f / 8 * MathHelper.TwoPi) * FieldPlayerDiameter,
+                Vector2.UnitX.Rotate(7f / 8 * MathHelper.TwoPi) * FieldPlayerDiameter,
+                Vector2.UnitX.Rotate(3f / 8 * MathHelper.TwoPi) * FieldPlayerDiameter
+            };
         }
 
         public Vector2 GetCharacterPosition(Characters.Character c)
@@ -200,7 +223,13 @@ namespace Betreten_Verboten.Components.Base
             {
                 case "player_registered":
                     int source = int.Parse(message.Sender.Substring(7));
-                    _players[source] = (Player)message.Body;
+                    _players[source] = (BVPlayer)message.Body;
+                    break;
+                case "ufo_field_added":
+                    _ufoFields.Add((int)message.Body);
+                    break;
+                case "ufo_field_removed":
+                    _ufoFields.Add((int)message.Body);
                     break;
                 default:
                     break;

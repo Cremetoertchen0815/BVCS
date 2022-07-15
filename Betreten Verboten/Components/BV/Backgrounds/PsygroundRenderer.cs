@@ -65,6 +65,12 @@ namespace Betreten_Verboten.Components.BV.Backgrounds
             LaunchColorFader();
         }
 
+        public override void Unload()
+        {
+            _loops = false;
+            base.Unload();
+        }
+
         public override void Render(Scene scene)
         {
             base.BeginRender(null);
@@ -96,6 +102,7 @@ namespace Betreten_Verboten.Components.BV.Backgrounds
 
         private void LaunchColorFader()
         {
+            if (!_loops) return;
             this.Tween("_colorA", GetRndColor(), Speed).SetCompletionHandler(x => LaunchColorFader()).Start();
             this.Tween("_colorB", GetRndColor(), Speed).Start();
             this.Tween("_colorC", GetRndColor(), Speed).Start();
