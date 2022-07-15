@@ -142,6 +142,8 @@ namespace Betreten_Verboten.Components.Base
 
             }
 
+            foreach (var item in _ufoFields) batcher.DrawCircle(_fieldsRegular[item], FieldPlayerDiameter, Color.MintCream, 5, CIRCLE_RES);
+
         }
 
         /// <summary>
@@ -229,7 +231,8 @@ namespace Betreten_Verboten.Components.Base
                     _ufoFields.Add((int)message.Body);
                     break;
                 case "ufo_field_removed":
-                    _ufoFields.Add((int)message.Body);
+                    source = (int)message.Body;
+                    if (_ufoFields.Contains(source)) _ufoFields.Remove(source);
                     break;
                 default:
                     break;
