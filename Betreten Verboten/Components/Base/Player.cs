@@ -67,18 +67,21 @@ namespace Betreten_Verboten.Components.Base
                 //If we rolled a 6, the base and out destination is not blocked and we got a figure in our home, move with it! It has top priority!
                 this.SendPrivateTele("base", "show_tutorial", "Move Character out of your homebase and move him " + trueDistance + " spaces!");
                 _figures[homebaseNr].AdvanceSteps(trueDistance);
-            } else if(is6InDicelist && homebaseNr > -1 && !isTrueDestinationBlocked)
+            }
+            else if (is6InDicelist && homebaseNr > -1 && !isTrueDestinationBlocked)
             {
                 //Check if we had the potential to move out of the house, but our base field was blocked!
                 //The blocking character standing on the base field can & has to be moved out of the way
                 this.SendPrivateTele("base", "show_tutorial", "Start field blocked! Move pieces out of the way first!");
                 _figures[baseBlocker].AdvanceSteps(trueDistance);
-            } else if (!(movableChars = GetMovableFigures(distance)).Any() || !is6InDicelist && GetHomebaseFigCount() == Board.FigureCountPP)
+            }
+            else if (!(movableChars = GetMovableFigures(distance)).Any() || !is6InDicelist && GetHomebaseFigCount() == Board.FigureCountPP)
             {
                 //If a regular move is not possible or all figures are in the home and no 6 was rolled, no move is possible!
                 this.SendPrivateTele("base", "show_tutorial", "No move possible!");
                 Core.Schedule(1f, x => this.SendPrivateTele("base", "char_move_done", null));
-            } else if (movableChars.Length == 1)
+            }
+            else if (movableChars.Length == 1)
             {
                 //If only one regular figure is movable, move it automatically!
                 this.SendPrivateTele("base", "show_tutorial", "Auto-moving character " + distance + " spaces!");
@@ -133,7 +136,7 @@ namespace Betreten_Verboten.Components.Base
         /// </summary>
         /// <param name="pos">The current position of the potential figure.</param>
         /// <param name="distance">The distance the potential figure would travel next move.</param>
-        private bool CanMove(int pos, int distance) => pos > -1 && pos + distance < Board.DistanceLimit && !IsFieldBlocked(pos + distance, out var _) && !IsOvertakingInHouse(pos, distance);
+        private bool CanMove(int pos, int distance) => pos > -1 && pos + distance < Board.DistanceLimit && !IsFieldBlocked(pos + distance, out int _) && !IsOvertakingInHouse(pos, distance);
 
         /// <summary>
         /// Returns the figures the player could possibly move with.
@@ -145,7 +148,7 @@ namespace Betreten_Verboten.Components.Base
         /// </summary>
         /// <param name="figure">The ID of the figure to be checked.</param>
         private bool IsFigureOnTrack(int figure) => _figures[figure].Position >= 0 && _figures[figure].Position < Board.FieldCountTotal;
-       
+
         /// <summary>
         /// Checks if a potential figure would overtake one of his siblings in the player's house, which is illegal.
         /// </summary>
@@ -154,7 +157,7 @@ namespace Betreten_Verboten.Components.Base
         private bool IsOvertakingInHouse(int pos, int distance)
         {
             if (distance < Board.DistanceLimit) return false;
-            for (int i = 0; i < distance; i++) if (IsFieldBlocked(pos + distance + 1, out var _)) return true;
+            for (int i = 0; i < distance; i++) if (IsFieldBlocked(pos + distance + 1, out int _)) return true;
             return false;
         }
 
@@ -171,7 +174,7 @@ namespace Betreten_Verboten.Components.Base
         public bool IsFieldBlocked(int field, out int who, int ignoredFigure = -1)
         {
             var res = _figures.Where(x => x.Position == field && x.Nr != ignoredFigure);
-            var any = res.Any();
+            bool any = res.Any();
             who = any ? res.ElementAt(0).Nr : -1;
             return any;
         }

@@ -80,6 +80,6 @@ namespace Betreten_Verboten.Components.BV.Player
         /// Returns all figures of the player that are in the house(lol).
         /// </summary>
         public IEnumerable<Character> GetHouseFigures() => _figures.Where(x => x.Position >= Board.FieldCountTotal && x.Position < Board.DistanceLimit);
-    
+
     }
 }

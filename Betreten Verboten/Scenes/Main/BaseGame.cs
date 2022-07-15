@@ -16,7 +16,6 @@ using Nez.GeonBit.UI.Utils;
 using Nez.Tweens;
 using System.Collections.Generic;
 using System.Linq;
-using static Betreten_Verboten.GlobalFields;
 
 namespace Betreten_Verboten.Scenes.Main
 {
@@ -75,7 +74,7 @@ namespace Betreten_Verboten.Scenes.Main
             //Prepare physics
             AddSceneComponent(new PhysicsWorld()).SetGravity(new Vector3(0, -150, 0));
             InitEnvironment();
-            
+
             //Init UI
             _scoreBtn = new VirtualButton(new VirtualButton.KeyboardKey(Microsoft.Xna.Framework.Input.Keys.Tab));
             FinalRenderDelegate = Core.GetGlobalManager<FinalUIRender>();
@@ -113,10 +112,16 @@ namespace Betreten_Verboten.Scenes.Main
                             _diceNumbers.Sort();
                             _thriceRoll = ThriceRollState.ALREADY_PERFORMED;
                         }
-                        else return;
+                        else
+                        {
+                            return;
+                        }
                     }
 
-                    if (Dice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice())) _uiPlayerReroll.Visible = true;
+                    if (Dice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice()))
+                    {
+                        _uiPlayerReroll.Visible = true;
+                    }
                     else
                     {
                         Core.Schedule(0.3f, x => _players[_activePlayer].DecideAfterDiceroll(_diceNumbers));
@@ -142,7 +147,7 @@ namespace Betreten_Verboten.Scenes.Main
             var bg = new Nez.Textures.RenderTexture();
             AddRenderer(new PsygroundRenderer(0));
             //CreateGeonEntity("skybox").AddComponent(new SkyBox(bg) { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
-            
+
             //Create playing field
             _board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
             _players = new BVPlayer[_board.PlayerCount];
@@ -154,7 +159,7 @@ namespace Betreten_Verboten.Scenes.Main
             //Add controll panel
             _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.Simple, Anchor.TopRight, new Vector2(15)));
             var btnA = _uiPlayerControls.AddChild(new Button("Dice", ButtonSkin.Alternative, Anchor.TopCenter, new Vector2(200, 80)) { OnClick = x => GameState = GameState.DiceRoll });
-            _uiPlayerAnger = _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)) { OnClick = x => OpenAnger()});
+            _uiPlayerAnger = _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)) { OnClick = x => OpenAnger() });
             _uiPlayerSacrifice = _uiPlayerControls.AddChild(new Button("Sacrifice", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)) { OnClick = x => OpenSacrifice() });
             _uiPlayerAfK = _uiPlayerControls.AddChild(new Button("AfK", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)));
             _uiPlayerReroll = UserInterface.Active.AddEntity(new Button("Roll Dice", ButtonSkin.Alternative, Anchor.TopRight, new Vector2(200, 80), new Vector2(15)) { Visible = false, OnClick = x => RollDice() });
@@ -228,8 +233,7 @@ namespace Betreten_Verboten.Scenes.Main
             }
         }
 
-        public void OpenAnger()
-        {
+        public void OpenAnger() =>
             //Display message cascade
             MessageBox.ShowMsgBox("[TRIGGERED]", "You get angry, because you suck at this game.", new MessageBox.MsgBoxOption("OK, I get it", () =>
             {
@@ -242,7 +246,7 @@ namespace Betreten_Verboten.Scenes.Main
                     }), new MessageBox.InputBoxOption("Let's go", x =>
                     {
                         //Check if value is valid
-                        if (!int.TryParse(x, out var cnt) || cnt < 0 || cnt > 12)
+                        if (!int.TryParse(x, out int cnt) || cnt < 0 || cnt > 12)
                         {
                             MessageBox.ShowMsgBox("W  A  T  .", "Nah mate, no chance. Enter a proper value.", new MessageBox.MsgBoxOption("Darn", () => true));
                             return false;
@@ -258,10 +262,8 @@ namespace Betreten_Verboten.Scenes.Main
                 }));
                 return true;
             }));
-        }
 
-        public void OpenSacrifice()
-        {
+        public void OpenSacrifice() =>
             //Display message cascade
             MessageBox.ShowMsgBox("Send that bastard to hell", "You can sacrifice one of your players to the holy BV gods. The further your player is, the higher is the chance to recieve a positive effect.", new MessageBox.MsgBoxOption("OK, I get it", () =>
             {
@@ -273,8 +275,14 @@ namespace Betreten_Verboten.Scenes.Main
                 {
                     var pl = _players[_activePlayer];
                     var possibleChars = pl.GetSacrificableFigures().ToList();
-                    if (possibleChars.Count == 0) MessageBox.ShowMsgBox("Pls plae gaem goodly!", "Nah, sorry mate. There's actually no sacrificable figure out right now!", new MessageBox.MsgBoxOption("Darn >:/", () => true));
-                    else if(possibleChars.Count == 1)  God.Sacrifice(possibleChars[0]);
+                    if (possibleChars.Count == 0)
+                    {
+                        MessageBox.ShowMsgBox("Pls plae gaem goodly!", "Nah, sorry mate. There's actually no sacrificable figure out right now!", new MessageBox.MsgBoxOption("Darn >:/", () => true));
+                    }
+                    else if (possibleChars.Count == 1)
+                    {
+                        God.Sacrifice(possibleChars[0]);
+                    }
                     else
                     {
                         GameState = GameState.PieceSelect;
@@ -285,7 +293,6 @@ namespace Betreten_Verboten.Scenes.Main
                 }));
                 return true;
             }));
-        }
 
         public GameState GameState
         {

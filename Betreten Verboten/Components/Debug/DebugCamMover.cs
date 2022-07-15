@@ -1,13 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
-using Nez.GeonBit.ECS;
-using Nez.GeonBit.Physics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Betreten_Verboten.Components.Debug
 {

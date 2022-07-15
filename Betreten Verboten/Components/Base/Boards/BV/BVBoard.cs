@@ -90,8 +90,8 @@ namespace Betreten_Verboten.Components.Base
         protected abstract int FieldPlayerArrowDiameter { get; }
         public abstract int FieldCountPP { get; }
         public abstract int FigureCountPP { get; }
-        public virtual int FieldCountTotal => FieldCountPP * PlayerCount; 
-        public virtual int FigureCountTotal => FigureCountPP * PlayerCount; 
+        public virtual int FieldCountTotal => FieldCountPP * PlayerCount;
+        public virtual int FigureCountTotal => FigureCountPP * PlayerCount;
         public virtual int DistanceLimit => FieldCountTotal + FigureCountPP - 1;
         public abstract float FigureJumpHeight { get; }
         public abstract int PlayerCount { get; }
@@ -120,7 +120,7 @@ namespace Betreten_Verboten.Components.Base
                 for (int j = 0; j < FieldCountPP; j++)
                 {
                     batcher.DrawCircle(_fieldsRegular[i * FieldCountPP + j], FieldPlayerDiameter, j == 0 ? plColor : Color.White, 3, CIRCLE_RES);
-                    if (j == 0) batcher.Draw(_texArrow, new Rectangle(_fieldsRegular[i * FieldCountPP].ToPoint(), new Point(FieldPlayerArrowDiameter)), null, plColor, MathHelper.PiOver2 * (4f * i / PlayerCount + 3f), Vector2.One * 17.5f, SpriteEffects.None, 0f );
+                    if (j == 0) batcher.Draw(_texArrow, new Rectangle(_fieldsRegular[i * FieldCountPP].ToPoint(), new Point(FieldPlayerArrowDiameter)), null, plColor, MathHelper.PiOver2 * (4f * i / PlayerCount + 3f), Vector2.One * 17.5f, SpriteEffects.None, 0f);
 
                 }
 
@@ -142,7 +142,8 @@ namespace Betreten_Verboten.Components.Base
 
             }
 
-            foreach (var item in _ufoFields) batcher.DrawCircle(_fieldsRegular[item], FieldPlayerDiameter, Color.MintCream, 5, CIRCLE_RES);
+            //Draw UFO fields
+            foreach (int item in _ufoFields) batcher.DrawCircle(_fieldsRegular[item], FieldPlayerDiameter, Color.MintCream, 5, CIRCLE_RES);
 
         }
 

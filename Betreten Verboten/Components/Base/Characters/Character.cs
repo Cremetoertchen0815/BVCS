@@ -69,7 +69,7 @@ namespace Betreten_Verboten.Components.Base.Characters
                     break;
                 case "landed_on_field":
                     var source = ((Character kicker, bool finalField))message.Body;
-                    var oldPos = source.kicker.Position;
+                    int oldPos = source.kicker.Position;
                     if (source.kicker == this || source.kicker.GlobalPosition != GlobalPosition) break;
                     //Check for kicking condition. That being that either landing the character on its final landing field or the character standing on its homebase.
                     //Of course we ignore our own characters.
@@ -129,17 +129,20 @@ namespace Betreten_Verboten.Components.Base.Characters
             //Send telegrams
             this.SendPrivateTele("char", "landed_on_field", (this, _travelDistLeft < 1));
             this.SendPrivateTele("base", "resort_score", null);
-            
+
         }
 
-        private void AdvAnimationStep(ITween<Vector2> y) 
+        private void AdvAnimationStep(ITween<Vector2> y)
         {
             if (_travelDistLeft < 1)
             {
                 RigidBody.CopyNodeWorldMatrix();
                 this.SendPrivateTele("base", "char_move_done", null);
             }
-            else TakeStep();
+            else
+            {
+                TakeStep();
+            }
         }
     }
 }

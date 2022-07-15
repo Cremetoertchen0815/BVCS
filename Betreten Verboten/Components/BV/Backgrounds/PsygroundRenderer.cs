@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Betreten_Verboten.Components.BV.Backgrounds
 {
@@ -53,9 +49,11 @@ namespace Betreten_Verboten.Components.BV.Backgrounds
             _indexBuffer = new DynamicIndexBuffer(Core.GraphicsDevice, IndexElementSize.ThirtyTwoBits, _indexList.Length, BufferUsage.WriteOnly);
             _indexBuffer.SetData(_indexList);
 
-            _effect = new BasicEffect(Core.GraphicsDevice);
-            _effect.World = Matrix.Identity;
-            _effect.VertexColorEnabled = true;
+            _effect = new BasicEffect(Core.GraphicsDevice)
+            {
+                World = Matrix.Identity,
+                VertexColorEnabled = true
+            };
 
             _loops = true;
             _colorA = GetRndColor();
@@ -94,7 +92,7 @@ namespace Betreten_Verboten.Components.BV.Backgrounds
             {
                 Core.GraphicsDevice.SetVertexBuffer(_vertexBuffer);
                 Core.GraphicsDevice.Indices = _indexBuffer;
-                
+
                 item.Apply();
                 Core.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4);
             }

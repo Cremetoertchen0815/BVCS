@@ -1,10 +1,6 @@
 ﻿using Betreten_Verboten.Components.Base.Characters;
 using Betreten_Verboten.Components.BV.Player;
 using Nez;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Betreten_Verboten.Components.BV
 {
@@ -29,9 +25,9 @@ namespace Betreten_Verboten.Components.BV
             Core.Schedule(2f, x =>
             {
                 //Choose type of sacrifice
-                var RNG = Random.NextFloat();
+                float RNG = Random.NextFloat();
                 if (RNG < pogfactor) SacrificePositive(character);
-                else if(RNG > flopfactor) SacrificeNegative(character);
+                else if (RNG > flopfactor) SacrificeNegative(character);
                 else SacrificeNeutral(character);
             });
         }
@@ -48,8 +44,8 @@ namespace Betreten_Verboten.Components.BV
                     {
                         case 0: //Boost ally
                             var fig = GetRandomAllyFigure(c);
-                            var boost = Random.Range(0, System.Math.Max(fig.Owner.Board.FieldCountTotal - fig.Position, 0));
-                            if (fig == null || c.Owner.IsFieldBlocked(fig.Position + boost, out var _)) break;
+                            int boost = Random.Range(0, System.Math.Max(fig.Owner.Board.FieldCountTotal - fig.Position, 0));
+                            if (fig == null || c.Owner.IsFieldBlocked(fig.Position + boost, out int _)) break;
                             fig.AdvanceSteps(boost);
                             c.SendPrivateTele("base", "show_action_result", "You're lucky! Your figure is being boosted!");
                             loopActive = false;
@@ -98,8 +94,8 @@ namespace Betreten_Verboten.Components.BV
                     {
                         case 0: //Kick ally
                             var fig = GetRandomAllyFigure(c);
-                            var boost = Random.Range(0, System.Math.Max(fig.Owner.Board.FieldCountTotal - fig.Position, 0));
-                            if (fig == null || c.Owner.IsFieldBlocked(fig.Position + boost, out var _)) break;
+                            int boost = Random.Range(0, System.Math.Max(fig.Owner.Board.FieldCountTotal - fig.Position, 0));
+                            if (fig == null || c.Owner.IsFieldBlocked(fig.Position + boost, out int _)) break;
                             fig.Kick(null);
                             c.SendPrivateTele("base", "show_action_result", "You're lucky! Your figure is being boosted!");
                             loopActive = false;
@@ -132,13 +128,7 @@ namespace Betreten_Verboten.Components.BV
         }
 
         //Helper methods
-        private static Character GetRandomEnemyFigure(Character c)
-        {
-            return null;
-        }
-        private static Character GetRandomAllyFigure(Character c)
-        {
-            return null;
-        }
+        private static Character GetRandomEnemyFigure(Character c) => null;
+        private static Character GetRandomAllyFigure(Character c) => null;
     }
 }
