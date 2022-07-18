@@ -138,7 +138,7 @@ namespace Betreten_Verboten.Components.Base.Characters
             {
                 Owner.DecideAfterCharacterLand();
                 RigidBody.CopyNodeWorldMatrix(); //Update rigid body
-                this.SendPrivateTele("base", "char_move_done", null); //Report landing
+                this.SendPublicTele("char_move_done", this); //Report landing
             }
             else
             {

@@ -22,6 +22,8 @@ namespace Betreten_Verboten.Scenes.Main
     [ManagedScene(100, false)]
     public class BVGame : GeonScene, ITelegramReceiver
     {
+
+        //Consts
         private const int ABUTTON_WIDTH = 350;
         private const int ABUTTON_HEIGHT = 70;
         private const int ABUTTON_MARGIN_RIGHT = 20;
@@ -32,6 +34,7 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected GeonDefaultRenderer _geonRenderer;
 
+        //Fields
         private int _activePlayer = -1;
         private BVPlayer[] _players;
         private BVBoard _board;
@@ -53,6 +56,7 @@ namespace Betreten_Verboten.Scenes.Main
         private Button _uiPlayerAfK;
 
         public string TelegramSender => "base";
+        public BVBoard Board => _board;
 
         public override void Initialize()
         {
@@ -364,14 +368,17 @@ namespace Betreten_Verboten.Scenes.Main
             }
 
             _uiPlayerAnger.Enabled = pl.AngerCount > 0;
-            _uiPlayerSacrifice.Enabled = pl.Sacrificable;
             _uiPlayerName.Text = pl.CharacterConfig.Name;
             _uiPlayerName.Tween("FillColor", _uiPlayerControls.FillColor, 0.5f).Start();
+            _uiPlayerSacrifice.Enabled = pl.Sacrificable;
             _uiPlayerTutorial.Text = "Choose an action!";
-            pl.Sacrificable = true;
-            pl.CharacterSwitched();
             _thriceRoll = pl.CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
             GameState = GameState.ActionSelect;
+
+            pl.Sacrificable = true;
+            pl.CharacterSwitched();
+
+            this.SendPublicTele("player_change", null);
             ReorderPlayerHUD();
         }
     }

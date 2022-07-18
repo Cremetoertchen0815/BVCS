@@ -25,7 +25,7 @@ namespace Betreten_Verboten.Components.Base
         private Vector2[] _suicideOffsets;
 
         //Fields
-        private List<int> _saucerFields;
+        public List<int> SaucerFields;
         private BVPlayer[] _players;
 
         //Assets & renderers
@@ -61,7 +61,7 @@ namespace Betreten_Verboten.Components.Base
             _kinematicBody.Restitution = 0f;
 
             //Load assets & prepare fields
-            _saucerFields = new List<int>();
+            SaucerFields = new List<int>();
             _texArrow = Entity.Scene.Content.LoadTexture("texture/arrow_right");
 
             //Add dice limiting box
@@ -96,6 +96,7 @@ namespace Betreten_Verboten.Components.Base
         public abstract float FigureJumpHeight { get; }
         public abstract int PlayerCount { get; }
         public abstract float CharScale { get; }
+        public abstract int SaucerSpawnRate { get; }
         public abstract Vector2 GetFieldPosition(int player, int fieldNr, FieldType fieldType, bool centerOffset = true);
 
 
@@ -143,7 +144,7 @@ namespace Betreten_Verboten.Components.Base
             }
 
             //Draw saucer fields
-            foreach (int item in _saucerFields) batcher.DrawCircle(_fieldsRegular[item], FieldPlayerDiameter, Color.MintCream, 5, CIRCLE_RES);
+            foreach (int item in SaucerFields) batcher.DrawCircle(_fieldsRegular[item], FieldPlayerDiameter, Color.SandyBrown, 7, CIRCLE_RES * 2);
 
         }
 
@@ -227,13 +228,6 @@ namespace Betreten_Verboten.Components.Base
                 case "player_registered":
                     int source = int.Parse(message.Sender.Substring(7));
                     _players[source] = (BVPlayer)message.Body;
-                    break;
-                case "saucer_field_added":
-                    _saucerFields.Add((int)message.Body);
-                    break;
-                case "saucer_field_removed":
-                    source = (int)message.Body;
-                    if (_saucerFields.Contains(source)) _saucerFields.Remove(source);
                     break;
                 default:
                     break;
