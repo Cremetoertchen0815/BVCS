@@ -20,7 +20,7 @@ using System.Linq;
 namespace Betreten_Verboten.Scenes.Main
 {
     [ManagedScene(100, false)]
-    public class BaseGame : GeonScene, ITelegramReceiver
+    public class BVGame : GeonScene, ITelegramReceiver
     {
         private const int ABUTTON_WIDTH = 350;
         private const int ABUTTON_HEIGHT = 70;
@@ -65,7 +65,7 @@ namespace Betreten_Verboten.Scenes.Main
             AddPostProcessor(new QualityBloomPostProcessor(0) { BloomPreset = QualityBloomPostProcessor.BloomPresets.SuperWide, BloomStrengthMultiplier = 0.6f, BloomThreshold = 0.5f });
 
             GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
-            GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 21, Vector3.Down, Vector3.Forward);
+            GeonDefaultRenderer.ActiveLightsManager.ShadowViewMatrix = Matrix.CreateLookAt(Vector3.Up * 50, Vector3.Down, Vector3.Forward);
 
             //Config camera5
             Camera.Node.Position = new Vector3(0, 23, 38);
@@ -152,6 +152,9 @@ namespace Betreten_Verboten.Scenes.Main
             _board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
             _players = new BVPlayer[_board.PlayerCount];
             for (int i = 0; i < _board.PlayerCount; i++) _players[i] = CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
+
+            //UFO
+            CreateGeonEntity("UFO", new Vector3(0, 5, 0), NodeType.BoundingBoxCulling).AddComponent(new UFO());
         }
 
         protected void InitUI()

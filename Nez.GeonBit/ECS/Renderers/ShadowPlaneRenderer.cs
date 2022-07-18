@@ -11,13 +11,13 @@ namespace Nez.GeonBit
         private Texture2D _filler;
         private Lights.ILightsManager lightsManager => GeonDefaultRenderer.ActiveLightsManager;
         private SpriteBatch _batch;
-        public ShadowPlaneRenderer(int renderOrder) : base(renderOrder)
+        public ShadowPlaneRenderer(int renderOrder, Point texSize, float shadowScale) : base(renderOrder)
         {
-            RenderTexture = GeonDefaultRenderer.ActiveLightsManager.ShadowMap = new RenderTexture(1000, 1000, SurfaceFormat.Color, DepthFormat.Depth24Stencil8) { ResizeBehavior = Textures.RenderTexture.RenderTextureResizeBehavior.None };
+            RenderTexture = GeonDefaultRenderer.ActiveLightsManager.ShadowMap = new RenderTexture(texSize.X, texSize.Y, SurfaceFormat.Color, DepthFormat.Depth24Stencil8) { ResizeBehavior = Textures.RenderTexture.RenderTextureResizeBehavior.None };
             _batch = new SpriteBatch(Core.GraphicsDevice);
             _filler = new Texture2D(Core.GraphicsDevice, 1, 1);
             _filler.SetData(new Color[] { Color.White });
-            _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, 1, 1, 999);//Matrix.CreateOrthographic(1200, 1200, 1, 50);
+            _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, 1, 1, 999) * Matrix.CreateScale(shadowScale, shadowScale, 1f);
         }
 
         public override void OnAddedToScene(Scene scene) => lightsManager.ShadowsEnabed = true;

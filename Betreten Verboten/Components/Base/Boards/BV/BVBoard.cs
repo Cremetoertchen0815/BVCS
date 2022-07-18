@@ -42,7 +42,7 @@ namespace Betreten_Verboten.Components.Base
             Insist.IsNotNull(Entity as GeonEntity, "Board has to be added to GeonEntity!");
 
             //Add board texture renderer
-            _shadowProjection = Entity.Scene.AddRenderer(new ShadowPlaneRenderer(-2)).RenderTexture;
+            _shadowProjection = Entity.Scene.AddRenderer(new ShadowPlaneRenderer(-2, new Point(1000), 2.45f)).RenderTexture;
             Entity.Scene.AddRenderer(new RenderLayerRenderer(-1, RENDER_LAYER_BOARD) { RenderTexture = _boardTexture = new RenderTexture(TEX_RES, TEX_RES) { ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None }, RenderTargetClearColor = new Color(Color.White * CLEAR_COLOR, 1f) });
 
             //Configure 3D renderer

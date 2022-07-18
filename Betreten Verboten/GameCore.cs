@@ -21,7 +21,7 @@ namespace Betreten_Verboten
             GamepadIcons.Instance.LoadXboxIcons();
             Scene.SetDefaultDesignResolution(1920, 1080, Scene.SceneResolutionPolicy.BestFit);
 
-            Scene = new Scenes.Main.BaseGame();
+            Scene = new Scenes.Main.BVGame();
 
         }
     }
