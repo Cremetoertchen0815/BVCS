@@ -6,6 +6,7 @@
         ActionSelect,
         PieceSelect,
         DiceRoll,
-        OtherAction
+        OtherAction,
+        SaucerActive
     }
 }

@@ -214,11 +214,12 @@ namespace Betreten_Verboten.Components.Base
             };
         }
 
-        public Vector2 GetCharacterPosition(Characters.Character c)
+        public Vector2 GetCharacterPosition(Characters.Character c, int offset = 0)
         {
-            if (c.Position < 0) return (_fieldsHome[c.Nr + FigureCountPP * c.Owner.Nr] - _centerOffset) * 0.04f;
-            if (c.Position >= FieldCountTotal) return (_fieldsHouse[c.Position - FieldCountTotal + FigureCountPP * c.Owner.Nr] - _centerOffset) * 0.04f;
-            return (_fieldsRegular[(c.Position + FieldCountPP * c.Owner.Nr) % (FieldCountTotal)] - _centerOffset) * 0.04f;
+            int pos = c.Position + offset;
+            if (pos < 0) return (_fieldsHome[c.Nr + FigureCountPP * c.Owner.Nr] - _centerOffset) * 0.04f;
+            if (pos >= FieldCountTotal) return (_fieldsHouse[pos - FieldCountTotal + FigureCountPP * c.Owner.Nr] - _centerOffset) * 0.04f;
+            return (_fieldsRegular[(pos + FieldCountPP * c.Owner.Nr) % (FieldCountTotal)] - _centerOffset) * 0.04f;
         }
 
         public void MessageReceived(Telegram message)
