@@ -11,7 +11,7 @@ using Nez.Tweens;
 
 namespace Betreten_Verboten.Components.BV
 {
-    public class UFO : GeonComponent
+    public class Saucer : GeonComponent
     {
 
         private const float SPEEN_SPEED = 3f;

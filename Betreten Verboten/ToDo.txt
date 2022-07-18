@@ -1,6 +1,6 @@
-﻿-Implement UFO
+﻿-Implement saucer
 -Implement scoring & winning
--Implement UFO
+-Implement saucer
 -Implement suicide
 -Implement CPU players
 -Start working on networking infrastructure

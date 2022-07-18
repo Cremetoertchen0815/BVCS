@@ -25,7 +25,7 @@ namespace Betreten_Verboten.Components.Base
         private Vector2[] _suicideOffsets;
 
         //Fields
-        private List<int> _ufoFields;
+        private List<int> _saucerFields;
         private BVPlayer[] _players;
 
         //Assets & renderers
@@ -61,7 +61,7 @@ namespace Betreten_Verboten.Components.Base
             _kinematicBody.Restitution = 0f;
 
             //Load assets & prepare fields
-            _ufoFields = new List<int>();
+            _saucerFields = new List<int>();
             _texArrow = Entity.Scene.Content.LoadTexture("texture/arrow_right");
 
             //Add dice limiting box
@@ -142,8 +142,8 @@ namespace Betreten_Verboten.Components.Base
 
             }
 
-            //Draw UFO fields
-            foreach (int item in _ufoFields) batcher.DrawCircle(_fieldsRegular[item], FieldPlayerDiameter, Color.MintCream, 5, CIRCLE_RES);
+            //Draw saucer fields
+            foreach (int item in _saucerFields) batcher.DrawCircle(_fieldsRegular[item], FieldPlayerDiameter, Color.MintCream, 5, CIRCLE_RES);
 
         }
 
@@ -228,12 +228,12 @@ namespace Betreten_Verboten.Components.Base
                     int source = int.Parse(message.Sender.Substring(7));
                     _players[source] = (BVPlayer)message.Body;
                     break;
-                case "ufo_field_added":
-                    _ufoFields.Add((int)message.Body);
+                case "saucer_field_added":
+                    _saucerFields.Add((int)message.Body);
                     break;
-                case "ufo_field_removed":
+                case "saucer_field_removed":
                     source = (int)message.Body;
-                    if (_ufoFields.Contains(source)) _ufoFields.Remove(source);
+                    if (_saucerFields.Contains(source)) _saucerFields.Remove(source);
                     break;
                 default:
                     break;

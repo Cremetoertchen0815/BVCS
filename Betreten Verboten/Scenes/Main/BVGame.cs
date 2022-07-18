@@ -153,8 +153,8 @@ namespace Betreten_Verboten.Scenes.Main
             _players = new BVPlayer[_board.PlayerCount];
             for (int i = 0; i < _board.PlayerCount; i++) _players[i] = CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
 
-            //UFO
-            CreateGeonEntity("UFO", new Vector3(0, 5, 0), NodeType.BoundingBoxCulling).AddComponent(new UFO());
+            //saucer
+            CreateGeonEntity("saucer", new Vector3(0, 5, 0), NodeType.BoundingBoxCulling).AddComponent(new Saucer());
         }
 
         protected void InitUI()
