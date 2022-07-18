@@ -1,4 +1,5 @@
-﻿-Implement scoring & winning
+﻿-Implement UFO
+-Implement scoring & winning
 -Implement UFO
 -Implement suicide
 -Implement CPU players
