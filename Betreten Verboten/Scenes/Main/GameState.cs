@@ -3,6 +3,7 @@
     public enum GameState
     {
         Intro,
+        Outro,
         ActionSelect,
         PieceSelect,
         DiceRoll,

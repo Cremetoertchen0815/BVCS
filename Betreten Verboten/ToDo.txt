@@ -1,3 +1,4 @@
-﻿-Implement scoring & winning
+﻿-Implement ranking & result screen
+-Add multiple outro animations(enemy chars flying upwards, tipping over, shrinking, etc.)
 -Implement CPU players
 -Start working on networking infrastructure

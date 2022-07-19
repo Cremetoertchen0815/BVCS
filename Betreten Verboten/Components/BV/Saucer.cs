@@ -154,12 +154,12 @@ namespace Betreten_Verboten.Components.BV
         }
 
         private float _rotator = 0f;
-        private float Rotator
+        public float Rotator
         {
             get => _rotator;
             set
             {
-                if (_ownerScene.GameState != GameState.SaucerActive) return;
+                if (_ownerScene.GameState != GameState.SaucerActive && _ownerScene.GameState != GameState.Outro) return;
                 _rotator = value;
                 _ownerScene.Camera.OverridePosition = new Vector3(33f * Mathf.Cos(_rotator), 15f, 33f * Mathf.Sin(_rotator));
             }

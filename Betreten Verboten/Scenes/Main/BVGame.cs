@@ -38,6 +38,7 @@ namespace Betreten_Verboten.Scenes.Main
         private int _activePlayer = -1;
         private BVPlayer[] _players;
         private BVBoard _board;
+        private Saucer _saucer;
         private List<int> _diceNumbers = new List<int>();
         private GameState _gameState = GameState.OtherAction;
         private ThriceRollState _thriceRoll = ThriceRollState.UNABLE;
@@ -138,7 +139,7 @@ namespace Betreten_Verboten.Scenes.Main
                     break;
                 case "char_move_done":
                 case "advance_player":
-                    AdvancePlayer();
+                    if (IsGameOver()) FinishGame(); else AdvancePlayer();
                     break;
                 case "resort_score":
                     ReorderPlayerHUD();
@@ -158,7 +159,7 @@ namespace Betreten_Verboten.Scenes.Main
             for (int i = 0; i < _board.PlayerCount; i++) _players[i] = CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
 
             //saucer
-            var saucer = CreateGeonEntity("saucer", NodeType.BoundingBoxCulling).AddComponent(new Saucer());
+            _saucer = CreateGeonEntity("saucer", NodeType.BoundingBoxCulling).AddComponent(new Saucer());
         }
 
         protected void InitUI()
@@ -328,6 +329,11 @@ namespace Betreten_Verboten.Scenes.Main
                         _diceNumbers.Clear(); //Clear dice queue
                         RollDice();
                         break;
+                    case GameState.Outro:
+                        _saucer.Tween("Rotator", 12f, 8f).SetEaseType(EaseType.CubicInOut).Start();
+                        Camera.LookAt = new Vector3(0, 0, 0);
+                        _uiPlayerTutorial.Text = "Game is over!";
+                        break;
                     case GameState.ActionSelect:
                         //Set camera position
                         Camera.OverridePosition = Camera.LookAt = null;
@@ -348,6 +354,23 @@ namespace Betreten_Verboten.Scenes.Main
         {
             for (int i = 0; i < (_thriceRoll == ThriceRollState.ABLE_TO ? 3 : 1); i++) Dice.Throw(this);
             _uiPlayerReroll.Visible = false;
+        }
+
+        public bool IsGameOver()
+        {
+            for (int i = 0; i < Board.PlayerCount; i++)
+            {
+                var figs = _players[i].GetFigures();
+                var hasWon = true;
+                for (int j = 0; j < Board.FigureCountPP; j++) if (figs[j].Position < Board.FieldCountTotal) hasWon = false;
+                if (hasWon) return true;
+            }
+            return false;
+        }
+
+        public void FinishGame()
+        {
+            GameState = GameState.Outro;
         }
 
         public void AdvancePlayer()
