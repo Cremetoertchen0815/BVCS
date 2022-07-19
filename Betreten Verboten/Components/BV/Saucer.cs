@@ -12,13 +12,15 @@ using Betreten_Verboten.Components.Base.Characters;
 
 namespace Betreten_Verboten.Components.BV
 {
-    public class Saucer : GeonComponent, ITelegramReceiver
+    public class Saucer : GeonComponent, ITelegramReceiver, IUpdatable
     {
 
         private const float SPEEN_SPEED = 3f;
 
-        private BVGame _ownerScene;
         private int _moveCounter;
+        private Vector3 _positionDelta;
+        private GeonEntity _targetEntity;
+        private BVGame _ownerScene;
         private ModelRenderer _renderer;
         private ITween<float> _camSpeener;
 
@@ -36,8 +38,11 @@ namespace Betreten_Verboten.Components.BV
                     }
 
                     break;
-                case "char_move_done":
-                    if (message.Body is Character chr && chr.GlobalPosition.Valid && _ownerScene.Board.SaucerFields.Contains(chr.GlobalPosition.Position)) TriggerAnimation(chr);
+                case "check_saucer":
+                    if (message.Body is Character chr && chr.GlobalPosition.Valid && _ownerScene.Board.SaucerFields.Contains(chr.GlobalPosition.Position)) 
+                        TriggerAnimation(chr);
+                    else
+                        this.SendPrivateTele("base", "char_move_done", false);
                     break;
             }
         }
@@ -96,10 +101,12 @@ namespace Betreten_Verboten.Components.BV
             int boost = Nez.Random.Range(-6, 7);
             while (tryCnt++ < 15 && !IsChrPosValid(c.Position + boost)) boost = Nez.Random.Range(-6, 7);
             var pos = _ownerScene.Board.GetCharacterPosition(c, boost);
+            _positionDelta = (_targetEntity = (GeonEntity)c.Entity).Node.Position - Node.Position;
 
             this.Tween("PosY", 10f, 1.5f).SetDelay(0.5f).SetFrom(3f).SetEaseType(EaseType.SineInOut).SetLoops(LoopType.PingPong).Start();
             this.Tween("PosXZ", pos, 3f).SetDelay(0.5f).SetEaseType(EaseType.CubicInOut).SetCompletionHandler(z =>
             {
+                _targetEntity = null;
                 c.Position += boost;
                 if (_ownerScene.Board.SaucerFields.Contains(c.GlobalPosition.Position))
                 {
@@ -117,13 +124,18 @@ namespace Betreten_Verboten.Components.BV
                         _ownerScene.Camera.OverridePosition = null;
                         _ownerScene.Camera.LookAtTarget = null;
                         _ownerScene.Camera.LookAt = null;
-                        this.SendPrivateTele("base", "char_move_done", null);
+                        this.SendPrivateTele("base", "char_move_done", true);
                     }).Start();
                 }
             }).Start();
         }
 
         private bool IsChrPosValid(int pos) => pos > -1;
+        public void Update()
+        {
+            if (_targetEntity == null) return;
+            _targetEntity.Node.Position = Node.Position - _positionDelta;
+        }
 
         private float PosY
         {

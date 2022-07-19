@@ -1,5 +1,4 @@
-﻿-Implement saucer
--Implement scoring & winning
+﻿-Implement scoring & winning
 -Implement saucer
 -Implement suicide
 -Implement CPU players

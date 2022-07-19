@@ -159,7 +159,6 @@ namespace Betreten_Verboten.Scenes.Main
 
             //saucer
             var saucer = CreateGeonEntity("saucer", NodeType.BoundingBoxCulling).AddComponent(new Saucer());
-            Core.Schedule(3f, x => saucer.TriggerAnimation(_players[0].GetFigures()[0]));
         }
 
         protected void InitUI()
