@@ -91,5 +91,7 @@ namespace Betreten_Verboten.Components.BV.Player
         /// </summary>
         public IEnumerable<Character> GetHouseFigures() => _figures.Where(x => x.Position >= Board.FieldCountTotal && x.Position < Board.DistanceLimit);
 
+        public bool IsAlly(BVPlayer p) => p.Team < 0 && this == p || p.Team > -1 && Team == p.Team;
+
     }
 }

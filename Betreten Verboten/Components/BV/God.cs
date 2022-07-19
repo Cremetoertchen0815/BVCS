@@ -132,7 +132,7 @@ namespace Betreten_Verboten.Components.BV
 
         //Helper methods
         private static IEnumerable<Character> GetAllFigures(BVBoard b) => b.GetAllPlayers().SelectMany( x => x.GetFigures());
-        private static Character GetRandomEnemyFigure(Character c) => GetAllFigures(c.Owner.Board).Where(x => x.Owner is BVPlayer b && !(b.Team < 0 && b == c.Owner || b.Team > -1 && b.Team == ((BVPlayer)c.Owner).Team)).Random();
-        private static Character GetRandomAllyFigure(Character c) => GetAllFigures(c.Owner.Board).Where(x => x.Owner is BVPlayer b && (b.Team < 0 && b == c.Owner || b.Team > -1 && b.Team == ((BVPlayer)c.Owner).Team)).Random();
+        private static Character GetRandomEnemyFigure(Character c) => GetAllFigures(c.Owner.Board).Where(x => x.Owner is BVPlayer b && !b.IsAlly((BVPlayer)c.Owner)).Random();
+        private static Character GetRandomAllyFigure(Character c) => GetAllFigures(c.Owner.Board).Where(x => x.Owner is BVPlayer b && b.IsAlly((BVPlayer)c.Owner)).Random();
     }
 }
