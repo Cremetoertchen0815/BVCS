@@ -61,7 +61,7 @@ namespace Betreten_Verboten.Components.Base
             _kinematicBody.Restitution = 0f;
 
             //Load assets & prepare fields
-            SaucerFields = new List<int>();
+            SaucerFields = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
             _texArrow = Entity.Scene.Content.LoadTexture("texture/arrow_right");
 
             //Add dice limiting box

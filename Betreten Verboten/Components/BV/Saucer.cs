@@ -20,6 +20,7 @@ namespace Betreten_Verboten.Components.BV
         private BVGame _ownerScene;
         private int _moveCounter;
         private ModelRenderer _renderer;
+        private ITween<float> _camSpeener;
 
         public string TelegramSender => "saucer";
 
@@ -76,28 +77,41 @@ namespace Betreten_Verboten.Components.BV
             if (_ownerScene.GameState == GameState.SaucerActive) return;
             _ownerScene.GameState = GameState.SaucerActive;
             _renderer.Enabled = true;
+            _ownerScene.Board.SaucerFields.Remove(c.GlobalPosition.Position);
 
             //Speen camera
             _ownerScene.Camera.LookAtTarget = Entity;
             var srcSpeen = Nez.Random.NextAngle();
-            var camSpeener = this.Tween("Rotator", MathHelper.TwoPi + srcSpeen, 20f).SetFrom(srcSpeen).SetEaseType(EaseType.Linear).SetLoops(LoopType.RestartFromBeginning, -1);
-            camSpeener.Start();
+            _camSpeener = this.Tween("Rotator", MathHelper.TwoPi + srcSpeen, 20f).SetFrom(srcSpeen).SetEaseType(EaseType.Linear).SetLoops(LoopType.RestartFromBeginning, -1);
+            _camSpeener.Start();
 
             //Play saucer animation
             var pos = _ownerScene.Board.GetCharacterPosition(c);
-            Node.Tween("Position", new Vector3(pos.X, 3, pos.Y), 1.5f).SetFrom(new Vector3(0, 20, 0)).SetEaseType(EaseType.QuadOut).SetCompletionHandler(x =>
-            {
-                int tryCnt = 0;
-                int boost = Nez.Random.Range(-6, 7);
-                while (tryCnt++ < 15 && !IsChrPosValid(c.Position + boost))  boost = Nez.Random.Range(-6, 7);
-                pos = _ownerScene.Board.GetCharacterPosition(c, boost);
+            Node.Tween("Position", new Vector3(pos.X, 3, pos.Y), 1f).SetFrom(new Vector3(0, 20, 0)).SetEaseType(EaseType.QuadOut).SetCompletionHandler(x => Lift(c)).Start();
+        }
 
-                this.Tween("PosY", 10f, 2f).SetDelay(1f).SetFrom(3f).SetEaseType(EaseType.CubicInOut).SetLoops(LoopType.PingPong).Start();
-                this.Tween("PosXZ", pos, 4f).SetDelay(1f).SetEaseType(EaseType.CubicInOut).SetCompletionHandler(z =>
+        private void Lift(Character c)
+        {
+            int tryCnt = 0;
+            int boost = Nez.Random.Range(-6, 7);
+            while (tryCnt++ < 15 && !IsChrPosValid(c.Position + boost)) boost = Nez.Random.Range(-6, 7);
+            var pos = _ownerScene.Board.GetCharacterPosition(c, boost);
+
+            this.Tween("PosY", 10f, 1.5f).SetDelay(0.5f).SetFrom(3f).SetEaseType(EaseType.SineInOut).SetLoops(LoopType.PingPong).Start();
+            this.Tween("PosXZ", pos, 3f).SetDelay(0.5f).SetEaseType(EaseType.CubicInOut).SetCompletionHandler(z =>
+            {
+                c.Position += boost;
+                if (_ownerScene.Board.SaucerFields.Contains(c.GlobalPosition.Position))
                 {
-                    Node.Tween("Position", new Vector3(0, 40, 0), 1.5f).SetEaseType(EaseType.QuadIn).SetDelay(1f).SetCompletionHandler(_ =>
+                    //Repeat saucer fly
+                    _ownerScene.Board.SaucerFields.Remove(c.GlobalPosition.Position);
+                    Lift(c);
+                } else
+                {
+                    //Back out saucer
+                    Node.Tween("Position", new Vector3(0, 40, 0), 1f).SetEaseType(EaseType.CubicInOut).SetDelay(0.5f).SetCompletionHandler(_ =>
                     {
-                        camSpeener.Stop();
+                        _camSpeener.Stop();
                         _ownerScene.GameState = GameState.OtherAction;
                         _renderer.Enabled = false;
                         _ownerScene.Camera.OverridePosition = null;
@@ -105,7 +119,7 @@ namespace Betreten_Verboten.Components.BV
                         _ownerScene.Camera.LookAt = null;
                         this.SendPrivateTele("base", "char_move_done", null);
                     }).Start();
-                }).Start();
+                }
             }).Start();
         }
 
