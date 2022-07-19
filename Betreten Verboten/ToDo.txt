@@ -1,5 +1,3 @@
 ﻿-Implement scoring & winning
--Implement saucer
--Implement suicide
 -Implement CPU players
 -Start working on networking infrastructure

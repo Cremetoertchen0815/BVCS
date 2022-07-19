@@ -214,6 +214,8 @@ namespace Betreten_Verboten.Components.Base
             };
         }
 
+        public BVPlayer[] GetAllPlayers() => _players;
+
         public Vector2 GetCharacterPosition(Characters.Character c, int offset = 0)
         {
             int pos = c.Position + offset;
@@ -227,7 +229,7 @@ namespace Betreten_Verboten.Components.Base
             switch (message.Head)
             {
                 case "player_registered":
-                    int source = int.Parse(message.Sender.Substring(7));
+                    int source = ((Player)message.Body).Nr;
                     _players[source] = (BVPlayer)message.Body;
                     break;
                 default:

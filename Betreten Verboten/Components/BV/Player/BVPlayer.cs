@@ -44,6 +44,8 @@ namespace Betreten_Verboten.Components.BV.Player
         /// </summary>
         public bool SkipRound { get; set; } = false;
 
+        public int Team { get; set; } = -1;
+
         /// <summary>
         /// Stores the position(-1 if not yet set) of a field, which kills the player and their team mates upon entering.
         /// </summary>
