@@ -6,6 +6,7 @@ using Betreten_Verboten.Components.BV.Backgrounds;
 using Betreten_Verboten.Components.BV.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.ECS;
@@ -35,6 +36,7 @@ namespace Betreten_Verboten.Scenes.Main
         protected GeonDefaultRenderer _geonRenderer;
 
         //Fields
+        private bool _gameFocussed = true;
         private int _activePlayer = -1;
         private BVPlayer[] _players;
         private BVBoard _board;
@@ -46,7 +48,6 @@ namespace Betreten_Verboten.Scenes.Main
         //UI
         private int[] _playerIndices;
         private bool _isScoreVisible = false;
-        private VirtualButton _scoreBtn;
         private Panel[] _uiPlayerHUDs;
         private Label _uiPlayerName;
         private Label _uiPlayerTutorial;
@@ -55,6 +56,13 @@ namespace Betreten_Verboten.Scenes.Main
         private Button _uiPlayerAnger;
         private Button _uiPlayerSacrifice;
         private Button _uiPlayerAfK;
+
+        //Virtual Controls
+        private VirtualButton _btnConfirmNRoll;
+        private VirtualButton _btnAnger;
+        private VirtualButton _btnSacrifice;
+        private VirtualButton _btnAfK;
+        private VirtualButton _btnScore;
 
         public string TelegramSender => "base";
         public BVBoard Board => _board;
@@ -80,8 +88,14 @@ namespace Betreten_Verboten.Scenes.Main
             AddSceneComponent(new PhysicsWorld()).SetGravity(new Vector3(0, -150, 0));
             InitEnvironment();
 
+            //Init virtual controls
+            _btnScore = new VirtualButton(new VirtualButton.KeyboardKey(Keys.Tab), new VirtualButton.GamePadButton(0, Buttons.LeftShoulder));
+            _btnConfirmNRoll = new VirtualButton(new VirtualButton.KeyboardKey(Keys.Space), new VirtualButton.GamePadButton(0, Buttons.A));
+            _btnSacrifice = new VirtualButton(new VirtualButton.KeyboardKey(Keys.Q), new VirtualButton.GamePadButton(0, Buttons.B));
+            _btnAnger = new VirtualButton(new VirtualButton.KeyboardKey(Keys.E), new VirtualButton.GamePadButton(0, Buttons.X));
+            _btnAfK = new VirtualButton(new VirtualButton.KeyboardKey(Keys.F), new VirtualButton.GamePadButton(0, Buttons.Y));
+
             //Init UI
-            _scoreBtn = new VirtualButton(new VirtualButton.KeyboardKey(Microsoft.Xna.Framework.Input.Keys.Tab));
             FinalRenderDelegate = Core.GetGlobalManager<FinalUIRender>();
             UserInterface.Active.Clear();
             InitUI();
@@ -94,7 +108,7 @@ namespace Betreten_Verboten.Scenes.Main
             //Init
             Core.Schedule(0.3f, x => AdvancePlayer());
 #if DEBUG
-            Camera.Entity.AddComponent(new Components.Debug.DebugCamMover());
+            //Camera.Entity.AddComponent(new Components.Debug.DebugCamMover());
             Core.DebugRenderEnabled = true;
 #endif
 
@@ -193,15 +207,30 @@ namespace Betreten_Verboten.Scenes.Main
                 scores[i].Visible = false;
 
             }
+
             UserInterface.Active.AddEntity(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.LT), new Vector2(50, 51), ImageDrawMode.Stretch, Anchor.Auto, new Vector2(80, 0)));
             _uiPlayerName = UserInterface.Active.AddEntity(new Label(string.Empty, Anchor.TopCenter, null, new Vector2(0, 30)) { FontOverride = Content.Load<SpriteFont>("fonts/player_label"), Text = "" });
             _uiPlayerTutorial = UserInterface.Active.AddEntity(new Label(string.Empty, Anchor.BottomLeft, null, new Vector2(80, 30)) { FontOverride = Content.Load<SpriteFont>("fonts/tutorial_label") });
             _uiPlayerTutorial.Tween("FillColor", Color.Lerp(Color.BlanchedAlmond, Color.Black, 0.7f), 0.7f).SetLoops(LoopType.PingPong, -1).SetEaseType(EaseType.QuadInOut).Start();
 
             //Implement score toggle
-            _scoreBtn.ButtonReleased += () =>
+            _btnConfirmNRoll.ButtonPressed += () => 
             {
-                if (_isScoreVisible)
+                if (!_gameFocussed) return;
+
+                switch (GameState)
+                {
+                    case GameState.ActionSelect:
+                        GameState = GameState.DiceRoll;
+                        break;
+                    case GameState.DiceRoll:
+                        if (_uiPlayerReroll.Visible && _uiPlayerReroll.Enabled) RollDice();
+                        break;
+                }
+            };
+            _btnScore.ButtonReleased += () =>
+            {
+                if (_isScoreVisible && _gameFocussed)
                 {
                     for (int i = 0; i < _board.PlayerCount; i++)
                     {
@@ -211,7 +240,7 @@ namespace Betreten_Verboten.Scenes.Main
                     }
                 }
             };
-            _scoreBtn.ButtonPressed += () =>
+            _btnScore.ButtonPressed += () =>
             {
                 if (!_isScoreVisible)
                 {
@@ -223,6 +252,8 @@ namespace Betreten_Verboten.Scenes.Main
                     }
                 }
             };
+            _btnAnger.ButtonPressed += () => OpenAnger();
+            _btnSacrifice.ButtonPressed += () => OpenSacrifice();
         }
 
         public void ReorderPlayerHUD()
@@ -240,15 +271,19 @@ namespace Betreten_Verboten.Scenes.Main
             }
         }
 
-        public void OpenAnger() =>
+        public void OpenAnger()
+        {
+            if (!_gameFocussed || !_uiPlayerAnger.Enabled || GameState != GameState.ActionSelect) return;
+            _gameFocussed = false;
+
             //Display message cascade
             MessageBox.ShowMsgBox("[TRIGGERED]", "You get angry, because you suck at this game.", new MessageBox.MsgBoxOption("OK, I get it", () =>
             {
-                MessageBox.ShowMsgBox("Anger Button", "You are granted a single Joker. Do you want to utilize it now?", new MessageBox.MsgBoxOption("Nah, I'm good", () => true), new MessageBox.MsgBoxOption("Yes, please!", () =>
+                MessageBox.ShowMsgBox("Anger Button", "You are granted a single Joker. Do you want to utilize it now?", new MessageBox.MsgBoxOption("Nah, I'm good", () => ExitMsgCascade()), new MessageBox.MsgBoxOption("Yes, please!", () =>
                 {
                     MessageBox.ShowInputBox("Anger Button", "How far do you want to move? (12 fields are the maximum and 1 field the minimum)", new MessageBox.InputBoxOption("Stop", x =>
                     {
-                        MessageBox.ShowMsgBox("Looser", "Alright, then don't.", new MessageBox.MsgBoxOption("Bitch!", () => true));
+                        MessageBox.ShowMsgBox("Looser", "Alright, then don't.", new MessageBox.MsgBoxOption("Bitch!", () => ExitMsgCascade()));
                         return true;
                     }), new MessageBox.InputBoxOption("Let's go", x =>
                     {
@@ -263,20 +298,25 @@ namespace Betreten_Verboten.Scenes.Main
                         if (cnt > 6) lst.Add(cnt - 6);
                         _players[_activePlayer].DecideAfterDiceroll(lst);
                         _players[_activePlayer].AngerCount--;
-                        return true;
+                        GameState = GameState.OtherAction;
+                        return ExitMsgCascade();
                     }));
                     return true;
                 }));
                 return true;
             }));
+        }
 
-        public void OpenSacrifice() =>
+        public void OpenSacrifice()
+        {
+            if (!_gameFocussed || !_uiPlayerSacrifice.Enabled || GameState != GameState.ActionSelect) return;
+
             //Display message cascade
             MessageBox.ShowMsgBox("Send that bastard to hell", "You can sacrifice one of your players to the holy BV gods. The further your player is, the higher is the chance to recieve a positive effect.", new MessageBox.MsgBoxOption("OK, I get it", () =>
             {
                 MessageBox.ShowMsgBox("Anger Button", "You really want to sacrifice one of your precious players?", new MessageBox.MsgBoxOption("Nah, I'm good", () =>
                 {
-                    MessageBox.ShowMsgBox("Looser", "Alright, then don't.", new MessageBox.MsgBoxOption("Bitch!", () => true));
+                    MessageBox.ShowMsgBox("Looser", "Alright, then don't.", new MessageBox.MsgBoxOption("Bitch!", () => ExitMsgCascade()));
                     return true;
                 }), new MessageBox.MsgBoxOption("Yes, please!", () =>
                 {
@@ -296,10 +336,18 @@ namespace Betreten_Verboten.Scenes.Main
                         foreach (var item in pl.GetFigures()) item.CanBeSelected = possibleChars.Contains(item);
                         pl.AddComponent(new CharPicker(x => God.Sacrifice(x))); //Open the character picker to choose the traveling distance
                     }
-                    return true;
+                    GameState = GameState.OtherAction;
+                    return ExitMsgCascade();
                 }));
                 return true;
             }));
+        }
+
+        private bool ExitMsgCascade()
+        {
+            _gameFocussed = true;
+            return true;
+        }
 
         public GameState GameState
         {
@@ -415,10 +463,10 @@ namespace Betreten_Verboten.Scenes.Main
                 return;
             }
 
-            _uiPlayerAnger.Enabled = pl.AngerCount > 0;
             _uiPlayerName.Text = pl.CharacterConfig.Name;
             _uiPlayerName.Tween("FillColor", _uiPlayerControls.FillColor, 0.5f).Start();
             _uiPlayerSacrifice.Enabled = pl.Sacrificable;
+            _uiPlayerAnger.Enabled = pl.AngerCount > 0;
             _uiPlayerTutorial.Text = "Choose an action!";
             _thriceRoll = pl.CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
             GameState = GameState.ActionSelect;
