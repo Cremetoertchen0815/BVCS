@@ -20,6 +20,12 @@ namespace Betreten_Verboten.Components.Base
         protected Character[] _figures;
         public BVBoard Board { get; private set; }
 
+
+        /// <summary>
+        /// Keeps track of any points that additionally get added to the final score, like for example Kick bonus or sacrifice bonus.
+        /// </summary>
+        public int AdditionalPoints { get; set; } = 0;
+
         //ctor
         public Player(int Nr) => this.Nr = Nr;
 

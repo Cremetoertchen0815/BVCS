@@ -90,7 +90,12 @@ namespace Betreten_Verboten.Components.Base.Characters
                     if (source.kicker == this || source.kicker.GlobalPosition != GlobalPosition) break;
                     //Check for kicking condition. That being that either landing the character on its final landing field or the character standing on its homebase.
                     //Of course we ignore our own characters.
-                    System.Action<ITween<float>> ac = x => { if (source.finalField || oldPos == 0) SetPosition(-1); };
+                    System.Action<ITween<float>> ac = x => 
+                    {
+                        if (!source.finalField && oldPos != 0) return;
+                        SetPosition(-1);
+                        source.kicker.Owner.AdditionalPoints += source.finalField ? 25 : 50;
+                    };
                     //Play ducking animation
                     this.Tween("ScaleHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).Start();
                     this.Tween("PosHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetFrom(3f).SetEaseType(EaseType.Linear).SetLoopCompletionHandler(ac).SetLoops(LoopType.PingPong).Start();
@@ -154,7 +159,7 @@ namespace Betreten_Verboten.Components.Base.Characters
             if (_travelDistLeft < 1)
             {
                 Owner.DecideAfterCharacterLand();
-                RigidBody.CopyNodeWorldMatrix(); //Update rigid body
+                RigidBody?.CopyNodeWorldMatrix(); //Update rigid body
                 this.SendPrivateTele("saucer", "check_saucer", this); //Report landing
             }
             else

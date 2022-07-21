@@ -59,10 +59,7 @@ namespace Nez
         {
             // first get the property
             var propInfo = GetPropertyInfo(targetObject, propertyName);
-            if (propInfo == null)
-                return default(T);
-
-            return CreateDelegate<T>(targetObject, propInfo.SetMethod);
+            return propInfo == null ? default : CreateDelegate<T>(targetObject, propInfo.SetMethod);
         }
 
         /// <summary>
@@ -73,10 +70,7 @@ namespace Nez
         {
             // first get the property
             var propInfo = GetPropertyInfo(targetObject, propertyName);
-            if (propInfo == null)
-                return default(T);
-
-            return CreateDelegate<T>(targetObject, propInfo.GetMethod);
+            return propInfo == null ? default : CreateDelegate<T>(targetObject, propInfo.GetMethod);
         }
 
         #endregion

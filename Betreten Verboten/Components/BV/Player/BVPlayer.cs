@@ -27,12 +27,7 @@ namespace Betreten_Verboten.Components.BV.Player
         /// <summary>
         /// Stores the number of anger buttons the player owns.
         /// </summary>
-        public virtual int AngerCount { get; set; } = 5;
-
-        /// <summary>
-        /// Keeps track of any points that additionally get added to the final score, like for example Kick bonus or sacrifice bonus.
-        /// </summary>
-        public int AdditionalPoints { get; set; } = 0;
+        public virtual int AngerCount { get; set; } = 1;
 
         /// <summary>
         /// Returns if the player is allowed to sacrifice yet. Set to true if you want to tick the cooldown counter, false if you want to reset it.
