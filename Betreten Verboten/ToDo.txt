@@ -1,4 +1,7 @@
-﻿-Implement ranking & result screen
--Add multiple outro animations(enemy chars flying upwards, tipping over, shrinking, etc.)
+﻿-Implement keyboard & gamepad shortcuts(+char picker)
+-Add sounds
+-Implement pause menu
+-Implement title screen
 -Implement CPU players
 -Start working on networking infrastructure
+-Implement ranking & result screen
