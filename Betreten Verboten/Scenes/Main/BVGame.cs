@@ -372,7 +372,7 @@ namespace Betreten_Verboten.Scenes.Main
         public void FinishGame(int playerWon)
         {
             GameState = GameState.Outro;
-            int action = 1; //Random.Range(0, 3);
+            int action = Random.Range(0, 3);
             for (int i = 0; i < _players.Length; i++)
             {
                 if (playerWon == i) continue;
@@ -390,6 +390,8 @@ namespace Betreten_Verboten.Scenes.Main
                             fg[j].RigidBody.AngularVelocity = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * 15f;
                             break;
                         case 2:
+                            fg[j].Node.Tween("Scale", Vector3.Zero, 2f).SetEaseType(EaseType.CubicIn).Start();
+                            fg[j].Node.Tween("PositionY", 0f, 2f).SetEaseType(EaseType.CubicIn).Start();
                             break;
                     }
                 }

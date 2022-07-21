@@ -31,11 +31,10 @@ namespace Betreten_Verboten.Components.Base
 
             //Create figures
             _figures = new Character[Board.FigureCountPP];
-            int[] def_pos = { 43, 40, 41, 42 };
             for (int i = 0; i < _figures.Length; i++)
             {
                 var ent = geonScene.CreateGeonEntity("char" + Nr + "_" + i, new Vector3(0, Character.CHAR_HITBOX_HEIGHT - 1f, 0), NodeType.BoundingBoxCulling);
-                _figures[i] = ent.AddComponent(new Character(this, i, CharacterConfig)).SetPosition(def_pos[i]);
+                _figures[i] = ent.AddComponent(new Character(this, i, CharacterConfig)).SetPosition(-1);
             }
 
             //Register in telegram service
