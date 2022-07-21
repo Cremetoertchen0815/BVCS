@@ -5,7 +5,7 @@ using Nez.Tweens;
 
 namespace Betreten_Verboten.Components.Base.Characters
 {
-    public class Character : Component, ITelegramReceiver
+    public class Character : GeonComponent, ITelegramReceiver
     {
         //Properties
         public int Position { get => _position; set => SetPosition(value); }
@@ -25,7 +25,7 @@ namespace Betreten_Verboten.Components.Base.Characters
         private int _position;
         private int _travelDistLeft = 0;
         private CharConfig _config;
-        private GeonEntity _geonCache;
+        private bool _rbActive = false;
 
         public Character(Player owner, int nr, CharConfig config)
         {
@@ -36,29 +36,46 @@ namespace Betreten_Verboten.Components.Base.Characters
 
         public override void OnAddedToEntity()
         {
-            _geonCache = (GeonEntity)Entity;
 
             //Set color
             _config.SetStdColorScheme(Owner.Nr);
 
             //Config renderer
-            Renderer = _geonCache.AddComponentAsChild(new ModelRenderer("mesh/piece_std"));
+            Renderer = Entity.AddComponentAsChild(new ModelRenderer("mesh/piece_std"));
             Renderer.Node.Position = Vector3.Down * CHAR_HITBOX_HEIGHT * 0.5f;
             Renderer.Node.Scale = new Vector3(Owner.Board.CharScale);
             Renderer.Node.Rotation = new Vector3(-MathHelper.PiOver2, 0, 0);
             Renderer.SetMaterials(_config.GetMaterials());
 
             //Config rigid body
-            RigidBody = _geonCache.AddComponent(new RigidBody(new ConeInfo(CHAR_HITBOX_WIDTH, CHAR_HITBOX_HEIGHT), 10, 1, 1));
-            RigidBody.Position = _geonCache.Node.Position;
-            RigidBody.AngularDamping = RigidBody.LinearDamping = 0.80f;
-            RigidBody.Enabled = false;
-            RigidBody.EnableSimulation = false;
 
             this.TeleRegister("char");
         }
 
         public override void OnRemovedFromEntity() => this.TeleDeregister();
+
+        public bool RigidBodyEnabled
+        {
+            get => _rbActive;
+            set
+            {
+                if (_rbActive == value) return;
+                _rbActive = value;
+                if (_rbActive)
+                {
+                    RigidBody = Entity.AddComponent(new RigidBody(new ConeInfo(CHAR_HITBOX_WIDTH, CHAR_HITBOX_HEIGHT), 10f, 10f, 1));
+                    RigidBody.Position = Node.Position;
+                    RigidBody.Restitution = 0.4f;
+                    RigidBody.AngularDamping = RigidBody.LinearDamping = 0.65f;
+                    RigidBody.Enabled = true;
+                    RigidBody.EnableSimulation = true;
+                } else
+                {
+                    Entity.RemoveComponent(RigidBody);
+                    RigidBody = null;
+                }
+            }
+        }
 
         public void MessageReceived(Telegram message)
         {
@@ -110,9 +127,9 @@ namespace Betreten_Verboten.Components.Base.Characters
             if ((_travelDistLeft = distance) > 0) TakeStep(true);
         }
 
-        private Vector2 Pos2D { get => new Vector2(_geonCache.Node.Position.X, _geonCache.Node.Position.Z); set => _geonCache.Node.Position = new Vector3(value.X, _geonCache.Node.Position.Y, value.Y); }
-        private float PosHeight { get => _geonCache.Node.Position.Y; set => _geonCache.Node.Position = new Vector3(_geonCache.Node.Position.X, value, _geonCache.Node.Position.Z); }
-        private float ScaleHeight { get => _geonCache.Node.ScaleY; set => _geonCache.Node.Scale = new Vector3(value); }
+        private Vector2 Pos2D { get => new Vector2(Node.Position.X, Node.Position.Z); set => Node.Position = new Vector3(value.X, Node.Position.Y, value.Y); }
+        private float PosHeight { get => Node.Position.Y; set => Node.Position = new Vector3(Node.Position.X, value, Node.Position.Z); }
+        private float ScaleHeight { get => Node.ScaleY; set => Node.Scale = new Vector3(value); }
 
         private void TakeStep(bool firstStep = false)
         {

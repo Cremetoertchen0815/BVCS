@@ -139,7 +139,7 @@ namespace Betreten_Verboten.Scenes.Main
                     break;
                 case "char_move_done":
                 case "advance_player":
-                    if (IsGameOver()) FinishGame(); else AdvancePlayer();
+                    if (IsGameOver(out int who)) FinishGame(who); else AdvancePlayer();
                     break;
                 case "resort_score":
                     ReorderPlayerHUD();
@@ -149,7 +149,6 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected void InitEnvironment()
         {
-            var bg = new Nez.Textures.RenderTexture();
             AddRenderer(new PsygroundRenderer(0));
             //CreateGeonEntity("skybox").AddComponent(new SkyBox(bg) { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
 
@@ -330,7 +329,7 @@ namespace Betreten_Verboten.Scenes.Main
                         RollDice();
                         break;
                     case GameState.Outro:
-                        _saucer.Tween("Rotator", 12f, 8f).SetEaseType(EaseType.CubicInOut).Start();
+                        _saucer.Tween("Rotator", 6f, 5f).SetEaseType(EaseType.CubicInOut).Start();
                         Camera.LookAt = new Vector3(0, 0, 0);
                         _uiPlayerTutorial.Text = "Game is over!";
                         break;
@@ -356,21 +355,45 @@ namespace Betreten_Verboten.Scenes.Main
             _uiPlayerReroll.Visible = false;
         }
 
-        public bool IsGameOver()
+        public bool IsGameOver(out int who)
         {
             for (int i = 0; i < Board.PlayerCount; i++)
             {
                 var figs = _players[i].GetFigures();
                 var hasWon = true;
                 for (int j = 0; j < Board.FigureCountPP; j++) if (figs[j].Position < Board.FieldCountTotal) hasWon = false;
+                who = i;
                 if (hasWon) return true;
             }
+            who = -1;
             return false;
         }
 
-        public void FinishGame()
+        public void FinishGame(int playerWon)
         {
             GameState = GameState.Outro;
+            int action = 1; //Random.Range(0, 3);
+            for (int i = 0; i < _players.Length; i++)
+            {
+                if (playerWon == i) continue;
+                var fg = _players[i].GetFigures();
+                for (int j = 0; j < Board.FigureCountPP; j++)
+                {
+                    switch (action)
+                    {
+                        case 0:
+                            fg[j].Node.Tween("PositionY", 50f, 3f).SetEaseType(EaseType.CubicIn).Start();
+                            break;
+                        case 1:
+                            fg[j].RigidBodyEnabled = true;
+                            var angle = Random.NextAngle();
+                            fg[j].RigidBody.AngularVelocity = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * 15f;
+                            break;
+                        case 2:
+                            break;
+                    }
+                }
+            }
         }
 
         public void AdvancePlayer()
