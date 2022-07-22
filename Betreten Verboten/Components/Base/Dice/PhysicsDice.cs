@@ -5,12 +5,11 @@ using Nez.GeonBit.Materials;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Betreten_Verboten.Components.Base
+namespace Betreten_Verboten.Components.Base.Dice
 {
-    internal class Dice : GeonComponent, IUpdatable
+    internal class PhysicsDice : Dice
     {
         private const float MEASURE_SPEED = 0.5f;
-        public const int ENTITY_TAG = 15;
         public const float ANGLE_REST_LIMIT = 0.95f;
 
 
@@ -18,8 +17,6 @@ namespace Betreten_Verboten.Components.Base
         //Surface normals of dice faces, beginning with 1 and ending with 6
         private readonly Vector3[] _sideNormals = { Vector3.Forward, Vector3.Down, Vector3.Backward, Vector3.Up, Vector3.Right, Vector3.Left };
         private bool _isDoneRolling = false;
-
-
 
         public override void OnAddedToEntity()
         {
@@ -39,7 +36,7 @@ namespace Betreten_Verboten.Components.Base
 
         }
 
-        public void Update()
+        public override void Update()
         {
             if (_isDoneRolling) return;
 
@@ -68,19 +65,5 @@ namespace Betreten_Verboten.Components.Base
             return floatDots.Aggregate((x, y) => x.dot > y.dot ? x : y).index + 1;
         }
 
-
-        public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500 + Random.MinusOneToOne() * 5, Random.Range(25, 40), -500 + Random.MinusOneToOne() * 5), NodeType.BoundingBoxCulling).SetTag(ENTITY_TAG).AddComponent(new Dice());
-
-        /// <summary>
-        /// Returns if another dice roll is necessary, depending on if the player can roll thrice.
-        /// The dice should reroll if none of the following conditions is satisfied:
-        /// 1. You can't roll thrice & you didn't roll a 6. (regular on-board roll)
-        /// 2. You can roll thrice, your last roll was indeed a 6 and this one is not. (Positive roll-thrice exit condition)
-        /// 3. You can roll thrice and already did, but even your last one isn't a 6. (Negative roll-thrice exit condition)
-        /// </summary>
-        /// <param name="nrs"></param>
-        /// <param name="RollThrice"></param>
-        /// <returns></returns>
-        public static bool ShouldReroll(List<int> nrs, bool RollThrice) => !(!RollThrice && nrs[nrs.Count - 1] < 6 || RollThrice && nrs.Count > 1 && nrs[nrs.Count - 1] < 6 && nrs[nrs.Count - 2] >= 6 || RollThrice && nrs.Count >= 3 && nrs[nrs.Count - 1] < 6);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Betreten_Verboten.Components.Base;
 using Betreten_Verboten.Components.Base.Boards.BV;
 using Betreten_Verboten.Components.Base.Characters;
+using Betreten_Verboten.Components.Base.Dice;
 using Betreten_Verboten.Components.BV;
 using Betreten_Verboten.Components.BV.Backgrounds;
 using Betreten_Verboten.Components.BV.Player;
@@ -138,7 +139,7 @@ namespace Betreten_Verboten.Scenes.Main
                         }
                     }
 
-                    if (Dice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice()))
+                    if (PhysicsDice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice()))
                     {
                         _uiPlayerReroll.Visible = true;
                     }
@@ -362,7 +363,7 @@ namespace Betreten_Verboten.Scenes.Main
                 switch (_gameState)
                 {
                     case GameState.DiceRoll:
-                        FindEntitiesWithTag(Dice.ENTITY_TAG).ForEach(x => x.Destroy());
+                        FindEntitiesWithTag(PhysicsDice.ENTITY_TAG).ForEach(x => x.Destroy());
                         break;
                 }
 
@@ -371,8 +372,8 @@ namespace Betreten_Verboten.Scenes.Main
                 {
                     case GameState.DiceRoll:
                         //Set camera position
-                        Camera.LookAt = new Vector3(-495, 3, -495);
-                        Camera.OverridePosition = new Vector3(-470, 50, -470);
+                        Camera.LookAt = Dice.GetCamFocusOverride(Dice.DiceType.Physics);
+                        Camera.OverridePosition = Dice.GetCamPosOverride(Dice.DiceType.Physics);
                         //Refresh UI elements
                         _uiPlayerTutorial.Text = "Roll the dice!";
                         _uiPlayerControls.Visible = false;
@@ -418,7 +419,7 @@ namespace Betreten_Verboten.Scenes.Main
 
         private void RollDice()
         {
-            for (int i = 0; i < (_thriceRoll == ThriceRollState.ABLE_TO ? 3 : 1); i++) Dice.Throw(this);
+            for (int i = 0; i < (_thriceRoll == ThriceRollState.ABLE_TO ? 3 : 1); i++) Dice.Throw(this, Dice.DiceType.Physics);
             _uiPlayerReroll.Visible = false;
         }
 
