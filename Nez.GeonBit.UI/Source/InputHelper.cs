@@ -218,7 +218,7 @@ namespace Nez.GeonBit.UI
             // get thumbstickleft state
             if (ThumbStickLeftDragging)
             {
-                ThumbStickLeftChange = _newGamePadState.ThumbSticks.Left;
+                ThumbStickLeftChange = _newGamePadState.ThumbSticks.Right;
                 if (ThumbStickLeftCanDrag == false && ThumbStickLeftCoolDown > 0)
                 {
                     ThumbStickLeftCoolDown--;
@@ -231,12 +231,12 @@ namespace Nez.GeonBit.UI
             }
 
             // Update mouse state's position if cursor mode is set to roaming (used by gamepad)
-            if (_newGamePadState.ThumbSticks.Left != Vector2.Zero && UserInterface.GamePadModeEnabled )
+            if (_newGamePadState.ThumbSticks.Right != Vector2.Zero && UserInterface.GamePadModeEnabled )
             {
                 UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
                 UpdateCursorPosition(new Vector2(
-                Input.RawMousePosition.X + (_newGamePadState.ThumbSticks.Left.X * 10),
-                Input.RawMousePosition.Y + (-_newGamePadState.ThumbSticks.Left.Y * 10)));
+                Input.RawMousePosition.X + (_newGamePadState.ThumbSticks.Right.X * 10),
+                Input.RawMousePosition.Y + (-_newGamePadState.ThumbSticks.Right.Y * 10)));
             }
 
             // get mouse wheel state
@@ -695,13 +695,13 @@ namespace Nez.GeonBit.UI
             switch (button)
             {
                 case GamePadButton.DPadUp:
-                    return _newGamePadState.DPad.Up;
+                    return (_newGamePadState.DPad.Up == ButtonState.Pressed || _newGamePadState.ThumbSticks.Left.Y < -Input.DEFAULT_DEADZONE) ? ButtonState.Pressed : ButtonState.Released;
                 case GamePadButton.DPadRight:
-                    return _newGamePadState.DPad.Right;
+                    return (_newGamePadState.DPad.Right == ButtonState.Pressed || _newGamePadState.ThumbSticks.Left.X < -Input.DEFAULT_DEADZONE) ? ButtonState.Pressed : ButtonState.Released;
                 case GamePadButton.DPadDown:
-                    return _newGamePadState.DPad.Down;
+                    return (_newGamePadState.DPad.Down == ButtonState.Pressed || _newGamePadState.ThumbSticks.Left.Y > Input.DEFAULT_DEADZONE) ? ButtonState.Pressed : ButtonState.Released;
                 case GamePadButton.DPadLeft:
-                    return _newGamePadState.DPad.Left;
+                    return (_newGamePadState.DPad.Left == ButtonState.Pressed || _newGamePadState.ThumbSticks.Left.X > Input.DEFAULT_DEADZONE) ? ButtonState.Pressed : ButtonState.Released;
                 case GamePadButton.A_Button:
                     return _newGamePadState.Buttons.A;
             }
@@ -737,13 +737,13 @@ namespace Nez.GeonBit.UI
             switch (button)
             {
                 case GamePadButton.DPadUp:
-                    return _oldGamePadState.DPad.Up;
+                    return (_oldGamePadState.DPad.Up == ButtonState.Pressed || _oldGamePadState.ThumbSticks.Left.Y < -Input.DEFAULT_DEADZONE) ? ButtonState.Pressed : ButtonState.Released;
                 case GamePadButton.DPadRight:
-                    return _oldGamePadState.DPad.Right;
+                    return (_oldGamePadState.DPad.Right == ButtonState.Pressed || _oldGamePadState.ThumbSticks.Left.X < -Input.DEFAULT_DEADZONE) ? ButtonState.Pressed : ButtonState.Released;
                 case GamePadButton.DPadDown:
-                    return _oldGamePadState.DPad.Down;
+                    return (_oldGamePadState.DPad.Down == ButtonState.Pressed || _oldGamePadState.ThumbSticks.Left.Y > Input.DEFAULT_DEADZONE) ? ButtonState.Pressed : ButtonState.Released;
                 case GamePadButton.DPadLeft:
-                    return _oldGamePadState.DPad.Left;
+                    return (_oldGamePadState.DPad.Left == ButtonState.Pressed || _oldGamePadState.ThumbSticks.Left.X > Input.DEFAULT_DEADZONE) ? ButtonState.Pressed : ButtonState.Released;
                 case GamePadButton.A_Button:
                     return _oldGamePadState.Buttons.A;
             }

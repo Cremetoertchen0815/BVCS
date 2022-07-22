@@ -234,7 +234,7 @@ namespace Nez.GeonBit.UI.Utils
             panel.AddChild(new Entities.Header(header));
             panel.AddChild(new Entities.HorizontalLine());
             panel.AddChild(new Entities.Paragraph(text));
-            var txt = panel.AddChild(new Entities.TextInput(false));
+            var txt = panel.AddChild(new Entities.TextInput(false) { IsFocused = true });
 
             // add to opened boxes counter
             OpenedMsgBoxesCount++;
