@@ -127,6 +127,8 @@ namespace Nez.GeonBit.UI
         /// </summary>
         public bool DebugDraw = false;
 
+        public static bool GamePadModeEnabled = false;
+
         /// <summary>
         /// Supported GamePad Cursor behavior.
         /// </summary>

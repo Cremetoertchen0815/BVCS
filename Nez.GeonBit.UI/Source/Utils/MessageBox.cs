@@ -127,6 +127,8 @@ namespace Nez.GeonBit.UI.Utils
         /// <returns>Message box panel.</returns>
         public static Entities.Panel ShowMsgBox(string header, string text, MsgBoxOption[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
         {
+            UserInterface.GamePadModeEnabled = true;
+
             // create panel for messagebox
             size = size ?? new Vector2(500, 500);
             var panel = new Entities.Panel(size.Value);
@@ -168,10 +170,11 @@ namespace Nez.GeonBit.UI.Utils
 
             // add all option buttons
             var btnSize = new Vector2(options.Length == 1 ? 0f : (1f / options.Length), 60);
-            foreach (var option in options)
+            for (int i = 0; i < options.Length; i++)
             {
+                var option = options[i];
                 // add button entity
-                var button = new Entities.Button(option.Title, anchor: Entities.Anchor.AutoInline, size: btnSize);
+                var button = new Entities.Button(option.Title, anchor: Entities.Anchor.AutoInline, size: btnSize) { Selectable = true, IsFirstSelection = i == 0};
 
                 // set click event
                 button.OnClick += (Entities.Entity ent) =>
@@ -190,6 +193,8 @@ namespace Nez.GeonBit.UI.Utils
                         onDone?.Invoke();
                     }
                 };
+
+                if (i == 0) button.Select();
 
                 // add button to buttons panel
                 buttonsPanel.AddChild(button);
@@ -221,6 +226,8 @@ namespace Nez.GeonBit.UI.Utils
         /// <returns>Input box panel.</returns>
         public static Entities.Panel ShowInputBox(string header, string text, InputBoxOption[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
         {
+            UserInterface.GamePadModeEnabled = true;
+
             // create panel for messagebox
             size = size ?? new Vector2(500, 500);
             var panel = new Entities.Panel(size.Value);
@@ -263,10 +270,11 @@ namespace Nez.GeonBit.UI.Utils
 
             // add all option buttons
             var btnSize = new Vector2(options.Length == 1 ? 0f : (1f / options.Length), 60);
-            foreach (var option in options)
+            for (int i = 0; i < options.Length; i++)
             {
+                var option = options[i];
                 // add button entity
-                var button = new Entities.Button(option.Title, anchor: Entities.Anchor.AutoInline, size: btnSize);
+                var button = new Entities.Button(option.Title, anchor: Entities.Anchor.AutoInline, size: btnSize) { Selectable = true, IsFirstSelection = i == 0};
 
                 // set click event
                 button.OnClick += (Entities.Entity ent) =>
@@ -288,6 +296,8 @@ namespace Nez.GeonBit.UI.Utils
 
                 // add button to buttons panel
                 buttonsPanel.AddChild(button);
+
+                if (i == 0) button.Select();
             }
 
             // add panel to active ui

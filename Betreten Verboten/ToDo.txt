@@ -1,4 +1,5 @@
-﻿-Implement keyboard & gamepad shortcuts(+char picker)
+﻿-Fix GeonBit UI control snapping
+-Implement keyboard & gamepad shortcuts(+char picker)
 -Implement quick dice
 -Add sounds
 -Implement pause menu

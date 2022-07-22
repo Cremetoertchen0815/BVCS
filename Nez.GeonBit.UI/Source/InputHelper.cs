@@ -231,7 +231,7 @@ namespace Nez.GeonBit.UI
             }
 
             // Update mouse state's position if cursor mode is set to roaming (used by gamepad)
-            if (_newGamePadState.ThumbSticks.Left != Vector2.Zero)
+            if (_newGamePadState.ThumbSticks.Left != Vector2.Zero && UserInterface.GamePadModeEnabled )
             {
                 UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
                 UpdateCursorPosition(new Vector2(
@@ -612,21 +612,21 @@ namespace Nez.GeonBit.UI
         /// </summary>
         /// <param name="button">Bouse button to check.</param>
         /// <return>True if given button is down.</return>
-        public bool GamePadButtonHeldDown(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Pressed;
+        public bool GamePadButtonHeldDown(GamePadButton button) => UserInterface.GamePadModeEnabled && GetGamePadButtonState(button) == ButtonState.Pressed;
 
         /// <summary>
         /// Check if a given gamepad button was released in current frame.
         /// </summary>
         /// <param name="button">GamePad button to check.</param>
         /// <return>True if given gamepad button was released in this frame.</return>
-        public bool GamePadButtonReleased(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Released && GetGamePadPreviousButtonState(button) == ButtonState.Pressed;
+        public bool GamePadButtonReleased(GamePadButton button) => UserInterface.GamePadModeEnabled && GetGamePadButtonState(button) == ButtonState.Released && GetGamePadPreviousButtonState(button) == ButtonState.Pressed;
 
         /// <summary>
         /// Check if a given gamepad button was pressed in current frame.
         /// </summary>
         /// <param name="button"></param>
         /// <returns></returns>
-        public bool GamePadButtonPressed(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Pressed && GetGamePadPreviousButtonState(button) == ButtonState.Released;
+        public bool GamePadButtonPressed(GamePadButton button) => UserInterface.GamePadModeEnabled && GetGamePadButtonState(button) == ButtonState.Pressed && GetGamePadPreviousButtonState(button) == ButtonState.Released;
 
         /// <summary>
         /// Return if any mouse button was released this frame.

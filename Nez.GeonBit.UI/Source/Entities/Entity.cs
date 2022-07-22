@@ -548,6 +548,8 @@ namespace Nez.GeonBit.UI.Entities
         // is this entity draggable?
         private bool _draggable = false;
 
+        private bool _selectionOnDstCalc = false;
+
         // do we need to init drag offset from current position?
         private bool _needToSetDragOffset = false;
 
@@ -1830,6 +1832,14 @@ namespace Nez.GeonBit.UI.Entities
 
             // return the newly created rectangle
             _destRect = ret;
+
+            if (_selectionOnDstCalc)
+            {
+                UserInterface.GetCursorMode = UserInterface.CursorMode.Snapping;
+                SetCursorPosition(this);
+                _selectionOnDstCalc = false;
+            }
+
             return ret;
         }
 
@@ -2253,9 +2263,12 @@ namespace Nez.GeonBit.UI.Entities
         {
             if (UserInterface.GetCursorMode == UserInterface.CursorMode.Snapping)
             {
+                var ptA = Vector2.Transform(entity._destRect.Location.ToVector2(), Core.Scene.ScreenTransformMatrix);
+                var ptD = Vector2.Transform((entity._destRect.Location + entity._destRect.Size).ToVector2(), Core.Scene.ScreenTransformMatrix);
+                var transRect = new Rectangle((int)ptA.X, (int)ptA.Y, (int)(ptD.X - ptA.X), (int)(ptD.Y - ptA.Y));
                 if ((entity is Slider == false || entity is ProgressBar) && entity is VerticalScrollbar == false)
                 {
-                    var cursorDestination = new Vector2(entity._destRect.Center.X, entity._destRect.Center.Y + entity._destRect.Height / 4);
+                    var cursorDestination = new Vector2(transRect.Center.X, transRect.Center.Y + transRect.Height / 4);
 
                     // Set the cursor position on the center of the entity if it's not a slider or vertical scrollbar
                     UserInterface.SetCursorPosition(cursorDestination);
@@ -2264,7 +2277,7 @@ namespace Nez.GeonBit.UI.Entities
                 {
                     // Set the cursor position on the center of the mark of the entity if it's a slider or vertical scrollbar
                     UserInterface.SetCursorPosition(new Vector2(
-                        ((Slider)entity).MarkRec.Center.X, ((Slider)entity).MarkRec.Center.Y + entity._destRect.Height / 4));
+                        ((Slider)entity).MarkRec.Center.X, ((Slider)entity).MarkRec.Center.Y + transRect.Height / 4));
                 }
             }
         }
@@ -2353,6 +2366,8 @@ namespace Nez.GeonBit.UI.Entities
             var possiblePanels = currentPanel.Parent.Children.Select(x => (Panel)x).ToList();
             return currentPanel._indexInParent - 1 < 0 ? currentPanel : possiblePanels[currentPanel._indexInParent - 1];
         }
+
+        public void Select() => _selectionOnDstCalc = true;
 
         /// <summary>
         /// Update Slider state and mouse cursor position.
@@ -2853,10 +2868,10 @@ namespace Nez.GeonBit.UI.Entities
                     }
 
                     // gamepad down
-                    if (Input.GamePadButtonPressed(GamePadButton.DPadDown) ||
+                    if ((Input.GamePadButtonPressed(GamePadButton.DPadDown) ||
                         Input.GamePadButtonPressed(GamePadButton.DPadUp) ||
                         Input.GamePadButtonPressed(GamePadButton.DPadLeft) ||
-                        Input.GamePadButtonPressed(GamePadButton.DPadRight))
+                        Input.GamePadButtonPressed(GamePadButton.DPadRight)))
                     {
                         UserInterface.GetCursorMode = UserInterface.CursorMode.Snapping;
                         DoOnGamePadButtonPressed();
