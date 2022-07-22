@@ -2269,79 +2269,6 @@ namespace Nez.GeonBit.UI.Entities
             }
         }
 
-        /// <summary>
-        /// Handle gamepad button press event.
-        /// </summary>
-        protected virtual void DoOnGamePadButtonPressed()
-        {
-            OnGamePadPressed?.Invoke(this);
-            UserInterface.Active.OnGamePadPressed?.Invoke(this);
-
-            if (Input.GamePadButtonPressed(GamePadButton.DPadDown))
-            {
-                if (this is Panel)
-                {
-                    SelectFirstEntity((Panel)this, true);
-                }
-                else
-                {
-                    SelectNextEntity(Parent);
-                }
-            }
-            else if (Input.GamePadButtonPressed(GamePadButton.DPadUp))
-            {
-                if (this is Panel)
-                {
-                    SelectFirstEntity((Panel)this, true);
-                }
-                else
-                {
-                    SelectPreviousEntity(Parent);
-                }
-            }
-            else if (Input.GamePadButtonPressed(GamePadButton.DPadLeft))
-            {
-                if (Parent.AttachedData is TabData)
-                {
-                    if (!IsGamepadAButtonHeldForDrag)
-                    {
-                        // select a tab
-                        SelectFirstEntity(GetPreviousPanelInTabs((Panel)Parent), true);
-                    }
-                }
-                else
-                {
-                    SelectPreviousEntity(Parent);
-                }
-            }
-            else if (Input.GamePadButtonPressed(GamePadButton.DPadRight))
-            {
-                if (AttachedData != null && (this is Button == false || AttachedData is Button))
-                {
-                    if (!IsGamepadAButtonHeldForDrag)
-                    {
-                        // select a tab
-                        if (AttachedData is TabData)
-                        {
-                            SelectFirstEntity(GetNextPanelInTabs(((TabData)AttachedData).panel), true);
-                        }
-                        else if (AttachedData is Entity && ((Entity)AttachedData).AttachedData is PanelTabs)
-                        {
-                            SelectFirstEntity(GetNextPanelInTabs(((PanelTabs)((Entity)AttachedData).AttachedData).ActiveTab.panel), true);
-                        }
-                        else if (AttachedData is Entity && ((Entity)AttachedData).AttachedData is TabData)
-                        {
-                            SelectFirstEntity(GetNextPanelInTabs(((TabData)((Entity)AttachedData).AttachedData).panel), true);
-                        }
-                    }
-                }
-                else
-                {
-                    SelectNextEntity(Parent);
-                }
-            }
-        }
-
         private Panel GetNextPanelInTabs(Panel currentPanel)
         {
             var possiblePanels = currentPanel.Parent.Children.Select(x => (Panel)x).ToList();
@@ -2368,20 +2295,6 @@ namespace Nez.GeonBit.UI.Entities
                     Input.ThumbStickLeftCanDrag = false;
                     MarkAsDirty();
                 }
-            }
-        }
-
-        /// <summary>
-        /// Handle gamepad up event.
-        /// </summary>        
-        protected virtual void DoOnGamePadReleased()
-        {
-            OnGamePadReleased?.Invoke(this);
-            UserInterface.Active.OnGamePadReleased?.Invoke(this);
-
-            if (!Input.GamePadButtonHeldDown(GamePadButton.DPadLeft) && !Input.GamePadButtonHeldDown(GamePadButton.DPadRight))
-            {
-                IsGamepadAButtonHeldForDrag = false;
             }
         }
 
@@ -2419,12 +2332,6 @@ namespace Nez.GeonBit.UI.Entities
         {
             WhileMouseDown?.Invoke(this);
             UserInterface.Active.WhileMouseDown?.Invoke(this);
-
-            if (!Input.GamePadButtonHeldDown(GamePadButton.DPadLeft) && !Input.GamePadButtonHeldDown(GamePadButton.DPadRight)
-                && !Input.GamePadButtonHeldDown(GamePadButton.DPadUp) && !Input.GamePadButtonHeldDown(GamePadButton.DPadDown))
-            {
-                UpdateSlider();
-            }
         }
 
         /// <summary>
@@ -2764,24 +2671,6 @@ namespace Nez.GeonBit.UI.Entities
                         _entityState = (IsFocused || PromiscuousClicksMode || Input.MouseButtonPressed()) &&
                             Input.MouseButtonHeldDown() ? EntityState.MouseDown : EntityState.MouseHover;
 
-                        if (
-                            Input.GamePadButtonHeldDown(GamePadButton.DPadDown) ||
-                            Input.GamePadButtonHeldDown(GamePadButton.DPadUp) ||
-                            Input.GamePadButtonHeldDown(GamePadButton.DPadLeft) ||
-                            Input.GamePadButtonHeldDown(GamePadButton.DPadRight))
-                        {
-                            _entityState = EntityState.MouseDown;
-                        }
-                        else if ((IsFocused || PromiscuousClicksMode ||
-                            Input.MouseButtonPressed() || Input.GamePadButtonPressed(GamePadButton.A_Button)) &&
-                            Input.MouseButtonHeldDown() || Input.GamePadButtonHeldDown(GamePadButton.A_Button))
-                        {
-                            _entityState = EntityState.MouseDown;
-                        }
-                        else
-                        {
-                            _entityState = EntityState.MouseHover;
-                        }
                     }
                 }
 
@@ -2807,18 +2696,6 @@ namespace Nez.GeonBit.UI.Entities
                 Input.MouseButtonPressed(MouseButton.Left))
             {
                 dragTargetEntity = this;
-            }
-            if ((_draggable || IsNaturallyInteractable()) && dragTargetEntity == null && _isMouseOver &&
-                Input.GamePadButtonPressed(GamePadButton.A_Button))
-            {
-                dragTargetEntity = this;
-            }
-
-            // If A is being held for a slider drag
-            if ((Input.GamePadButtonPressed(GamePadButton.DPadRight) || Input.GamePadButtonPressed(GamePadButton.DPadLeft))
-                    && Input.GamePadButtonHeldDown(GamePadButton.A_Button))
-            {
-                IsGamepadAButtonHeldForDrag = true;
             }
 
             // STEP 3: CALL EVENTS
@@ -2847,38 +2724,21 @@ namespace Nez.GeonBit.UI.Entities
                 if (prevState != _entityState)
                 {
                     // mouse down
-                    if (Input.MouseButtonPressed() || Input.GamePadButtonPressed(GamePadButton.A_Button))
+                    if (Input.MouseButtonPressed())
                     {
                         DoOnMouseDown();
                     }
 
-                    // gamepad down
-                    if (Input.GamePadButtonPressed(GamePadButton.DPadDown) ||
-                        Input.GamePadButtonPressed(GamePadButton.DPadUp) ||
-                        Input.GamePadButtonPressed(GamePadButton.DPadLeft) ||
-                        Input.GamePadButtonPressed(GamePadButton.DPadRight))
-                    {
-                        UserInterface.GetCursorMode = UserInterface.CursorMode.Snapping;
-                        DoOnGamePadButtonPressed();
-                    }
-
-                    // gamepad up
-                    if (Input.GamePadButtonReleased(GamePadButton.A_Button))
-                    {
-                        DoOnGamePadReleased();
-                    }
+                    
+                    
                     // mouse up
                     if (Input.MouseButtonReleased())
                     {
                         DoOnMouseReleased();
                     }
                     // mouse click
-                    if (Input.MouseButtonClick() || Input.GamePadButtonPressed(GamePadButton.A_Button))
+                    if (Input.MouseButtonClick())
                     {
-                        if (Input.GamePadButtonPressed(GamePadButton.A_Button))
-                        {
-                            UserInterface.GetCursorMode = UserInterface.CursorMode.Snapping;
-                        }
                         DoOnClick();
                     }
                 }

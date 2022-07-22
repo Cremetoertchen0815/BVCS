@@ -94,8 +94,6 @@ namespace Nez.GeonBit.UI
         // store current & previous mouse states so we can detect key release and diff
         private MouseState _newMouseState;
         private MouseState _oldMouseState;
-        private GamePadState _newGamePadState;
-        private GamePadState _oldGamePadState;
         private Vector2 _newMousePos;
 
         // store current frame gametime
@@ -171,7 +169,6 @@ namespace Nez.GeonBit.UI
             _newKeyboardState = _oldKeyboardState;
 
             // init mouse and gamepad states
-            _newGamePadState = _oldGamePadState;
             _newMouseState = _oldMouseState;
 
             // call first update to get starting positions
@@ -197,12 +194,10 @@ namespace Nez.GeonBit.UI
             // store previous states
             _oldMouseState = _newMouseState;
             _oldKeyboardState = _newKeyboardState;
-            _oldGamePadState = _newGamePadState;
 
             // get new states
             _newMouseState = Mouse.GetState();
             _newKeyboardState = Keyboard.GetState();
-            _newGamePadState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
 
             // If the mouse was used, set to roaming cursor mode (as opposed to snapping mode for gamepad)
             if (Input.MousePositionDelta.X != 0 && Input.MousePositionDelta.Y != 0)
@@ -218,7 +213,6 @@ namespace Nez.GeonBit.UI
             // get thumbstickleft state
             if (ThumbStickLeftDragging)
             {
-                ThumbStickLeftChange = _newGamePadState.ThumbSticks.Left;
                 if (ThumbStickLeftCanDrag == false && ThumbStickLeftCoolDown > 0)
                 {
                     ThumbStickLeftCoolDown--;
@@ -228,15 +222,6 @@ namespace Nez.GeonBit.UI
                     ThumbStickLeftCanDrag = true;
                     ThumbStickLeftCoolDown = ThumbStickLeftCoolDownMax;
                 }
-            }
-
-            // Update mouse state's position if cursor mode is set to roaming (used by gamepad)
-            if (_newGamePadState.ThumbSticks.Left != Vector2.Zero)
-            {
-                UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
-                UpdateCursorPosition(new Vector2(
-                Input.RawMousePosition.X + (_newGamePadState.ThumbSticks.Left.X * 10),
-                Input.RawMousePosition.Y + (-_newGamePadState.ThumbSticks.Left.Y * 10)));
             }
 
             // get mouse wheel state
@@ -608,27 +593,6 @@ namespace Nez.GeonBit.UI
         public bool MouseButtonReleased(MouseButton button = MouseButton.Left) => GetMouseButtonState(button) == ButtonState.Released && GetMousePreviousButtonState(button) == ButtonState.Pressed;
 
         /// <summary>
-        /// Check if a given mouse button is held down.
-        /// </summary>
-        /// <param name="button">Bouse button to check.</param>
-        /// <return>True if given button is down.</return>
-        public bool GamePadButtonHeldDown(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Pressed;
-
-        /// <summary>
-        /// Check if a given gamepad button was released in current frame.
-        /// </summary>
-        /// <param name="button">GamePad button to check.</param>
-        /// <return>True if given gamepad button was released in this frame.</return>
-        public bool GamePadButtonReleased(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Released && GetGamePadPreviousButtonState(button) == ButtonState.Pressed;
-
-        /// <summary>
-        /// Check if a given gamepad button was pressed in current frame.
-        /// </summary>
-        /// <param name="button"></param>
-        /// <returns></returns>
-        public bool GamePadButtonPressed(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Pressed && GetGamePadPreviousButtonState(button) == ButtonState.Released;
-
-        /// <summary>
         /// Return if any mouse button was released this frame.
         /// </summary>
         /// <returns>True if any mouse button was released.</returns>
@@ -686,29 +650,6 @@ namespace Nez.GeonBit.UI
         }
 
         /// <summary>
-        /// Return the state of a gamepad button (up / down).
-        /// </summary>
-        /// <param name="button">Button to check.</param>
-        /// <returns>GamePad button state.</returns>
-        private ButtonState GetGamePadButtonState(GamePadButton button)
-        {
-            switch (button)
-            {
-                case GamePadButton.DPadUp:
-                    return _newGamePadState.DPad.Up;
-                case GamePadButton.DPadRight:
-                    return _newGamePadState.DPad.Right;
-                case GamePadButton.DPadDown:
-                    return _newGamePadState.DPad.Down;
-                case GamePadButton.DPadLeft:
-                    return _newGamePadState.DPad.Left;
-                case GamePadButton.A_Button:
-                    return _newGamePadState.Buttons.A;
-            }
-            return ButtonState.Released;
-        }
-
-        /// <summary>
         /// Return the state of a mouse button (up / down), in previous frame.
         /// </summary>
         /// <param name="button">Button to check.</param>
@@ -723,29 +664,6 @@ namespace Nez.GeonBit.UI
                     return _oldMouseState.RightButton;
                 case MouseButton.Middle:
                     return _oldMouseState.MiddleButton;
-            }
-            return ButtonState.Released;
-        }
-
-        /// <summary>
-        /// Get GamePad state in previous frame.
-        /// </summary>
-        /// <param name="button"></param>
-        /// <returns></returns>
-        private ButtonState GetGamePadPreviousButtonState(GamePadButton button = GamePadButton.A_Button)
-        {
-            switch (button)
-            {
-                case GamePadButton.DPadUp:
-                    return _oldGamePadState.DPad.Up;
-                case GamePadButton.DPadRight:
-                    return _oldGamePadState.DPad.Right;
-                case GamePadButton.DPadDown:
-                    return _oldGamePadState.DPad.Down;
-                case GamePadButton.DPadLeft:
-                    return _oldGamePadState.DPad.Left;
-                case GamePadButton.A_Button:
-                    return _oldGamePadState.Buttons.A;
             }
             return ButtonState.Released;
         }
