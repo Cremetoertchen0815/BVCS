@@ -348,7 +348,8 @@ namespace Betreten_Verboten.Scenes.Main
 
         private bool ExitMsgCascade()
         {
-            _gameFocussed = true;
+            _gameFocussed = true; //Enable virtual buttons
+            UserInterface.GamePadModeEnabled = false; //Disable GeonBit UI gamepad mode
             return true;
         }
 
