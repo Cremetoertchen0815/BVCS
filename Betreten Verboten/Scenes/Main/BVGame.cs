@@ -46,9 +46,11 @@ namespace Betreten_Verboten.Scenes.Main
         private ThriceRollState _thriceRoll = ThriceRollState.UNABLE;
 
         //UI
+        private bool _scoreTriggerOverride = false;
         private int[] _playerIndices;
         private bool _isScoreVisible = false;
         private Panel[] _uiPlayerHUDs;
+        private DynamicLabel[] _scoreLabels;
         private Label _uiPlayerName;
         private Label _uiPlayerTutorial;
         private Panel _uiPlayerControls;
@@ -89,11 +91,11 @@ namespace Betreten_Verboten.Scenes.Main
             InitEnvironment();
 
             //Init virtual controls
-            _btnScore = new VirtualButton(new VirtualButton.KeyboardKey(Keys.Tab), new VirtualButton.GamePadButton(0, Buttons.LeftShoulder));
             _btnConfirmNRoll = new VirtualButton(new VirtualButton.KeyboardKey(Keys.Space), new VirtualButton.GamePadButton(0, Buttons.A));
             _btnSacrifice = new VirtualButton(new VirtualButton.KeyboardKey(Keys.Q), new VirtualButton.GamePadButton(0, Buttons.B));
             _btnAnger = new VirtualButton(new VirtualButton.KeyboardKey(Keys.E), new VirtualButton.GamePadButton(0, Buttons.X));
             _btnAfK = new VirtualButton(new VirtualButton.KeyboardKey(Keys.F), new VirtualButton.GamePadButton(0, Buttons.Y));
+            _btnScore = new VirtualButton(new VirtualButton.KeyboardKey(Keys.Tab));
 
             //Init UI
             FinalRenderDelegate = Core.GetGlobalManager<FinalUIRender>();
@@ -108,7 +110,6 @@ namespace Betreten_Verboten.Scenes.Main
             //Init
             Core.Schedule(0.3f, x => AdvancePlayer());
 #if DEBUG
-            //Camera.Entity.AddComponent(new Components.Debug.DebugCamMover());
             Core.DebugRenderEnabled = true;
 #endif
 
@@ -194,7 +195,7 @@ namespace Betreten_Verboten.Scenes.Main
 
             //Add player hud
             _uiPlayerHUDs = new Panel[_board.PlayerCount];
-            var scores = new DynamicLabel[_board.PlayerCount];
+            _scoreLabels = new DynamicLabel[_board.PlayerCount];
             var chrCfg = new CharConfig();
             for (int i = 0; i < _board.PlayerCount; i++)
             {
@@ -203,8 +204,8 @@ namespace Betreten_Verboten.Scenes.Main
                 _uiPlayerHUDs[i] = UserInterface.Active.AddEntity(new Panel(new Vector2(200, 70), PanelSkin.Default, Anchor.TopLeft, new Vector2(5, 15 + i * 75)) { FillColor = chrCfg.Color }); //
                 _uiPlayerHUDs[i].AddChild(new Image(Graphics.Instance.DebugSprite.Texture2D, new Vector2(40), ImageDrawMode.Stretch, Anchor.CenterLeft));
                 _uiPlayerHUDs[i].AddChild(new Label("Player " + i, Anchor.TopLeft, null, new Vector2(50, 0)));
-                scores[i] = _uiPlayerHUDs[i].AddChild(new DynamicLabel(() => _players[ii].Points.ToString(), Anchor.TopRight));
-                scores[i].Visible = false;
+                _scoreLabels[i] = _uiPlayerHUDs[i].AddChild(new DynamicLabel(() => _players[ii].Points.ToString(), Anchor.TopRight));
+                _scoreLabels[i].Visible = false;
 
             }
 
@@ -234,8 +235,8 @@ namespace Betreten_Verboten.Scenes.Main
                 {
                     for (int i = 0; i < _board.PlayerCount; i++)
                     {
-                        scores[i].Visible = false;
-                        _uiPlayerHUDs[i].Tween("Size", new Vector2(200, 70), 0.1f).Start();
+                        _scoreLabels[i].Visible = false;
+                        _uiPlayerHUDs[i].Tween("Size", new Vector2(200, 70), 0.1f).SetCompletionHandler(x => _scoreTriggerOverride = false).Start();
                         _isScoreVisible = false;
                     }
                 }
@@ -244,10 +245,11 @@ namespace Betreten_Verboten.Scenes.Main
             {
                 if (!_isScoreVisible)
                 {
+                    _scoreTriggerOverride = true;
                     for (int i = 0; i < _board.PlayerCount; i++)
                     {
                         int ii = i;
-                        _uiPlayerHUDs[ii].Tween("Size", new Vector2(400, 70), 0.1f).SetCompletionHandler(x => scores[ii].Visible = true).Start();
+                        _uiPlayerHUDs[ii].Tween("Size", new Vector2(400, 70), 0.1f).SetCompletionHandler(x => _scoreLabels[ii].Visible = true).Start();
                         _isScoreVisible = true;
                     }
                 }
@@ -310,11 +312,12 @@ namespace Betreten_Verboten.Scenes.Main
         public void OpenSacrifice()
         {
             if (!_gameFocussed || !_uiPlayerSacrifice.Enabled || GameState != GameState.ActionSelect) return;
+            _gameFocussed = false;
 
             //Display message cascade
             MessageBox.ShowMsgBox("Send that bastard to hell", "You can sacrifice one of your players to the holy BV gods. The further your player is, the higher is the chance to recieve a positive effect.", new MessageBox.MsgBoxOption("OK, I get it", () =>
             {
-                MessageBox.ShowMsgBox("Anger Button", "You really want to sacrifice one of your precious players?", new MessageBox.MsgBoxOption("Nah, I'm good", () =>
+                MessageBox.ShowMsgBox("Sacrifice Button", "You really want to sacrifice one of your precious players?", new MessageBox.MsgBoxOption("Nah, I'm good", () =>
                 {
                     MessageBox.ShowMsgBox("Looser", "Alright, then don't.", new MessageBox.MsgBoxOption("Bitch!", () => ExitMsgCascade()));
                     return true;
@@ -395,6 +398,21 @@ namespace Betreten_Verboten.Scenes.Main
                         break;
                 }
             }
+        }
+
+        public override void Update()
+        {
+            if (Input.GamePads[0].IsConnected() && !_scoreTriggerOverride)
+            {
+                var val = Input.GamePads[0].GetLeftTriggerRaw();
+                for (int i = 0; i < _board.PlayerCount; i++)
+                {
+                    _scoreLabels[i].Visible = val > 1 - Mathf.Epsilon;
+                    _uiPlayerHUDs[i].Size = new Vector2(200 + val * 200, 70);
+                    _isScoreVisible = val > Mathf.Epsilon;
+                }
+            }
+            base.Update();
         }
 
         private void RollDice()
