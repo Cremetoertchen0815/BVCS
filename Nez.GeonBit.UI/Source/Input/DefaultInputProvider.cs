@@ -1,8 +1,7 @@
 ﻿#region File Description
 //-----------------------------------------------------------------------------
-// Helper utility to get keyboard and mouse input.
-// It provides easier access to the Input API, and in addition functions to
-// measure changes between frames.
+// Helper utility that implements default mouse and keyboard input for GeonBit.UI.
+// You can create your own mouse/keyboard inputs to replace this.
 //
 // Author: Ronen Ness.
 // Since: 2016.
@@ -11,168 +10,73 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Nez.GeonBit.UI
+namespace GeonBit.UI
 {
     /// <summary>
-    /// Supported mouse buttons.
+    /// Implement Mouse Input and Keyboard Input for GeonBit.UI + provide some helpful utils you can use externally.
+    /// This is the object we provide to GeonBit.UI by default, if no other input providers were set by user.
     /// </summary>
-    public enum MouseButton
+    public class DefaultInputProvider : IMouseInput, IKeyboardInput
     {
-        ///<summary>Left mouse button.</summary>
-        Left,
-
-        ///<summary>Right mouse button.</summary>
-        Right,
-
-        ///<summary>Middle mouse button (eg scrollwheel when clicked).</summary>
-        Middle
-    };
-
-    /// <summary>
-    /// Supported GamePad Buttons
-    /// </summary>
-    public enum GamePadButton
-    {
-        ///<summary>GamePad A button.</summary>
-        A_Button,
-        ///<summary>GamePad down button.</summary>
-        DPadDown,
-        ///<summary>GamePad up button.</summary>
-        /// <summary>
-        /// DPAD-Up button
-        /// </summary>
-        DPadUp,
-        /// <summary>
-        /// DPAD-Left button
-        /// </summary>
-        DPadLeft,
-        /// <summary>
-        /// DPAD-Right button
-        /// </summary>
-        DPadRight
-    };
-
-    /// <summary>
-    /// Some special characters input.
-    /// Note: enum values are based on ascii table values for these special characters.
-    /// </summary>
-    internal enum SpecialChars
-    {
-        Null = 0,           // no character input
-        Delete = 127,       // delete char
-        Backspace = 8,      // backspace char
-        Space = 32,         // space character input
-        ArrowLeft = 1,      // arrow left - moving caret left
-        ArrowRight = 2,     // arrow right - moving caret right
-    };
-
-    /// <summary>
-    /// Provide easier keyboard and mouse access, keyboard text input, and other user input utils.
-    /// </summary>
-    public class InputHelper
-    {
-        // locks the mouse cursor position
-        private bool _LockMousePosition = false;
-        /// <summary>
-        /// LockMousePosition
-        /// </summary>
-        public bool LockMousePosition
-        {
-            private get => _LockMousePosition;
-            set => _LockMousePosition = value;
-        }
-
-        /// <summary>
-        /// Is the A button on the gamepad currently being pressed?
-        /// </summary>
-        public bool IsAButtonPressed = false;
-
         // store current & previous keyboard states so we can detect key release
-        private KeyboardState _newKeyboardState;
-        private KeyboardState _oldKeyboardState;
+        KeyboardState _newKeyboardState;
+        KeyboardState _oldKeyboardState;
 
         // store current & previous mouse states so we can detect key release and diff
-        private MouseState _newMouseState;
-        private MouseState _oldMouseState;
-        private GamePadState _newGamePadState;
-        private GamePadState _oldGamePadState;
-        private Vector2 _newMousePos;
+        MouseState _newMouseState;
+        MouseState _oldMouseState;
+
+        // store old and new mouse position so we can get diff
+        Vector2 _newMousePos;
+        Vector2 _oldMousePos;
 
         // store current frame gametime
-        private GameTime _currTime;
+        GameTime _currTime;
+
+        // store all Key values in lookup array
+        Keys[] _allKeyValues;
 
         /// <summary>An artificial "lag" after a key is pressed when typing text input, to prevent mistake duplications.</summary>
         public float KeysTypeCooldown = 0.6f;
 
         // last character that was pressed down
-        private char _currCharacterInput = (char)SpecialChars.Null;
+        char _currCharacterInput = (char)SpecialChars.Null;
 
         // last key that provide character input and was pressed
-        private Keys _currCharacterInputKey = Keys.Escape;
+        Keys _currCharacterInputKey = Keys.Escape;
 
         // keyboard input cooldown for textual input
-        private float _keyboardInputCooldown = 0f;
+        float _keyboardInputCooldown = 0f;
 
         // true when a new keyboard key is pressed
-        private bool _newKeyIsPressed = false;
+        bool _newKeyIsPressed = false;
 
         // current capslock state
-        private bool _capslock = false;
+        bool _capslock = false;
 
         /// <summary>
         /// Current mouse wheel value.
         /// </summary>
-        public int MouseWheel = 0;
+        public int MouseWheel { get; private set; }
 
         /// <summary>
         /// Mouse wheel change sign (eg 0, 1 or -1) since last frame.
         /// </summary>
-        public int MouseWheelChange = 0;
-
-        /// <summary>
-        /// ThumbStickLeftChange. Used for mouse cursor control (after dragging)
-        /// </summary>
-        public Vector2 ThumbStickLeftChange = Vector2.Zero;
-        /// <summary>
-        /// Defines if the left thumbstick should be used for dragging (sliders etc.)
-        /// </summary>
-        private bool _ThumbStickLeftDragging = true;
-        /// <summary>
-        /// Set this to true if you want to use the left thumbstick of your gamepad for dragging sliders etc.
-        /// </summary>
-        public bool ThumbStickLeftDragging
-        {
-            get => _ThumbStickLeftDragging;
-            set => _ThumbStickLeftDragging = value;
-        }
-
-        /// <summary>
-        /// Defines if the left thumbstick can be used.
-        /// </summary>
-        private bool _ThumbStickLeftCanDrag = false;
-        /// <summary>
-        /// Defines if the left thumbstick can be used (don't changed it manually! It's automatically set for you).
-        /// </summary>
-        public bool ThumbStickLeftCanDrag
-        {
-            get => _ThumbStickLeftCanDrag;
-            set => _ThumbStickLeftCanDrag = value;
-        }
-
-        private float ThumbStickLeftCoolDown = 12f;
-        private float ThumbStickLeftCoolDownMax = 12f;
+        public int MouseWheelChange { get; private set; }
 
         /// <summary>
         /// Create the input helper.
         /// </summary>
-        public InputHelper()
+        public DefaultInputProvider()
         {
+            _allKeyValues = (Keys[])System.Enum.GetValues(typeof(Keys));
+
             // init keyboard states
             _newKeyboardState = _oldKeyboardState;
 
-            // init mouse and gamepad states
-            _newGamePadState = _oldGamePadState;
+            // init mouse states
             _newMouseState = _oldMouseState;
+            _newMousePos = new Vector2(_newMouseState.X, _newMouseState.Y);
 
             // call first update to get starting positions
             Update(new GameTime());
@@ -181,7 +85,10 @@ namespace Nez.GeonBit.UI
         /// <summary>
         /// Current frame game time.
         /// </summary>
-        public GameTime CurrGameTime => _currTime;
+        public GameTime CurrGameTime
+        {
+            get { return _currTime; }
+        }
 
         /// <summary>
         /// Update current states.
@@ -197,51 +104,18 @@ namespace Nez.GeonBit.UI
             // store previous states
             _oldMouseState = _newMouseState;
             _oldKeyboardState = _newKeyboardState;
-            _oldGamePadState = _newGamePadState;
 
             // get new states
             _newMouseState = Mouse.GetState();
             _newKeyboardState = Keyboard.GetState();
-            _newGamePadState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
 
-            // If the mouse was used, set to roaming cursor mode (as opposed to snapping mode for gamepad)
-            if (Input.MousePositionDelta.X != 0 && Input.MousePositionDelta.Y != 0)
-            {
-                UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
-            }
-
-            if (!_LockMousePosition)
-            {
-                _newMousePos = Input.MousePosition;
-            }
-
-            // get thumbstickleft state
-            if (ThumbStickLeftDragging)
-            {
-                ThumbStickLeftChange = _newGamePadState.ThumbSticks.Left;
-                if (ThumbStickLeftCanDrag == false && ThumbStickLeftCoolDown > 0)
-                {
-                    ThumbStickLeftCoolDown--;
-                }
-                else
-                {
-                    ThumbStickLeftCanDrag = true;
-                    ThumbStickLeftCoolDown = ThumbStickLeftCoolDownMax;
-                }
-            }
-
-            // Update mouse state's position if cursor mode is set to roaming (used by gamepad)
-            if (_newGamePadState.ThumbSticks.Left != Vector2.Zero)
-            {
-                UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
-                UpdateCursorPosition(new Vector2(
-                Input.RawMousePosition.X + (_newGamePadState.ThumbSticks.Left.X * 10),
-                Input.RawMousePosition.Y + (-_newGamePadState.ThumbSticks.Left.Y * 10)));
-            }
+            // get mouse position
+            _oldMousePos = _newMousePos;
+            _newMousePos = new Vector2(_newMouseState.X, _newMouseState.Y);
 
             // get mouse wheel state
             int prevMouseWheel = MouseWheel;
-            MouseWheel = Input.MouseWheel;
+            MouseWheel = _newMouseState.ScrollWheelValue;
             MouseWheelChange = System.Math.Sign(MouseWheel - prevMouseWheel);
 
             // update capslock state
@@ -265,7 +139,7 @@ namespace Nez.GeonBit.UI
             }
 
             // send key-down events
-            foreach (Keys key in System.Enum.GetValues(typeof(Keys)))
+            foreach (var key in _allKeyValues)
             {
                 if (_newKeyboardState.IsKeyDown(key) && !_oldKeyboardState.IsKeyDown(key))
                 {
@@ -278,11 +152,11 @@ namespace Nez.GeonBit.UI
         /// Move the cursor to be at the center of the screen.
         /// </summary>
         /// <param name="pos">New mouse position.</param>
-        public void UpdateCursorPosition(Vector2 pos)
+        public void UpdateMousePosition(Vector2 pos)
         {
             // move mouse position back to center
             Mouse.SetPosition((int)pos.X, (int)pos.Y);
-            _newMousePos = pos;
+            _newMousePos = _oldMousePos = pos;
         }
 
         /// <summary>
@@ -290,7 +164,7 @@ namespace Nez.GeonBit.UI
         /// </summary>
         /// <param name="transform">Matrix to transform cursor position by.</param>
         /// <returns>Cursor position with optional transform applied.</returns>
-        public Vector2 TransformCursorPos(Matrix? transform)
+        public Vector2 TransformMousePosition(Matrix? transform)
         {
             var newMousePos = _newMousePos;
             if (transform != null)
@@ -304,7 +178,10 @@ namespace Nez.GeonBit.UI
         /// Called every time a keyboard key is pressed (called once on the frame key was pressed).
         /// </summary>
         /// <param name="key">Key code that is being pressed on this frame.</param>
-        protected void OnKeyPressed(Keys key) => NewKeyTextInput(key);
+        protected void OnKeyPressed(Keys key)
+        {
+            NewKeyTextInput(key);
+        }
 
         /// <summary>
         /// This update the character the user currently type down, for text input.
@@ -322,7 +199,7 @@ namespace Nez.GeonBit.UI
             bool isShiftDown = _newKeyboardState.IsKeyDown(Keys.LeftShift) || _newKeyboardState.IsKeyDown(Keys.RightShift);
 
             // set curr input key, but also keep the previous key in case we need to revert
-            var prevKey = _currCharacterInputKey;
+            Keys prevKey = _currCharacterInputKey;
             _currCharacterInputKey = key;
 
             // handle special keys and characters
@@ -338,6 +215,14 @@ namespace Nez.GeonBit.UI
 
                 case Keys.Right:
                     _currCharacterInput = (char)SpecialChars.ArrowRight;
+                    return;
+
+                case Keys.Up:
+                    _currCharacterInput = (char)SpecialChars.ArrowUp;
+                    return;
+
+                case Keys.Down:
+                    _currCharacterInput = (char)SpecialChars.ArrowDown;
                     return;
 
                 case Keys.Delete:
@@ -529,9 +414,10 @@ namespace Nez.GeonBit.UI
         /// This also handles keyboard cooldown, to make it feel like windows-input.
         /// </summary>
         /// <param name="txt">String to push text input into.</param>
+        /// <param name="lineWidth">How many characters can fit in a line.</param>
         /// <param name="pos">Position to insert / remove characters. -1 to push at the end of string. After done, will contain actual new caret position.</param>
         /// <returns>String after text input applied on it.</returns>
-        public string GetTextInput(string txt, ref int pos)
+        public string GetTextInput(string txt, int lineWidth, ref int pos)
         {
             // if need to skip due to cooldown time
             if (!_newKeyIsPressed && _keyboardInputCooldown > 0f)
@@ -562,6 +448,16 @@ namespace Nez.GeonBit.UI
                     if (++pos > txt.Length) { pos = txt.Length; }
                     return txt;
 
+                case (char)SpecialChars.ArrowUp:
+                    pos -= lineWidth;
+                    if (pos < 0) { pos = 0; }
+                    return txt;
+
+                case (char)SpecialChars.ArrowDown:
+                    pos += lineWidth;
+                    if (pos > txt.Length) { pos = txt.Length; }
+                    return txt;
+
                 case (char)SpecialChars.Backspace:
                     pos--;
                     return (pos < txt.Length && pos >= 0 && txt.Length > 0) ? txt.Remove(pos, 1) : txt;
@@ -577,94 +473,104 @@ namespace Nez.GeonBit.UI
         /// <summary>
         /// Get current mouse poisition.
         /// </summary>
-        public Vector2 MousePosition => _newMousePos;
+        public Vector2 MousePosition
+        {
+            get { return _newMousePos; }
+        }
 
         /// <summary>
         /// Get mouse position change since last frame.
         /// </summary>
         /// <return>Mouse position change as a 2d vector.</return>
-        public Vector2 MousePositionDiff => Input.MousePositionDelta.ToVector2();
+        public Vector2 MousePositionDiff
+        {
+            get { return _newMousePos - _oldMousePos; }
+        }
 
         /// <summary>
         /// Check if a given mouse button is down.
         /// </summary>
         /// <param name="button">Mouse button to check.</param>
         /// <return>True if given mouse button is down.</return>
-        public bool MouseButtonHeldDown(MouseButton button = MouseButton.Left) => GetMouseButtonState(button) == ButtonState.Pressed;
+        public bool MouseButtonDown(MouseButton button = MouseButton.Left)
+        {
+            return GetMouseButtonState(button) == ButtonState.Pressed;
+        }
 
         /// <summary>
         /// Return if any of mouse buttons is down.
         /// </summary>
         /// <returns>True if any mouse button is currently down.</returns>
-        public bool AnyMouseButtonDown() => MouseButtonHeldDown(MouseButton.Left) ||
-                MouseButtonHeldDown(MouseButton.Right) ||
-                MouseButtonHeldDown(MouseButton.Middle);
+        public bool AnyMouseButtonDown()
+        {
+            return MouseButtonDown(MouseButton.Left) ||
+                MouseButtonDown(MouseButton.Right) ||
+                MouseButtonDown(MouseButton.Middle);
+        }
 
         /// <summary>
         /// Check if a given mouse button was released in current frame.
         /// </summary>
         /// <param name="button">Mouse button to check.</param>
         /// <return>True if given mouse button was released in this frame.</return>
-        public bool MouseButtonReleased(MouseButton button = MouseButton.Left) => GetMouseButtonState(button) == ButtonState.Released && GetMousePreviousButtonState(button) == ButtonState.Pressed;
-
-        /// <summary>
-        /// Check if a given mouse button is held down.
-        /// </summary>
-        /// <param name="button">Bouse button to check.</param>
-        /// <return>True if given button is down.</return>
-        public bool GamePadButtonHeldDown(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Pressed;
-
-        /// <summary>
-        /// Check if a given gamepad button was released in current frame.
-        /// </summary>
-        /// <param name="button">GamePad button to check.</param>
-        /// <return>True if given gamepad button was released in this frame.</return>
-        public bool GamePadButtonReleased(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Released && GetGamePadPreviousButtonState(button) == ButtonState.Pressed;
-
-        /// <summary>
-        /// Check if a given gamepad button was pressed in current frame.
-        /// </summary>
-        /// <param name="button"></param>
-        /// <returns></returns>
-        public bool GamePadButtonPressed(GamePadButton button) => GetGamePadButtonState(button) == ButtonState.Pressed && GetGamePadPreviousButtonState(button) == ButtonState.Released;
+        public bool MouseButtonReleased(MouseButton button = MouseButton.Left)
+        {
+            return GetMouseButtonState(button) == ButtonState.Released && GetMousePreviousButtonState(button) == ButtonState.Pressed;
+        }
 
         /// <summary>
         /// Return if any mouse button was released this frame.
         /// </summary>
         /// <returns>True if any mouse button was released.</returns>
-        public bool AnyMouseButtonReleased() => MouseButtonReleased(MouseButton.Left) ||
+        public bool AnyMouseButtonReleased()
+        {
+            return MouseButtonReleased(MouseButton.Left) ||
                 MouseButtonReleased(MouseButton.Right) ||
                 MouseButtonReleased(MouseButton.Middle);
+        }
 
         /// <summary>
         /// Check if a given mouse button was pressed in current frame.
         /// </summary>
         /// <param name="button">Mouse button to check.</param>
         /// <return>True if given mouse button was pressed in this frame.</return>
-        public bool MouseButtonPressed(MouseButton button = MouseButton.Left) => GetMouseButtonState(button) == ButtonState.Pressed && GetMousePreviousButtonState(button) == ButtonState.Released;
+        public bool MouseButtonPressed(MouseButton button = MouseButton.Left)
+        {
+            return GetMouseButtonState(button) == ButtonState.Pressed && GetMousePreviousButtonState(button) == ButtonState.Released;
+        }
 
         /// <summary>
         /// Return if any mouse button was pressed in current frame.
         /// </summary>
         /// <returns>True if any mouse button was pressed in current frame..</returns>
-        public bool AnyMouseButtonPressed() => MouseButtonPressed(MouseButton.Left) ||
+        public bool AnyMouseButtonPressed()
+        {
+            return MouseButtonPressed(MouseButton.Left) ||
                 MouseButtonPressed(MouseButton.Right) ||
                 MouseButtonPressed(MouseButton.Middle);
+        }
 
         /// <summary>
         /// Check if a given mouse button was just clicked (eg released after being pressed down)
         /// </summary>
         /// <param name="button">Mouse button to check.</param>
         /// <return>True if given mouse button is clicked.</return>
-        public bool MouseButtonClick(MouseButton button = MouseButton.Left) => GetMouseButtonState(button) == ButtonState.Released && GetMousePreviousButtonState(button) == ButtonState.Pressed;
+        public bool MouseButtonClick(MouseButton button = MouseButton.Left)
+        {
+            return GetMouseButtonState(button) == ButtonState.Released && GetMousePreviousButtonState(button) == ButtonState.Pressed;
+        }
 
         /// <summary>
         /// Return if any of mouse buttons was clicked this frame.
         /// </summary>
         /// <returns>True if any mouse button was clicked.</returns>
-        public bool AnyMouseButtonClicked() => MouseButtonClick(MouseButton.Left) ||
+        public bool AnyMouseButtonClicked()
+        {
+            return
+                MouseButtonClick(MouseButton.Left) ||
                 MouseButtonClick(MouseButton.Right) ||
                 MouseButtonClick(MouseButton.Middle);
+        }
 
         /// <summary>
         /// Return the state of a mouse button (up / down).
@@ -681,29 +587,6 @@ namespace Nez.GeonBit.UI
                     return _newMouseState.RightButton;
                 case MouseButton.Middle:
                     return _newMouseState.MiddleButton;
-            }
-            return ButtonState.Released;
-        }
-
-        /// <summary>
-        /// Return the state of a gamepad button (up / down).
-        /// </summary>
-        /// <param name="button">Button to check.</param>
-        /// <returns>GamePad button state.</returns>
-        private ButtonState GetGamePadButtonState(GamePadButton button)
-        {
-            switch (button)
-            {
-                case GamePadButton.DPadUp:
-                    return _newGamePadState.DPad.Up;
-                case GamePadButton.DPadRight:
-                    return _newGamePadState.DPad.Right;
-                case GamePadButton.DPadDown:
-                    return _newGamePadState.DPad.Down;
-                case GamePadButton.DPadLeft:
-                    return _newGamePadState.DPad.Left;
-                case GamePadButton.A_Button:
-                    return _newGamePadState.Buttons.A;
             }
             return ButtonState.Released;
         }
@@ -728,41 +611,24 @@ namespace Nez.GeonBit.UI
         }
 
         /// <summary>
-        /// Get GamePad state in previous frame.
-        /// </summary>
-        /// <param name="button"></param>
-        /// <returns></returns>
-        private ButtonState GetGamePadPreviousButtonState(GamePadButton button = GamePadButton.A_Button)
-        {
-            switch (button)
-            {
-                case GamePadButton.DPadUp:
-                    return _oldGamePadState.DPad.Up;
-                case GamePadButton.DPadRight:
-                    return _oldGamePadState.DPad.Right;
-                case GamePadButton.DPadDown:
-                    return _oldGamePadState.DPad.Down;
-                case GamePadButton.DPadLeft:
-                    return _oldGamePadState.DPad.Left;
-                case GamePadButton.A_Button:
-                    return _oldGamePadState.Buttons.A;
-            }
-            return ButtonState.Released;
-        }
-
-        /// <summary>
         /// Check if a given keyboard key is down.
         /// </summary>
         /// <param name="key">Key button to check.</param>
         /// <return>True if given key button is down.</return>
-        public bool IsKeyDown(Keys key) => _newKeyboardState.IsKeyDown(key);
+        public bool IsKeyDown(Keys key)
+        {
+            return _newKeyboardState.IsKeyDown(key);
+        }
 
         /// <summary>
         /// Check if a given keyboard key was previously pressed down and now released in this frame.
         /// </summary>
         /// <param name="key">Key button to check.</param>
         /// <return>True if given key button was just released.</return>
-        public bool IsKeyReleased(Keys key) => _oldKeyboardState.IsKeyDown(key) &&
+        public bool IsKeyReleased(Keys key)
+        {
+            return _oldKeyboardState.IsKeyDown(key) &&
                    _newKeyboardState.IsKeyUp(key);
+        }
     }
 }

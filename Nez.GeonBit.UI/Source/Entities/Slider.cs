@@ -322,11 +322,11 @@ namespace Nez.GeonBit.UI.Entities
 
             // stepDirection > 0 -> moves the mark to the right
             // stepDirection < 0 -> moves the mark to the left
-            if (Input.ThumbStickLeftChange.X > 0)
+            if (Input.ThumbStickLeftChange.X > 0 || Input.GamePadButtonHeldDown(GamePadButton.DPadRight) || Input.GamePadButtonPressed(GamePadButton.DPadRight))
             {
                 stepDirection = 1;
             }
-            else if (Input.ThumbStickLeftChange.X < 0)
+            else if (Input.ThumbStickLeftChange.X < 0 || Input.GamePadButtonHeldDown(GamePadButton.DPadLeft) || Input.GamePadButtonPressed(GamePadButton.DPadLeft))
             {
                 stepDirection = -1;
             }

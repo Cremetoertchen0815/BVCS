@@ -549,7 +549,7 @@ namespace Nez.GeonBit.UI
             Root.Update(ref target, ref _dragTarget, ref wasEventHandled, Point.Zero);
 
             // set active entity
-            if (_input.MouseButtonHeldDown(MouseButton.Left))
+            if (_input.MouseButtonHeldDown(MouseButton.Left) || _input.GamePadButtonHeldDown(GamePadButton.A_Button))
             {
                 ActiveEntity = target;
             }
