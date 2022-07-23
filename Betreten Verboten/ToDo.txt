@@ -1,4 +1,6 @@
-﻿-Add sounds
+﻿-Fix missaligned UI elements
+-Fix saucer being able to fly into other figure
+-Add sounds
 -Implement pause menu
 -Implement title screen
 -Implement CPU players
