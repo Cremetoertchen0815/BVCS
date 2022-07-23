@@ -1,14 +1,10 @@
-﻿using Nez;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Betreten_Verboten.Components.Base.Characters;
 using Betreten_Verboten.Scenes.Main;
-using Nez.GeonBit;
 using Microsoft.Xna.Framework;
+using Nez;
+using Nez.GeonBit;
 using Nez.Tweens;
-using Betreten_Verboten.Components.Base.Characters;
+using System;
 
 namespace Betreten_Verboten.Components.BV
 {
@@ -39,7 +35,7 @@ namespace Betreten_Verboten.Components.BV
 
                     break;
                 case "check_saucer":
-                    if (message.Body is Character chr && chr.GlobalPosition.Valid && _ownerScene.Board.SaucerFields.Contains(chr.GlobalPosition.Position)) 
+                    if (message.Body is Character chr && chr.GlobalPosition.Valid && _ownerScene.Board.SaucerFields.Contains(chr.GlobalPosition.Position))
                         TriggerAnimation(chr);
                     else
                         this.SendPrivateTele("base", "char_move_done", false);
@@ -86,7 +82,7 @@ namespace Betreten_Verboten.Components.BV
 
             //Speen camera
             _ownerScene.Camera.LookAtTarget = Entity;
-            var srcSpeen = Nez.Random.NextAngle();
+            float srcSpeen = Nez.Random.NextAngle();
             _camSpeener = this.Tween("Rotator", MathHelper.TwoPi + srcSpeen, 20f).SetFrom(srcSpeen).SetEaseType(EaseType.Linear).SetLoops(LoopType.RestartFromBeginning, -1);
             _camSpeener.Start();
 
@@ -101,7 +97,7 @@ namespace Betreten_Verboten.Components.BV
             int boost = Nez.Random.Range(-6, 7);
             while (tryCnt++ < 15 && !IsChrPosValid(c.Position + boost)) boost = Nez.Random.Range(-6, 7);
             var pos = _ownerScene.Board.GetCharacterPosition(c, boost);
-            _positionDelta = (_targetEntity = (GeonEntity)c.Entity).Node.Position - Node.Position;
+            _positionDelta = (_targetEntity = c.Entity).Node.Position - Node.Position;
 
             this.Tween("PosY", 10f, 1.5f).SetDelay(0.5f).SetFrom(3f).SetEaseType(EaseType.SineInOut).SetLoops(LoopType.PingPong).Start();
             this.Tween("PosXZ", pos, 3f).SetDelay(0.5f).SetEaseType(EaseType.CubicInOut).SetCompletionHandler(z =>
@@ -113,7 +109,8 @@ namespace Betreten_Verboten.Components.BV
                     //Repeat saucer fly
                     _ownerScene.Board.SaucerFields.Remove(c.GlobalPosition.Position);
                     Lift(c);
-                } else
+                }
+                else
                 {
                     //Back out saucer
                     Node.Tween("Position", new Vector3(0, 40, 0), 1f).SetEaseType(EaseType.CubicInOut).SetDelay(0.5f).SetCompletionHandler(_ =>

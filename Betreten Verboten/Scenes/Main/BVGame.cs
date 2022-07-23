@@ -166,7 +166,7 @@ namespace Betreten_Verboten.Scenes.Main
         {
             //Create backgrounds
             AddRenderer(new PsygroundRenderer(0));
-            
+
             //Create table
             var table = CreateGeonEntity("table", new Vector3(0, -26, 0), NodeType.BoundingBoxCulling).AddComponent(new ModelRenderer(Content.LoadModel("mesh/table")));
             table.Node.Scale = Vector3.One * 0.2f;
@@ -227,7 +227,7 @@ namespace Betreten_Verboten.Scenes.Main
             _uiPlayerTutorial.Tween("FillColor", Color.Lerp(Color.BlanchedAlmond, Color.Black, 0.7f), 0.7f).SetLoops(LoopType.PingPong, -1).SetEaseType(EaseType.QuadInOut).Start();
 
             //Implement score toggle
-            _btnConfirmNRoll.ButtonPressed += () => 
+            _btnConfirmNRoll.ButtonPressed += () =>
             {
                 if (!_gameFocussed) return;
 
@@ -438,7 +438,7 @@ namespace Betreten_Verboten.Scenes.Main
             //Update scoreboard size by the amount of trigger press on the player's gamepad.
             if (Input.GamePads[0].IsConnected() && !_scoreTriggerOverride)
             {
-                var val = Input.GamePads[0].GetLeftTriggerRaw();
+                float val = Input.GamePads[0].GetLeftTriggerRaw();
                 for (int i = 0; i < _board.PlayerCount; i++)
                 {
                     _scoreLabels[i].Visible = val > 1 - Mathf.Epsilon;
@@ -471,7 +471,7 @@ namespace Betreten_Verboten.Scenes.Main
             for (int i = 0; i < Board.PlayerCount; i++)
             {
                 var figs = _players[i].GetFigures();
-                var hasWon = true;
+                bool hasWon = true;
                 for (int j = 0; j < Board.FigureCountPP; j++) if (figs[j].Position < Board.FieldCountTotal) hasWon = false;
                 who = i;
                 if (hasWon) return true;
@@ -504,7 +504,7 @@ namespace Betreten_Verboten.Scenes.Main
                             break;
                         case 1: //Tip over
                             fg[j].RigidBodyEnabled = true;
-                            var angle = Random.NextAngle();
+                            float angle = Random.NextAngle();
                             fg[j].RigidBody.AngularVelocity = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * 15f;
                             break;
                         case 2: //Shrink

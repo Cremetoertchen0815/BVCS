@@ -2,8 +2,8 @@
 using Betreten_Verboten.Components.Base.Characters;
 using Betreten_Verboten.Components.BV.Player;
 using Nez;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Betreten_Verboten.Components.BV
 {
@@ -131,7 +131,7 @@ namespace Betreten_Verboten.Components.BV
         }
 
         //Helper methods
-        private static IEnumerable<Character> GetAllFigures(BVBoard b) => b.GetAllPlayers().SelectMany( x => x.GetFigures());
+        private static IEnumerable<Character> GetAllFigures(BVBoard b) => b.GetAllPlayers().SelectMany(x => x.GetFigures());
         private static Character GetRandomEnemyFigure(Character c) => GetAllFigures(c.Owner.Board).Where(x => x.Owner is BVPlayer b && !b.IsAlly((BVPlayer)c.Owner)).Random();
         private static Character GetRandomAllyFigure(Character c) => GetAllFigures(c.Owner.Board).Where(x => x.Owner is BVPlayer b && b.IsAlly((BVPlayer)c.Owner)).Random();
     }

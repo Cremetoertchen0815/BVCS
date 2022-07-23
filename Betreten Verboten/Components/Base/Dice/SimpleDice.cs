@@ -1,13 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
-using Nez.GeonBit;
-using Nez.GeonBit.Materials;
 using Nez.GeonBit.UI;
 using Nez.GeonBit.UI.Entities;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Betreten_Verboten.Components.Base.Dice
 {

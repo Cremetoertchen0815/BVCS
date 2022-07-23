@@ -69,7 +69,8 @@ namespace Betreten_Verboten.Components.Base.Characters
                     RigidBody.AngularDamping = RigidBody.LinearDamping = 0.65f;
                     RigidBody.Enabled = true;
                     RigidBody.EnableSimulation = true;
-                } else
+                }
+                else
                 {
                     Entity.RemoveComponent(RigidBody);
                     RigidBody = null;
@@ -90,7 +91,7 @@ namespace Betreten_Verboten.Components.Base.Characters
                     if (source.kicker == this || source.kicker.GlobalPosition != GlobalPosition) break;
                     //Check for kicking condition. That being that either landing the character on its final landing field or the character standing on its homebase.
                     //Of course we ignore our own characters.
-                    System.Action<ITween<float>> ac = x => 
+                    System.Action<ITween<float>> ac = x =>
                     {
                         if (!source.finalField && oldPos != 0) return;
                         SetPosition(-1);
@@ -115,7 +116,7 @@ namespace Betreten_Verboten.Components.Base.Characters
         {
             _position = pos;
             GlobalPosition = GlobalPosition.FromChar(this);
-            var node = (Entity as GeonEntity)?.Node;
+            var node = Entity?.Node;
             if (node == null) return this;
             var pos2D = Owner.Board.GetCharacterPosition(this);
             node.Position = new Vector3(pos2D.X, node.Position.Y, pos2D.Y);
