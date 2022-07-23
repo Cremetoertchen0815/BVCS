@@ -1,5 +1,4 @@
-﻿-Implement quick dice
--Add sounds
+﻿-Add sounds
 -Implement pause menu
 -Implement title screen
 -Implement CPU players

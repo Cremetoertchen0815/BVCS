@@ -127,7 +127,7 @@ namespace Nez.GeonBit.UI.Utils
         /// <returns>Message box panel.</returns>
         public static Entities.Panel ShowMsgBox(string header, string text, MsgBoxOption[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
         {
-            UserInterface.GamePadModeEnabled = true;
+            UserInterface.GamePadModeEnabled = Input.GamePads[0]?.IsConnected() ?? false;
 
             // create panel for messagebox
             size = size ?? new Vector2(500, 500);
@@ -194,7 +194,7 @@ namespace Nez.GeonBit.UI.Utils
                     }
                 };
 
-                if (i == 0) button.Select();
+                if (i == 0 && UserInterface.GamePadModeEnabled) button.Select();
 
                 // add button to buttons panel
                 buttonsPanel.AddChild(button);
@@ -226,7 +226,7 @@ namespace Nez.GeonBit.UI.Utils
         /// <returns>Input box panel.</returns>
         public static Entities.Panel ShowInputBox(string header, string text, InputBoxOption[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
         {
-            UserInterface.GamePadModeEnabled = true;
+            UserInterface.GamePadModeEnabled = Input.GamePads[0]?.IsConnected() ?? false;
 
             // create panel for messagebox
             size = size ?? new Vector2(500, 500);
@@ -297,7 +297,7 @@ namespace Nez.GeonBit.UI.Utils
                 // add button to buttons panel
                 buttonsPanel.AddChild(button);
 
-                if (i == 0) button.Select();
+                if (i == 0 && UserInterface.GamePadModeEnabled) button.Select();
             }
 
             // add panel to active ui

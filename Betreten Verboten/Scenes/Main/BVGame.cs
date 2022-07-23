@@ -26,23 +26,28 @@ namespace Betreten_Verboten.Scenes.Main
     public class BVGame : GeonScene, ITelegramReceiver
     {
 
-        protected GeonDefaultRenderer _geonRenderer;
 
-        //Fields
+        //Config
+        public DiceType DiceType { get; set; } = DiceType.Simple;
+
+        //Misc
+        protected GeonDefaultRenderer _geonRenderer;
         private bool _gameFocussed = true;
         private int _activePlayer = -1;
         private BVPlayer[] _players;
         private BVBoard _board;
-        private Saucer _saucer;
+        //private Saucer _saucer;
         private List<int> _diceNumbers = new List<int>();
         private GameState _gameState = GameState.OtherAction;
         private ThriceRollState _thriceRoll = ThriceRollState.UNABLE;
+
 
         //UI
         private bool _scoreTriggerOverride = false;
         private int[] _playerIndices;
         private bool _isScoreVisible = false;
         private Panel[] _uiPlayerHUDs;
+        private SimpleDice _uiSimpleDice;
         private DynamicLabel[] _scoreLabels;
         private Label _uiPlayerName;
         private Label _uiPlayerTutorial;
@@ -118,7 +123,7 @@ namespace Betreten_Verboten.Scenes.Main
                     int nr = (int)message.Body;
                     _diceNumbers.Add(nr);
 
-                    if (_thriceRoll == ThriceRollState.ABLE_TO)
+                    if (_thriceRoll == ThriceRollState.ABLE_TO && DiceType == DiceType.Physics)
                     {
                         if (_diceNumbers.Count > 2)
                         {
@@ -157,6 +162,7 @@ namespace Betreten_Verboten.Scenes.Main
 
         protected void InitEnvironment()
         {
+            //Create backgrounds
             AddRenderer(new PsygroundRenderer(0));
             //CreateGeonEntity("skybox").AddComponent(new SkyBox(bg) { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
             
@@ -168,20 +174,19 @@ namespace Betreten_Verboten.Scenes.Main
             table.RenderingQueue = RenderingQueue.Terrain;
             table.SetMaterial(new NormalMapLitMaterial() { NormalTexture = Content.LoadTexture("mesh/wood_normal"), Texture = Content.LoadTexture("mesh/wood-2609093_960_720"), TextureEnabled = true, CastsShadows = false });
 
-            Camera.Entity.AddComponent(new Components.Debug.DebugCamMover());
             //Create playing field
             _board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
             _players = new BVPlayer[_board.PlayerCount];
             for (int i = 0; i < _board.PlayerCount; i++) _players[i] = CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
 
-            //saucer
-            _saucer = CreateGeonEntity("saucer", NodeType.BoundingBoxCulling).AddComponent(new Saucer());
+            //Saucer
+            CreateGeonEntity("saucer", NodeType.BoundingBoxCulling).AddComponent(new Saucer());
         }
 
         protected void InitUI()
         {
-            //Add controll panel
-            _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.Simple, Anchor.TopRight, new Vector2(15)));
+            //Add control panel
+            _uiPlayerControls = UserInterface.Active.AddEntity(new Panel(new Vector2(250, 400), PanelSkin.Simple, Anchor.TopRight, new Vector2(15)) { FillColor = Color.Transparent });
             var btnA = _uiPlayerControls.AddChild(new Button("Dice", ButtonSkin.Alternative, Anchor.TopCenter, new Vector2(200, 80)) { OnClick = x => GameState = GameState.DiceRoll });
             _uiPlayerAnger = _uiPlayerControls.AddChild(new Button("Anger", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)) { OnClick = x => OpenAnger() });
             _uiPlayerSacrifice = _uiPlayerControls.AddChild(new Button("Sacrifice", ButtonSkin.Alternative, Anchor.AutoCenter, new Vector2(200, 80)) { OnClick = x => OpenSacrifice() });
@@ -195,7 +200,7 @@ namespace Betreten_Verboten.Scenes.Main
             _uiPlayerAfK.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.Y), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
             _uiPlayerReroll.AddChild(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.A), Vector2.One * 35, ImageDrawMode.Stretch, Anchor.CenterLeft, new Vector2(-18, -2)));
 
-            //Add player hud
+            //Add player score hud
             _uiPlayerHUDs = new Panel[_board.PlayerCount];
             _scoreLabels = new DynamicLabel[_board.PlayerCount];
             var chrCfg = new CharConfig();
@@ -203,7 +208,7 @@ namespace Betreten_Verboten.Scenes.Main
             {
                 int ii = i;
                 chrCfg.SetStdColorScheme(i);
-                _uiPlayerHUDs[i] = UserInterface.Active.AddEntity(new Panel(new Vector2(200, 70), PanelSkin.Default, Anchor.TopLeft, new Vector2(5, 15 + i * 75)) { FillColor = chrCfg.Color }); //
+                _uiPlayerHUDs[i] = UserInterface.Active.AddEntity(new Panel(new Vector2(200, 70), PanelSkin.Default, Anchor.TopLeft, new Vector2(5, 15 + i * 75)) { FillColor = chrCfg.Color });
                 _uiPlayerHUDs[i].AddChild(new Image(Graphics.Instance.DebugSprite.Texture2D, new Vector2(40), ImageDrawMode.Stretch, Anchor.CenterLeft));
                 _uiPlayerHUDs[i].AddChild(new Label("Player " + i, Anchor.TopLeft, null, new Vector2(50, 0)));
                 _scoreLabels[i] = _uiPlayerHUDs[i].AddChild(new DynamicLabel(() => _players[ii].Points.ToString(), Anchor.TopRight));
@@ -211,6 +216,10 @@ namespace Betreten_Verboten.Scenes.Main
 
             }
 
+            //Add simple dice(if mode matches)
+            if (DiceType == DiceType.Simple) _uiSimpleDice = CreateEntity("dice").SetTag(Dice.ENTITY_TAG).AddComponent(new SimpleDice());
+
+            //Set up rest of the HUD
             UserInterface.Active.AddEntity(new Image(GamepadIcons.Instance.GetIcon(GamepadIcons.GamepadButton.LT), new Vector2(50, 51), ImageDrawMode.Stretch, Anchor.Auto, new Vector2(80, 0)));
             _uiPlayerName = UserInterface.Active.AddEntity(new Label(string.Empty, Anchor.TopCenter, null, new Vector2(0, 30)) { FontOverride = Content.Load<SpriteFont>("fonts/player_label"), Text = "" });
             _uiPlayerTutorial = UserInterface.Active.AddEntity(new Label(string.Empty, Anchor.BottomLeft, null, new Vector2(80, 30)) { FontOverride = Content.Load<SpriteFont>("fonts/tutorial_label") });
@@ -360,11 +369,16 @@ namespace Betreten_Verboten.Scenes.Main
             get => _gameState;
             set
             {
+                if (_gameState == value) return; //Ignore same non-value changing triggers
+
                 //Switch for old state
                 switch (_gameState)
                 {
                     case GameState.DiceRoll:
-                        FindEntitiesWithTag(PhysicsDice.ENTITY_TAG).ForEach(x => x.Destroy());
+                        if (DiceType == DiceType.Physics)
+                            FindEntitiesWithTag(Dice.ENTITY_TAG).ForEach(x => x.Destroy());
+                        else
+                            _uiSimpleDice.Visible = false;
                         break;
                 }
 
@@ -372,9 +386,16 @@ namespace Betreten_Verboten.Scenes.Main
                 switch (_gameState = value)
                 {
                     case GameState.DiceRoll:
-                        //Set camera position
-                        Camera.LookAt = Dice.GetCamFocusOverride(Dice.DiceType.Physics);
-                        Camera.OverridePosition = Dice.GetCamPosOverride(Dice.DiceType.Physics);
+                        if (DiceType == DiceType.Physics)
+                        {
+                            //Set camera position
+                            Camera.LookAt = PhysicsDice.GetCamFocusOverride();
+                            Camera.OverridePosition = PhysicsDice.GetCamPosOverride();
+                        }
+                        else
+                        {
+                            _uiSimpleDice.Visible = true;
+                        }
                         //Refresh UI elements
                         _uiPlayerTutorial.Text = "Roll the dice!";
                         _uiPlayerControls.Visible = false;
@@ -383,7 +404,7 @@ namespace Betreten_Verboten.Scenes.Main
                         RollDice();
                         break;
                     case GameState.Outro:
-                        _saucer.Tween("Rotator", 6f, 5f).SetEaseType(EaseType.CubicInOut).Start();
+                        FindEntity("saucer").GetComponent<Saucer>().Tween("Rotator", 6f, 5f).SetEaseType(EaseType.CubicInOut).Start();
                         Camera.LookAt = new Vector3(0, 0, 0);
                         _uiPlayerTutorial.Text = "Game is over!";
                         break;
@@ -420,7 +441,11 @@ namespace Betreten_Verboten.Scenes.Main
 
         private void RollDice()
         {
-            for (int i = 0; i < (_thriceRoll == ThriceRollState.ABLE_TO ? 3 : 1); i++) Dice.Throw(this, Dice.DiceType.Physics);
+            if (DiceType == DiceType.Physics)
+                for (int i = 0; i < (_thriceRoll == ThriceRollState.ABLE_TO ? 3 : 1); i++) PhysicsDice.Throw(this);
+            else
+                _uiSimpleDice.Throw();
+
             _uiPlayerReroll.Visible = false;
         }
 
@@ -472,7 +497,7 @@ namespace Betreten_Verboten.Scenes.Main
             //Switch to next player & adapt UI
             _activePlayer = ++_activePlayer % _board.PlayerCount;
             var pl = _players[_activePlayer];
-            _uiPlayerControls.FillColor = CharConfig.GetStdColor(_activePlayer) * 0.95f;
+            var plClor = CharConfig.GetStdColor(_activePlayer);
 
             //Implement skipping
             if (pl.SkipRound)
@@ -485,7 +510,8 @@ namespace Betreten_Verboten.Scenes.Main
             }
 
             _uiPlayerName.Text = pl.CharacterConfig.Name;
-            _uiPlayerName.Tween("FillColor", _uiPlayerControls.FillColor, 0.5f).Start();
+            _uiPlayerName.Tween("FillColor", plClor, 0.2f).Start();
+            _uiSimpleDice?.SetColor(plClor);
             _uiPlayerSacrifice.Enabled = pl.Sacrificable;
             _uiPlayerAnger.Enabled = pl.AngerCount > 0;
             _uiPlayerTutorial.Text = "Choose an action!";

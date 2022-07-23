@@ -7,8 +7,11 @@ using System.Linq;
 
 namespace Betreten_Verboten.Components.Base.Dice
 {
-    internal class PhysicsDice : Dice
+    internal class PhysicsDice : GeonComponent, IUpdatable
     {
+        public static Vector3 GetCamPosOverride() => new Vector3(-470, 50, -470);
+        public static Vector3 GetCamFocusOverride() => new Vector3(-495, 3, -495);
+
         private const float MEASURE_SPEED = 0.5f;
         public const float ANGLE_REST_LIMIT = 0.95f;
 
@@ -36,7 +39,7 @@ namespace Betreten_Verboten.Components.Base.Dice
 
         }
 
-        public override void Update()
+        public void Update()
         {
             if (_isDoneRolling) return;
 
@@ -65,5 +68,7 @@ namespace Betreten_Verboten.Components.Base.Dice
             return floatDots.Aggregate((x, y) => x.dot > y.dot ? x : y).index + 1;
         }
 
+
+        public static void Throw(GeonScene scene) => scene.CreateGeonEntity("dice", new Vector3(-500 + Random.MinusOneToOne() * 5, Random.Range(25, 40), -500 + Random.MinusOneToOne() * 5), NodeType.BoundingBoxCulling).SetTag(Dice.ENTITY_TAG).AddComponent(new PhysicsDice());
     }
 }
