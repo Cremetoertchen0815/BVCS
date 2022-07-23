@@ -7,18 +7,21 @@ namespace Betreten_Verboten.Components.Base.Dice
 {
     public class SimpleDice : Component, IUpdatable
     {
-        private const float _tickSleep = 0.01f;
-        private const float _afterSleep = 0.2f;
-        private const int _tickCount = 20;
-        private const float DICE_SIZE = 300f;
+        //Const
+        private const int TICK_COUNT = 20;
+        private const float TICK_SLEEP_TIME = 0.01f;
+        private const float AFTER_SLEEP_TIME = 0.2f;
+        private const float DICE_SIZE = 250f;
         private const float MARGIN = 50f;
 
+        //Fields
         private Image _uiEntity;
         private Image _uiBG;
         private int _ticksLeft = 0;
         private float _tickTimer;
         private int _currentNr;
-        public SimpleDice()
+
+        public override void OnAddedToEntity()
         {
             _uiEntity = UserInterface.Active.AddEntity(new Image(Core.Content.LoadTexture("texture/dice_simple_eyes"), new Vector2(DICE_SIZE), ImageDrawMode.Stretch, Anchor.BottomRight, new Vector2(-DICE_SIZE, MARGIN)));
             _uiEntity.Background = _uiBG = new Image(Core.Content.LoadTexture("texture/dice_simple_border"), new Vector2(DICE_SIZE), ImageDrawMode.Stretch, Anchor.Center);
@@ -46,26 +49,28 @@ namespace Betreten_Verboten.Components.Base.Dice
         public void Throw()
         {
             if (_ticksLeft > 0) return;
-            _ticksLeft = _tickCount;
-            _tickTimer = _tickSleep;
+            _ticksLeft = TICK_COUNT;
+            _tickTimer = TICK_SLEEP_TIME;
         }
 
         public void Update()
         {
-            if (_ticksLeft < 1) return;
+            if (_ticksLeft < 1) return; //Timer not active -> return
+
             if ((_tickTimer -= Time.DeltaTime) <= 0)
             {
-                //Tick down timer
-                _tickTimer = _tickSleep;
-                _ticksLeft--;
                 //Generate new number
                 _currentNr = Random.Range(1, 7);
                 _uiEntity.SourceRectangle = GetNrSourceRect();
+                //Tick down timer
+                _tickTimer = TICK_SLEEP_TIME;
+                if (--_ticksLeft < 1) Core.Schedule(AFTER_SLEEP_TIME, x => _currentNr.SendPrivateObj("dice", "base", "dice_value_set"));
             }
-
-            if (_ticksLeft < 1) Core.Schedule(_afterSleep, x => _currentNr.SendPrivateObj("dice", "base", "dice_value_set"));
         }
 
+        /// <summary>
+        /// Returns the source texture rectangle of the currently rolled number.
+        /// </summary>
         private Rectangle GetNrSourceRect()
         {
             switch (_currentNr)

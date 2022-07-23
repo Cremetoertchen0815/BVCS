@@ -1,4 +1,4 @@
-﻿-Fix missaligned UI elements
+﻿-Fix weird table top missing bug
 -Fix saucer being able to fly into other figure
 -Add sounds
 -Implement pause menu
