@@ -7,6 +7,7 @@ namespace Nez.GeonBit
     public class ShadowPlaneRenderer : Renderer
     {
 
+
         private Matrix _projection;
         private Texture2D _filler;
         private Lights.ILightsManager lightsManager => GeonDefaultRenderer.ActiveLightsManager;
@@ -40,7 +41,7 @@ namespace Nez.GeonBit
             ListPool<GeonEntity>.Free(lst);
 
             Materials.MaterialAPI.SetViewProjection(lightsManager.ShadowViewMatrix, _projection);
-            RenderingQueues.DrawQueues(false);
+            RenderingQueues.DrawQueues(false, true, true);
 
             Core.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 1f, 0);
 

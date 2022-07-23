@@ -64,6 +64,9 @@ namespace Nez.GeonBit
         /// If true, will draw just the wireframe of the entity.
         /// Note: settings this property will change the rendering queue property.
         /// </summary>
+        /// 
+        public bool ShadowDraw { get; set; } = true;
+
         public bool WireFrame
         {
             get => RenderingQueue == RenderingQueue.Wireframe;

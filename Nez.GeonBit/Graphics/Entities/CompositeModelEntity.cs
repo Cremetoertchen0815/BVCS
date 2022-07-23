@@ -45,7 +45,7 @@ namespace Nez.GeonBit
         /// Dictionary with all the mesh entities.
         /// </summary>
         protected OrderedDictionary _meshes = new OrderedDictionary();
-        protected List<MeshEntity> _meshAccess;
+        protected List<MeshEntity> _meshAccess = new List<MeshEntity>();
 
         /// <summary>
         /// Create the model entity from model instance.

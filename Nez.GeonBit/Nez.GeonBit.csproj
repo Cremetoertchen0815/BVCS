@@ -153,6 +153,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transformations\Transformations.cs" />
     <Compile Include="Utils\CountAndAlert.cs" />
+    <Compile Include="Utils\Extension.cs" />
     <Compile Include="Utils\Math3D.cs" />
     <Compile Include="Utils\ResizeableArray.cs" />
     <Compile Include="Utils\ResourcesManager.cs" />

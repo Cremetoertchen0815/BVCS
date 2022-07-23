@@ -365,7 +365,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Draw rendering queues.
         /// </summary>
-        public static void DrawQueues(bool clearQueues = true, bool sortEntities = true)
+        public static void DrawQueues(bool clearQueues = true, bool sortEntities = true, bool onlyDrawShadow = false)
         {
             // iterate drawing queues
             for (int i = 0; i < _renderingQueues.Count; i++)
@@ -396,6 +396,7 @@ namespace Nez.GeonBit
                 for (int j = 0; j < queue.Entities.Count; j++)
                 {
                     var entityData = queue.Entities[j];
+                    if (onlyDrawShadow && !entityData.Entity.ShadowDraw) continue;
                     entityData.Entity.DoEntityDraw(ref entityData.World);
                 }
 

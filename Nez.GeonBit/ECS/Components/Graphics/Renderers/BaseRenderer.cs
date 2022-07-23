@@ -55,6 +55,8 @@ namespace Nez.GeonBit
             set => RenderableEntity.RenderingQueue = value;
         }
 
+        public virtual bool ShadowsEnabled { get => RenderableEntity.ShadowDraw; set => RenderableEntity.ShadowDraw = value; }
+
         /// <summary>
         /// Copy basic properties to another component (helper function to help with Cloning).
         /// </summary>

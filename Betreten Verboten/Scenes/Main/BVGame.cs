@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.ECS;
+using Nez.GeonBit.Materials;
 using Nez.GeonBit.Physics;
 using Nez.GeonBit.UI;
 using Nez.GeonBit.UI.Entities;
@@ -24,15 +25,6 @@ namespace Betreten_Verboten.Scenes.Main
     [ManagedScene(100, false)]
     public class BVGame : GeonScene, ITelegramReceiver
     {
-
-        //Consts
-        private const int ABUTTON_WIDTH = 350;
-        private const int ABUTTON_HEIGHT = 70;
-        private const int ABUTTON_MARGIN_RIGHT = 20;
-        private const int ABUTTON_MARGIN_BOTTOM = 20;
-        private const int ABUTTON_PADDING_X = 20;
-        private const int ABUTTON_PADDING_Y = 20;
-        private const int ABUTTON_SPACING = 20;
 
         protected GeonDefaultRenderer _geonRenderer;
 
@@ -139,7 +131,7 @@ namespace Betreten_Verboten.Scenes.Main
                         }
                     }
 
-                    if (PhysicsDice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice()))
+                    if (Dice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice()))
                     {
                         _uiPlayerReroll.Visible = true;
                     }
@@ -167,7 +159,16 @@ namespace Betreten_Verboten.Scenes.Main
         {
             AddRenderer(new PsygroundRenderer(0));
             //CreateGeonEntity("skybox").AddComponent(new SkyBox(bg) { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
+            
+            //Create table
+            var table = CreateGeonEntity("table", new Vector3(0, -26, 0), NodeType.BoundingBoxCulling).AddComponent(new ModelRenderer(Content.LoadModel("mesh/table")));
+            table.Node.Scale = Vector3.One * 0.2f;
+            table.Node.RotationX = MathHelper.PiOver2;
+            table.ShadowsEnabled = false;
+            table.RenderingQueue = RenderingQueue.Terrain;
+            table.SetMaterial(new NormalMapLitMaterial() { NormalTexture = Content.LoadTexture("mesh/wood_normal"), Texture = Content.LoadTexture("mesh/wood-2609093_960_720"), TextureEnabled = true, CastsShadows = false });
 
+            Camera.Entity.AddComponent(new Components.Debug.DebugCamMover());
             //Create playing field
             _board = CreateGeonEntity("board", NodeType.Simple).AddComponent(new BVPlusBoard());
             _players = new BVPlayer[_board.PlayerCount];
