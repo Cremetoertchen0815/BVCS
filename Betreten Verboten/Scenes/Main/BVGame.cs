@@ -26,7 +26,6 @@ namespace Betreten_Verboten.Scenes.Main
     public class BVGame : GeonScene, ITelegramReceiver
     {
 
-
         //Config
         public DiceType DiceType { get; set; } = DiceType.Simple;
 
@@ -36,11 +35,9 @@ namespace Betreten_Verboten.Scenes.Main
         private int _activePlayer = -1;
         private BVPlayer[] _players;
         private BVBoard _board;
-        //private Saucer _saucer;
         private List<int> _diceNumbers = new List<int>();
         private GameState _gameState = GameState.OtherAction;
         private ThriceRollState _thriceRoll = ThriceRollState.UNABLE;
-
 
         //UI
         private bool _scoreTriggerOverride = false;
@@ -119,10 +116,11 @@ namespace Betreten_Verboten.Scenes.Main
         {
             switch (message.Head)
             {
-                case "dice_value_set":
+                case "dice_value_set": //Dice finished rolling and reports back a certain number rolled
                     int nr = (int)message.Body;
                     _diceNumbers.Add(nr);
 
+                    //Takes into account multiple physical dices getting rolled simultaneously.
                     if (_thriceRoll == ThriceRollState.ABLE_TO && DiceType == DiceType.Physics)
                     {
                         if (_diceNumbers.Count > 2)
@@ -136,6 +134,7 @@ namespace Betreten_Verboten.Scenes.Main
                         }
                     }
 
+                    //Check if any further rerolls are necessary and act accordingly
                     if (Dice.ShouldReroll(_diceNumbers, _players[_activePlayer].CanRollThrice()))
                     {
                         _uiPlayerReroll.Visible = true;
@@ -146,14 +145,17 @@ namespace Betreten_Verboten.Scenes.Main
                         GameState = GameState.PieceSelect;
                     }
                     break;
+                //Some game component wants to display a message/a piece of information to the player.
                 case "show_action_result":
                 case "show_tutorial":
                     _uiPlayerTutorial.Text = (string)message.Body ?? string.Empty;
                     break;
+                //Some game component reports that the current player is done moving and the next player is due.
                 case "char_move_done":
                 case "advance_player":
                     if (IsGameOver(out int who)) FinishGame(who); else AdvancePlayer();
                     break;
+                //Some game component requests a re-ordering of the scoreboard.
                 case "resort_score":
                     ReorderPlayerHUD();
                     break;
@@ -164,7 +166,6 @@ namespace Betreten_Verboten.Scenes.Main
         {
             //Create backgrounds
             AddRenderer(new PsygroundRenderer(0));
-            //CreateGeonEntity("skybox").AddComponent(new SkyBox(bg) { RenderingQueue = RenderingQueue.SolidBackNoCull }); //Create skybox
             
             //Create table
             var table = CreateGeonEntity("table", new Vector3(0, -26, 0), NodeType.BoundingBoxCulling).AddComponent(new ModelRenderer(Content.LoadModel("mesh/table")));
@@ -179,7 +180,7 @@ namespace Betreten_Verboten.Scenes.Main
             _players = new BVPlayer[_board.PlayerCount];
             for (int i = 0; i < _board.PlayerCount; i++) _players[i] = CreateGeonEntity("player_" + i).AddComponent(new LocalPlayer(i));
 
-            //Saucer
+            //Create Saucer
             CreateGeonEntity("saucer", NodeType.BoundingBoxCulling).AddComponent(new Saucer());
         }
 
@@ -269,6 +270,9 @@ namespace Betreten_Verboten.Scenes.Main
             _btnSacrifice.ButtonPressed += () => OpenSacrifice();
         }
 
+        /// <summary>
+        /// Forces a reorder of the scoreboard. Needs to be called when the score has been changed to accomodate the new ranking.
+        /// </summary>
         public void ReorderPlayerHUD()
         {
             //Resort
@@ -357,6 +361,10 @@ namespace Betreten_Verboten.Scenes.Main
             }));
         }
 
+        /// <summary>
+        /// Prepares a MsgBox/InputBox dialogue to be closed correctly.
+        /// </summary>
+        /// <returns>Returns always true.</returns>
         private bool ExitMsgCascade()
         {
             _gameFocussed = true; //Enable virtual buttons
@@ -364,6 +372,7 @@ namespace Betreten_Verboten.Scenes.Main
             return true;
         }
 
+        //Allows the flow of the game to be controlled by setting this property.
         public GameState GameState
         {
             get => _gameState;
@@ -426,6 +435,7 @@ namespace Betreten_Verboten.Scenes.Main
 
         public override void Update()
         {
+            //Update scoreboard size by the amount of trigger press on the player's gamepad.
             if (Input.GamePads[0].IsConnected() && !_scoreTriggerOverride)
             {
                 var val = Input.GamePads[0].GetLeftTriggerRaw();
@@ -439,6 +449,9 @@ namespace Betreten_Verboten.Scenes.Main
             base.Update();
         }
 
+        /// <summary>
+        /// Trigger the dice to roll(physical and simple).
+        /// </summary>
         private void RollDice()
         {
             if (DiceType == DiceType.Physics)
@@ -449,6 +462,10 @@ namespace Betreten_Verboten.Scenes.Main
             _uiPlayerReroll.Visible = false;
         }
 
+        /// <summary>
+        /// Returns true if one of the players won the game.
+        /// </summary>
+        /// <param name="who">The player who has won the game.</param>
         public bool IsGameOver(out int who)
         {
             for (int i = 0; i < Board.PlayerCount; i++)
@@ -463,27 +480,34 @@ namespace Betreten_Verboten.Scenes.Main
             return false;
         }
 
+        /// <summary>
+        /// Prepares the game for its ending & plays ending animations for the characters.
+        /// </summary>
+        /// <param name="playerWon">The ID of the player who won the game.</param>
         public void FinishGame(int playerWon)
         {
             GameState = GameState.Outro;
             int action = Random.Range(0, 3);
+            //Play outro animation for each player's characters
             for (int i = 0; i < _players.Length; i++)
             {
+                //Ignore winner & buffer chars
                 if (playerWon == i) continue;
                 var fg = _players[i].GetFigures();
                 for (int j = 0; j < Board.FigureCountPP; j++)
                 {
+                    //Play outro animation
                     switch (action)
                     {
-                        case 0:
+                        case 0: //Fly upwards
                             fg[j].Node.Tween("PositionY", 50f, 3f).SetEaseType(EaseType.CubicIn).Start();
                             break;
-                        case 1:
+                        case 1: //Tip over
                             fg[j].RigidBodyEnabled = true;
                             var angle = Random.NextAngle();
                             fg[j].RigidBody.AngularVelocity = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * 15f;
                             break;
-                        case 2:
+                        case 2: //Shrink
                             fg[j].Node.Tween("Scale", Vector3.Zero, 2f).SetEaseType(EaseType.CubicIn).Start();
                             fg[j].Node.Tween("PositionY", 0f, 2f).SetEaseType(EaseType.CubicIn).Start();
                             break;
@@ -492,9 +516,12 @@ namespace Betreten_Verboten.Scenes.Main
             }
         }
 
+        /// <summary>
+        /// Is getting called when a player's round is over and a new player shall take over, while getting everything ready.
+        /// </summary>
         public void AdvancePlayer()
         {
-            //Switch to next player & adapt UI
+            //Switch to next player
             _activePlayer = ++_activePlayer % _board.PlayerCount;
             var pl = _players[_activePlayer];
             var plClor = CharConfig.GetStdColor(_activePlayer);
@@ -509,20 +536,22 @@ namespace Betreten_Verboten.Scenes.Main
                 return;
             }
 
+            //Update UI
             _uiPlayerName.Text = pl.CharacterConfig.Name;
             _uiPlayerName.Tween("FillColor", plClor, 0.2f).Start();
             _uiSimpleDice?.SetColor(plClor);
             _uiPlayerSacrifice.Enabled = pl.Sacrificable;
             _uiPlayerAnger.Enabled = pl.AngerCount > 0;
             _uiPlayerTutorial.Text = "Choose an action!";
+
+            //Prepare misc variables
             _thriceRoll = pl.CanRollThrice() ? ThriceRollState.ABLE_TO : ThriceRollState.UNABLE;
             GameState = GameState.ActionSelect;
-
             pl.Sacrificable = true;
             pl.CharacterSwitched();
 
-            this.SendPublicTele("player_change", null);
-            ReorderPlayerHUD();
+            this.SendPublicTele("player_change", null); //Notify everyone
+            ReorderPlayerHUD(); //Forces a re-ordering of the scoreboard
         }
     }
 }
