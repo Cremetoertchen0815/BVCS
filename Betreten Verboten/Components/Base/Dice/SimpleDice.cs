@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Nez;
 using Nez.GeonBit.UI;
 using Nez.GeonBit.UI.Entities;
@@ -20,11 +21,13 @@ namespace Betreten_Verboten.Components.Base.Dice
         private int _ticksLeft = 0;
         private float _tickTimer;
         private int _currentNr;
+        private SoundEffect _sfx;
 
         public override void OnAddedToEntity()
         {
             _uiEntity = UserInterface.Active.AddEntity(new Image(Core.Content.LoadTexture("texture/dice_simple_eyes"), new Vector2(DICE_SIZE), ImageDrawMode.Stretch, Anchor.BottomRight, new Vector2(-DICE_SIZE, MARGIN)));
             _uiEntity.Background = _uiBG = new Image(Core.Content.LoadTexture("texture/dice_simple_border"), new Vector2(DICE_SIZE), ImageDrawMode.Stretch, Anchor.Center);
+            _sfx = Entity.Scene.Content.Load<SoundEffect>("sound/sfx/dice");
         }
 
         private bool _isVisible = false;
@@ -62,6 +65,7 @@ namespace Betreten_Verboten.Components.Base.Dice
                 //Generate new number
                 _currentNr = Random.Range(1, 7);
                 _uiEntity.SourceRectangle = GetNrSourceRect();
+                _sfx.CreateInstance().Play();
                 //Tick down timer
                 _tickTimer = TICK_SLEEP_TIME;
                 if (--_ticksLeft < 1) Core.Schedule(AFTER_SLEEP_TIME, x => _currentNr.SendPrivateObj("dice", "base", "dice_value_set"));

@@ -2480,6 +2480,12 @@
 /processorParam:Quality=Best
 /build:sound/sfx/access_denied.wav
 
+#begin sound/sfx/dice.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sfx/dice.wav
+
 #begin sound/sfx/happy.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
