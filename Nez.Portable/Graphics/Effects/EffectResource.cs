@@ -29,53 +29,53 @@ namespace Nez
 
         internal static byte[] BloomExtractBytes => GetFileResourceBytes("engine/fx/ppfx/bloom_extract");
 
-        internal static byte[] QualityBloom => GetFileResourceBytes("/nez/effects/QualityBloom.mgfxo");
+        internal static byte[] QualityBloom => GetFileResourceBytes("engine/fx/ppfx/bloom_hq");
 
-        internal static byte[] Mosaic => GetFileResourceBytes("/nez/effects/Mosaic.mgfxo");
+        internal static byte[] Mosaic => GetFileResourceBytes("engine/fx/ppfx/mosaic");
 
-        internal static byte[] LUTColorGrade => GetFileResourceBytes("/nez/effects/LUTColorGrade.mgfxo");
+        internal static byte[] LUTColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade");
 
-        internal static byte[] GaussianBlurBytes => GetFileResourceBytes("/nez/effects/GaussianBlur.mgfxo");
+        internal static byte[] GaussianBlurBytes => GetFileResourceBytes("engine/fx/ppfx/gauss_blur");
 
-        internal static byte[] VignetteBytes => GetFileResourceBytes("/nez/effects/Vignette.mgfxo");
+        internal static byte[] VignetteBytes => GetFileResourceBytes("engine/fx/ppfx/vignette");
 
-        internal static byte[] LetterboxBytes => GetFileResourceBytes("/nez/effects/Letterbox.mgfxo");
+        internal static byte[] LetterboxBytes => GetFileResourceBytes("engine/fx/ppfx/letterbox");
 
-        internal static byte[] HeatDistortionBytes => GetFileResourceBytes("/nez/effects/HeatDistortion.mgfxo");
+        internal static byte[] HeatDistortionBytes => GetFileResourceBytes("engine/fx/ppfx/heat_distortion");
 
-        internal static byte[] SpriteLightMultiplyBytes => GetFileResourceBytes("/nez/effects/SpriteLightMultiply.mgfxo");
+        internal static byte[] SpriteLightMultiplyBytes => GetFileResourceBytes("engine/fx/ppfx/sprite_light_multiply");
 
-        internal static byte[] PixelGlitchBytes => GetFileResourceBytes("/nez/effects/PixelGlitch.mgfxo");
+        internal static byte[] PixelGlitchBytes => GetFileResourceBytes("engine/fx/ppfx/pixel_glitch");
 
-        internal static byte[] StencilLightBytes => GetFileResourceBytes("/nez/effects/StencilLight.mgfxo");
+        internal static byte[] StencilLightBytes => GetFileResourceBytes("engine/fx/ppfx/stencil_light");
 
         // deferred lighting
-        internal static byte[] DeferredSpriteBytes => GetFileResourceBytes("/nez/effects/DeferredSprite.mgfxo");
+        internal static byte[] DeferredSpriteBytes => GetFileResourceBytes("engine/fx/light/deferred_sprite");
 
-        internal static byte[] DeferredLightBytes => GetFileResourceBytes("/nez/effects/DeferredLighting.mgfxo");
+        internal static byte[] DeferredLightBytes => GetFileResourceBytes("engine/fx/light/deferred");
 
         // forward lighting
-        internal static byte[] ForwardLightingBytes => GetFileResourceBytes("/nez/effects/ForwardLighting.mgfxo");
+        internal static byte[] ForwardLightingBytes => GetFileResourceBytes("engine/fx/light/forward");
 
-        internal static byte[] PolygonLightBytes => GetFileResourceBytes("/nez/effects/PolygonLight.mgfxo");
+        internal static byte[] PolygonLightBytes => GetFileResourceBytes("engine/fx/light/polygon");
 
         // scene transitions
-        internal static byte[] SquaresTransitionBytes => GetFileResourceBytes("/nez/effects/transitions/Squares.mgfxo");
+        internal static byte[] SquaresTransitionBytes => GetFileResourceBytes("engine/fx/transition/square");
 
         // sprite or post processor effects
         internal static byte[] SpriteEffectBytes => GetMonoGameEmbeddedResourceBytes("Microsoft.Xna.Framework.Graphics.Effect.Resources.SpriteEffect.ogl.mgfxo");
 
-        internal static byte[] MultiTextureOverlayBytes => GetFileResourceBytes("/nez/effects/MultiTextureOverlay.mgfxo");
+        internal static byte[] MultiTextureOverlayBytes => GetFileResourceBytes("engine/fx/ppfx/multi_tex_overlay");
 
-        internal static byte[] ScanlinesBytes => GetFileResourceBytes("/nez/effects/Scanlines.mgfxo");
+        internal static byte[] ScanlinesBytes => GetFileResourceBytes("engine/fx/ppfx/scanline");
 
-        internal static byte[] ReflectionBytes => GetFileResourceBytes("/nez/effects/Reflection.mgfxo");
+        internal static byte[] ReflectionBytes => GetFileResourceBytes("engine/fx/ppfx/reflection");
 
-        internal static byte[] GrayscaleBytes => GetFileResourceBytes("/nez/effects/Grayscale.mgfxo");
+        internal static byte[] GrayscaleBytes => GetFileResourceBytes("engine/fx/ppfx/grayscale");
 
-        internal static byte[] SepiaBytes => GetFileResourceBytes("/nez/effects/Sepia.mgfxo");
+        internal static byte[] SepiaBytes => GetFileResourceBytes("engine/fx/ppfx/sepia");
 
-        internal static byte[] PaletteCyclerBytes => GetFileResourceBytes("/nez/effects/PaletteCycler.mgfxo");
+        internal static byte[] PaletteCyclerBytes => GetFileResourceBytes("engine/fx/ppfx/palette_cycle");
 
 
         /// <summary>

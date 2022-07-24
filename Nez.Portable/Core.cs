@@ -215,7 +215,7 @@ namespace Nez
 
             // prep the default Graphics system
             GraphicsDevice = base.GraphicsDevice;
-            var font = Content.Load<BitmapFont>("nez/NezDefaultBMFont");
+            var font = Content.Load<BitmapFont>("engine/tex/debug_font");
             Graphics.Instance = new Graphics(font);
         }
 

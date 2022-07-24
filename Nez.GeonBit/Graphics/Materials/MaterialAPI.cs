@@ -154,7 +154,7 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Path of GeonBit built-in effects.
         /// </summary>
-        public static readonly string EffectsPath = "GeonBit.Core/Effects/";
+        public static readonly string EffectsPath = "engine/fx/geon/";
 
         /// <summary>
         /// Get the effect instance.

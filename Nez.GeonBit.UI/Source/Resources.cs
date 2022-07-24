@@ -257,7 +257,7 @@ namespace Nez.GeonBit.UI
         public static void LoadContent(ContentManager content, string theme = "default")
         {
             // set resources root path and store content manager
-            _root = "GeonBit.UI/themes/" + theme + "/";
+            _root = "engine/ui/" + theme + "/";
             _content = content;
 
             // load cursors metadata

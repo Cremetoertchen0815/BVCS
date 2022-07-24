@@ -6,7 +6,7 @@ namespace Nez.GeonBit.Materials
     public class ShadowPlaneMaterial : MaterialAPI
     {
         // effect path
-        private static readonly string _effectPath = EffectsPath + "ShadowPlaneEffect";
+        private static readonly string _effectPath = EffectsPath + "shadow_plane";
 
         // the effect instance of this material.
         private readonly Effect _effect;

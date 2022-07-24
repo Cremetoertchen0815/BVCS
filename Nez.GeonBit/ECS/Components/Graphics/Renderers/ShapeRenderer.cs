@@ -55,14 +55,25 @@ namespace Nez.GeonBit
         /// <summary>
         /// Path of the shape models folder.
         /// </summary>
-        public static readonly string ShapeModelsRoot = "GeonBit.Core/BasicMeshes/";
+        public static readonly string ShapeModelsRoot = "engine/mesh/";
 
         /// <summary>
         /// Create the model renderer component.
         /// </summary>
         /// <param name="shape">Shape to draw.</param>
-        public ShapeRenderer(ShapeMeshes shape) : base(ShapeModelsRoot + shape.ToString())
+        public ShapeRenderer(ShapeMeshes shape) : base(ShapeModelsRoot + ShapeToPath(shape))
         {
         }
-    }
+
+        public static string ShapeToPath(ShapeMeshes s)
+        {
+            switch (s)
+            {
+                case ShapeMeshes.SphereLowPoly: return "sphere_lq";
+                case ShapeMeshes.SphereSmooth: return "sphere_hq";
+                default: return s.ToString().ToLower();
+            }
+        }
+
+}
 }

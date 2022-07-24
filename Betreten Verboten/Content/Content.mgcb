@@ -40,223 +40,223 @@
 
 #begin engine/fx/light/deferred.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/light/deferred.fx
 
 #begin engine/fx/light/deferred_sprite.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/light/deferred_sprite.fx
 
 #begin engine/fx/light/forward.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/light/forward.fx
 
 #begin engine/fx/light/polygon.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/light/polygon.fx
 
 #begin engine/fx/ppfx/bevels.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/bevels.fx
 
 #begin engine/fx/ppfx/bloom_combine.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/bloom_combine.fx
 
 #begin engine/fx/ppfx/bloom_extract.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/bloom_extract.fx
 
 #begin engine/fx/ppfx/bloom_hq.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/bloom_hq.fx
 
 #begin engine/fx/ppfx/color_grade.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/color_grade.fx
 
 #begin engine/fx/ppfx/gauss_blur.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/gauss_blur.fx
 
 #begin engine/fx/ppfx/grayscale.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/grayscale.fx
 
 #begin engine/fx/ppfx/heat_distortion.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/heat_distortion.fx
 
 #begin engine/fx/ppfx/invert.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/invert.fx
 
 #begin engine/fx/ppfx/letterbox.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/letterbox.fx
 
 #begin engine/fx/ppfx/mosaic.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/mosaic.fx
 
 #begin engine/fx/ppfx/multi_tex.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/multi_tex.fx
 
 #begin engine/fx/ppfx/multi_tex_overlay.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/multi_tex_overlay.fx
 
 #begin engine/fx/ppfx/palette_cycle.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/palette_cycle.fx
 
 #begin engine/fx/ppfx/pixel_glitch.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/pixel_glitch.fx
 
 #begin engine/fx/ppfx/reflection.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/reflection.fx
 
 #begin engine/fx/ppfx/scanline.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/scanline.fx
 
 #begin engine/fx/ppfx/sepia.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/sepia.fx
 
 #begin engine/fx/ppfx/sprite_fx.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/sprite_fx.fx
 
 #begin engine/fx/ppfx/sprite_light_multiply.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/sprite_light_multiply.fx
 
 #begin engine/fx/ppfx/stencil_light.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/stencil_light.fx
 
 #begin engine/fx/ppfx/vignette.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/vignette.fx
 
 #begin engine/fx/sprite/alpha_test.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/sprite/alpha_test.fx
 
 #begin engine/fx/sprite/blink.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/sprite/blink.fx
 
 #begin engine/fx/sprite/crosshatch.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/sprite/crosshatch.fx
 
 #begin engine/fx/sprite/dissolve.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/sprite/dissolve.fx
 
 #begin engine/fx/sprite/dots.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/sprite/dots.fx
 
 #begin engine/fx/sprite/lines.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/sprite/lines.fx
 
 #begin engine/fx/sprite/noise.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/sprite/noise.fx
 
 #begin engine/fx/sprite/twist.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/sprite/twist.fx
 
 #begin engine/fx/transition/square.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/transition/square.fx
 
 #begin engine/fx/transition/tex_wipe.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/transition/tex_wipe.fx
 
 #begin engine/fx/transition/wind.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/transition/wind.fx
 

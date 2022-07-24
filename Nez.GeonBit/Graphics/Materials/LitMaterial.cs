@@ -29,7 +29,7 @@ namespace Nez.GeonBit.Materials
     public class LitMaterial : MaterialAPI
     {
         // effect path
-        private static readonly string _effectPath = EffectsPath + "LitEffect";
+        private static readonly string _effectPath = EffectsPath + "lit_regular";
 
         // the effect instance of this material.
         private readonly Effect _effect;

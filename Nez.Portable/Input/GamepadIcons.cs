@@ -13,14 +13,14 @@ namespace Nez
         public void LoadXboxIcons()
         {
             icons.Clear();
-            icons.Add(GamepadButton.A, Core.Content.LoadTexture("nez/textures/gamepad/xbox/a"));
-            icons.Add(GamepadButton.B, Core.Content.LoadTexture("nez/textures/gamepad/xbox/b"));
-            icons.Add(GamepadButton.X, Core.Content.LoadTexture("nez/textures/gamepad/xbox/x"));
-            icons.Add(GamepadButton.Y, Core.Content.LoadTexture("nez/textures/gamepad/xbox/y"));
-            icons.Add(GamepadButton.RB, Core.Content.LoadTexture("nez/textures/gamepad/xbox/bumper_right"));
-            icons.Add(GamepadButton.LB, Core.Content.LoadTexture("nez/textures/gamepad/xbox/bumper_right"));
-            icons.Add(GamepadButton.LT, Core.Content.LoadTexture("nez/textures/gamepad/xbox/trigger_left"));
-            icons.Add(GamepadButton.RT, Core.Content.LoadTexture("nez/textures/gamepad/xbox/trigger_right"));
+            icons.Add(GamepadButton.A, Core.Content.LoadTexture("engine/tex/gamepad/xbox/a"));
+            icons.Add(GamepadButton.B, Core.Content.LoadTexture("engine/tex/gamepad/xbox/b"));
+            icons.Add(GamepadButton.X, Core.Content.LoadTexture("engine/tex/gamepad/xbox/x"));
+            icons.Add(GamepadButton.Y, Core.Content.LoadTexture("engine/tex/gamepad/xbox/y"));
+            icons.Add(GamepadButton.RB, Core.Content.LoadTexture("engine/tex/gamepad/xbox/bumper_right"));
+            icons.Add(GamepadButton.LB, Core.Content.LoadTexture("engine/tex/gamepad/xbox/bumper_right"));
+            icons.Add(GamepadButton.LT, Core.Content.LoadTexture("engine/tex/gamepad/xbox/trigger_left"));
+            icons.Add(GamepadButton.RT, Core.Content.LoadTexture("engine/tex/gamepad/xbox/trigger_right"));
         }
 
         public enum GamepadButton

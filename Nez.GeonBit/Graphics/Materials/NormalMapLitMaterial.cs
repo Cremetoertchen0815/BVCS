@@ -27,7 +27,7 @@ namespace Nez.GeonBit.Materials
     public class NormalMapLitMaterial : LitMaterial
     {
         // effect path
-        private static readonly string _effectPath = EffectsPath + "NormalMapLitEffect";
+        private static readonly string _effectPath = EffectsPath + "lit_normal";
 
         /// <summary>
         /// Create new lit effect instance.

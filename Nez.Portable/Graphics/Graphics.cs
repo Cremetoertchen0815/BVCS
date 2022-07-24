@@ -46,8 +46,8 @@ namespace Nez
 
             PixelTexture = new Sprite(CreateSingleColorTexture(1, 1, Color.White), 0, 0, 1, 1);
 
-            DebugSprite = new Sprite(Texture2D.FromFile(Core.GraphicsDevice, Core.Content.RootDirectory + "/nez/textures/placeholder.png"));
-            CircleTexture = new Sprite(Texture2D.FromFile(Core.GraphicsDevice, Core.Content.RootDirectory + "/nez/textures/circle.png"));
+            DebugSprite = new Sprite(Core.Content.LoadTexture("engine/tex/placeholder"));
+            CircleTexture = new Sprite(Core.Content.LoadTexture("engine/tex/circle"));
         }
 
 
