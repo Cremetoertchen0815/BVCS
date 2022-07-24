@@ -38,116 +38,227 @@
 /processorParam:DebugMode=Auto
 /build:engine/fx/geon/shadow_plane.fx
 
-#begin engine/fx/tex_pp/bevel.mgfxo
-/copy:engine/fx/tex_pp/bevel.mgfxo
+#begin engine/fx/light/deferred.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/light/deferred.fx
 
-#begin engine/fx/tex_pp/bloom_combine.mgfxo
-/copy:engine/fx/tex_pp/bloom_combine.mgfxo
+#begin engine/fx/light/deferred_sprite.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/light/deferred_sprite.fx
 
-#begin engine/fx/tex_pp/bloom_hq.mgfxo
-/copy:engine/fx/tex_pp/bloom_hq.mgfxo
+#begin engine/fx/light/forward.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/light/forward.fx
 
-#begin engine/fx/tex_pp/bloom_xtract.mgfxo
-/copy:engine/fx/tex_pp/bloom_xtract.mgfxo
+#begin engine/fx/light/polygon.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/light/polygon.fx
 
-#begin engine/fx/tex_pp/color_grade.mgfxo
-/copy:engine/fx/tex_pp/color_grade.mgfxo
+#begin engine/fx/ppfx/bevels.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/bevels.fx
 
-#begin engine/fx/tex_pp/deferred_light.mgfxo
-/copy:engine/fx/tex_pp/deferred_light.mgfxo
+#begin engine/fx/ppfx/bloom_combine.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/bloom_combine.fx
 
-#begin engine/fx/tex_pp/deferred_sprite.mgfxo
-/copy:engine/fx/tex_pp/deferred_sprite.mgfxo
+#begin engine/fx/ppfx/bloom_extract.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/bloom_extract.fx
 
-#begin engine/fx/tex_pp/dissolve.mgfxo
-/copy:engine/fx/tex_pp/dissolve.mgfxo
+#begin engine/fx/ppfx/bloom_hq.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/bloom_hq.fx
 
-#begin engine/fx/tex_pp/dot.mgfxo
-/copy:engine/fx/tex_pp/dot.mgfxo
+#begin engine/fx/ppfx/color_grade.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/color_grade.fx
 
-#begin engine/fx/tex_pp/forward_light.mgfxo
-/copy:engine/fx/tex_pp/forward_light.mgfxo
+#begin engine/fx/ppfx/gauss_blur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/gauss_blur.fx
 
-#begin engine/fx/tex_pp/gauss_blur.mgfxo
-/copy:engine/fx/tex_pp/gauss_blur.mgfxo
+#begin engine/fx/ppfx/grayscale.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/grayscale.fx
 
-#begin engine/fx/tex_pp/glitch.mgfxo
-/copy:engine/fx/tex_pp/glitch.mgfxo
+#begin engine/fx/ppfx/heat_distortion.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/heat_distortion.fx
 
-#begin engine/fx/tex_pp/grayscale.mgfxo
-/copy:engine/fx/tex_pp/grayscale.mgfxo
+#begin engine/fx/ppfx/invert.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/invert.fx
 
-#begin engine/fx/tex_pp/heat.mgfxo
-/copy:engine/fx/tex_pp/heat.mgfxo
+#begin engine/fx/ppfx/letterbox.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/letterbox.fx
 
-#begin engine/fx/tex_pp/invert.mgfxo
-/copy:engine/fx/tex_pp/invert.mgfxo
+#begin engine/fx/ppfx/mosaic.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/mosaic.fx
 
-#begin engine/fx/tex_pp/letterbox.mgfxo
-/copy:engine/fx/tex_pp/letterbox.mgfxo
+#begin engine/fx/ppfx/multi_tex.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/multi_tex.fx
 
-#begin engine/fx/tex_pp/mosaic.mgfxo
-/copy:engine/fx/tex_pp/mosaic.mgfxo
+#begin engine/fx/ppfx/multi_tex_overlay.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/multi_tex_overlay.fx
 
-#begin engine/fx/tex_pp/multi_tex.mgfxo
-/copy:engine/fx/tex_pp/multi_tex.mgfxo
+#begin engine/fx/ppfx/palette_cycle.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/palette_cycle.fx
 
-#begin engine/fx/tex_pp/multi_tex_overlay.mgfxo
-/copy:engine/fx/tex_pp/multi_tex_overlay.mgfxo
+#begin engine/fx/ppfx/pixel_glitch.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/pixel_glitch.fx
 
-#begin engine/fx/tex_pp/noise.mgfxo
-/copy:engine/fx/tex_pp/noise.mgfxo
+#begin engine/fx/ppfx/reflection.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/reflection.fx
 
-#begin engine/fx/tex_pp/palette_cycle.mgfxo
-/copy:engine/fx/tex_pp/palette_cycle.mgfxo
+#begin engine/fx/ppfx/scanline.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/scanline.fx
 
-#begin engine/fx/tex_pp/poly_light.mgfxo
-/copy:engine/fx/tex_pp/poly_light.mgfxo
+#begin engine/fx/ppfx/sepia.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/sepia.fx
 
-#begin engine/fx/tex_pp/reflection.mgfxo
-/copy:engine/fx/tex_pp/reflection.mgfxo
+#begin engine/fx/ppfx/sprite_fx.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/sprite_fx.fx
 
-#begin engine/fx/tex_pp/scanline.mgfxo
-/copy:engine/fx/tex_pp/scanline.mgfxo
+#begin engine/fx/ppfx/sprite_light_multiply.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/sprite_light_multiply.fx
 
-#begin engine/fx/tex_pp/sepia.mgfxo
-/copy:engine/fx/tex_pp/sepia.mgfxo
+#begin engine/fx/ppfx/stencil_light.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/stencil_light.fx
 
-#begin engine/fx/tex_pp/sprite_alpha_test.mgfxo
-/copy:engine/fx/tex_pp/sprite_alpha_test.mgfxo
+#begin engine/fx/ppfx/vignette.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/vignette.fx
 
-#begin engine/fx/tex_pp/sprite_blink.mgfxo
-/copy:engine/fx/tex_pp/sprite_blink.mgfxo
+#begin engine/fx/sprite/alpha_test.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/sprite/alpha_test.fx
 
-#begin engine/fx/tex_pp/sprite_fx.mgfxo
-/copy:engine/fx/tex_pp/sprite_fx.mgfxo
+#begin engine/fx/sprite/blink.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/sprite/blink.fx
 
-#begin engine/fx/tex_pp/sprite_light_multiply.mgfxo
-/copy:engine/fx/tex_pp/sprite_light_multiply.mgfxo
+#begin engine/fx/sprite/crosshatch.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/sprite/crosshatch.fx
 
-#begin engine/fx/tex_pp/sprite_lines.mgfxo
-/copy:engine/fx/tex_pp/sprite_lines.mgfxo
+#begin engine/fx/sprite/dissolve.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/sprite/dissolve.fx
 
-#begin engine/fx/tex_pp/stencil_light.mgfxo
-/copy:engine/fx/tex_pp/stencil_light.mgfxo
+#begin engine/fx/sprite/dots.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/sprite/dots.fx
 
-#begin engine/fx/tex_pp/twist.mgfxo
-/copy:engine/fx/tex_pp/twist.mgfxo
+#begin engine/fx/sprite/lines.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/sprite/lines.fx
 
-#begin engine/fx/tex_pp/vignette.mgfxo
-/copy:engine/fx/tex_pp/vignette.mgfxo
+#begin engine/fx/sprite/noise.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/sprite/noise.fx
 
-#begin engine/fx/tex_pp/xhatch.mgfxo
-/copy:engine/fx/tex_pp/xhatch.mgfxo
+#begin engine/fx/sprite/twist.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/sprite/twist.fx
 
-#begin engine/fx/trans/sqares.mgfxo
-/copy:engine/fx/trans/sqares.mgfxo
+#begin engine/fx/transition/square.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/transition/square.fx
 
-#begin engine/fx/trans/wind.mgfxo
-/copy:engine/fx/trans/wind.mgfxo
+#begin engine/fx/transition/tex_wipe.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/transition/tex_wipe.fx
 
-#begin engine/fx/trans/wipe.mgfxo
-/copy:engine/fx/trans/wipe.mgfxo
+#begin engine/fx/transition/wind.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/transition/wind.fx
 
 #begin engine/mesh/cone.fbx
 /importer:FbxImporter
@@ -2269,27 +2380,6 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:font/tutorial_label.spritefont
-
-#begin fonts/action_btn.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:fonts/action_btn.spritefont
-
-#begin fonts/player_label.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:fonts/player_label.spritefont
-
-#begin fonts/tutorial_label.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:fonts/tutorial_label.spritefont
 
 #begin mesh/dice_cubemap.png
 /importer:TextureImporter

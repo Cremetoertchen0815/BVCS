@@ -9,11 +9,12 @@ namespace Nez
     {
         protected override byte[] Read(ContentReader input, byte[] existingInstance)
         {
-            bool compressed = input.ReadBoolean();
             int length = input.ReadInt32();
+            bool compressed = length < 0;
             byte[] data = input.ReadBytes(length);
 
             if (!compressed) return data;
+            length *= -1;
 
             using (var msi = new MemoryStream(data))
             using (var mso = new MemoryStream())
