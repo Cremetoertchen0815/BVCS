@@ -42,8 +42,7 @@ namespace Nez.ExtendedContent
 
         protected override void Write(ContentWriter output, ProcessedBinaryData value)
         {
-            output.Write(value.Compressed);
-            output.Write(value.Data.Length);
+            output.Write((value.Compressed ? -1 : 1) * value.Data.Length);
             output.Write(value.Data);
         }
     }
