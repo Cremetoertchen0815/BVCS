@@ -2510,6 +2510,12 @@
 /processorParam:Quality=Best
 /build:sound/sfx/sad.mp3
 
+#begin sound/sfx/saucer.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sfx/saucer.wav
+
 #begin sound/sfx/shock.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

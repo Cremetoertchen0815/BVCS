@@ -99,6 +99,8 @@ namespace Betreten_Verboten.Components.BV
             var pos = _ownerScene.Board.GetCharacterPosition(c, boost);
             _positionDelta = (_targetEntity = c.Entity).Node.Position - Node.Position;
 
+            this.SendPrivateTele("base", "play_sfx", "saucer");
+
             this.Tween("PosY", 10f, 1.5f).SetDelay(0.5f).SetFrom(3f).SetEaseType(EaseType.SineInOut).SetLoops(LoopType.PingPong).Start();
             this.Tween("PosXZ", pos, 3f).SetDelay(0.5f).SetEaseType(EaseType.CubicInOut).SetCompletionHandler(z =>
             {

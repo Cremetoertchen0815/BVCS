@@ -1,5 +1,6 @@
 ﻿using Betreten_Verboten.Components.Base;
 using Betreten_Verboten.Components.Base.Characters;
+using Nez;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -73,7 +74,17 @@ namespace Betreten_Verboten.Components.BV.Player
         public override void DecideAfterCharacterLand()
         {
             //Check for suicide
-            if (SuicideField > -1) foreach (var item in _figures) if (item.Position == SuicideField) item.Kick(item);
+            if (SuicideField < 0) return;
+            foreach (var item in _figures)
+            {
+                if (item.Position == SuicideField)
+                {
+
+                    this.SendPrivateTele("base", "play_sfx", "sad");
+                    item.Kick(item);
+                    return;
+                }
+            }
         }
 
         /// <summary>
