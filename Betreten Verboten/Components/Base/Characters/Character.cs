@@ -27,6 +27,8 @@ namespace Betreten_Verboten.Components.Base.Characters
         private CharConfig _config;
         private bool _rbActive = false;
 
+        private static bool _playKick = false;
+
         public Character(Player owner, int nr, CharConfig config)
         {
             Owner = owner;
@@ -88,18 +90,22 @@ namespace Betreten_Verboten.Components.Base.Characters
                 case "landed_on_field":
                     var source = ((Character kicker, bool finalField))message.Body;
                     int oldPos = source.kicker.Position;
-                    if (source.kicker == this || source.kicker.GlobalPosition != GlobalPosition) break;
+                    //Test if real kicking is gonna be checked of if simple land is in progress
+                    if (source.kicker == this || source.kicker.GlobalPosition != GlobalPosition)  break;
+
                     //Check for kicking condition. That being that either landing the character on its final landing field or the character standing on its homebase.
                     //Of course we ignore our own characters.
                     System.Action<ITween<float>> ac = x =>
                     {
                         if (!source.finalField && oldPos != 0) return;
+                        this.SendPrivateTele("base", "play_sfx", "stomp"); //Play kicking sound
                         SetPosition(-1);
                         source.kicker.Owner.AdditionalPoints += source.finalField ? 25 : 50;
                     };
                     //Play ducking animation
                     this.Tween("ScaleHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetEaseType(EaseType.Linear).SetLoops(LoopType.PingPong).Start();
                     this.Tween("PosHeight", 0f, CHAR_HALF_WALK_TIME * 2f).SetFrom(3f).SetEaseType(EaseType.Linear).SetLoopCompletionHandler(ac).SetLoops(LoopType.PingPong).Start();
+                    if (source.finalField || oldPos == 0) _playKick = true;
                     break;
                 default:
                     break;
@@ -153,12 +159,18 @@ namespace Betreten_Verboten.Components.Base.Characters
             this.SendPrivateTele("char", "landed_on_field", (this, _travelDistLeft < 1));
             this.SendPrivateTele("base", "resort_score", null);
 
+            //Play sfx
+            if (firstStep) return;
+            if (_playKick) _playKick = false; else this.SendPrivateTele("base", "play_sfx", "jump");
+
         }
 
         private void AdvAnimationStep(ITween<Vector2> y)
         {
             if (_travelDistLeft < 1)
             {
+                this.SendPrivateTele("base", "play_sfx", _playKick ? "stomp" : "land");
+                _playKick = false;
                 Owner.DecideAfterCharacterLand();
                 RigidBody?.CopyNodeWorldMatrix(); //Update rigid body
                 this.SendPrivateTele("saucer", "check_saucer", this); //Report landing

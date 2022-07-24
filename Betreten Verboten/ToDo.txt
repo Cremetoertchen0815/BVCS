@@ -1,6 +1,6 @@
 ﻿-Fix weird table top missing bug
 -Fix saucer being able to fly into other figure
--Add sounds
+-Add sounds(saucer, god, dice)
 -Implement pause menu
 -Implement title screen
 -Implement CPU players
