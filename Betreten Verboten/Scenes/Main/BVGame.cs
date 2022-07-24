@@ -6,6 +6,7 @@ using Betreten_Verboten.Components.BV;
 using Betreten_Verboten.Components.BV.Backgrounds;
 using Betreten_Verboten.Components.BV.Player;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Nez;
@@ -38,6 +39,7 @@ namespace Betreten_Verboten.Scenes.Main
         private List<int> _diceNumbers = new List<int>();
         private GameState _gameState = GameState.OtherAction;
         private ThriceRollState _thriceRoll = ThriceRollState.UNABLE;
+        private Dictionary<string, SoundEffect> _sfxDict;
 
         //UI
         private bool _scoreTriggerOverride = false;
@@ -104,6 +106,7 @@ namespace Betreten_Verboten.Scenes.Main
 
             //Init
             Core.Schedule(0.3f, x => AdvancePlayer());
+            _sfxDict = SFXManager.LoadRegularSFX(this);
 #if DEBUG
             Core.DebugRenderEnabled = true;
 #endif
@@ -158,6 +161,9 @@ namespace Betreten_Verboten.Scenes.Main
                 //Some game component requests a re-ordering of the scoreboard.
                 case "resort_score":
                     ReorderPlayerHUD();
+                    break;
+                case "play_sfx":
+                    if (_sfxDict.TryGetValue((string)message.Body, out var sfx)) sfx.Play();
                     break;
             }
         }
